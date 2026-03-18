@@ -1,0 +1,144 @@
+<!-- Form Section -->
+<div class="card card-custom mb-4">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <h3 class="card-label">RMS Request Comparison</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <form
+      [formGroup]="requestComparisonForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+      (ngSubmit)="getRequestComparison()"
+    >
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateFrom"
+            class="form-control form-control-md"
+            type="text"
+          />
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            #dateTo="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control form-control-md"
+            type="text"
+          />
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">User:</label>
+          <ng-select
+            style="width: 100%"
+            [items]="employeesList"
+            bindLabel="EmpName"
+            formControlName="EmpId"
+            bindValue="UserId"
+            placeholder="- Select User -"
+          ></ng-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button
+            class="btn btn-primary btn-md px-4"
+            type="submit"
+            [disabled]="disabledButton"
+          >
+            <ngx-spinner
+              *ngIf="isSpinner"
+              size="sm"
+              bdColor="rgba(0,0,0,0.8)"
+              color="#fff"
+              type="square-loader"
+              [fullScreen]="false"
+              style="display: inline-block; margin-right: 5px"
+            >
+            </ngx-spinner>
+            <i class="fa fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="card card-custom">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right text-danger">
+          <strong>Total Records: {{ requestComparisonList.length }}</strong>
+        </small>
+        <div class="table-responsive" style="min-height: 330px">
+          <table class="table table-hover" cellpadding="0" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Patient Name</th>
+                <th class="text-center">Contact</th>
+                <th class="text-center">Req. No</th>
+                <th class="text-center">Created By</th>
+                <th class="text-center">Status ID</th>
+                <th class="text-center">Req. Status</th>
+                <th class="text-center">Req. Message</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="requestComparisonList.length > 0; else noRecord">
+              <tr *ngFor="let item of requestComparisonList; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-center">{{ item.FullName }}</td>
+                <td class="text-center">{{ item.CellNo }}</td>
+                <td class="text-center">{{ item.CMSRequestNo }}</td>
+                <td class="text-center">{{ item.CreatedBy }}</td>
+                <td class="text-center">{{ item.CMSStatusID }}</td>
+                <td class="text-center">{{ item.CMSStatus }}</td>
+                <td class="text-center">{{ item.RequestMessage }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noRecord>
+    <div
+      class="no-record-message"
+      style="
+        text-align: center;
+        padding: 1rem;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+      "
+    >
+      <strong>No Record Found</strong>
+    </div>
+  </ng-template>
+</div>
+
+

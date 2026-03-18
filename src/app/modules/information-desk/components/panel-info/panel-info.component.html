@@ -1,0 +1,181 @@
+<div class="roles-page">
+    <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" >
+        <div class="card-body" style="min-height: 320px;">
+            <div class="row">
+                <div class="col-md-7">
+                    <label class="" >Panel:</label>
+                    <div class ="form-check-inline">
+                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode"  id="byCode1" checked>
+                        <label for="radio1" class="form-check-label">By Code</label>
+                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byName')" value="byName"  id="byName1">
+                        <label for="radio2" class="form-check-label">By Name</label>
+                    </div>
+                    <div>
+                        <ng-select 
+                            [items]="panelsList" 
+                            bindLabel="CodeName" 
+                            bindValue="PanelId"
+                            (change)="paneListChanged($event)"                          
+                            placeholder="--select--" 
+                            name="tests"
+                            [searchFn]="customSearchFn"
+                            >
+                            <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                <span ><strong>{{ item.Code }} </strong>- {{ item.CodeName }}</span>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+
+                </div>
+            </div>
+            <ng-container *ngIf="PanelID then testResultArea else noResultArea"></ng-container>
+            <ng-template #testResultArea>
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.panelGeneralSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Please wait... </p>
+            </ngx-spinner>
+                <div class="row mt-2" *ngIf="(panelGeneralData | json) != ({} | json)">
+                    <div class="col-md-12">
+                        <!--start::Test Info-->
+                        <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">General Info.</legend>
+                            <div class="row">
+                                <div class="col-md-3 mt-2">
+                                    <p class="p-mb">Code: <strong class="ml-2">{{panelGeneralData['Code']}} </strong></p>
+                                    <p class="p-mb">Name: <strong class="ml-2">{{panelGeneralData['Name']}}</strong></p>
+                                    <p class="p-mb">Company: <strong class="ml-2">{{panelGeneralData['Company']}}</strong></p>
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <p class="p-mb">Billing Type: <strong class="ml-2">{{panelGeneralData['PanelBillingType']}} </strong></p>
+                                    <p class="p-mb">Contact Person: <strong class="ml-2">{{panelGeneralData['ContactPerson']||'N/A'}}</strong></p>
+                                    <p class="p-mb">Person Mobile: <strong class="ml-2">{{panelGeneralData['CpPhone']||'N/A'}}</strong></p>
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <p class="p-mb">Person Email: <strong class="ml-2">{{panelGeneralData['CpEmail']||'N/A'}}</strong></p>
+                                    <p class="p-mb">Person Phone: <strong class="ml-2">{{panelGeneralData['CpPhone']||'N/A'}}</strong></p>
+                                    <p class="p-mb">Email Report: <strong class="ml-2">{{panelGeneralData['EmailReport']||'N/A'}}</strong></p>
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <p class="p-mb">Email To: <strong class="ml-2">{{panelGeneralData['EmailTo']||'N/A'}}</strong></p>
+                                    <p class="p-mb">Email CC: <strong class="ml-2">{{panelGeneralData['EmailCC']||'N/A'}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-2">
+                                    <p class="p-mb">Address: <strong class="ml-2">{{panelGeneralData['BillingAddress']||'N/A'}}</strong></p>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <p class="p-mb">Protocol: <strong class="ml-2">{{panelGeneralData['Protocol']||'N/A'}}</strong></p>
+                                </div>
+                                
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Test/Profile/Package</legend>
+                            <mat-tab-group class="demo-tab-group" style="background-color: #fff;"> 
+                                <mat-tab label="Test/s ({{testList.length}})">
+                                    <div *matTabContent>
+                                        <div class="row">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4 text-right"><input type="text" class="form-control form-control-sm mb-2 mt-2" placeholder="Type to filter" [(ngModel)]="FilterStringTest" /></div>
+                                        </div>
+                                        <div class="table-responsive" style="max-height: 345px; overflow-y: auto;">
+                                            <table class="table table-hover table-stripped table-condensed compact" >
+                                                <thead style="background-color:white;">
+                                                    <tr style="background-color:white;">
+                                                        <th style="text-align:left;">#</th>
+                                                        <th>Code</th>
+                                                        <th>Name</th>
+                                                        <th class="text-right">Net Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="!testList.length">
+                                                        <td colspan="4" style="text-align: center;"><strong class="text-primary">No record found...</strong></td>
+                                                    </tr>
+                                                    <tr *ngFor="let test of testList | filterByKey:FilterStringTest:['Code','Name']; let i=index;">
+                                                        <td style="text-align:left;">{{i+1}}</td>
+                                                        <td>{{test.Code}}</td>
+                                                        <td>{{test.Name}}</td>
+                                                        <td class="text-right">{{helperService.formatNumericValues((test.NetPrice || 0))||0}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="Profile/s ({{profileList.length}})">
+                                    <div *matTabContent>
+                                        <div class="row">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4 text-right"><input type="text" class="form-control form-control-sm mb-2 mt-2" placeholder="Type to filter" [(ngModel)]="FilterStringProfile" /></div>
+                                        </div>
+                                        <div class="table-responsive" style="max-height: 345px; overflow-y: auto;">
+                                            <table class="table table-hover table-stripped table-condensed compact" >
+                                                <thead style="background-color:white;">
+                                                    <tr style="background-color:white;">
+                                                        <th style="text-align:left;">#</th>
+                                                        <th>Code</th>
+                                                        <th>Name</th>
+                                                        <th class="text-right">Net Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="!profileList.length">
+                                                        <td colspan="4" style="text-align: center;"><strong class="text-primary">No record found...</strong></td>
+                                                    </tr>
+                                                    <tr *ngFor="let profile of profileList | filterByKey:FilterStringProfile:['Code','Name']; let i=index;">
+                                                        <td style="text-align:left;">{{i+1}}</td>
+                                                        <td>{{profile.Code}}</td>
+                                                        <td>{{profile.Name}}</td>
+                                                        <td class="text-right">{{helperService.formatNumericValues((profile.NetPrice || 0))}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="Package/s ({{packageList.length}})">
+                                    <div *matTabContent>
+                                        <div class="row">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4 text-right"><input type="text" class="form-control form-control-sm mb-2 mt-2" placeholder="Type to filter" [(ngModel)]="FilterStringPackage" /></div>
+                                        </div>
+                                        <div class="table-responsive" style="max-height: 345px; overflow-y: auto;">
+                                            <table class="table table-hover table-stripped table-condensed compact" >
+                                                <thead style="background-color:white;">
+                                                    <tr style="background-color:white;">
+                                                        <th style="text-align:left;">#</th>
+                                                        <th>Code</th>
+                                                        <th>Name</th>
+                                                        <th class="text-right">Net Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="!packageList.length">
+                                                        <td colspan="4" style="text-align: center;"><strong class="text-primary">No record found...</strong></td>
+                                                    </tr>
+                                                    <tr *ngFor="let package of packageList | filterByKey:FilterStringPackage:['Code','Name']; let i=index;">
+                                                        <td style="text-align:left;">{{i+1}}</td>
+                                                        <td>{{package.Code}}</td>
+                                                        <td>{{package.Name}}</td>
+                                                        <td class="text-right">{{helperService.formatNumericValues((package.NetPrice || 0))}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                            </mat-tab-group>
+                           
+                        </fieldset>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #noResultArea>
+                <div class="col-12 text-center text-primary"> <hr> <div>Please select a panel to show details</div> </div>
+            </ng-template>
+        </div>
+    </app-card>
+</div>

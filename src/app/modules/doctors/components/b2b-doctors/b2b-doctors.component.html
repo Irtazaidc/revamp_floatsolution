@@ -1,0 +1,979 @@
+<div class="b2b-doctors-page">
+  <!-- <fieldset class="fieldset-border-all-primary">
+        <legend class="font-weight-bold text-info" style="font-size: 1.1rem">
+            B to B Panel Creation
+        </legend> -->
+  <div class="row">
+    <div class="col-md-6">
+      <app-card
+        [title]="'B to B Doctors'"
+        [cardClass]="'tim-card tim-card tim-card-success'"
+      >
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="type to filter"
+                class="form-control form-control-sm"
+                [(ngModel)]="searchText"
+                name="searchText"
+              />
+              <button
+                class="btn btn-outline-success btn-mini"
+                (click)="getB2BDoctors()"
+              >
+                <i class="ti-reload"></i>
+              </button>
+              <button
+                class="btn btn-outline-success btn-mini"
+                (click)="optionalColumnsVisibility = !optionalColumnsVisibility"
+              >
+                <span *ngIf="!optionalColumnsVisibility">show all columns</span>
+                <span *ngIf="optionalColumnsVisibility">show less columns</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="table-responsive fixed-height-table"
+          style="max-height: 600px; overflow-y: auto"
+        >
+          <table class="table table-hover compact">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <!-- <th>First Name</th> -->
+                <!-- <th>Last Name</th> -->
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Gender
+                </th>
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Phone
+                </th>
+                <th>Mobile</th>
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Email
+                </th>
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Education
+                </th>
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Code
+                </th>
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Report View
+                </th>
+                <th
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  Address
+                </th>
+                <th>Speciality</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="!b2bDoctorsList">
+                <td colspan="100" style="text-align: center">
+                  <strong class="text-primary"> No Record Found</strong>
+                </td>
+              </tr>
+              <tr
+                *ngFor="
+                  let item of b2bDoctorsList
+                    | filterByKey
+                      : searchText
+                      : ['FirstName', 'LastName', 'Phone', 'Email'];
+                  let i = index
+                "
+                [ngClass]="{
+                  'active-rec-border-left':
+                    doctorForm.get('B2BDoctorID').value == item.B2BDoctorID
+                }"
+              >
+                <td>
+                  {{ item.Title }} {{ item.FirstName }} {{ item.LastName }}
+                </td>
+                <!-- <td>{{item.FirstName}}</td> -->
+                <!-- <td>{{item.LastName}}</td> -->
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.Gender || "-" }}
+                </td>
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.Phone || "-" }}
+                </td>
+                <td>{{ item.Cell || "-" }}</td>
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.Email || "-" }}
+                </td>
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.Education || "-" }}
+                </td>
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.Code || "-" }}
+                </td>
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.isOnlineReportView ? "Yes" : "No" }}
+                </td>
+                <td
+                  class="optional"
+                  [ngStyle]="{
+                    display: optionalColumnsVisibility ? '' : 'none'
+                  }"
+                >
+                  {{ item.Address || "-" }}
+                </td>
+                <td>{{ item.Speciality || "-" }}</td>
+                <td class="text-right">
+                  <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Basic example"
+                  >
+                    <button
+                      class="btn btn-outline-danger btn-mini"
+                      title="Delete"
+                      mwlConfirmationPopover
+                      [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                      [popoverMessage]="
+                        confirmationPopoverConfig.popoverMessage
+                      "
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]"
+                      (confirm)="delete(item)"
+                      (cancel)="
+                        confirmationPopoverConfig.confirmPopoverCancel()
+                      "
+                      confirmButtonType="danger"
+                      cancelButtonType="outline-secondary"
+                      (click)="
+                        confirmationPopoverConfig.confirmClicked = false;
+                        confirmationPopoverConfig.cancelClicked = false
+                      "
+                      [appendToBody]="true"
+                    >
+                      <i class="ti-trash m-0"></i>
+                    </button>
+                    <button
+                      class="btn btn-outline-success btn-mini ml-1"
+                      title="Edit"
+                      (click)="edit(item)"
+                    >
+                      <i class="ti-pencil m-0"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-md-6">
+      <mat-card>
+        <mat-card-content>
+          <mat-tab-group class="demo-tab-group" style="background-color: #fff">
+            <mat-tab label="B to B Panel Creation">
+              <div>
+                <div class="col-12 mt-5" *matTabContent>
+                  <div class="col-md-12">
+                    <app-card
+                      [title]="'B to B Panel Creation'"
+                      [cardClass]="'tim-card tim-card tim-card-success'"
+                    >
+                      <div class="row">
+                        <div class="col-12">
+                          <!-- <span style="font-size: 24px;">B2B Doctor(s)</span> -->
+                          <!-- <button class="btn btn-outline-success pull-right"  (click)="showAddB2BDoctorForm(true)"><i class="ti-plus"></i>Add New</button> -->
+                          <!-- <button class="btn btn-outline-danger pull-right" *ngIf="showB2BDoctorsForm" (click)="showAddB2BDoctorForm(false)"><i class="ti-close"></i></button> -->
+                        </div>
+                        <div class="col-12">
+                          <form
+                            class="md-float-material"
+                            [formGroup]="doctorForm"
+                          >
+                            <div class="row">
+                              <div class="col-md-4 d-none">
+                                <label>Doc ID:</label>
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="B2BDoctorID"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <label>Code </label>
+                                <div class="input-group">
+                                  <input
+                                    placeholder="B to B Code"
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="Code"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <label
+                                  >Title | First Name
+                                  <span class="mandatory-asterisk"
+                                    >*</span
+                                  ></label
+                                >
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="Title"
+                                    [disabled]="true"
+                                    style="max-width: 50px"
+                                    [ngClass]="{
+                                      invalid: doctorForm.get('Title').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('Title').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  />
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="FirstName"
+                                    placeholder="First Name"
+                                    [ngClass]="{
+                                      invalid:
+                                        doctorForm.get('FirstName').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('FirstName').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Last Name </label>
+                                <div class="input-group">
+                                  <input
+                                    placeholder="Last Name"
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="LastName"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <label
+                                  >Type
+                                  <span class="mandatory-asterisk"
+                                    >*</span
+                                  ></label
+                                >
+                                <div class="input-group">
+                                  <select
+                                    class="form-control"
+                                    formControlName="B2BTypeID"
+                                    (change)="b2bTypeChangedEvent()"
+                                    [ngClass]="{
+                                      invalid:
+                                        doctorForm.get('B2BTypeID').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('B2BTypeID').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  >
+                                    <option [value]="''">--select--</option>
+                                    <option
+                                      *ngFor="let s of b2bTypes"
+                                      [value]="s.id"
+                                    >
+                                      {{ s.title }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Gender</label>
+                                <div class="input-group">
+                                  <select
+                                    class="form-control"
+                                    formControlName="Gender"
+                                  >
+                                    <!-- [ngClass]="{'invalid': doctorForm.get('Gender').errors, 'invalid-highlighted': doctorForm.get('Gender').errors && doctorFormSubmitted}" -->
+                                    <option [value]="''">--select--</option>
+                                    <option
+                                      *ngFor="let s of genders"
+                                      [value]="s.id"
+                                    >
+                                      {{ s.title }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Phone</label>
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="Phone"
+                                    [ngClass]="{
+                                      invalid: doctorForm.get('Phone').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('Phone').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                    (keypress)="validateNo($event)"
+                                  />
+                                  <div
+                                    class="col-md-12"
+                                    *ngIf="
+                                      doctorForm
+                                        .get('Phone')
+                                        .hasError('maxlength')
+                                    "
+                                  >
+                                    <span class="text-danger">
+                                      <small>Maximum length is 15</small>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <label>Mobile</label>
+                                <div class="input-group">
+                                  <input
+                                    mask="0000-0000000"
+                                    [showMaskTyped]="true"
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="Cell"
+                                    [ngClass]="{
+                                      invalid: doctorForm.get('Cell').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('Cell').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                    (keypress)="validateNo($event)"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <label>E-Mail</label>
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="example@domain.com"
+                                    formControlName="Email"
+                                    [ngClass]="{
+                                      invalid: doctorForm.get('Email').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('Email').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  />
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <label>Qualification</label>
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="Education"
+                                    placeholder="Qualification"
+                                    [ngClass]="{
+                                      invalid:
+                                        doctorForm.get('Education').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('Education').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Speciality</label>
+                                <div class="input-group">
+                                  <select
+                                    class="form-control"
+                                    formControlName="SpecialityId"
+                                  >
+                                    <option [value]="''">--select--</option>
+                                    <option
+                                      *ngFor="let s of doctorSpecialityList"
+                                      [value]="s.SpecialityId"
+                                    >
+                                      {{ s.Title }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Discount (%)</label>
+                                <span class="pull-right"
+                                  ><input
+                                    type="checkbox"
+                                    formControlName="DiscountTypeID"
+                                  />
+                                  upto</span
+                                >
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="Discount"
+                                    mask="separator.3"
+                                    [dropSpecialCharacters]="true"
+                                    separatorLimit="100"
+                                    (input)="validateDiscountRange($event)"
+                                    [ngClass]="{ invalid:doctorForm.get('Discount').errors,
+                                    'invalid-highlighted':doctorForm.get('Discount').errors && doctorFormSubmitted}"
+                                  />
+                                </div>
+                                <!-- separatorLimit="100" -->
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Lab. Share (%)</label>
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="LISShare"
+                                    mask="separator.2"
+                                    separatorLimit="99"
+                                    [ngClass]="{
+                                      invalid:
+                                        doctorForm.get('LISShare').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('LISShare').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <label>Radiology Share (%)</label>
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="RISShare"
+                                    mask="separator.2"
+                                    separatorLimit="99"
+                                    [ngClass]="{
+                                      invalid:
+                                        doctorForm.get('RISShare').errors,
+                                      'invalid-highlighted':
+                                        doctorForm.get('RISShare').errors &&
+                                        doctorFormSubmitted
+                                    }"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                <label>Address</label>
+                                <div class="input-group">
+                                  <textarea
+                                    rows="1"
+                                    class="form-control"
+                                    formControlName="Address"
+                                  ></textarea>
+                                </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                <label>Panels</label>
+                                <div class="input-group panel-dropdown">
+                                  <ng-select
+                                    style="width: 100%"
+                                    class="mt-1 mr-1"
+                                    [items]="panelsList"
+                                    bindLabel="CodeName"
+                                    placeholder="Select Panel"
+                                    bindValue="PanelId"
+                                    multiple="true"
+                                    [closeOnSelect]="false"
+                                    dropdownPosition="top"
+                                    [hideSelected]="true"
+                                    formControlName="AssociatePanelIDs"
+                                  >
+                                  </ng-select>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group row mt-12">
+                                  <!-- <div class="col-3 col-form-label"> -->
+                                  <!-- <span class="form-text text-center">SMS is Required or Not</span> -->
+                                  <div class="checkbox-inline">
+                                    <label class="checkbox checkbox-primary">
+                                      <input
+                                        class="m-l-10"
+                                        type="checkbox"
+                                        formControlName="isOnlineReportView"
+                                        name="isOnlineReportView"
+                                      />
+                                      <span></span>
+                                    </label>
+                                  </div>
+                                  <!-- </div> -->
+                                  <label class="form-label m-l-10"
+                                    >Is Online Report View?</label
+                                  >
+                                </div>
+                              </div>
+                              <!-- Spinner (visible when QR code is being generated) -->
+                              <!-- QR Code Display (Only visible when DrQrData has value) -->
+                             <div class="col-lg-4 col-md-12 col-sm-12">
+                                <ngx-spinner
+                                  class="spinner-warning"
+                                  [name]="spinnerRefs.DocDrGen"
+                                  bdColor="rgba(0,0,0,0.8)"
+                                  size="medium"
+                                  color="#fff"
+                                  type="square-loader"
+                                  [fullScreen]="false"
+                                >
+                                  <p style="color: white; font-weight: bold;">Loading...</p>
+                                </ngx-spinner>
+
+                                <div *ngIf="QRCodeNumber" class="qr-container">
+                                  <div class="qr-card" #qrWrapper>
+                                    <qrcode
+                                      #qrCodeEl
+                                      [qrdata]="QRCodeNumber"
+                                      [width]="200"
+                                      [errorCorrectionLevel]="'M'">
+                                    </qrcode>
+
+                                    <p class="qr-value">{{ QRCodeNumber }}</p>
+                                  </div>
+
+                                  <div class="mt-3">
+                                    <button class="btn btn-primary btn-sm mr-2" (click)="downloadQRCode()">
+                                      <i class="fa fa-download mr-1"></i> Download
+                                    </button>
+
+                                    <button class="btn btn-outline-secondary btn-sm" (click)="printQRCode()">
+                                      <i class="fa fa-print mr-1"></i> Print
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-lg-8 col-md-12 col-sm-12">
+                                <label>&nbsp;</label>
+                                <div class="input-group justify-content-end">
+                                  <button
+                                    class="btn btn-success mr-2"
+                                    title="Save"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="
+                                      confirmationPopoverConfig.popoverTitle
+                                    "
+                                    [popoverMessage]="
+                                      confirmationPopoverConfig.popoverMessage
+                                    "
+                                    [confirmText]="
+                                      confirmationPopoverConfig.confirmText
+                                    "
+                                    [cancelText]="
+                                      confirmationPopoverConfig.cancelText
+                                    "
+                                    [placement]="
+                                      confirmationPopoverConfig.placements[0]
+                                    "
+                                    (confirm)="submitForm()"
+                                    (cancel)="
+                                      confirmationPopoverConfig.confirmPopoverCancel()
+                                    "
+                                    confirmButtonType="success"
+                                    cancelButtonType="outline-secondary"
+                                    (click)="
+                                      confirmationPopoverConfig.confirmClicked = false;
+                                      confirmationPopoverConfig.cancelClicked = false
+                                    "
+                                    [appendToBody]="true"
+                                  >
+                                    <i class="ti-save m-0"></i>
+                                    <span
+                                      *ngIf="
+                                        !doctorForm.get('B2BDoctorID').value
+                                      "
+                                      >Save</span
+                                    >
+                                    <span
+                                      *ngIf="
+                                        doctorForm.get('B2BDoctorID').value
+                                      "
+                                      >Update</span
+                                    >
+                                  </button>
+                                  <!-- <button *ngIf="doctorForm.get('B2BDoctorID')?.value" class="btn btn-primary c-button" (click)="generateQrCode()"    ngbTooltip="Generate QR Code">
+                                        <i class="fa fa-qrcode m-0"></i> QRCode
+                                  </button> -->
+                                  <button
+                                    type="button"
+                                    class="btn btn-outline-danger mr-2"
+                                    (click)="resetForm()"
+                                  >
+                                    <i class="fa fa-eraser m-0"></i>Clear
+                                  </button>
+                                  
+                                </div>
+                              </div>
+                              <hr />
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </app-card>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Doctors Mapping" [disabled]="getB2BDoctorID">
+              <div>
+                <div class="col-12 mt-5">
+                  <app-ref-by-b2b-doctors-mapping
+                    [bTobDoctorsData]="bTobDoctorsData"
+                  ></app-ref-by-b2b-doctors-mapping>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="User" [disabled]="getB2BDoctorID">
+              <div>
+                <div class="col-12 mt-5">
+                  <form
+                    [formGroup]="userCreationForm"
+                    class="form-horizontal container mt-4 p-3 border rounded shadow-sm bg-light"
+                    name="form"
+                    role="form"
+                  >
+                    <ngx-spinner
+                      class="spinner-warning"
+                      [name]="spinnerRefs.insertForm"
+                      bdColor="rgba(0,0,0,0.8)"
+                      size="medium"
+                      color="#fff"
+                      type="ball-atom"
+                      [fullScreen]="false"
+                    >
+                      <!-- <p style="color: white"> Loading... </p> -->
+                    </ngx-spinner>
+                    <div class="row justify-content-center">
+                      <!-- Username -->
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label"
+                          >Username: <span class="text-danger">*</span></label
+                        >
+                        <input
+                          formControlName="Username"
+                          type="text"
+                          class="form-control"
+                          placeholder="Enter Username"
+                          autocomplete="off"
+                          [ngClass]="{
+                            'is-invalid':
+                              userCreationForm.get('Username').errors &&
+                              isSubmitted
+                          }"
+                        />
+                        <div
+                          *ngIf="
+                            userCreationForm.get('Username').errors &&
+                            isSubmitted
+                          "
+                          class="invalid-feedback"
+                        >
+                          Username is required.
+                        </div>
+                      </div>
+
+                      <!-- Password -->
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label"
+                          >Password: <span class="text-danger">*</span></label
+                        >
+                        <input
+                          formControlName="Password"
+                          type="password"
+                          class="form-control"
+                          placeholder="Enter Password"
+                          autocomplete="off"
+                          [ngClass]="{
+                            'is-invalid':
+                              userCreationForm.get('Password').errors &&
+                              isSubmitted
+                          }"
+                        />
+                        <div
+                          *ngIf="
+                            userCreationForm.get('Password').errors &&
+                            isSubmitted
+                          "
+                          class="invalid-feedback"
+                        >
+                          Password is required.
+                        </div>
+                      </div>
+
+                      <!-- Full Name -->
+                      <!-- <div class="col-md-12 mb-3">
+                                                <label class="form-label">Full Name: <span class="text-danger">*</span></label>
+                                                <input formControlName="FullName" type="text" class="form-control"
+                                                    placeholder="Enter Full Name"
+                                                    [ngClass]="{'is-invalid': userCreationForm.get('FullName').errors && isSubmitted}" />
+                                                <div *ngIf="userCreationForm.get('FullName').errors && isSubmitted" class="invalid-feedback">
+                                                    Full Name is required.
+                                                </div>
+                                            </div> -->
+
+                      <!-- Cell -->
+                      <!-- <div class="col-md-6 mb-3">
+                                                <label class="form-label">Cell:</label>
+                                                <input formControlName="Cell" (keypress)="validateNo($event)" type="text" class="form-control" placeholder="Enter Cell" />
+                                            </div> -->
+
+                      <!-- Phone -->
+                      <!-- <div class="col-md-6 mb-3">
+                                                <label class="form-label">Phone:</label>
+                                                <input formControlName="Phone" (keypress)="validateNo($event)" type="text" class="form-control" placeholder="Enter Phone" />
+                                            </div> -->
+
+                      <!-- Email -->
+                      <!-- <div class="col-md-12 mb-3">
+                                                <label class="form-label">Email: <span class="text-danger">*</span></label>
+                                                <input formControlName="Email" type="email" class="form-control"
+                                                    placeholder="Enter Email"
+                                                    [ngClass]="{'is-invalid': userCreationForm.get('Email').errors && isSubmitted}" />
+                                                <div *ngIf="userCreationForm.get('Email').errors && isSubmitted" class="invalid-feedback">
+                                                    A valid email is required.
+                                                </div>
+                                            </div> -->
+
+                      <!-- Action Buttons -->
+
+                      <div
+                        class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4"
+                      >
+                      <button
+                      *ngIf="isEditing || isSaveEditing"
+                      class="btn btn-success mr-1"
+                      mwlConfirmationPopover
+                      [popoverTitle]="'Please Confirm...!'"
+                      [popoverMessage]="'Are you sure you want to update?'"
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]"
+                      (confirm)="InsertUpdatePanelUser()"
+                      (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                      confirmButtonType="btn btn-sm btn-primary"
+                      cancelButtonType="btn btn-sm btn-outline-secondary"
+                      (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                      [appendToBody]="true"
+                    >
+                      <i class="fas fa-save me-2"></i> Update
+                    </button>
+                        <button
+                          *ngIf="isEditing || isSaveEditing"
+                          (click)="cancelEdit()"
+                          class="btn btn-secondary mr-1"
+                        >
+                          <i class="fas fa-times-circle me-2"></i> Cancel
+                        </button>
+                        <button
+                          *ngIf="toggleEditFields"
+                          (click)="refreshForm()"
+                          class="btn btn-info mr-1"
+                        >
+                          <i class="fas fa-sync-alt me-2"></i> Refresh
+                        </button>
+                        <!-- <button  *ngIf="toggleEditFields" (click)="deleteUser()" class="btn btn-danger mr-1">
+                                                    <i class="fas fa-trash-alt me-2"></i> Delete
+                                                </button> -->
+                        <!-- <button *ngIf="toggleEditFields" 
+                                                    type="button" 
+                                                    class="btn btn-danger mr-1" mwlConfirmationPopover
+                                                    [popoverTitle]="'Do you want to proceed <strong>Delete</strong>?'"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="deleteUser()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true">
+                                                    <i class="fas fa-trash-alt me-2"></i> Delete 
+                                                </button> -->
+                        <button
+                          *ngIf="toggleEditFields"
+                          (click)="editUser()"
+                          class="btn btn-outline-primary mr-1"
+                        >
+                          <i class="fas fa-edit me-2"></i> Edit
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Associate User -->
+
+            <mat-tab label="Associate" [disabled]="getB2BDoctorID">
+              <div>
+                <div class="col-md-12 mt-5" style="min-height: 600px;">
+                  <form
+                    [formGroup]="insertPanelform"
+                    class="form-horizontal container mt-4 p-3 border rounded shadow-sm bg-light"
+                    name="form"
+                    role="form"
+                  >
+                    <div class="row justify-content-center" style="width: 50rem; margin: 0.2rem;">
+                      <!-- Dropdown -->
+                      <label for="Panel User" class="control-label"
+                        >Panel User</label
+                      >
+                      <ng-select
+                        style="width: 100%; justify-content: center;"
+                        multiple="true"
+                        bindLabel="Username"
+                        [items]="panelUsersDataList"
+                        placeholder="--Select--"
+                        bindValue="PanelUserId"
+                        formControlName="PanelUserId"
+                        [closeOnSelect]="true"
+                      ></ng-select>
+
+                      <!-- Action Buttons -->
+
+                      <div
+                        class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4"
+                      >
+                      <button type="button" [disabled]="disabledButton"
+                      class="btn btn-primary pull-right" mwlConfirmationPopover
+                      [popoverTitle]="'Please Confirm...!'"
+                      [popoverMessage]="'Are you sure want to save?'"
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]" 
+                      (confirm)="insertPanelUserForAssociation()" 
+                      (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                      confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                      (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false" [appendToBody]="true">
+                      <i class="fa fa-save"></i>Save <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                  </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- </fieldset> -->
+  <!-- <div class="row mt-3">
+       
+        <div class="col-12">
+            <fieldset class="fieldset-border-all-primary">
+                <legend class="font-weight-bold text-info" style="font-size: 1.1rem">
+                    Doctors Mapping
+                </legend>
+            <app-ref-by-b2b-doctors-mapping></app-ref-by-b2b-doctors-mapping>
+        </fieldset>
+
+        </div>  
+    </div> -->
+
+  <ngx-spinner
+    class="spinner-success"
+    bdColor="rgba(0,0,0,0.8)"
+    size="medium"
+    color="#fff"
+    type="square-loader"
+    [fullScreen]="false"
+  >
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
+</div>

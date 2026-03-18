@@ -1,0 +1,21 @@
+/* Make table columns adjust to content */
+table {
+  table-layout: auto;
+}
+
+/* Prevent text wrapping in cells */
+td, th {
+  white-space: nowrap;
+  padding: 4px 8px; /* Adjust padding as needed */
+}
+
+/* Allow wrapping for specific columns if needed */
+td.wrap-content, th.wrap-content {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* For the 'No Record Found' cell */
+td[colspan] {
+  white-space: normal;
+}

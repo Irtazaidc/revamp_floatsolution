@@ -1,0 +1,31 @@
+:host {
+  width: 100%;
+  @media (min-width: 992px) {
+    .login-form {
+      width: 100%;
+      max-width: 450px;
+
+      .mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.form-control.form-control-solid {
+  border-color: #ccc;
+}
+
+.form-control.form-control-solid:active, .form-control.form-control-solid.active, .form-control.form-control-solid:focus, .form-control.form-control-solid.focus {
+  background-color: #F3F6F9;
+  border-color: #70d5d0;
+}
+
+.eye-icon:hover i {
+  color: #3699FF;
+}
+
+.eye-icon {
+  z-index: 10;
+  color: #999;
+}

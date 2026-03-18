@@ -1,0 +1,915 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fa fa-user-circle text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Manage Panel
+            </h3>
+        </div>
+    </div>
+    <div class="card-body pt-1">
+        <div class="row">
+            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.searchTable" bdColor="rgba(0,0,0,0.8)"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="col-xl-3 col-lg-4 col-md-12 col-sm-12 mb-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                                [(ngModel)]="searchText" name="searchText" />
+                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                (click)="getPanelDataList()"><i class="ti-reload"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive table-container fixed-height-table">
+                            <table class="table table-hover compact table-bordered" style="width: 100%; " cellpadding=0
+                                cellspacing=0>
+                                <thead class="sticky-header">
+                                    <th>#</th>
+                                    <th>Panels</th>
+                                </thead>
+                                <tbody>
+                                    <tr class="text-center" *ngIf="!panelDataList.length">
+                                        <td colspan="2">No Record Found</td>
+                                    </tr>
+                                    <tr *ngFor="let data of panelDataList | filterByKey: searchText:['Code']; let i = index"
+                                        [ngClass]="{'active':i == rowIndex}" (click)="getTableDate(data,i)">
+                                        <td>{{i+1}}</td>
+                                        <td>{{data.Code || 'NA'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-8 col-md-12 col-sm-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-card class="pt-0">
+                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.ParentSection" bdColor="rgba(0,0,0,0.8)"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                            <mat-card-content>
+                                <mat-tab-group class="demo-tab-group" [(selectedIndex)]="selectedTabIndex"
+                                    (selectedTabChange)="onTabChanged($event)" animationDuration="0ms"
+                                    style="background-color: #fff;">
+                                    <mat-tab label="General">
+                                        <ng-template mat-tab-label>
+                                            <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i>
+                                            General
+                                        </ng-template>
+                                        <div class="container-fluid px-0 overflow-hidden" *matTabContent>
+                                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.generalSection"
+                                                bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                                                [fullScreen]="false">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                                    <form [formGroup]="userCreationForm" class="form-horizontal" name="form"
+                                                        role="form">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <fieldset class="fieldset-border-all-primary">
+                                                                    <legend class="font-weight-bold text-success"
+                                                                        style="font-size: 1.1rem">
+                                                                        Basic Information
+                                                                    </legend>
+                                                                    <div class="row justify-content-center">
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label class="form-label">Code: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="Code" type="text"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Code"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('Code').errors,'invalid-highlighted': userCreationForm.get('Code').errors && isSubmitted}" />
+    
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label class="form-label">Name: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="Name" type="text"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Panel Name"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('Name').errors,'invalid-highlighted': userCreationForm.get('Name').errors && isSubmitted}" />
+    
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label class="form-label">Panel Type: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <div class="form-group">
+                                                                                <ng-select style="width: 100%;" value=""
+                                                                                    formControlName="PanelType"
+                                                                                    [items]="panelType" bindLabel="Title"
+                                                                                    placeholder="-Select Panel Type-"
+                                                                                    bindValue="TypeId"
+                                                                                    [ngClass]="{'invalid': userCreationForm.get('PanelType').errors,'invalid-highlighted': userCreationForm.get('PanelType').errors && isSubmitted}">
+                                                                                </ng-select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label class="form-label">Receipt
+                                                                                Prefix:</label>
+                                                                            <input formControlName="ReceiptPrefix"
+                                                                                type="text" class="form-control"
+                                                                                placeholder="Enter Receipt Prefix" />
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                            </div>
+                                                            <div class="col-xl-8 col-lg-6 col-md-6 col-sm-12">
+                                                                <fieldset class="fieldset-border-all-primary">
+                                                                    <legend class="font-weight-bold text-success"
+                                                                        style="font-size: 1.1rem">
+                                                                        Company Information
+                                                                    </legend>
+                                                                    <div class="row justify-content-center">
+                                                                        <!-- Username -->
+                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">Company: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="Company" type="text"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Company"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('Company').errors,'invalid-highlighted': userCreationForm.get('Company').errors && isSubmitted}" />
+    
+                                                                        </div>
+                                                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">Address: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <textarea formControlName="CompanyAddress"
+                                                                                type="text" class="form-control" row="2"
+                                                                                placeholder="Enter Address"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('CompanyAddress').errors,'invalid-highlighted': userCreationForm.get('CompanyAddress').errors && isSubmitted}"></textarea>
+    
+                                                                        </div>
+                                                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">Billing
+                                                                                Address:<span
+                                                                                class="text-danger">*</span></label>
+                                                                            <textarea formControlName="BillingAddress"
+                                                                                type="text" row="2" class="form-control"
+                                                                                placeholder="Enter Billing Address" [ngClass]="{'invalid': userCreationForm.get('BillingAddress').errors,'invalid-highlighted': userCreationForm.get('BillingAddress').errors && isSubmitted}"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <fieldset class="fieldset-border-all-primary">
+                                                                    <legend class="font-weight-bold text-success"
+                                                                        style="font-size: 1.1rem">
+                                                                        Miscellaneous
+                                                                    </legend>
+                                                                    <div class="row justify-content-center">
+                                                                        <!-- Username -->
+                                                                        <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                                                                            <label class="form-label">Protocol:</label>
+                                                                            <textarea formControlName="Protocol" type="text"
+                                                                                class="form-control" row="2"
+                                                                                placeholder="Enter Protocol"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('Protocol').errors,'invalid-highlighted': userCreationForm.get('Protocol').errors && isSubmitted}"></textarea>
+    
+                                                                        </div>
+                                                                        <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">NTN: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="NTN" type="text"
+                                                                                class="form-control" placeholder="Enter NTN"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('NTN').errors,'invalid-highlighted': userCreationForm.get('NTN').errors && isSubmitted}" />
+    
+                                                                        </div>
+                                                                        <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">Credit Limit:</label>
+                                                                            <input formControlName="CreditLimit" type="text"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Credit Limit" />
+                                                                        </div>
+                                                                        <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">Credit
+                                                                                Utilized:</label>
+                                                                            <input formControlName="CreditUtil" type="text"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Phone" />
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                                                                <fieldset class="fieldset-border-all-primary">
+                                                                    <legend class="font-weight-bold text-success"
+                                                                        style="font-size: 1.1rem">
+                                                                        Contact Person
+                                                                    </legend>
+                                                                    <div class="row justify-content-center">
+                                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                            <label class="form-label">Name: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="ContactPerson"
+                                                                                type="text" class="form-control"
+                                                                                placeholder="Enter Name"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('ContactPerson').errors,'invalid-highlighted': userCreationForm.get('ContactPerson').errors && isSubmitted}" />
+    
+                                                                        </div>
+                                                                        <div class="col-xl-6 col-lg-12 col-md-12">
+                                                                            <label class="form-label">Mobile: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="CpMobile" type="text"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Mobile" (keypress)="validateNo($event)"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('CpMobile').errors,'invalid-highlighted': userCreationForm.get('CpMobile').errors && isSubmitted}" />
+                                                                        </div>
+                                                                        <div class="col-xl-6 col-lg-12 col-md-12">
+                                                                            <label class="form-label">Phone:</label>
+                                                                            <input formControlName="CpPhone" type="text"
+                                                                                class="form-control" (keypress)="validateNo($event)"
+                                                                                placeholder="Enter Phone"  [ngClass]="{'invalid': userCreationForm.get('CpPhone').errors,'invalid-highlighted': userCreationForm.get('CpPhone').errors && isSubmitted}"/>
+                                                                        </div>
+                                                                        <div class="ccol-xl-12 col-lg-12 col-md-12">
+                                                                            <label class="form-label">Email: <span
+                                                                                    class="text-danger">*</span></label>
+                                                                            <input formControlName="CpEmail" type="email"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Email"
+                                                                                [ngClass]="{'invalid': userCreationForm.get('CpEmail').errors,'invalid-highlighted': userCreationForm.get('CpEmail').errors && isSubmitted}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <fieldset class="fieldset-border-all-primary">
+                                                                    <legend class="font-weight-bold text-success"
+                                                                        style="font-size: 1.1rem">
+                                                                        <div class="form-check">
+                                                                            <input
+                                                                                formControlName="EmailReport"
+                                                                                type="checkbox"
+                                                                                class="form-check-input"
+                                                                                id="EmailReport" />
+                                                                                <label for="EmailReport"
+                                                                                class="form-check-label">Email Reports</label>
+                                                                        </div>
+                                                                       
+                                                                       
+                                                                    </legend>
+                                                                    <div class="row justify-content-center">
+                                                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-12">
+                                                                            <label class="form-label">Email(To):</label>
+                                                                            <input formControlName="EmailTo" type="email"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Email(To)"
+                                                                                [ngClass]="{'invalid-highlighted': userCreationForm.get('EmailTo').errors && isSubmitted}" />
+                                                                        </div>
+                                                                        <div class="col-xl-6 col-lg-12 col-md-6 col-sm-12">
+                                                                            <label class="form-label">Email(CC):</label>
+                                                                            <input formControlName="EmailCC" type="email"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Email(CC)"
+                                                                                [ngClass]="{'invalid-highlighted': userCreationForm.get('EmailCC').errors && isSubmitted}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <fieldset class="fieldset-border-all-primary">
+                                                                    <legend class="font-weight-bold text-success"
+                                                                        style="font-size: 1.1rem">
+                                                                        Cash Panel Discount
+                                                                    </legend>
+                                                                    <div class="row justify-content-center">
+                                                                        <div class="col-md-8 input-group">
+                                                                        <label class="form-label mt-3">Max. Discount: </label>
+                                                                        <input formControlName="MaxDiscount" type="nummber"
+                                                                            class="form-control"
+                                                                            [ngClass]="{'invalid-highlighted': userCreationForm.get('MaxDiscount').errors && isSubmitted}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                        <fieldset class="fieldset-border-all-primary">
+                                                                            <legend class="font-weight-bold text-success"
+                                                                                style="font-size: 1.1rem">
+                                                                                Test Share(%)
+                                                                            </legend>
+                                                                            <div class="row justify-content-center mb-5">
+                                                                                <div class=" col-md-6 col-sm-12 ">
+                                                                                    <label class="form-label">Lab: </label>
+                                                                                    <input formControlName="LabSharePercent"
+                                                                                        type="number" class="form-control"
+                                                                                        [ngClass]="{'invalid-highlighted': userCreationForm.get('LabSharePercent').errors && isSubmitted}" />
+                                                                                </div>
+                                                                                <div class=" col-md-6 col-sm-12">
+                                                                                    <label class="form-label">Imaging: </label>
+                                                                                    <input
+                                                                                        formControlName="RadioSharePercent"
+                                                                                        type="number" class="form-control"
+                                                                                        [ngClass]="{'is-invalid': userCreationForm.get('RadioSharePercent').errors && isSubmitted}" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </fieldset>
+                                                                    </div>
+                                                                    <div class="col-xl-9 col-lg-6 col-md-6 col-sm-12">
+                                                                        <fieldset class="fieldset-border-all-primary">
+                                                                            <legend class="font-weight-bold text-success"
+                                                                                style="font-size: 1.1rem">
+                                                                                Account Details
+                                                                            </legend>
+                                                                            <div class="row justify-content-center">
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12 ">
+                                                                                    <label class="form-label">Chart of
+                                                                                        Account: </label>
+                                                                                    <div class="form-group">
+                                                                                        <ng-select style="width: 100%;"
+                                                                                            value=""
+                                                                                            formControlName="COAId"
+                                                                                            [items]="COAData"
+                                                                                            bindLabel="Code"
+                                                                                            placeholder="-Select Chart Of Account-"
+                                                                                            bindValue="COAId"
+                                                                                            [ngClass]="{'invalid-highlighted': userCreationForm.get('COAId').errors && isSubmitted}">
+                                                                                        </ng-select>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12  ">
+                                                                                    <label class="form-label">Account #:</label>
+                                                                                    <input formControlName="AccountNo"
+                                                                                        type="text" class="form-control"
+                                                                                        placeholder="Enter Account No."
+                                                                                        (keypress)="validateNo($event)"
+                                                                                        (keydown.enter)="GetAccMaintenaceByCOAId()" />
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12  ">
+                                                                                    <label class="form-label">Title: </label>
+                                                                                    <input formControlName="Title"
+                                                                                        type="text" class="form-control"
+                                                                                        placeholder="Title"
+                                                                                        [ngClass]="{'invalid-highlighted': userCreationForm.get('Title').errors && isSubmitted}" />
+    
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12  ">
+                                                                                    <label class="form-label">Acc
+                                                                                        Type:</label>
+                                                                                        <select class="form-control" name="DebitCredit"
+                                                                                            formControlName="DebitCredit">
+                                                                                            <option value="D">Debit</option>
+                                                                                            <option value="C">Credit</option>
+                                                                                        </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </fieldset>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <fieldset class="fieldset-border-all-primary">
+                                                                            <legend class="font-weight-bold text-success"
+                                                                                style="font-size: 1.1rem">
+                                                                                Permissions
+                                                                            </legend>
+                                                                            <div class="row">
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            formControlName="RegistrationAllowed"
+                                                                                            type="checkbox"
+                                                                                            class="form-check-input"                                                                                            id="RegistrationAllowed" />
+                                                                                        <label for="RegistrationAllowed"
+                                                                                            class="form-check-label">Registration
+                                                                                            Allowed</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            formControlName="BiometircVerification"
+                                                                                            type="checkbox"
+                                                                                            class="form-check-input"
+                                                                                            id="BiometircVerification" />
+                                                                                        <label for="BiometircVerification"
+                                                                                            class="form-check-label">Biometric
+                                                                                            Verification Needed</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                                    <div class="form-check">
+                                                                                        <input formControlName="SMSAlert"
+                                                                                            type="checkbox"
+                                                                                            class="form-check-input"
+                                                                                            id="SMSAlert" />
+                                                                                        <label for="SMSAlert"
+                                                                                            class="form-check-label">SMS
+                                                                                            Alert</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                                    <div class="form-check">
+                                                                                        <input
+                                                                                            formControlName="ShowOnlineRpt"
+                                                                                            type="checkbox"
+                                                                                            class="form-check-input"
+                                                                                            id="ShowOnlineRpt" />
+                                                                                        <label for="ShowOnlineRpt"
+                                                                                            class="form-check-label">Show
+                                                                                            Online Report</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </fieldset>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                    <mat-tab label="Detail">
+                                        <ng-template mat-tab-label>
+                                            <i class="flaticon-list-2 icon-lg text-danger custom-icons mr-2"></i>
+                                            Detail
+                                        </ng-template>
+                                        <div class="container-fluid" *matTabContent>
+                                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.generalSection"
+                                                bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                                                [fullScreen]="false">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                            <div class="row">
+                                                <div class="col-md-12 my-3">
+                                                    <form [formGroup]="testDetailsForm" class="form-horizontal container"
+                                                        name="form" role="form">
+                                                        <div class="row justify-content-center">
+                                                            <!-- Username -->
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
+                                                                <div class="form-group">
+                                                                    <label for="DepartmentId">Department:</label>
+                                                                    <div class="form-group">
+                                                                        <ng-select style="width: 100%;"
+                                                                            formControlName="DepartmentId"
+                                                                            [items]="labDepartmentList"
+                                                                            bindLabel="Title"
+                                                                            bindValue="DeptId"
+                                                                            [ngClass]="{'invalid': testDetailsForm.get('DepartmentId').errors,'invalid-highlighted': testDetailsForm.get('DepartmentId').errors && isSubmitted}">
+                                                                        </ng-select>
+                                                                    </div>
+                                                                    <!-- <select class="form-control" name="labDeptID"
+                                                                        placeholder="--Select Department--"
+                                                                        [(ngModel)]="labDeptID"
+                                                                        [ngModelOptions]="{standalone: true}">
+                                                                        <option value="-1">-Select All-</option>
+                                                                        <option value="1">Lab</option>
+                                                                        <option value="2">Imaging</option>
+                                                                    </select> -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
+                                                                <label class="form-label">Rates On Reg. Slip: <span
+                                                                        class="text-danger">*</span></label>
+                                                                        <div class="form-group">
+                                                                            <ng-select style="width: 100%;"
+                                                                                formControlName="ShowRates"
+                                                                                [items]="panelRateList"
+                                                                                bindLabel="Title"
+                                                                                bindValue="DisplayId"
+                                                                                [ngClass]="{'invalid': testDetailsForm.get('ShowRates').errors,'invalid-highlighted': testDetailsForm.get('ShowRates').errors && isSubmitted}">
+                                                                            </ng-select>
+                                                                        </div>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
+                                                                <label class="form-label">Price List: <span
+                                                                        class="text-danger">*</span></label>
+                                                                        <div class="form-group">
+                                                                            <ng-select style="width: 100%;"
+                                                                                formControlName="RateListId"
+                                                                                [items]="testPriceList"
+                                                                                bindLabel="Code"
+                                                                                bindValue="TPPLId"
+                                                                                (change)="GetAllTestsByPanelIDPriceListId()"
+                                                                                [ngClass]="{'invalid': testDetailsForm.get('RateListId').errors,'invalid-highlighted': testDetailsForm.get('RateListId').errors && isSubmitted}">
+                                                                            </ng-select>
+                                                                        </div>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12 mb-2">
+                                                                <label class="form-label">Billing Type: <span
+                                                                        class="text-danger">*</span></label>
+                                                                        <div class="form-group">
+                                                                            <ng-select style="width: 100%;"
+                                                                                formControlName="BillTypeId"
+                                                                                [items]="panelBillType"
+                                                                                bindLabel="Title"
+                                                                                bindValue="BillTypeId"
+                                                                                [ngClass]="{'invalid': testDetailsForm.get('BillTypeId').errors,'invalid-highlighted': testDetailsForm.get('BillTypeId').errors && isSubmitted}">
+                                                                            </ng-select>
+                                                                        </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group">
+                                                                <input type="text" placeholder="type to filter"
+                                                                    class="form-control form-control-sm"
+                                                                    [(ngModel)]="searchedText" name="searchText" />
+                                                                <!-- <button
+                                                                    class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                                                    (click)="getTestProfileList()"><i
+                                                                        class="ti-reload"></i></button> -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 mt-2 mb-2">
+                                                            <div class="d-flex justify-content-end">
+                                                                <div class="flex-grow-1 d-flex gap-2">
+                                                                    <span tabindex="1"
+                                                                        class="badge badge-primary cursor-pointer flex-fill mr-2 py-4 text-center"
+                                                                        [ngClass]="{'lable-active': active == 1}"
+                                                                        (click)="onStatusChange(1)">
+                                                                        Test(s)
+                                                                    </span>
+                                                                    <span tabindex="2"
+                                                                        class="badge badge-success cursor-pointer flex-fill mr-2 py-4 text-center"
+                                                                        [ngClass]="{'lable-active': active == 2}"
+                                                                        (click)="onStatusChange(2)">
+                                                                        Profile(s)
+                                                                    </span>
+                                                                    <span tabindex="3"
+                                                                        class="badge badge-warning cursor-pointer flex-fill mr-2 py-4 text-center text-white"
+                                                                        [ngClass]="{'lable-active': active == 3}"
+                                                                        (click)="onStatusChange(3)">
+                                                                        Package(s)
+                                                                    </span>
+                                                                </div>
+                                                                <!-- <span
+                                                            tabindex="4"
+                                                            class="badge bg-purple cursor-pointer text-white ml-1 py-4"
+                                                            [ngClass]="{'lable-active': active == 0}"
+                                                            (click)="onStatusChange(false)"
+                                                            style="color: #fff;"
+                                                        >
+                                                            All
+                                                        </span> -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <ngx-spinner class="spinner-warning"
+                                                                [name]="spinnerRefs.TestSection" bdColor="rgba(0,0,0,0.8)"
+                                                                size="medium" color="#fff" type="square-loader"
+                                                                [fullScreen]="false">
+                                                                <p style="color: white"> Loading... </p>
+                                                            </ngx-spinner>
+                                                            <div
+                                                                class="table-responsive table-container fixed-height-table">
+                                                                <table class="table table-hover compact table-bordered"
+                                                                    style="width: 100%; " cellpadding=0 cellspacing=0>
+                                                                    <thead class="sticky-header">
+                                                                        <th *ngIf="AddnRemove">
+                                                                            <input type="checkbox" [(ngModel)]="mainChkTests"
+                                                                            class="cursor-pointer"
+                                                                            [ngModelOptions]="{standalone: true}"
+                                                                            (change)="selectAllTestsProfile($event.target.checked)"
+                                                                            [disabled]="isTestsFieldDisabled" />
+                                                                        </th>
+                                                                        <th>Code</th>
+                                                                        <th>Name</th>
+                                                                        <th>Currency</th>
+                                                                        <th>Price</th>
+                                                                        <th>Discount</th>
+                                                                        <th>Net</th>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr class="text-center"
+                                                                            *ngIf="!filteredTestList.length">
+                                                                            <td colspan="10">No Record Found</td>
+                                                                        </tr>
+                                                                        <ng-container *ngFor="let data of filteredTestList | filterByKey: searchedText:['Code','Name'];">
+                                                                            <tr >
+                                                                                <td *ngIf="AddnRemove">
+                                                                                    <input class="cursor-pointer" type="checkbox"
+                                                                                        (change)="onSelectedProfileTests(data)"
+                                                                                        [(ngModel)]="data.Allow"
+                                                                                        [ngModelOptions]="{standalone: true}" />
+                                                                                </td>
+                                                                                <td>{{data.Code || 'NA'}}</td>
+                                                                                <td>{{data.Name || 'NA'}}</td>
+                                                                                <td>{{data.Currency || 'PKR'}}</td>
+                                                                                <td>{{data.Price || '0'}}</td>
+                                                                                <td>{{data.Discount || '0'}}</td>
+                                                                                <!-- <td>{{data.Discount ? (data.Price) - (data.NetPrice) : '0'}}</td> -->
+                                                                                <td>{{data.NetPrice || '0'}}</td>
+                                                                            </tr>
+                                                                        </ng-container>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-12 d-flex align-items-center justify-content-between p-2 border rounded bg-light shadow-sm">
+                                                            <!-- Checkboxes -->
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="form-check mr-4">
+                                                                    <input type="checkbox" [(ngModel)]="AddnRemove"
+                                                                        class="checkbox-input form-check-input"
+                                                                        id="AddnRemove" (change)="addnRemoveChange(AddnRemove)"/>
+                                                                    <label for="AddnRemove"
+                                                                        class="form-check-label ml-2 mt-1">
+                                                                        Add / Remove
+                                                                    </label>
+                                                                </div>
+                                                                <!-- <div class="form-check">
+                                                                    <input type="checkbox" [(ngModel)]="SelectAll"
+                                                                        class="checkbox-input form-check-input"
+                                                                        id="SelectAll" />
+                                                                    <label for="SelectAll"
+                                                                        class="form-check-label ml-2 mt-1">
+                                                                        Select All
+                                                                    </label>
+                                                                </div> -->
+                                                            </div>
+    
+                                                            <!-- Badges -->
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="text-center mx-3">
+                                                                    <span class="badge bg-primary text-white px-3 py-2 ">
+                                                                        <i class="fas fa-vial text-white me-2"></i> Test(s)
+                                                                    </span>
+                                                                    <span class="text-muted ms-2 ml-2">{{0}} / {{TestsCounts
+                                                                        || '0'}}</span>
+                                                                </div>
+                                                                <div class="text-center mx-3">
+                                                                    <span class="badge bg-success text-white px-3 py-2 ">
+                                                                        <i class="fas fa-user-alt text-white me-2"></i>
+                                                                        Profile(s)
+                                                                    </span>
+                                                                    <span class="text-muted ms-2 ml-2">{{0}} /
+                                                                        {{ProfilesCounts || '0'}}</span>
+                                                                </div>
+                                                                <div class="text-center mx-3">
+                                                                    <span
+                                                                        class="badge bg-warning text-dark px-3 py-2 text-white">
+                                                                        <i class="fas fa-box text-white  me-2"></i>
+                                                                        Package(s)
+                                                                    </span>
+                                                                    <span class="text-muted ms-2 ml-2">{{0}} /
+                                                                        {{PackagesCounts || '0'}}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <fieldset class="fieldset-border-all-primary">
+                                                                <legend class="font-weight-bold text-success"
+                                                                    style="font-size: 1.1rem">
+                                                                    Discount Rate Calculator
+                                                                </legend>
+                                                                <div class="row container">
+                                                                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                                                                        <div class="form-check">
+                                                                            <input [(ngModel)]="DiscountType" [ngModelOptions]="{standalone: true}" type="radio"
+                                                                                class="form-check-input large-radio"
+                                                                                id="DiscountPer" name="discount"
+                                                                                value="1" />
+                                                                            <label for="DiscountPer"
+                                                                                class="form-check-label ml-2 mt-1">Discount(%)</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                                                                        <div class="form-check">
+                                                                            <input [(ngModel)]="DiscountType" [ngModelOptions]="{standalone: true}" type="radio"
+                                                                                class="form-check-input large-radio"
+                                                                                id="DiscountRate" name="discount"
+                                                                                value="2" />
+                                                                            <label for="DiscountRate"
+                                                                                class="form-check-label ml-2 mt-1">Discount(Rate)</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                                                                        <div class="form-check">
+                                                                            <input [(ngModel)]="DiscountType" [ngModelOptions]="{standalone: true}" type="radio"
+                                                                                class="form-check-input large-radio"
+                                                                                id="DiscountFixed" name="discount"
+                                                                                value="3" />
+                                                                            <label for="DiscountFixed"
+                                                                                class="form-check-label ml-2 mt-1">Discount(Fixed)</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-2 col-md-6 col-sm-12 mb-3">
+                                                                        <div class="form-check">
+                                                                            <input [(ngModel)]="DiscountCount" [ngModelOptions]="{standalone: true}" type="text"
+                                                                                placeholder="Enter Discount" (keydown.enter)="applyDiscountCritrea()"
+                                                                                class="form-control form-control-sm"
+                                                                                id="DiscountCount" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+    
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                    <mat-tab label="locations">
+                                        <ng-template mat-tab-label>
+                                            <i class="flaticon2-location icon-lg text-danger custom-icons mr-2"></i>
+                                            Locations
+                                        </ng-template>
+                                        <div class="container-fluid" *matTabContent>
+                                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.generalSection"
+                                                bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                                                [fullScreen]="false">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                            <div class="row mt-2">
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="type to filter"
+                                                            class="form-control form-control-sm"
+                                                            [(ngModel)]="searchTextfrLocation" name="searchText" />
+                                                        <!-- <button class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                                    (click)="getPanelLocationsByPanelId()"><i class="ti-reload"></i></button> -->
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.LocationTable"
+                                                    bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff"
+                                                    type="square-loader" [fullScreen]="false">
+                                                    <p style="color: white"> Loading... </p>
+                                                </ngx-spinner>
+                                                    <div class="table-responsive table-container fixed-height-table">
+                                                        <table class="table table-hover compact table-bordered"
+                                                            style="width: 100%; " cellpadding=0 cellspacing=0>
+                                                            <thead class="sticky-header">
+                                                                <th>
+                                                                    <input type="checkbox" [(ngModel)]="mainChk"
+                                                                        class="cursor-pointer"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        (change)="selectAllItems($event.target.checked)"
+                                                                        [disabled]="isFieldDisabled" />
+                                                                </th>
+                                                                <th>Code</th>
+                                                                <th>Title</th>
+                                                                <th>Short Name</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="text-center" *ngIf="!panelLocationList.length">
+                                                                    <td colspan="2">No Record Found</td>
+                                                                </tr>
+                                                                <tr
+                                                                    *ngFor="let data of panelLocationList | filterByKey: searchTextfrLocation:['Code','Title','ShortName']">
+                                                                    <td>
+                                                                        <input class="cursor-pointer" type="checkbox"
+                                                                            (change)="onSelectedLocation(data)"
+                                                                            [(ngModel)]="data.Allow"
+                                                                            [ngModelOptions]="{standalone: true}"
+                                                                            [disabled]="isDissabledChk" />
+                                                                    </td>
+                                                                    <td>{{data.Code || 'NA'}}</td>
+                                                                    <td>{{data.Title || 'NA'}}</td>
+                                                                    <td>{{data.ShortName || 'NA'}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                    <mat-tab label="Users">
+                                        <ng-template mat-tab-label>
+                                            <i class="flaticon2-group icon-lg text-danger custom-icons mr-2"></i>
+                                            Users
+                                        </ng-template>
+                                        <div class="container-fluid" *matTabContent>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="type to filter"
+                                                            class="form-control form-control-sm" [(ngModel)]="searchTextUsers"
+                                                            name="searchText" />
+                                                        <button
+                                                            class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                                            (click)="getPanelUsersByPanelId()"><i
+                                                                class="ti-reload"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive table-container fixed-height-table">
+                                                        <table class="table table-hover compact table-bordered"
+                                                            style="width: 100%; " cellpadding=0 cellspacing=0>
+                                                            <thead class="sticky-header">
+                                                                <!-- <th>#</th> -->
+                                                                <th>Username</th>
+                                                                <th>Full Name</th>
+                                                                <th>Email</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="text-center" *ngIf="!panelUsersList.length">
+                                                                    <td colspan="4">No Record Found</td>
+                                                                </tr>
+                                                                <tr *ngFor="let data of panelUsersList | filterByKey: searchTextUsers:['Username','FullName','Email']; let i = index">
+                                                                    <!-- <td>{{i+1}}</td> -->
+                                                                    <td>{{data.Username || 'NA'}}</td>
+                                                                    <td>{{data.FullName || 'NA'}}</td>
+                                                                    <td>{{data.Email || 'NA'}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                </mat-tab-group>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="container-fluid row">
+                        <div class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4">
+                            <!-- <button *ngIf="isEditing || isSaveEditing" (click)="InsertUpdatePanel()"
+                                class="btn btn-success mr-1">
+                                <i class="fas fa-save me-2"></i>
+                                <span *ngIf="isEditing">Update</span>
+                                <span *ngIf="isSaveEditing">Save</span>
+                            </button> -->
+                            <button
+                            *ngIf="isEditing || isSaveEditing"
+                            class="btn btn-success mr-1"
+                            mwlConfirmationPopover
+                            [popoverTitle]="'Please Confirm...!'"
+                            [popoverMessage]="'Are you sure you want to update?'"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]"
+                            (confirm)="InsertUpdatePanel()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true"
+                          >
+                            <i class="fas fa-save me-2"></i> Update
+                          </button>
+                            <button *ngIf="isEditing || isSaveEditing" (click)="cancelEdit()"
+                                class="btn btn-secondary mr-1">
+                                <i class="fas fa-times-circle me-2"></i> Cancel
+                            </button>
+                            <button *ngIf="toggleEditFields" (click)="refreshForm()" class="btn btn-info mr-1">
+                                <i class="fas fa-sync-alt me-2"></i> Refresh
+                            </button>
+
+
+
+                            <!-- <button *ngIf="toggleEditFields" (click)="deleteUser()" class="btn btn-danger mr-1">
+                                <i class="fas fa-trash-alt me-2"></i> Delete
+                            </button> -->
+
+                            <button
+                            *ngIf="toggleEditFields"
+                            class="btn btn-danger mr-1"
+                            mwlConfirmationPopover
+                            [popoverTitle]="'Please Confirm...!'"
+                            [popoverMessage]="'Are you sure you want to delete?'"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]"
+                            (confirm)="deleteUser()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true"
+                          >
+                            <i class="fas fa-trash-alt me-2"></i> Delete
+                          </button>
+
+
+
+
+
+                            <button *ngIf="toggleEditFields" (click)="editUser()" class="btn btn-outline-primary mr-1">
+                                <i class="fas fa-edit me-2"></i> Edit
+                            </button>
+                            <button *ngIf="toggleEditFields" (click)="copyUser()" class="btn btn-warning mr-1">
+                                <i class="fas fa-copy me-2"></i> Copy
+                            </button>
+                            <button *ngIf="toggleEditFields" (click)="createNewPanel()" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i> New
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

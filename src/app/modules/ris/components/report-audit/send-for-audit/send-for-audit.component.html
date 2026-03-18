@@ -1,0 +1,481 @@
+<div class="card card-custom">
+    <div class="card-header" style="
+    margin-top: -18px;
+    margin-bottom: -13px;
+    min-height: 57px;
+">  
+        <div class="card-title" style="margin-bottom: -10px;">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label mt-1">
+                RIS Search
+            </h3>
+        </div>
+    </div>
+    <div class="card-toolbar"></div>
+    <div class="card-body">
+        <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                    <label>Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="dateFrom"
+                        name="dateFrom" class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(0)"
+                        [ngClass]="{'invalid': _form.get('dateFrom').errors && _form.get('dateFrom').touched, 'invalid-highlighted': _form.get('dateFrom').errors}"
+                        />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                    <label>Date To</label>
+                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" formControlName="dateTo" name="dateTo"
+                        class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(1)"
+                        [ngClass]="{'invalid': _form.get('dateTo').errors && _form.get('dateTo').touched, 'invalid-highlighted': _form.get('dateTo').errors}"
+                        />
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                    <label for="subSectionIDs" class="control-label">Section</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList" 
+                        bindLabel="SubSectionTitle"
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        formControlName="subSectionIDs" 
+                        (change)="clearSearchedvalue()"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllSections()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                    <label for="RadiologistID" class="control-label">Radiologst</label>
+                    <ng-select style="width: 100%;"  
+                        class="mr-1"
+                        [ngClass]="{'invalid': _form.get('RadiologistID').errors && _form.get('RadiologistID').touched, 'invalid-highlighted': _form.get('RadiologistID').errors}"
+                        [items]="radoiologistList"
+                        bindLabel="FullName" 
+                        placeholder="-Please select radiologst"
+                        bindValue="EmpId"
+                        formControlName="RadiologistID" 
+                        (change)="onRadiologistChange($event)"
+                        >
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 mt-8">
+                    <button type="button" (click)="getRISWorkListForAudit();" class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card card-custom mt-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                    <ng-container *ngIf="risWorklist.length; else noRequestData">
+                        <div class="row">
+                            <div class="col-8">
+                                <span *ngIf="risWorklist.length" class="text-warning pull-right"><strong> <span class="text-warning">Total Reports: {{risWorklist.length}} </span>  <span class="text-dark">|</span>  <span class="text-warning"> Selected Reports: {{checkedItemCount}}</span> </strong></span>
+                            </div>
+                            <div class="col-4">
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th><input class="cursor-pointer" type="checkbox" (change)="selectAllTPs($event)" [(ngModel)]="mainChk" [disabled]="isFieldDisabled" /></th>
+                                                <th scope="col" >VisitNo</th>
+                                                <th scope="col" >TPName</th>
+                                                <th scope="col" >PatientName</th>
+                                                <th scope="col" >BranchCode</th>
+                                                <th scope="col" >Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let row of risWorklist | filterByKey:searchText:['VisitNo','TPCode','TPName','PatientName','BranchCode']; let i = index" class="cursor-pointer" (dblclick)="showVisitDetail(row,i)"
+                                            [ngClass]="{'active': i==rowIndex}">
+                                                <td> 
+                                                    <input class="cursor-pointer"
+                                                        type="checkbox"
+                                                        [(ngModel)]="row.checked"
+                                                        [disabled]="isFieldDisabled"
+                                                        (change)="countCheckedItems()"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                        <i 
+                                                        [ngClass]="returnCopyClasses(i)"
+                                                        class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                        (click)="copyText(row,i)">&nbsp;</i>
+                                                </span> {{ row.VisitNo }}</td>
+                                                <td>{{ row.TPCode }}-{{row.TPName}} 
+                                                    <i style="font-size: 15px;"
+                                                        *ngIf="row.isPreMedical" 
+                                                        class="fas fa-notes-medical text-danger ml-1 mr-2" 
+                                                        [ngClass]="{'text-white': i==rowIndex}"
+                                                        [ngbTooltip]="'Study for Medical Fitness'" 
+                                                        placement="top" >
+                                                    </i>
+
+                                                    <span *ngIf="row.RadiologistVisitTPAuditID" class="text-danger">
+                                                        <i class="fa fa-check text-danger" aria-hidden="true" style="font-size: 14px;"></i>(Audit Done)
+                                                    </span>
+                                                </td>
+                                                <td>{{ row.PatientName }}</td>
+                                                <td>{{row.BranchCode}}</td>
+                                                <td>
+                                                    <span class="cursor-pointer mr-2"><i (click)="showVisitDetail(row,i)" class="fa fa-info-circle" [ngClass]="rowIndex==i?'text-white':'text-warning'" ngbTooltip="Visit Detail"></i></span>
+                                                    <div class="btn-group">
+                                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                                            aria-label="Button group with nested dropdown">
+                                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                                        Vitals </span>
+                                                                </button>
+                                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                                        EMR </span>
+                                                                </button>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                                <!-- (confirm)="insertUpdateRadiologistVisitTPAudit()" we will add first to a local list then will send the whole packet for audit-->
+                                <!-- mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are you <strong>sure</strong> want to send?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="addToList()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false" 
+                                [appendToBody]="true"-->
+                                <button [disabled]="disabledButton" (click)="addToList()" ngbTooltip="Click to add to the audit list"
+                                    class="btn btn-sm btn-primary py-2 pull-right" >
+                                    <i class="fas fa-folder-plus"></i>Add to audit
+                                </button>
+                            <ng-select style="width: 30%;"
+                                class="mr-3 pull-right"
+                                [ngClass]="{'invalid': !AuditorRadiologistID, 'invalid-highlighted': (!AuditorRadiologistID && isSubmitClicked)}"
+                                [items]="auditorRadoiologistList"
+                                bindLabel="FullName" 
+                                placeholder="--Please select the doctor--"
+                                bindValue="EmpId"
+                                [(ngModel)]="AuditorRadiologistID"
+                                >
+                            </ng-select>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noRequestData>
+                        <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found>
+                    </ng-template>
+            </div>
+        </div>
+
+        <!--begin::listToSend-->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <ng-container *ngIf="(listTosend.length && risWorklist.length)">
+                        <hr style="margin-bottom: 0px; margin-top: 6px;">
+                        <div class="row">
+                            <div class="col-12">
+                                <span *ngIf="listTosend.length" class="text-warning pull-right"><strong> <span class="text-warning">Total reports to send for audit: {{listTosend.length}} </span> </strong></span>
+                            </div>
+                            <!-- <div class="col-4">
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                </div>
+                            </div> -->
+                            <div class="col-12">
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <!-- <th><input class="cursor-pointer" type="checkbox" (change)="selectAllTPs($event)" [(ngModel)]="mainChk" [disabled]="isFieldDisabled" /></th> -->
+                                                <th scope="col" >VisitNo</th>
+                                                <th scope="col" >TPName</th>
+                                                <th scope="col" >PatientName</th>
+                                                <th scope="col" >BranchCode</th>
+                                                <th scope="col" >Actions</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let row of listTosend | filterByKey:searchText:['VisitNo','TPCode','TPName','PatientName','BranchCode']; let i = index" class="cursor-pointer" (dblclick)="showVisitDetailForSendList(row,i)"
+                                            [ngClass]="{'active': i==rowIndexToSend}">
+                                                <!-- <td> 
+                                                    <input class="cursor-pointer"
+                                                        type="checkbox"
+                                                        [(ngModel)]="row.checked"
+                                                        [disabled]="isFieldDisabled"
+                                                        (change)="countCheckedItems()"
+                                                    />
+                                                </td> -->
+                                                <td>
+                                                    <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                        <i 
+                                                        [ngClass]="returnCopyClasses(i)"
+                                                        class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                        (click)="copyText(row,i)">&nbsp;</i>
+                                                </span> {{ row.VisitNo }}</td>
+                                                <td>{{ row.TPCode }}-{{row.TPName}} <span *ngIf="row.RadiologistVisitTPAuditID" class="text-danger"><i class="fa fa-check text-danger" aria-hidden="true" style="font-size: 14px;"></i>(Audit Done)</span></td>
+                                                <td>{{ row.PatientName }}</td>
+                                                <td>{{row.BranchCode}}</td>
+                                                <td>
+                                                    <span class="cursor-pointer mr-2"><i (click)="showVisitDetailForSendList(row,i)" class="fa fa-info-circle" [ngClass]="rowIndexToSend==i?'text-white':'text-warning'" ngbTooltip="Visit Detail"></i></span>
+                                                    <span>
+                                                        <!-- (click)="removeItem(row)" -->
+                                                        <i 
+                                                        mwlConfirmationPopover
+                                                        [popoverTitle]="'Please confirm...!'"
+                                                        [popoverMessage]="'Are you <strong>sure</strong> want to remove report from audit?'"
+                                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                                        (confirm)="removeItem(row)"
+                                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                        confirmButtonType="btn btn-sm btn-primary"
+                                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                        [appendToBody]="true"
+                                                        class="fa fa-times text-danger cursor-pointer ml-2" ngbTooltip="Remove the report from the audit"></i></span> 
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                                <!-- (confirm)="insertUpdateRadiologistVisitTPAudit()" we will add first to a local list then will send the whole packet for audit-->
+                                <button [disabled]="disabledButton"
+                                class="btn btn-sm btn-primary py-2 pull-right"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are you <strong>sure</strong> want to send?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="insertUpdateRadiologistVisitTPAudit()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i 
+                                class="fas fa-external-link-alt"
+                                ></i>Send for audit <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                            </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- <ng-template #noListToSend>
+                        <app-no-record-found [infoMessageParam]="'Select items and add it to send list'"></app-no-record-found>
+                    </ng-template> -->
+            </div>
+        </div>
+        <!--end::listToSend-->
+    </div>
+</div>
+
+<!-- <div class="card card-custom mt-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <ng-container *ngIf="listTosend.length; else noRequestData">
+                        <div class="row">
+                            <div class="col-8">
+                                <span *ngIf="listTosend.length" class="text-warning pull-right"><strong> <span class="text-warning">Total Reports: {{listTosend.length}} </span>  <span class="text-dark">|</span>  <span class="text-warning"> Selected Reports: {{checkedItemCount}}</span> </strong></span>
+                            </div>
+                            <div class="col-12">
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th><input class="cursor-pointer" type="checkbox" (change)="selectAllTPs($event)" [(ngModel)]="mainChk" [disabled]="isFieldDisabled" /></th>
+                                                <th scope="col" >VisitNo</th>
+                                                <th scope="col" >TPName</th>
+                                                <th scope="col" >PatientName</th>
+                                                <th scope="col" >BranchCode</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let row of listTosend | filterByKey:searchText:['VisitNo','TPCode','TPName','PatientName','BranchCode']; let i = index" class="cursor-pointer" (dblclick)="showVisitDetail(row,i)"
+                                            [ngClass]="{'active': i==rowIndex}">
+                                                <td> 
+                                                    <input class="cursor-pointer"
+                                                        type="checkbox"
+                                                        [(ngModel)]="row.checked"
+                                                        [disabled]="isFieldDisabled"
+                                                        (change)="countCheckedItems()"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                        <i 
+                                                        [ngClass]="returnCopyClasses(i)"
+                                                        class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                        (click)="copyText(row,i)">&nbsp;</i>
+                                                </span> {{ row.VisitNo }}</td>
+                                                <td>{{ row.TPCode }}-{{row.TPName}}</td>
+                                                <td>{{ row.PatientName }}</td>
+                                                <td>{{row.BranchCode}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                                <button [disabled]="disabledButton"
+                                class="btn btn-sm btn-primary py-2 pull-right"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are you <strong>sure</strong> want to send?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="addToList()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i 
+                                class="fas fa-external-link-alt"
+                                ></i>Send for audit <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                            </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noRequestData>
+                        <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found>
+                    </ng-template>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="card card-custom mt-2" *ngIf="risWorklist.length && visitDetailBtnClicked">
+    <div class="card-body">
+        <div class="row" *ngIf="risWorklist.length && visitDetailBtnClicked" #detailArea> 
+            <div *ngIf="VisitIDWithDashes && visitDetailBtnClicked" class="col-md-12"><strong class="float-right mr-2">
+                <i class="far fa-hand-point-down text-primary mr-2 tagToggle"></i><span class="visit-tpname">  {{VisitIDWithDashes}} | {{TPName}}</span></strong>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                        [moduleName]="'Send-Studies-for-audit'"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-----------------------------------------begin::Modal Popups---------------------------------------->
+
+<!-- EMR Modal Popup-->
+<ng-template #vitalsModal let-vitalsModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="vitalsModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:true, cardSection:false}"></app-vitals>
+    </div>
+</ng-template>
+
+
+<!--EMR Modal Popup-->
+<ng-template #emrModal let-emrModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="emrModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-emr [visitInfo]="visitInfo"></app-emr>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-info" data-dismiss="modal" (click)="emrModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!-----------------------------------------end::Modal Popups------------------------------------------>

@@ -1,0 +1,299 @@
+<div class="row d-flex justify-content-center align-items-center">
+  <div class="col-md-12 col-lg-12 col-sm-12" style=" max-height: 400px;overflow-y: auto; ">
+    <app-patient-search [SectionToShow]="{showCardNo:true,NoRecordLabel:false,hidePIN:false}"
+      [buttonControls]="[ 'discountCardsViewBtn']" (gettingValueTableRow)="receiveValueFromTable($event)"
+      (cardInfo)="getCardInfo($event)">
+    </app-patient-search>
+  </div>
+</div>
+
+<div class=" mt-2" *ngIf="cardNoValue">
+  <!-- Loading Spinner -->
+  <ngx-spinner class="spinner-warning" 
+               [name]="spinnerRefs.cardTable" 
+               bdColor="rgba(0,0,0,0.8)" 
+               size="medium"
+               color="#fff" 
+               type="square-loader" 
+               [fullScreen]="false">
+    <p class="text-white">Loading...</p>
+  </ngx-spinner>
+
+  <!-- Main Content -->
+  <div class="row justify-content-center align-items-center" *ngIf="cardNoValue!=null">
+    <!-- Discount Card Section -->
+
+     <ngx-spinner class="spinner-warning" 
+               [name]="spinnerRefs.cardTable" 
+               bdColor="rgba(0,0,0,0.8)" 
+               size="medium"
+               color="#fff" 
+               type="square-loader" 
+               [fullScreen]="false">
+    <p class="text-white">Loading...</p>
+  </ngx-spinner>
+
+    <div class="col-xl-6 col-lg-12 mb-4">
+      <div class="card card-custom h-100" style="min-height:360px;">
+        <div class="card-body overflow-auto">
+          <app-discount-card [cardNO]="cardNoValue" 
+                            (discountCardDetails)="getdiscountCardDetails($event)">
+          </app-discount-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Family Members Section (Conditional) -->
+    <div class="col-xl-6 col-lg-12 mb-4" *ngIf="getCardTypeId==2">
+      <div class="card card-custom h-100" style="min-height:360px;">
+        <div class="card-body">
+          <!-- Relationship and Add Buttons -->
+          <div class="row g-3 mb-3"> 
+            <div class="col-md-12 d-flex align-items-center justify-content-center mb-2" *ngIf="familyCardMemberCount != null && familyCardMemberCount >= 5" >
+              <span 
+                class="family-card-alert">
+                ⚠️ Limit reached! A maximum of 5 members can be linked to a family card.
+              </span>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-1">
+              <!-- <label class="form-label">Relationship</label> -->
+                    <select name="Relationship" class="form-control" [disabled]="disableAddButton || familyCardlist?.length >= 5"
+                      [(ngModel)]="RelationshipID" (change)="changeRalation($event)">
+                      <option value="" selected hidden>-Select Relationship-</option>
+                      <option *ngFor="let relation of relationshiplist" value="{{relation.RelationshipID}}">
+                        {{relation.Relationship}}</option>
+                    </select>
+            </div>
+            
+            <div class="col-md-4 col-sm-12 d-flex align-items-end mb-1">
+              <button class="btn btn-success w-100" 
+                      [disabled]="disableAddButton || familyCardlist?.length >= 5" 
+                      (click)="openAddNewPatientPopUp()">
+                Add New Patient
+              </button>
+            </div>
+            
+            <div class="col-md-4 col-sm-12 d-flex align-items-end mb-1">
+              <button class="btn btn-success w-100" 
+                      [disabled]="disableAddButton || familyCardlist?.length >= 5" 
+                      (click)="openExistingPatientPopUp()">
+                Add Existing Patient
+              </button>
+            </div>
+          </div>
+
+          <!-- Family Members Table -->
+          <div class="table-responsive mb-3">
+            <div style="max-height: 200px; overflow-y: auto;">
+              <table class="table table-hover table-sm bg-white">
+                <ngx-spinner class="spinner-warning" 
+                            [name]="spinnerRefs.associateTable" 
+                            bdColor="rgba(0,0,0,0.8)"
+                            size="small" 
+                            color="#fff" 
+                            type="square-loader" 
+                            [fullScreen]="false">
+                  <p class="text-white">Loading...</p>
+                </ngx-spinner>
+                
+                <thead class="sticky-top bg-light">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Relationship</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">MRNo</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  <tr class="text-center" *ngIf="!familyCardlist?.length">
+                    <td colspan="5">No Record Found</td>
+                  </tr>
+                  
+                  <tr *ngFor="let patient of familyCardlist; let i = index">
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{patient.Relationship}}</td>
+                    <td>{{patient.Name}}</td>
+                    <td>{{patient.Age || ''}}{{patient.AgeGender || ''}}</td>
+                    <td>{{patient.MRN}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>          
+          <!-- Action Button -->
+          <div class="d-flex justify-content-end">
+            <button 
+            mwlConfirmationPopover
+            class="btn btn-primary"
+            [popoverTitle]="'Send Message'"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="saveDiscountCardInfo()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="primary btn-md"
+            cancelButtonType="secondary btn-md">
+            <i class="fa fa-paper-plane"></i>
+            Associate Member
+          </button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modals (Templates) -->
+<ng-template #showAddNew>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Add New Patient Details</h5>
+    <button type="button" class="close" aria-label="Close" (click)="closeLoginModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+      <!-- <div class="modal-content"> -->
+      <form [formGroup]="addNewPatient">
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Salutation:<span class="mandatory-asterisk">*</span></label>
+              <select class="form-control" formControlName="Salutation" #salutation
+                [ngClass]="{'invalid': addNewPatient.get('Salutation').errors, 'invalid-highlighted': addNewPatient.get('Salutation').errors }">
+                <option [value]="''">--Select--</option>
+                <option *ngFor="let s of salutationsList" [value]="s.SalutationTitle">
+                  {{s.SalutationTitle}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>First Name:<span class="mandatory-asterisk">*</span></label>
+              <input formControlName="firstName" type="text" class="form-control"
+                [ngClass]="{'invalid': addNewPatient.get('firstName').errors, 'invalid-highlighted': addNewPatient.get('firstName').errors }" />
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Last Name:</label>
+              <input formControlName="lastName" type="text" class="form-control" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Date of Birth:<span class="mandatory-asterisk">*</span></label>
+              <div class="input-group">
+                <input #dob type="text" class="form-control" (click)="dFrom_dob.toggle()"
+                  placeholder="dd-mm-yyyy" autocomplete="off" name="dob" [maxDate]="maxDate_dob_bs"
+                  ngbDatepicker [minDate]="{year: 1900, month:1, day: 1}" #dFrom_dob="ngbDatepicker"
+                  formControlName="DateOfBirth" (change)="calculateAge(dob.value)"  (input)="calculateAge(dob.value)" 
+                  [ngClass]="{'invalid': addNewPatient.get('DateOfBirth').errors, 'invalid-highlighted': addNewPatient.get('DateOfBirth').errors }">
+                <input #age type="text" class="form-control col-2 pl-1 pr-0"
+                  (change)="ageChange(age.value)" placeholder="Age" formControlName="Age"
+                  [ngClass]="{'invalid': addNewPatient.get('Age').errors, 'invalid-highlighted': addNewPatient.get('Age').errors }">
+                <select #dmy class="form-control col-3 px-0" formControlName="dmy"
+                  (change)="dmyChange(dmy.value)"
+                  [ngClass]="{'invalid': addNewPatient.get('dmy').errors, 'invalid-highlighted': addNewPatient.get('dmy').errors }">
+                  <option *ngFor="let item of dmyEnum" [value]="item.id">
+                    {{item.name}}</option>
+                </select>
+                <span class="md-line"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>CNIC</label>
+              <input formControlName="CNIC" type="text" mask='00000-0000000-0'
+              [showMaskTyped]="true" class="form-control" />
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Cell Number:<span class="mandatory-asterisk">*</span></label>
+              <input formControlName="CellNumber" type="text" mask='0000-0000000'
+                [showMaskTyped]="true" class="form-control"
+                [ngClass]="{'invalid': addNewPatient.get('CellNumber').errors, 'invalid-highlighted': addNewPatient.get('CellNumber').errors }" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Marital Status:<span class="mandatory-asterisk">*</span></label>
+              <select id="pat_maritalStatus" class="form-control" formControlName="maritalStatus"
+                [ngClass]="{'invalid': addNewPatient.get('maritalStatus').errors, 'invalid-highlighted': addNewPatient.get('maritalStatus').errors }">
+                <option [value]="''">--Select--</option>
+                <option *ngFor="let item of maritalStatusList" [value]="item.StatusId">
+                  {{item.Title}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Email</label>
+              <input formControlName="Email" type="email" placeholder="example@domain.com"
+                class="form-control" maxlength="50"
+                [ngClass]="{'invalid': addNewPatient.get('Email').errors, 'invalid-highlighted': addNewPatient.get('Email').errors } " />
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Gender:<span class="mandatory-asterisk">*</span></label>
+              <select formControlName="Gender" class="form-control"
+                [ngClass]="{'invalid': addNewPatient.get('Gender').errors, 'invalid-highlighted': addNewPatient.get('Gender').errors }">
+                <option [value]="''">--select--</option>
+                <option *ngFor="let gender of gendersList" [value]="gender.GenderID">
+                  {{gender.GenderTitle}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="modal-footer">
+         
+        </div> -->
+      </form>
+      <!-- </div> -->
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-sm btn-primary" (click)="saveAddNewPatientInfo()"
+            [disabled]="!addNewPatient.valid">
+            <i class="fas fa-save"></i> Save </button>
+    <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+      (click)="closeLoginModal()">
+      <i class="fa fa-times-circle"></i> Close</button>
+  </div>
+
+</ng-template>
+
+<ng-template #showExistingPatient>
+  <!-- <div class="modal-dialog">
+    <div class="modal-content"> -->
+      <!-- <div class="modal-header ">
+        <h5 class="modal-title">Add Existing Patient</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeLoginModal()"></button>
+      </div> -->
+      <div class="modal-body">
+        <app-patient-search [SectionToShow]="{selectedPatientEvent:true, hidePIN:true, showCardNo:false, NoRecordLabel:true}"
+                          (patientSelectedEvent)="receiveExistingPatientValues($event)">
+        </app-patient-search>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeLoginModal()">
+          Close
+        </button>
+      </div>
+    <!-- </div>
+  </div> -->
+</ng-template>

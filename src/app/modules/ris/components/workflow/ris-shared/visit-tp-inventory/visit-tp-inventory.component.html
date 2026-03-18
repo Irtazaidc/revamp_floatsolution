@@ -1,0 +1,107 @@
+<div>
+    <ng-container *ngIf="TPItemsList.length; else noTPItems">
+        <div class="row">
+            <div class="col-6">
+                <input type="text" placeholder="Search" class="form-control form-control-sm  pull-right" [(ngModel)]="searchText" name="searchText"/>
+            </div>
+            <div class="col-12">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.inventorySection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 1%;">#</th>
+                                <th style="width: 4%;"><input type="checkbox" class="" (change)="selectAllTPStoreItems($event)" [disabled]="isFieldDisabled" /></th>
+                                <th style="width: 40%;" scope="col" class="col-md">Item Name</th>
+                                <th style="width: 10%;" scope="col" class="col-md">Max Qty</th>
+                                <th style="width: 12%;" scope="col" class="col-md">Consumed</th>
+                                <th style="width: 12%;" scope="col" class="col-md">Damaged</th>
+                                <th style="width: 21%;" scope="col" class="col-md">Remarks</th>
+                                <!-- <th style="width: 20%;" scope="col" class="col-md">Comments</th> -->
+                                <!-- <th style="width: 5%;" scope="col" class="col-md">Action</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of TPItemsList| filterByKey: searchText:['StoreItemTitle']; let i = index">
+                                <td style="width: 1%;" >{{i+1}}</td>
+                                <td style="width: 4%;"> 
+                                    <input
+                                        type="checkbox"
+                                        class=""
+                                        [(ngModel)]="item.checked"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="isFieldDisabled"
+                                    />
+                                </td>
+                                <td style="width: 40%;" class="col-md">{{ item.StoreItemTitle }}</td>
+                                <td style="width: 10%;" class="col-md"><label [ngClass]="'badge badge-primary ml-2'">{{item.RecQuantity}}</label></td>
+                                <td style="width: 12%;" class="col-md">
+                                    <input [disabled]="isFieldDisabled" type="number" [(ngModel)] ="item.ConsumedQuantity"class="form-control form-control-sm" min="1" oninput="this.value =!!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                    [ngClass]="{'invalid': ((!item.ConsumedQuantity && !item.DamagedQuantity)||(item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)) && item.checked, 'invalid-highlighted': (item.checked && buttonClicked && ((!item.ConsumedQuantity && !item.DamagedQuantity) || (item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)))}"
+                                    
+                                    >
+                                </td>
+                                <td style="width: 12%;" class="col-md">
+                                    <input [disabled]="isFieldDisabled" type="number" [(ngModel)] ="item.DamagedQuantity"class="form-control form-control-sm" min="1" oninput="this.value =!!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                    [ngClass]="{'invalid': ((!item.ConsumedQuantity && !item.DamagedQuantity)||(item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)) && item.checked, 'invalid-highlighted': (item.checked && buttonClicked && ((!item.ConsumedQuantity && !item.DamagedQuantity) || (item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)))}">
+                                </td>
+                                <!-- <label [ngClass]="'badge badge-primary ml-2'">{{item.Quantity}}</label> -->
+                                    <!-- <span class="label label-lg label-light-success label-inline font-weight-bold py-4">{{item.Quantity}}</span> -->
+                                    <!-- <td style="width: 15%;" class="col-md">
+                                        <select class="form-control form-control-sm" [(ngModel)]="item.Remarks">
+                                            <option value="Take">Take</option>
+                                            <option value="Damaged">Damaged</option>
+                                            <option value="Returned">Returned</option>
+                                        </select>
+                                    </td> -->
+                                
+                            
+                                <td style="width: 21%;" class="col-md">
+                                    <input [disabled]="isFieldDisabled" type="text" 
+                                    [(ngModel)] ="item.Remarks" class="form-control form-control-sm" 
+                                    [ngClass]="{'invalid': ((item.DamagedQuantity)||(item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)) && !item.Remarks && item.checked, 'invalid-highlighted': !item.Remarks && (item.checked && buttonClicked && ((item.DamagedQuantity) || (item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)))}"
+                                    >
+                                </td>
+                                <!-- <td style="width: 5%;" class="col-md">
+                                    <i style="cursor: pointer;" class="fa fa-times text-danger" ngbTooltip="Remove Item" (click)="removeItem(item.QuestionID)" ></i>
+                                </td> -->
+                            </tr>
+                            <tr *ngIf="!TPItemsList.length">
+                                <td colspan="6" class="text-center">
+                                    <p class="text-success">
+                                        <strong>Info! </strong> No store item(s) associated...
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="RISStatusID!=4 && RISStatusID!=5 && RISStatusID!=6 && RISStatusID!=8 && RISStatusID!=9">
+                <button *ngIf="TPItemsList.length" type="button" [disabled]="disabledButtonInventory" [disabled]="isFieldDisabled"
+                    class="btn btn-sm btn-primary pull-right mr-2" mwlConfirmationPopover
+                    [popoverTitle]="confirmationPopoverConfigInventory.popoverTitle"
+                    [popoverMessage]="confirmationPopoverConfigInventory.popoverMessage"
+                    [confirmText]="confirmationPopoverConfigInventory.confirmText"
+                    [cancelText]="confirmationPopoverConfigInventory.cancelText"
+                    [placement]="confirmationPopoverConfigInventory.placements[0]" 
+                    (confirm)="insertUpdateVisitTPInventory(1)" 
+                    (cancel)="confirmationPopoverConfigInventory.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopoverConfigInventory.confirmClicked = false; confirmationPopoverConfigInventory.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i class="fa fa-save"></i>Save Inventory<i class="spinner-border-custom" aria-hidden="true"
+                        [hidden]="isSpinnerInventory"></i>
+                </button>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #noTPItems>
+        <div class="container">
+            <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="'No inventory associated with this test'"></app-no-record-found>
+        </div>
+    </ng-template>
+</div>

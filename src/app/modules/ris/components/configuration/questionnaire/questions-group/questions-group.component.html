@@ -1,0 +1,146 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="cardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="QuestionClassificationCode" class="control-label">Question Classification</label>
+                                <ng-select style="width: 100%;"
+                                class="mr-1"
+                                [items]="classificationList"
+                                bindLabel="QuestionClassificationName" 
+                                placeholder="--Select Question Classification--"
+                                bindValue="QuestionClassificationID"
+                                [ngClass]="{'invalid': !questionClassificationID, 'invalid-highlighted':!requiredHighlited}"
+                                [(ngModel)]="questionClassificationID"
+                                (change)="getQClassificationQuestions($event)"
+                                >
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.QuestionClassificationName}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+                            <div class="form-group">
+                                <label for="Question" class="control-label">Question</label>
+                                <ng-select style="width: 100%;"
+                                class="mr-1"
+                                [items]="questionList"
+                                bindLabel="Question" 
+                                placeholder="--Select Question--"
+                                bindValue="QuestionID"
+                                (change)="addSelectedQuestion($event)"
+                                >
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.Question}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div  style="min-height: 200px;">
+                        <div class="row mt-3 ml-0 mr-0">
+                            <!-- <div class="table-responsive">
+                                <table class="table table-bordered selected-test-rate-table compact">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 5%;">#</th>
+                                            <th scope="col" style="width: 5%;"><i class="fa fa-sort text-bar-heading " aria-hidden="true"></i></th>
+                                            <th cope="col" style="width: 70%;">Quesetion</th>
+                                            <th scope="col" style="width: 15%;">Question Classification</th>
+                                            <th scope="col" style="width: 5%;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+                                        <tr *ngFor="let q of selectedQuestion; let i = index;" cdkDrag cdkDragLockAxis="y" class="cursor-pointer">
+                                            <td style="width: 5%;">{{i+1}}</td>
+                                            <td style="width: 5%;" class="drag-handle"><i class="fa fa-bars text-bar" aria-hidden="true"></i></td>
+                                            <td style="width: 70%;">{{q.Question}}</td>
+                                            <td style="width: 15%;">{{q.QuestionGroupType}}</td>
+                                            <td style="width: 5%;"><i style="cursor: pointer;" class="ti-close text-danger" ngbTooltip="Remove Item" (click)="removeItem(q.QuestionID)" ></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> -->
+                            <div class="table-responsive">
+                                <table class="table" *ngIf="selectedQuestion.length; else NoRec">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 5%;">#</th>
+                                            <th style="width: 5%;" scope="col" class="col-md"><i class="fa fa-sort text-bar-heading " aria-hidden="true"></i></th>
+                                            <th style="width: 70%;" scope="col" class="col-md">Quesetion</th>
+                                            <th style="width: 15%;" scope="col" class="col-md">Group Type</th>
+                                            <th style="width: 5%;" scope="col" class="col-md">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+                                        <tr *ngFor="let item of selectedQuestion; let i = index" style="cursor: move;" cdkDrag cdkDragLockAxis="y">
+                                            <td style="width: 5%;">{{i+1}}</td>
+                                            <th style="width: 5%;" class="col-md">
+                                                <div class="drag-handle">
+                                                    <i class="fa fa-bars text-bar" aria-hidden="true" ngbTooltip="Hold and drag to set item sort order"></i>
+                                                </div>
+                                            </th>
+                                            <td style="width: 70%;" class="col-md">{{ item.Question }}</td>
+                                            <td style="width: 15%;" class="col-md">{{ item.QuestionGroupType }}</td>
+                                            <td style="width: 5%;" class="col-md">
+                                                <i style="cursor: pointer;" class="fa fa-times text-danger" ngbTooltip="Remove Item" (click)="removeItem(item.QuestionID)" ></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <ng-template #NoRec>
+                                    <table class="table" *ngIf="!selectedQuestion.length">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" class="text-center"> 
+                                                    <strong class="text-primary">No question associated</strong>   
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="selectedQuestion.length">
+                            <div class="col-12 mt-3">
+                                <button  type="button" class="btn btn-primary pull-right ml-2" 
+                                [disabled]="disabledButton"
+                                class="btn btn-primary btn-sm waves-effect pull-right"
+                                mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="insertUpdateQClassificationQuestion()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-danger"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                                ><i class="fa fa-save"></i><strong>{{actionButtonText||'Save'}} </strong> <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i></button>                                          
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        
+    </div>
+</div>

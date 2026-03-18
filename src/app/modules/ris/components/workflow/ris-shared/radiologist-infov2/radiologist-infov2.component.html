@@ -1,0 +1,64 @@
+<div class="col-12 mb-2">
+  <div class="card shadow-sm bg-light rounded p-2">
+    <div class="d-flex flex-wrap align-items-start">
+
+      <!-- Image -->
+      <div class="position-relative me-2" style="min-width: 90px;">
+        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.drPic" size="small"
+          color="#fff" type="square-loader" [fullScreen]="false">
+          <p class="spinner-text text-center small mt-4">Loading...</p>
+        </ngx-spinner>
+
+        <img class="rounded border border-secondary" [src]="radiologistPic || defaultPatientPic"
+          alt="Doctor Pic" style="width: 81px; height: 81px; object-fit: cover;" />
+      </div>
+
+      <!-- Info -->
+      <div class="flex-fill min-w-0">
+        <div class="d-grid gap-1" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+
+          <!-- Full-width top line -->
+         <div class="d-flex flex-wrap fw-bold text-truncate gap-1">
+            <span>{{ radoiologistRow.EmpNoWithPrefix }}</span>
+            <span class="text-muted">|</span>
+            <span>{{ radoiologistRow.FullName }}</span>
+            <span class="text-muted">|</span>
+            <span>{{ radoiologistRow.LocationFromIorgLoc }}</span>
+        </div>
+          <div class="row g-1">
+            <div class="col-12 col-md-6">
+              <div>
+                <small class="text-muted d-block">Department</small>
+                <span class="fw-semibold text-truncate" title="{{ radoiologistRow.Department }}">{{ radoiologistRow.Department }}</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div>
+                <small class="text-muted d-block">Designation</small>
+                <span class="fw-semibold text-truncate" title="{{ radoiologistRow.Designation }}">{{ radoiologistRow.Designation }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="info-item">
+            <span class="label-name">Department</span>
+            <span class="label-value">{{ radoiologistRow.Department }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="label-name">Designation</span>
+            <span class="label-value">{{ radoiologistRow.Designation }}</span>
+          </div> -->
+
+          <!-- Emp Status / Guaranteed Income -->
+          <div class="fw-semibold text-truncate" title="{{ radoiologistRow.EmploymentStatus }}/{{ radoiologistRow.SharingGuaranteedIncome }}">
+            <small class="text-muted d-block">Emp Status / Guaranteed Income</small>
+            {{ radoiologistRow.EmploymentStatus }} / {{ radoiologistRow.SharingGuaranteedIncome }}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

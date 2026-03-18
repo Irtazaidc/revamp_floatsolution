@@ -1,0 +1,321 @@
+<app-card [cardClass]="'tim-card tim-card-primary'">
+  <div class="card-header">
+    <div class="card-title">
+      <h2 class="card-label">
+        Services Configuration
+        <!-- <small>config</small> -->
+      </h2>
+    </div>
+  </div>
+
+  <div class="card card-custom">
+    <div class="card-body pb-0">
+      <form
+        [formGroup]="servicesListForm"
+        class="form-horizontal"
+        name="form"
+        role="form"
+      >
+        <div class="row">
+          <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            <label>Department:</label>
+            <select
+              class="form-control"
+              placeholder="-Select Department-"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="labDeptID"
+              (ngModelChange)="getSubSection()"
+            >
+              <option [ngValue]="-1">Select All</option>
+              <option [ngValue]="1">Lab</option>
+              <option [ngValue]="2">Imaging</option>
+            </select>
+          </div>
+          <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            <label>Subsection:</label>
+            <ng-select
+              style="width: 100%"
+              value=""
+              [items]="subSectionList"
+              bindLabel="SubSectionTitle"
+              placeholder="-Select Sub Section-"
+              bindValue="SubSectionId"
+              formControlName="SubSectionId"
+            >
+            </ng-select>
+          </div>
+          <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            <label>Location:</label>
+            <ng-select
+              id="pat_branch"
+              style="width: 100%"
+              [items]="branchList"
+              bindLabel="Title"
+              [multiple]="false"
+              [closeOnSelect]="true"
+              bindValue="LocId"
+              placeholder="--Select Branch--"
+              formControlName="LocId"
+            >
+            </ng-select>
+          </div>
+
+          <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-5">
+            <button
+              type="button"
+              (click)="getServicesList()"
+              class="btn btn-primary btn-block mt-2 w-100"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0,0,0,0.8)"
+      [name]="spinnerRefs.tableFormSection"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Please wait...</p>
+    </ngx-spinner>
+
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-6">
+        <input
+          type="text"
+          placeholder="Type Here To Search"
+          class="form-control form-control-sm"
+          [(ngModel)]="searchText"
+          name="searchText"
+        />
+      </div>
+    </div>
+    <small class="pull-right text-danger mb-2">
+      <strong>Total Records: {{ testList.length }}</strong>
+    </small>
+
+    <div class="table-responsive table-container fixed-height-table mt-4">
+      <table class="table table-hover compact table-bordered">
+        <thead class="sticky-header">
+          <tr>
+            <th>#</th>
+            <th>Service Name</th>
+            <th *ngIf="!isLocationFilterApplied">Location</th>
+            <th>Status</th>
+            <th>Service's Remarks/Timings</th>
+            <th>Person's Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="testList as groupedList">
+            <tr class="text-center" *ngIf="(groupedList | filterByKey : searchText : ['SubSectionCode', 'TPName', 'TPCode'])?.length === 0">
+              <td colspan="7">
+                <div class="container-fluid">
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Parent row with controls -->
+            <ng-container
+              *ngFor="
+                let group of groupedList | filterByKey
+                  : searchText
+                  : ['SubSectionCode', 'TPName','TPCode']"
+            >
+              <tr class="table cursor-pointer align-middle">
+                <!-- Parent Checkbox (Select All Services) -->
+                <td>
+                  <input
+                    type="checkbox"
+                    class="cursor-pointer"
+                    [checked]="isGroupFullyChecked(group)"
+                    [indeterminate]="isGroupIndeterminate(group)"
+                    (change)="
+                      toggleGroupSelection(group, $event.target.checked)
+                    "
+                  />
+                </td>
+
+                <!-- Parent Title -->
+                <td>
+                  <i
+                    (click)="toggleGroupExpand(group.SubSectionCode)"
+                    class="ti mr-2"
+                    [ngClass]="{
+                      'ti-angle-down': expandedGroup === group.SubSectionCode,
+                      'ti-angle-right': expandedGroup !== group.SubSectionCode
+                    }"
+                  >
+                  </i>
+                  <strong>{{ group.SubSectionCode }}</strong>
+                </td>
+
+                <!-- Parent Location -->
+                <td *ngIf="!isLocationFilterApplied">
+                  <ng-select
+                    style="width: 100%"
+                    [items]="getAllowedBranches()"
+                    bindLabel="Title"
+                    [multiple]="true"
+                    [closeOnSelect]="false"
+                    bindValue="LocId"
+                    placeholder="--Select Branch--"
+                    [(ngModel)]="group.parentLocId"
+                    (change)="applyParentLocation(group)"
+                  >
+                  </ng-select>
+                </td>
+
+                <!-- Parent Status -->
+                <td>
+                  <input
+                    type="checkbox"
+                    class="cursor-pointer"
+                    [checked]="isGroupStatusesFullyChecked(group)"
+                    [indeterminate]="isGroupStatusesIndeterminate(group)"
+                    (change)="toggleGroupStatuses(group, $event.target.checked)"
+                    [attr.title]="
+                      isGroupStatusesIndeterminate(group)
+                        ? 'Partially selected'
+                        : 'Select/unselect all statuses'
+                    "
+                  />
+                  <em class="ml-1">All Status</em>
+                </td>
+
+                <!-- Parent Service Remarks -->
+                <td>
+                  <textarea
+                    [(ngModel)]="group.parentServiceTiming"
+                    (blur)="applyParentServiceTiming(group)"
+                    class="form-control form-control-sm"
+                    rows="1"
+                    placeholder="Service Remarks for all"
+                  ></textarea>
+                </td>
+
+                <!-- Parent Person Remarks -->
+                <td>
+                  <textarea
+                    [(ngModel)]="group.parentServiceRemarks"
+                    (blur)="applyParentServiceRemarks(group)"
+                    class="form-control form-control-sm"
+                    rows="1"
+                    placeholder="Person Remarks for all"
+                  ></textarea>
+                </td>
+              </tr>
+
+              <!-- Child Rows -->
+              <ng-container *ngIf="expandedGroup === group.SubSectionCode">
+                <tr
+                  *ngFor="let data of group.children; let i = index"
+                  class="table-light align-middle"
+                >
+                  <td>
+                    <input
+                      type="checkbox"
+                      class="cursor-pointer"
+                      (change)="onSelectedChild(data)"
+                      [(ngModel)]="data.checked"
+                      [ngModelOptions]="{ standalone: true }"
+                      [disabled]="isDissabledChk"
+                    />
+                  </td>
+                  <td>{{ data.TPName }} - {{ data.TPCode }}</td>
+                  <td *ngIf="!isLocationFilterApplied">
+                    <ng-select
+                      style="width: 100%"
+                      [items]="getAllowedBranches()"
+                      bindLabel="Title"
+                      [multiple]="true"
+                      [closeOnSelect]="false"
+                      bindValue="LocId"
+                      placeholder="--Select Branch--"
+                      [(ngModel)]="data.LocId"
+                      (change)="onLocationSelected(data, data.LocId)"
+                    >
+                    </ng-select>
+                  </td>
+                  <td>
+                    <label class="form-check-inline mt-3">
+                      <input
+                        type="checkbox"
+                        class="form-check-input mr-2"
+                        [(ngModel)]="data.isServicePerform"
+                        name="status{{ i }}"
+                      />
+                      Is Active?
+                    </label>
+                  </td>
+                  <td>
+                    <textarea
+                      [(ngModel)]="data.ServiceTiming"
+                      class="form-control form-control-sm w-200"
+                      rows="2"
+                      placeholder="Enter Remarks"
+                    ></textarea>
+                  </td>
+                  <td>
+                    <textarea
+                      [(ngModel)]="data.ServiceRemarks"
+                      class="form-control form-control-sm w-200"
+                      rows="2"
+                      placeholder="Enter Remarks"
+                    ></textarea>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      class="text-right mt-4"
+      *ngIf="
+        (testList | filterByKey : searchText : ['TPName', 'TPCode', 'status'])
+          ?.length > 0
+      "
+    >
+      <button
+      *ngIf="isAnyChecked()"
+        type="button"
+        [disabled]="disabledButton"
+        class="btn btn-primary"
+        mwlConfirmationPopover
+        [popoverTitle]="'Please Confirm...!'"
+        [popoverMessage]="'Are you sure you want to save?'"
+        [confirmText]="confirmationPopoverConfig.confirmText"
+        [cancelText]="confirmationPopoverConfig.cancelText"
+        [placement]="confirmationPopoverConfig.placements[0]"
+        (confirm)="updateServicesAvailability()"
+        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+        confirmButtonType="btn btn-sm btn-primary"
+        cancelButtonType="btn btn-sm btn-outline-secondary"
+        (click)="
+          confirmationPopoverConfig.confirmClicked = false;
+          confirmationPopoverConfig.cancelClicked = false
+        "
+        [appendToBody]="true"
+      >
+        <i class="fa fa-save"></i> Save
+        <i
+          class="spinner-border-custom"
+          aria-hidden="true"
+          [hidden]="isSpinner"
+        ></i>
+      </button>
+    </div>
+  </div>
+</app-card>

@@ -1,0 +1,76 @@
+.tp-cancellation-requests-page {
+
+    ul.visits-list {
+        list-style: none;
+        padding-left: 5px;
+    }
+
+    ul.cancelled-tests-list {
+        padding-left: 0;
+
+        li {
+            list-style: none;
+            padding-left: 0;
+        }
+    }
+
+    ul.cancelled-req-info {
+
+        border-right: 1px solid #ccc;
+        padding-left: 0;
+        padding-right: 20px;
+
+        li {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+    
+            .val {
+                font-weight: bold;
+            }
+        }
+    }
+
+}
+
+
+.visit-item {
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.visit-item:hover {
+  background-color: #f0f8ff;
+  transform: scale(1.02);
+}
+
+.visits-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+
+
+.test-section {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  height: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+

@@ -1,0 +1,169 @@
+<!-- style="min-height: 170px; max-height: 170px; overflow-y: auto;" -->
+<!-- <div>
+    <div *ngIf="multipleBookingIds" class="">
+        <ng-select tabindex="1" [(ngModel)]="selBookingID" (change)="getbookingDetailByBookingID()" #bookingID placeholder="Select Booking" name="bookingID"
+            [closeOnSelect]="true">
+            <ng-option style="width: 100%;" [value]="1" *ngFor="let b of multipleBookingIds">
+                {{b}}
+            </ng-option>
+        </ng-select>
+    </div>
+
+   
+    <table class="table table-hover compact table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Booking ID</th>
+                <th scope="col">HC DateTime</th>
+                <th scope="col">Test Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ hcBookingInfo.BookingPatientID }}</td>
+                <td>{{ hcBookingInfo.HCDateTime | date:"dd MMM, yyyy, h:mm:ss a" }}</td>
+                <td>{{ bookedTestNames }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->
+
+<!-- <div *ngIf="multipleBookingIds && multipleBookingIds.length > 1 " class="mb-2">
+
+    <ng-select tabindex="1" [(ngModel)]="selBookingID" (change)="getbookingDetailByBookingID()" #bookingID
+        placeholder="Select Booking" name="bookingID" [closeOnSelect]="true">
+        <ng-option [value]="b" *ngFor="let b of multipleBookingIds">
+            {{b}}
+        </ng-option>
+    </ng-select>
+</div>
+<div class="row">
+    <div class="col-md-3 font-weight-bolder py-1">
+        <i class="text-primary fa fa-address-card"></i> Booking ID:
+    </div>
+    <div class="col-md-3 py-1">
+        {{hcBookingInfo.HCRequestID }}
+    </div>
+    <div class="col-md-3 font-weight-bolder py-1">
+        <i class="text-primary fa fa-address-card"></i> Request ID:
+    </div>
+    <div class="col-md-3 py-1">
+        {{hcBookingInfo.BookingPatientID || ''}}
+    </div>
+    <div class="col-md-3 font-weight-bolder pr-0">
+        <i class="text-primary fa fa-flask"></i> Tests Booked:
+    </div>
+    <div class="col-md-9 text-truncate">
+         <span class="text-break">
+                {{ bookedTestNames || 'N/A' }}
+            </span>
+    </div>
+    <div class="col-md-3 font-weight-bolder pr-0 py-1">
+        <i class="text-primary fa fa-clock"></i> Contact Time:
+    </div>
+    <div class="col-md-3 py-1">
+        {{hcBookingInfo.HCDateTime}}
+    </div>
+    <div class="col-md-2 font-weight-bolder py-1">
+        <i class="text-primary fas fa-map-marker-alt"></i> City:
+    </div>
+    <div class="col-md-3 py-1">
+        {{hcBookingInfo.HCCity}}
+    </div>
+    <div class="col-md-3 font-weight-bolder pr-0">
+        <i class="text-primary fa fa-clock"></i> Booking Time:
+    </div>
+    <div class="col-md-3">
+        {{hcBookingInfo.HCDateTime}}
+    </div>
+    <div class="col-md-2 font-weight-bolder pr-0">
+        <i class="text-primary fas fa-user"></i> Status:
+    </div>
+    <div class="col-md-3">
+        {{hcBookingInfo.HCBookingStatus}}
+    </div>
+</div> -->
+
+
+<div *ngIf="multipleBookingIds && multipleBookingIds.length > 1" class="mb-2">
+    <ng-select
+        tabindex="1"
+        [(ngModel)]="selBookingID"
+        (change)="getbookingDetailByBookingID()"
+        #bookingID
+        placeholder="Select Booking"
+        name="bookingID"
+        [closeOnSelect]="true"
+        aria-label="Select Booking ID"
+    >
+        <ng-option [value]="b" *ngFor="let b of multipleBookingIds">
+            {{ b }}
+        </ng-option>
+    </ng-select>
+</div>
+
+<div class="">
+    <div class="row">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.BookingCard"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+       
+        <div class="col-6 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fa fa-address-card"></i> Booking ID:
+        </div>
+        <div class="col-6 col-md-3 py-1">
+            {{ hcBookingInfo.BookingPatientID || 'N/A' }}
+        </div>
+
+        
+        <div class="col-6 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fa fa-address-card"></i> Request ID:
+        </div>
+        <div class="col-6 col-md-3 py-1">
+            {{ hcBookingInfo.HCRequestID|| 'N/A' }}
+        </div>
+
+       
+        <div class="col-12 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fa fa-flask"></i> Tests Booked:
+        </div>
+        <div class="col-12 col-md-9 text-truncate">
+            <span class="d-inline-block">
+                {{ bookedTestNames || 'No tests booked' }}
+            </span>
+        </div>
+
+  
+        <div class="col-6 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fa fa-clock"></i> Contact Time:
+        </div>
+        <div class="col-6 col-md-3 py-1">
+            {{ hcBookingInfo.HCDateTime || 'N/A' }}
+        </div>
+
+      
+        <div class="col-6 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fas fa-map-marker-alt"></i> City:
+        </div>
+        <div class="col-6 col-md-3 py-1">
+            {{ hcBookingInfo.HCCity || 'N/A' }}
+        </div>
+
+
+        <div class="col-6 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fa fa-clock"></i> Booking Time:
+        </div>
+        <div class="col-6 col-md-3 py-1">
+            {{ hcBookingInfo.HCDateTime || 'N/A' }}
+        </div>
+
+
+        <div class="col-6 col-md-3 font-weight-bold py-1">
+            <i class="text-primary fas fa-user"></i> Status:
+        </div>
+        <div class="col-6 col-md-3 py-1">
+            {{ hcBookingInfo.HCBookingStatus || 'N/A' }}
+        </div>
+    </div>
+</div>

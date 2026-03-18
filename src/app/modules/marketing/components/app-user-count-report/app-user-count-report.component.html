@@ -1,0 +1,202 @@
+<div class="container-fluid">
+  <div class="card card-custom">
+    <div class="card-body pb-0">
+      <form
+        [formGroup]="filterForm"
+        class="form-horizontal"
+        name="form"
+        role="form"
+      >
+        <div class="row container form-group justify-content-center">
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12 mt-1">
+            <label class="control-label">Date From:</label>
+            <div class="effective-date-time mt-1 d-flex align-items-center">
+              <input
+                (click)="dateFrom.toggle()"
+                #dateFrom="ngbDatepicker"
+                placeholder="dd-mm-yyyy"
+                ngbDatepicker
+                value="1980-08-26"
+                formControlName="dateFrom"
+                name="dateFrom"
+                class="form-control"
+                type="text"
+                value=""
+                [ngClass]="{
+                  invalid: filterForm.get('dateFrom').errors,
+                  'invalid-highlighted':
+                    filterForm.get('dateFrom').errors && isSubmitted
+                }"
+                [maxDate]="maxDate"
+              />
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12 mt-1">
+            <label>Date To:</label>
+            <div class="effective-date-time mt-1 d-flex align-items-center">
+              <input
+                (click)="dateTo.toggle()"
+                placeholder="dd-mm-yyyy"
+                #dateTo="ngbDatepicker"
+                ngbDatepicker
+                formControlName="dateTo"
+                class="form-control"
+                name="dateTo"
+                type="text"
+                value=""
+                [ngClass]="{
+                  invalid: filterForm.get('dateTo').errors,
+                  'invalid-highlighted':
+                    filterForm.get('dateTo').errors && isSubmitted
+                }"
+                [maxDate]="maxDate"
+              />
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2">
+            <label class="control-label">Branch:</label>
+            <div class="form-group">
+              <ng-select
+                id="pat_branch"
+                style="width: 100%"
+                formControlName="locationid"
+                [items]="BranchesList"
+                bindLabel="Title"
+                [closeOnSelect]="true"
+                bindValue="LocId"
+                placeholder="--Select Branch--"
+              >
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12 mt-2">
+            <label lass="control-label">Group Type:</label>
+            <div class="form-group">
+              <select
+                class="form-control"
+                [(ngModel)]="ForGroup"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Select status"
+              >
+                <option *ngFor="let b of groupOption" [value]="b.value">
+                  {{ b.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-9 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <div
+              (click)="getAppUserData()"
+              class="btn btn-primary mt-1"
+              type="button"
+            >
+              Search
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <ngx-spinner
+        class="spinner-warning"
+        [name]="spinnerRefs.dataTable"
+        bdColor="rgba(0,0,0,0.8)"
+        size="medium"
+        color="#fff"
+        type="square-loader"
+        [fullScreen]="false"
+      >
+        <p style="color: white">Loading...</p>
+      </ngx-spinner>
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-sm-12">
+          <div class="input-group">
+            <!-- <input
+              type="text"
+              placeholder="Type to filter"
+              class="form-control form-control-sm"
+              [(ngModel)]="searchText"
+              (keyup)="filterResults()"
+              name="searchText"
+            /> -->
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-12">
+          <button
+            *ngIf="appUserDataList.length"
+            type="submit"
+            class="btn btn-primary ml-2 btn-sm pull-right"
+            mwlConfirmationPopover
+            [popoverTitle]="'Export as...!'"
+            [popoverMessage]="'Which file to export?'"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="exportAsExcel()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-success d-flex align-items-center gap-1"
+            cancelButtonType="btn btn-sm btn-danger d-flex align-items-center gap-1"
+            (click)="
+              confirmationPopoverConfig.confirmClicked = false;
+              confirmationPopoverConfig.cancelClicked = false
+            "
+            [appendToBody]="true"
+          >
+            <i class="fa fa-download"></i>
+            <span>Export Report</span>
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive table-container">
+        <table class="table table-hover table-bordered compact w-100">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Record Type</th>
+
+              <!-- Dynamic Columns -->
+              <th *ngFor="let col of displayColumns">{{ col }}</th>
+
+              <th>Average</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- No Record -->
+            <tr *ngIf="!groupedData || groupedData.length === 0">
+              <td colspan="100%" class="text-center">
+                <app-no-record-found></app-no-record-found>
+              </td>
+            </tr>
+
+            <!-- Grouped Rows -->
+            <ng-container *ngFor="let group of groupedData">
+              <!-- Group Header -->
+              <tr class="table-secondary">
+                <td [attr.colspan]="2 + displayColumns.length + 1">
+                  <strong>{{ group.branch }} - {{ group.city }}</strong>
+                </td>
+              </tr>
+
+              <!-- Data Rows -->
+              <tr *ngFor="let row of group.records; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ row.RecordType }}</td>
+
+                <!-- Dynamic Values -->
+                <td *ngFor="let col of dynamicColumns">
+                  {{ row[col] !== null ? row[col] : "-" }}
+                </td>
+
+                <td>{{ row.Average !== null ? row.Average : "-" }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

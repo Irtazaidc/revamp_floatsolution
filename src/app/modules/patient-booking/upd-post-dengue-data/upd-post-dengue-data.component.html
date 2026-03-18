@@ -1,0 +1,73 @@
+<div class="card">
+    <div class="card-title"></div>
+
+    <div class="card-body">
+        <div style="float: right;" class="row">
+            <div class="col-2">
+                <button class="btn btn-primary" (click)="checkdatatopost()">Update Data</button>
+            </div>
+        </div>
+        <ng-container *ngIf="dengueData.length then dengueFound else dengueNotFound "></ng-container>
+        <ng-template #dengueFound>
+            <table *ngIf="dengueData.length" class="table table-hover" style="width: 100%;" cellpadding=0 cellspacing=0>
+                <thead>
+                    <th>
+                        <input [(ngModel)]="masterSelected" (change)="selectUnselectAllItem()" class=""
+                            type="checkbox" />
+                    </th>
+                    
+                    <th></th>
+                    <th>Patient Name</th>
+                    <th>VisitId</th>
+                    <th>Param Name</th>
+                    <th>Result</th>
+                    <th>District</th>
+                    <th>Tehsil</th>
+                    <th>Permanent District</th>
+                    <th>Permanent Tehsil</th>
+                    <th>ReportingDate</th>
+                    <th>Posted Date</th>
+                    <th>Response Code</th>
+                    <th>Response</th>
+                    <th>Branch</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let den of dengueData; let i = index">
+                        <!-- <td> <input [(ngModel)]="den.isSelected" class="" type="checkbox" /></td>
+                        <td>{{den.PatientName}}</td>
+                        <td>{{den.PID}}</td>
+                        <td>{{den.TPId}}</td>
+                        <td>{{den.VisitId}}</td> -->
+                        <td> <input [(ngModel)]="den.isSelected" class="" type="checkbox" /></td>
+
+                        <td>{{i + 1}}</td>
+                        <td>{{den.PatientName}}</td>
+                        <td>{{den.VisitId}}</td>
+                        <td>{{den.PCode}}</td>
+                        <td>{{den.Result}}</td>
+                        <td>{{den.District}}</td>
+                        <td>{{den.Tehsil}}</td>
+                        <td>{{den.PermenentDistrict}}</td>
+                        <td>{{den.PermenentTehsil}}</td>
+                        <td>{{den.ReportingDate | date: "dd MMM, yyyy, h:mm a"}}</td>
+                        <td>{{den.PostedDateTime | date: "dd MMM, yyyy, h:mm a"}}</td>
+                        <td>{{den.ResponseStatusCode}}</td>
+                        <td>{{den.ResponseJSON}}</td>
+                        <td>{{den.RegLoc}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-template>
+        <ng-template #dengueNotFound>
+            <span>
+                <p style="text-align: centre;"></p> No Record Found
+            </span>
+        </ng-template>
+    </div>
+</div>
+
+
+<ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="square-loader"
+    [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>

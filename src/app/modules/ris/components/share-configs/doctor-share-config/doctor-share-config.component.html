@@ -1,0 +1,407 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Assign Share
+                <small>Assign share to radiologist</small>
+            </h3>
+        </div>
+    </div>
+    <div class="card-body pb-4">
+        <div class="row">
+            <div class="col-12">
+                <form [formGroup]="searchAssignForm" class="form-horizontal" name="form" role="form">
+                    <div class="row form-group justify-content-center" style="margin-top: -20px;">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-3">
+                            <label for="InitByEmpID">Doctor/Radiologist <span class="text-danger">*</span> <span
+                                    class="badge badge-light badge-light-custom text-primary"
+                                    style="margin-right: -2px;">{{radoiologistList.length}}</span></label>
+                            <ng-select style="width: 100%;" class="mr-1" [items]="radoiologistList" bindLabel="displayLabel"
+                                formControlName="doctorUserID" placeholder="-Select Doctor-"
+                                bindValue="EmpId" [searchFn]="customSearch" (change)="getEmployeeUserID($event)"
+                                [ngClass]="{invalid:  searchAssignForm.get('doctorUserID').errors,
+                                'invalid-highlighted':searchAssignForm.get('doctorUserID').errors && clickSubmit }">
+                            </ng-select>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <div class="form-group mt-9">
+                                <mat-radio-group aria-label="Select an option" [(ngModel)]="searchValue"
+                                    (ngModelChange)="onChange($event)" [ngModelOptions]="{standalone: true}">
+                                    <mat-radio-button value="1">By Loc</mat-radio-button>
+                                    <mat-radio-button value="0" class="ml-2">By Test </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <label for="subSectionIDs" class="control-label">Section:</label>
+                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList"
+                                bindLabel="SubSectionTitle" placeholder="-Select Section-" bindValue="SubSectionId"
+                                [multiple]="true" [closeOnSelect]="false" formControlName="subSectionIDs"
+                                (change)="clearSearchedvalue($event)">
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)"
+                                            aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                    </div>
+                                    <div class="ng-value" *ngIf="items.length > 2">
+                                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template ng-header-tmp>
+                                    <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                        type="button"><i class="ti-check"></i> Select all</button>
+                                    <button (click)="onUnselectAllSections()"
+                                        class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                            class="ti-close"></i> Unselect all</button>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-3" *ngIf="ByLoc">
+                            <label class="">Branch <span class="text-danger">*</span></label>
+                            <ng-select id="pat_branch" style="width: 100%;"
+                                (change)="clearDataSet()" formControlName="locID" [items]="branchList" bindLabel="Title"
+                                bindValue="LocId" placeholder="--Select Branch--"
+                                [ngClass]="{invalid:
+                                    searchAssignForm.get('locID').errors &&
+                                    searchAssignForm.get('locID'),
+                                'invalid-highlighted':
+                                    searchAssignForm.get('locID').errors && clickSubmit
+                                }">
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-3" *ngIf="ByTest">
+                            <label class="">Tests <span class="text-danger">*</span></label>
+                            <ng-select style="width: 100%;" class="" placeholder="-Select Tests-" [items]="testList"
+                                (change)="onTestChange($event)" bindLabel="TestCompleteName" bindValue="TPId"
+                                formControlName="TPID" (change)="clearDataSet()"
+                                
+                                [ngClass]="{invalid:
+                                    searchAssignForm.get('TPID').errors &&
+                                    searchAssignForm.get('TPID'),
+                                'invalid-highlighted':
+                                    searchAssignForm.get('TPID').errors && clickSubmit
+                                                }">
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)"
+                                            aria-hidden="true">×</span>
+                                        <span>{{item.TestCompleteName }}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                            <strong class="text-primary" *ngIf="RegTestProfilePrice>0">Test Price: Rs.
+                                {{RegTestProfilePrice}}</strong>
+                        </div>
+                        <div class="mt-8 col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <button [disabled]="disabledButtonSearch" (click)="searchDataAssign()"
+                                class="btn btn-primary" [ngClass]="{'pull-right': !isLargeScreen}" type="button"><i
+                                    aria-hidden="true" class="fa fa-search"></i>Search <i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinnerSearch"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card card-custom mt-1">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <ngx-spinner class="spinner-warning" [name]="spinnerRefs.searchTable" bdColor="rgba(0,0,0,0.8)"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="row justify-content-center" *ngIf="dataSetList.length">
+                    <div class="offset-md-3 offset-lg-3 offset-xl-3 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="input-group">
+                            <input type="text" [(ngModel)]="searchText" (input)="updateFilteredList()"
+                                placeholder="Search..." class="form-control form-control-sm" />
+
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <span *ngIf="dataSetList.length" class="text-warning pull-right"><strong> <span
+                            class="text-warning">Total Records: {{dataSetList.length}} </span> <span
+                            class="text-dark">|</span> <span class="text-warning">Selected Records: {{
+                            selectedCheckboxesCount }}</span> </strong></span>
+
+                    </div>
+                </div>
+                <div class="table-responsive table-container" style="max-height: 385px;" #tableContainer>
+                    <button
+                        *ngIf="showScrollTop"
+                        class="btn btn-light btn-sm shadow-sm rounded-circle position-absolute scroll-top-btn"
+                        (click)="scrollTableToTop()"
+                        ngbTooltip="Scroll to top"
+                    >
+                        <i class="fa fa-arrow-up"></i>
+                    </button>
+                    <table *ngIf="!dataSetList.length" class="table table-hover compact table-bordered cursor-pointer"
+                        style="width: 100%;" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr style="border: none !important;">
+                                <td colspan="15" style="border: none !important;">
+                                    <div class="container">
+                                        <app-no-record-found [pyClassParam]="'py-5'"
+                                            [infoMessageParam]="noDataMessage"></app-no-record-found>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table *ngIf="filteredDataSetList.length" class="table table-hover compact table-bordered cursor-pointer"
+                        style="width: 100%;" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr class="sticky-header">
+                                <th class="text-center" style="width: 2%;">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <mat-checkbox class="cursor-pointer"
+                                        [(ngModel)]="mainChk"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (change)="selectAllItems($event.checked)"
+                                        [disabled]="isFieldDisabled">
+                                        </mat-checkbox>
+                                    </div>
+                                </th>
+                                <th *ngIf="hideLoc">Location</th>
+                                <th *ngIf="hideTest">Test</th>
+                                <th colspan="2">Initial</th>
+                                <th colspan="2">DS</th>
+                            </tr>
+                            <tr class="sticky-header-2">
+                                <th></th>
+                                <th *ngIf="hideLoc"></th>
+                                <th *ngIf="hideTest"></th>
+                                <th>Share (Fixed amount)</th>
+                                <th>
+                                    Share % <br>
+                                    <input
+                                        type="text"
+                                        placeholder="Share %"
+                                        [(ngModel)]="initHeaderPerc"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (keypress)="validateDecimalNo($event)"
+                                        class="form-control form-control-mini d-inline-block">
+                                    <mat-checkbox
+                                        class="cursor-pointer ml-1"
+                                        [(ngModel)]="applyInitPerc"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (change)="applyPercentage('Init')">
+                                    </mat-checkbox>
+                                </th>
+
+                                <th>Share (Fixed amount)</th>
+                                <th>
+                                    Share % <br>
+                                    <input
+                                        type="text"
+                                        placeholder="Share %"
+                                        [(ngModel)]="dsHeaderPerc"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (keypress)="validateDecimalNo($event)"
+                                        class="form-control form-control-mini d-inline-block">
+                                    <mat-checkbox
+                                        class="cursor-pointer ml-1"
+                                        [(ngModel)]="applyDSPerc"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (change)="applyPercentage('DS')">
+                                    </mat-checkbox>
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of filteredDataSetList; let i = index">
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <mat-checkbox
+                                        class="cursor-pointer"
+                                        [(ngModel)]="data.checked"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        (change)="onSelectedDoctor(data)">
+                                        </mat-checkbox>
+                                    </div>
+                                </td>
+                                <td *ngIf="hideLoc"><span ngbTooltip="{{data.Title}}">{{data.Code}}</span></td>
+                                <td *ngIf="hideTest"><span
+                                        ngbTooltip="{{data.TestProfileName}}">{{data.TestProfileCode}}</span> - <span
+                                        class="text-primary">Rs: {{data.TestProfilePrice}}</span></td>
+                                <td class="text-center">
+                                    <input type="text" placeholder="Share" [(ngModel)]="data.InitialShare"
+                                        [ngModelOptions]="{standalone: true}" [ngClass]="{
+                                        'invalid': (data.InitialShare === null || data.InitialShare === undefined || data.InitialShare === '') && data.checked,
+                                        'invalid-highlighted': (data.InitialShare === null || data.InitialShare === undefined || data.InitialShare === '') && data.checked && isValues
+                                        }" (keypress)="validateDecimalNo($event)"
+                                        value="{{data.InitialShare?data.InitialShare:0}}"
+                                        class="form-control form-control-mini d-inline-block"
+                                        (blur)="calculatePercentage(data, 'Share','Init')">
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" placeholder="%age" [(ngModel)]="data.InitialSharePerc"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [ngClass]="{ 'invalid': (data.InitialSharePerc === null || data.InitialSharePerc === undefined || data.InitialSharePerc==='') && data.checked,'invalid-highlighted': (data.InitialSharePerc === null || data.InitialSharePerc === undefined || data.InitialSharePerc==='') && data.checked && isValues }"
+                                        (keypress)="validateDecimalNo($event)"
+                                        value="{{data.InitialSharePerc?data.InitialSharePerc:0}}"
+                                        class="form-control form-control-mini d-inline-block"
+                                        (blur)="calculatePercentage(data, 'SharePerc','Init')">
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" placeholder="Share" [(ngModel)]="data.DSShare"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [ngClass]="{ 'invalid': (data.DSShare === null || data.DSShare === undefined || data.DSShare==='') && data.checked,'invalid-highlighted': (data.DSShare === null || data.DSShare === undefined || data.DSShare ==='') && data.checked && isValues }"
+                                        (keypress)="validateDecimalNo($event)" value="{{data.DSShare?data.DSShare:0}}"
+                                        class="form-control form-control-mini d-inline-block"
+                                        (blur)="calculatePercentage(data, 'Share','DS')">
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" placeholder="%age" [(ngModel)]="data.DSSharePerc"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [ngClass]="{ 'invalid': (data.DSSharePerc === null || data.DSSharePerc === undefined || data.DSSharePerc==='') && data.checked,'invalid-highlighted': (data.DSSharePerc=== null || data.DSSharePerc === undefined || data.DSSharePerc==='') && data.checked && isValues }"
+                                        (keypress)="validateDecimalNo($event)" value="{{data.DSSharePerc?data.DSSharePerc:0}}"
+                                        class="form-control form-control-mini d-inline-block"
+                                        (blur)="calculatePercentage(data, 'SharePerc','DS')">
+                                </td>
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5" *ngIf="dataSetList.length">
+                <button type="button" [disabled]="disabledButton" class="btn btn-sm btn-primary pull-right mr-5"
+                    mwlConfirmationPopover [popoverTitle]="'Please Confirm...!'"
+                    [popoverMessage]="'Are you sure want to save?'" [confirmText]="confirmationPopover.confirmText"
+                    [cancelText]="confirmationPopover.cancelText" [placement]="confirmationPopover.placements[0]"
+                    (confirm)="updateDoctorShare()" (cancel)="confirmationPopover.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopover.confirmClicked = false; confirmationPopover.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i class="fa fa-save"></i>Save <i class="spinner-border-custom" aria-hidden="true"
+                        [hidden]="isSpinner"></i>
+                </button>
+                <button *ngIf="!hideLoc && hasExistingConfig" class="btn btn-sm btn-warning pull-right mr-2" (click)="showBranchSelectionModal()">
+                    <i class="fa fa-clone" aria-hidden="true"></i>Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #showbranchSelectionModal let-showbranchSelectionModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="card-title">Clone Doctor Share Configuration</h4>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <label class="control-label mb-3">Choose an option  <span class="text-danger">*</span></label>
+                <div class="">
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="ValueOfCopyRadio"
+                        (ngModelChange)="ChangeofValueAtCopyRadio($event)" [ngModelOptions]="{standalone: true}">
+                        <mat-radio-button value="1">By Radiologist</mat-radio-button>
+                        <mat-radio-button value="2" class="ml-2">By Branch</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-12" *ngIf="ByRadiologist">
+                 <label class="">Doctor/Radiologist  <span class="text-danger">*</span></label>
+                 <ng-select style="width: 100%;" class="mr-1" [items]="distaniationRadiologistList" bindLabel="displayLabel"
+                        [(ngModel)]="radiologistIds" placeholder="-Select Radiologist-" [searchFn]="customSearch"
+                    [ngClass]="{'invalid': !radiologistIds?.length,'invalid-highlighted': !radiologistIds?.length && isRadiologistSubmitted}"
+                    bindValue="EmpId" [multiple]="true" [closeOnSelect]="false" name="radiologistIds">
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            <span class="ng-value-label"> {{item.displayLabel}}</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">f8
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                        </div>
+                    </ng-template>
+                    <ng-template ng-header-tmp>
+                        <button (click)="onSelectAllRadiologist()" class="btn btn-mini btn-outline-primary"
+                            type="button"><i class="ti-check"></i> Select all</button>
+                        <button (click)="onUnselectAllRadiologist()"
+                            class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                class="ti-close"></i> Unselect all</button>
+                    </ng-template>
+                </ng-select>
+            </div>
+            <div class="col-md-8 col-sm-12" *ngIf="ByLocation">
+                 <label class="">Branch/Location <span class="text-danger">*</span></label>
+                <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="distaniationBranchesList" bindLabel="Title"
+                    [ngClass]="{'invalid': !branchIds?.length,'invalid-highlighted': !branchIds?.length && isBranchSubmitted}"
+                    placeholder="-Select Branch-" bindValue="LocId" [(ngModel)]="branchIds" name="branchIds"
+                    [multiple]="true" [closeOnSelect]="false">
+
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            <span class="ng-value-label"> {{item.Title}}</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                        </div>
+                    </ng-template>
+                    <ng-template ng-header-tmp>
+                        <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                            type="button"><i class="ti-check"></i> Select all</button>
+                        <button (click)="onUnselectAllBranches()"
+                            class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                class="ti-close"></i> Unselect all</button>
+                    </ng-template>
+                </ng-select>
+            </div>
+
+        <div class="col-md-12 mt-2">
+             <div class="alert alert-danger d-flex align-items-start shadow-sm" style="border-left: 5px solid red; background-color: #fff8e1;">
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-2 d-flex justify-content-center align-items-center"> 
+                        <img src="./assets/images/brand/info-icon3.png" alt="Info Icon" style="height: 60px; width: 60px;"> 
+                    </div> 
+                    <div class="col-md-10" style="padding-left: 0px; margin-left: -19px;"> 
+                        <h6 class="mb-1 fw-bold text-dark">
+                            Important Notice
+                        </h6>
+                        <p class="mb-1 fw-bold text-dark">Once confirmed, the current doctor share configuration will be applied to the selected {{ ByRadiologist ? 'doctors' : 'branches' }} or all {{ ByRadiologist ? 'doctors' : 'branches' }} if <strong>'Select All'</strong> is selected. 
+                        <span class="text-danger fw-semibold"> <br><strong> 
+                        Note: </strong>If any of the selected {{ ByRadiologist ? 'doctors' : 'branches' }} already have an existing doctor share configuration, it will be updated and overwritten with the current settings.</span> 
+                        </p> 
+                    </div> 
+                </div> 
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal"
+            (click)="showbranchSelectionModal.close()">
+            <i class="fa fa-times-circle"></i>Close
+        </button>
+        <!-- <button type="button" class="btn btn-sm btn-primary" (click)="confirmBranchSelection()">Confirm</button> -->
+        <button type="button" [disabled]="disabledButtonCopy" class="btn btn-sm btn-primary pull-right mr-5"
+            mwlConfirmationPopover [popoverTitle]="'Please Confirm...!'"
+            [popoverMessage]="confirmationPopoverCopy.popoverMessage"
+            [confirmText]="confirmationPopoverCopy.confirmText" [cancelText]="confirmationPopoverCopy.cancelText"
+            [placement]="confirmationPopoverCopy.placements[0]" (confirm)="copyDataToSelectedBranchOrRadiologist()"
+            (cancel)="confirmationPopoverCopy.confirmPopoverCancel()" confirmButtonType="btn btn-sm btn-primary"
+            cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverCopy.confirmClicked = false; confirmationPopoverCopy.cancelClicked = false"
+            [appendToBody]="true">
+            <i class="fa fa-save"></i>Save <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerCopy"></i>
+        </button>
+
+    </div>
+</ng-template>

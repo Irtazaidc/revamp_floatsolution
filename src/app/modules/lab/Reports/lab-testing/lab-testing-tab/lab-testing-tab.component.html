@@ -1,0 +1,28 @@
+<mat-card>
+    <mat-card-content >
+        <mat-tab-group class="demo-tab-group" (selectedTabChange)="onTabChanged($event)" animationDuration="0ms" style="background-color: #fff;"> 
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i>
+                    Lab Testing TAT
+                  </ng-template>
+                  <app-lab-testing *ngIf="selectedTabIndex === 0"></app-lab-testing>
+            </mat-tab>
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-search icon-lg text-danger mr-2 custom-icons"></i>
+                    Lab Testing DateWise
+                  </ng-template>
+                  <app-lab-testing-date *ngIf="selectedTabIndex === 1"></app-lab-testing-date>
+            </mat-tab>  
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-layers icon-lg text-danger mr-2 custom-icons"></i>
+                    Lab Testing LocationWise
+                  </ng-template>
+                  <app-lab-testing-loc *ngIf="selectedTabIndex === 2"></app-lab-testing-loc>
+            </mat-tab> 
+           
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

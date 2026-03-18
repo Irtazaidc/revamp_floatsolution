@@ -1,0 +1,55 @@
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card card-custom bg-light">
+            <div style="max-height:340px; overflow-y: auto; ">
+                <div class="card-body bg-light">
+                    <div class="row gradient" style="border: 0.2px solid rgb(237, 215, 215)">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
+                            <h4>Card NO: {{discountCardNumber}}</h4>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 text-right mt-2">
+                            <h4>{{cardTitle}}</h4>
+                        </div>
+                    </div>
+                    <div class="row mt-8 container">
+                        <div class="col-12">
+                            <div class="row  mt-5 ">
+                                <div class="col-xl-9 col-lg-9 col-md-8 col-sm-8 ">
+                                    <p class="para-font">Name: {{PatientName}}</p>
+                                    <p class="para-font">MRN: {{PatientID}}</p>
+                                   
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 ">
+                                            <p class="para-font">First Visit: {{CreatedOn | date:'dd-MMM-yyyy '}}</p>
+                                            <p class="para-font">Remaining Card Points: {{RewardPoints}}</p>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 ">
+                                            <p class="para-font">Age/Gender: {{Age}}{{Gender}}</p>
+                                            <p class="para-font">Used/Redeemed Points: {{UsedRedeemedPoints}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 ">
+                                    <div class="flex-shrink-0 mr-5 mt-lg-0 ">
+                                        <div class="symbol symbol-60 symbol-lg-100 symbol-xl-120">
+                                            <img class="bg-light" [src]="DiscountCardImage"
+                                                alt="defaultPic" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                                    <input class="form-control bg-white form-control-lg form-control-solid" type="text"
+                                        [value]="Remarks?Remarks:''" placeholder="Remarks" [readonly]="isReadonly" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

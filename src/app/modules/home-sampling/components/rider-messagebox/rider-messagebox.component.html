@@ -1,0 +1,103 @@
+<div class="container-fluid">
+    <app-card [cardClass]="'tim-card tim-card-primary'"> <!-- [title]="'Visit Management'" -->
+
+        <div class="my-2 py-2">
+            <h4 class="fw-bold text-uppercase" style="letter-spacing: 1px;">
+                <i class="fa fa-bell text-primary me-2"></i>
+                Rider Notification Message Box
+            </h4>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="collapse show" id="sendNotificationSpecificCardToggle">
+                    <div class="form-row">
+                        <div class="form-group col-lg-7 col-md-6 col-sm-12">
+                            <label>Title: <span class="mandatory-field text-danger">*</span></label>
+
+                            <input type="text"
+                                class="form-control"
+                                [(ngModel)]="notificationForms.Title"
+                                minlength="15"
+                                [ngClass]="{
+                                    'invalid': !notificationForms.Title || notificationForms.Title.length < 15,
+                                    'invalid-highlighted': isSubmitted && (!notificationForms.Title || notificationForms.Title.length < 15)
+                                }"/>
+
+                            <small class="text-danger"
+                                *ngIf="isSubmitted && notificationForms.Title?.length < 15">
+                                Minimum 15 characters required
+                            </small>
+                        </div>
+
+                        <div class="form-group col-lg-5 col-md-6 col-sm-12">
+                            <label>Riders: <span class="mandatory-field text-danger">*</span></label>
+                             <div class="form-group">
+                                <ng-select id="pat_branch" style="width: 100%;" [(ngModel)]="notificationForms.Riders"  [ngClass]="{'invalid': !notificationForms.Riders?.length, 'invalid-highlighted': !notificationForms.Riders?.length && isSubmitted }" 
+                                [items]="RidersDetailList" bindLabel="RiderFullName" [multiple]="true" 
+                                [closeOnSelect]="false" 
+                                bindValue="UserID" placeholder="--Select Riders--">
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.RiderFullName}}</span>
+                                    </div>
+                                    <div class="ng-value" *ngIf="items.length > 4">
+                                        <span class="ng-value-label">{{items.length - 4}} more...</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template ng-header-tmp>
+                                    <button (click)="onSelectAllRiders()" class="btn btn-mini btn-outline-primary"
+                                        type="button"><i class="ti-check"></i>Select All</button>
+                                    <button (click)="onUnselectAllRiders()"
+                                        class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                            class="ti-close"></i>Unselect All</button>
+                                </ng-template>
+                                </ng-select>
+                             </div> 
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label>Message: <span class="mandatory-field text-danger">*</span></label>
+
+                            <textarea rows="4"
+                                    class="form-control"
+                                    [(ngModel)]="notificationForms.MessageBody"
+                                    minlength="15"
+                                    [ngClass]="{
+                                        'invalid': !notificationForms.MessageBody || notificationForms.MessageBody.length < 15,
+                                        'invalid-highlighted': isSubmitted && (!notificationForms.MessageBody || notificationForms.MessageBody.length < 15)
+                                    }"></textarea>
+
+                            <small class="text-danger"
+                                *ngIf="isSubmitted && notificationForms.MessageBody?.length < 15">
+                                Minimum 15 characters required
+                            </small>
+                        </div>
+
+
+                        <div class="col-12">
+                            <button tabindex="20" class="btn btn-sm btn-danger pull-right" title="Save"
+                                mwlConfirmationPopover [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="sendNotifications()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="primary"
+                                cancelButtonType="outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"> <i class="fa fa-save m-0"></i>
+                                Send Message
+                            </button>
+                        </div>
+                    </div>
+                    <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)"
+                        [name]="spinnerRefs.pushNotification_generic" size="large" color="#fff" type="square-loader"
+                        [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                </div>
+            </div>
+        </div>
+    </app-card>
+</div>

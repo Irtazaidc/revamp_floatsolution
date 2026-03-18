@@ -1,0 +1,23 @@
+.fixed-height-table {
+    max-height: 300px;
+}
+
+
+.patients-table-mobile .action-btns {
+    // position: sticky;
+    // right: 0;
+    position: absolute;
+    right: 15px;
+    background-color: #fff;
+}
+
+
+.copy-text-button {
+    position: absolute;
+    right: 8px;
+    top: 7px;
+    cursor: pointer;
+}
+.copy-text-button i:hover {
+    color: #1bc5bd;
+}

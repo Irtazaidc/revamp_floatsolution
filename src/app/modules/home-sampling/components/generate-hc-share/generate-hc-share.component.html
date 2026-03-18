@@ -1,0 +1,541 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header card-header-tabs-line">
+        <div class="card-toolbar" style="width:50% !important;">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(1)"
+                        [ngClass]="{'active-tab': visibleTab == 1}" >
+                        <div class="nav-content bg-warning text-white">
+                            <i class="far fa-clock text-dark"></i>
+                            <span class="text-dark">Process Share</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(2)"
+                        [ngClass]="{'active-tab': visibleTab == 2}" >
+                        <div class="nav-content bg-primary">
+                            <i class="fa fa-spinner text-white"></i>
+                            <span class="text-white">Recommend Share</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(3)"
+                        [ngClass]="{'active-tab': visibleTab == 3}">
+                        <div class="nav-content bg-green">
+                            <i class="fas fa-check-circle text-white"></i>
+                            <span class="text-white">Approve Share</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body col-md-12">
+            <div class="tab-content">
+                <!--HC unprocessed Share ::Begin-->
+                <div class="fade show active" [hidden]="visibleTab != 1" id="HC_unprocessed_Share" role="tabpanel"
+                    aria-labelledby="HC_unprocessed_Share">
+                    <mat-card class="mb-5 mt-6">
+                        <mat-card-content>
+                            <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                                <form [formGroup]="unProcessShareform" class="form-horizontal" name="form" role="form"
+                                    (ngSubmit)="getUnProccessedShareData('')">
+                                    <div class="row">
+                                        <div class="col-md-2 col-sm-12">
+                                            <label class="control-label">Date From</label>
+                                            <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                                placeholder="dd-mm-yyyy" ngbDatepicker value="1980-08-26"
+                                                formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                                                 (dateSelect)="onMonthChange($event)"
+                                                 readonly
+                                                type="text" value="" />
+                                        </div>
+
+                                        <div class="col-md-2 col-sm-12">
+                                            <label class="control-label">Date To</label>
+                                            <input (click)="dateTo.toggle()" value="1980-08-26" placeholder="dd-mm-yyyy"
+                                                #dateTo="ngbDatepicker" ngbDatepicker formControlName="dateTo" readonly
+                                                class="form-control mb-4" name="dateTo" type="text" value="" />
+                                        </div>
+
+                                        <div class="col-md-2 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="periodMonthName" class="control-label">Fiscal Info</label>
+                                                <input disabled formControlName="periodMonthName" class="form-control"
+                                                    name="periodMonthName" type="text"
+                                                    value="{{currFiscalYearData.FiscalMonth}}" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-1 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="rider" class="control-label">All HC Staff</label>
+                                                <label class="switch">
+                                                    <input disabled formControlName="isSelAllRiders"
+                                                        name="isSelAllRiders" type="checkbox">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="rider" class="control-label">Discarded</label>
+                                                <label class="switch">
+                                                    <input formControlName="isDiscard" name="isDiscard" type="checkbox">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="rider" class="control-label">Processed</label>
+                                                <label class="switch">
+                                                    <input formControlName="isProcessed" name="isProcessed"
+                                                        type="checkbox">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mt-8">
+                                            <button (click)="getUnProccessedShareData('')"
+                                                class="form-control btn btn-primary" value=""><i
+                                                    class="ti-search m-0"></i> Search</button>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.processSection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                     </ngx-spinner>
+                    <ng-container
+                    
+                        *ngIf="unproccessedShareData.length; then UnproccessedShareDataSpace  else NoUnproccessedShareDataReqFoundSpace">
+
+                       
+
+                    </ng-container>
+                    <ng-template #UnproccessedShareDataSpace>
+                        
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12">
+                                <div class="col-lg-5 col-md-5 col-sm-12" style="float: right;">
+                                    <input type="text" placeholder="Search Here" class="form-control form-control-sm "
+                                        [(ngModel)]="searchInUnprocessedShareData"
+                                        name="searchInUnprocessedShareData" />
+                                </div>
+                                <div *ngIf="HCTestCountsOfAlRiders.length" class="col-lg-7 col-md-7 col-sm-12 m-2">
+                                    <mat-chip-list>
+                                        <mat-chip *ngFor="let countData of HCTestCountsOfAlRiders" color="#1e8bc1"
+                                            selected="true">
+                                            {{countData.TestProfileCode}} : {{countData.TestProfileCount}}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                                <div class="table-responsive table-container fixed-height-table">
+                                    <table class="table table-sm table-hover compact table-bordered cursor-pointer" style="width: 100%;"
+                                        cellpadding=0 cellspacing=0>
+                                    <thead>
+                                        <tr style="font-weight: bold;">
+                                            <th scope="col"> <input type="checkbox"
+                                                    (change)="checkUncheckUproccessedAll()"
+                                                    [attr.disabled]="IsMasterDisable ? true : null"
+                                                    [(ngModel)]="masterSelected" name="list_name" value="m1" />
+                                            <th scope="col">HC Staff Name</th>
+                                            <th scope="col">Share Amount</th>
+                                            <th scope="col" *ngIf="!unProcessShareform.get('isProcessed')?.value">Other Allowances</th>
+                                            <th scope="col" *ngIf="!unProcessShareform.get('isProcessed')?.value">Net Payable</th>
+                                            <th scope="col">View Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="">
+                                        <tr *ngIf="unproccessedShareData.length<1">
+                                            <td colspan="100" class="text-center">No Record Found</td>
+                                        </tr>
+                                        <tr scope="row"
+                                            *ngFor="let hc of unproccessedShareData| filterByKey: searchInUnprocessedShareData:['RiderName', 'ShareAmount'] ">
+                                            <td scope="col">
+                                                <!-- [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null" -->
+                                                <input (change)="getUpProccessedSelData()" [(ngModel)]="hc.isSelected"
+                                                    type="checkbox" class="" />
+                                            </td>
+                                            <td scope="col"> {{hc.RiderName}}</td>
+                                            <td scope="col"> {{hc.ShareAmount }}</td>
+                                            <td *ngIf="!unProcessShareform.get('isProcessed')?.value" scope="col">
+                                                <input type="number"
+                                                    class="form-control form-control-sm"
+                                                    [(ngModel)]="hc.otherAllowance"
+                                                    [disabled]="!hc.isSelected"
+                                                    (ngModelChange)="updateNetPayable(hc)" />
+                                            </td>
+                                            <td *ngIf="!unProcessShareform.get('isProcessed')?.value" scope="col"> {{hc.netPayable }}</td>
+                                            <td scope="col" style="cursor: pointer;"> <i class="fa fa-eye"
+                                                    (click)="getUnProccessedShareData(hc)"></i> </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                </div>
+                                <div style="float: right;" class="row">
+                                    <button class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                        ngbTooltip="Process HC Share" mwlConfirmationPopover
+                                        [popoverTitle]="'Process HC Share'" [popoverMessage]="'Are you sure?'"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="generateHCShareData()"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="primary btn-mini"
+                                        cancelButtonType="outline-secondary btn-mini"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true">
+                                        Process Share
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 col-lg-6 col-sm-12">
+                                <div class="col-lg-5 col-md-5 col-sm-12 m-2" style="float: right;">
+                                    <input type="text" placeholder="Search Here" class="form-control form-control-sm "
+                                        [(ngModel)]="searchInUnprocessedShareOfSelriderData"
+                                        name="searchInUnprocessedShareOfSelriderData" />
+                                </div>
+                                <div *ngIf="HCTestCountsOfSelRider.length" class="col-lg-7 col-md-7 col-sm-12 m-2">
+
+                                    <mat-chip-list>
+                                        <mat-chip *ngFor="let countData of HCTestCountsOfSelRider" color="#1e8bc1"
+                                            selected="true">
+                                            {{countData.TestProfileCode}} : {{countData.TestProfileCount}}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 m-2" style="float: right;">
+                                    <span>{{UnproccessesShareSum}}</span>
+                                </div>
+                                <button *ngIf="isDiscardShareBtnEnable" class="btn btn-primary"
+                                    (click)="discardHCShare()">Discard share</button>
+
+                                    <div class="table-responsive table-container fixed-height-table">
+                                        <table class="table table-sm table-hover compact table-bordered cursor-pointer" style="width: 100%;"
+                                            cellpadding=0 cellspacing=0>
+                                    <thead>
+                                        
+                                        <tr style="font-weight: bold;">
+                                            <!-- <th scope="col"> <input type="checkbox"
+                                                    (change)="SelUnSelReqIDsToProcessedList()"
+                                                    [(ngModel)]="ReqIDsMasterSelected" name="" /> -->
+                                            <th>#</th>
+                                            <th></th>
+                                            <th scope="col">Request ID</th>
+                                            <th scope="col">Test Name</th>
+                                            <th scope="col">CCR Remarks</th>
+                                            <th scope="col">Points</th>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Status</th>
+                                            <!-- <th scope="col">Visit ID</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="">
+                                        <tr *ngIf="unproccessedSpecificRiderShareData.length<1">
+                                            <td colspan="100" class="text-center">No Record Found</td>
+                                        </tr>
+                                        <tr scope="row"
+                                            *ngFor="let hc of unproccessedSpecificRiderShareData | filterByKey: searchInUnprocessedShareOfSelriderData:['HCRequestID', 'TestName', 'RemarksByCCRStaff', 'FeedbackPoints', 'RemarksByCCRStaff', 'ShareAmount', 'VisitIDs'] ; let i = index">
+                                            <td>{{i+1}}</td>
+                                            <td scope="col">
+                                                <input [disabled]="hc.status == 'Cancelled'"
+                                                    (change)="AddRemoveReqIDsToProcessedList(hc)"
+                                                    [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                                            </td>
+                                            <td scope="col"> {{hc.HCRequestID}}</td>
+                                            <td scope="col"> {{hc.TestName }}</td>
+                                            <td scope="col"> {{hc.RemarksByCCRStaff }}</td>
+                                            <td scope="col"> {{hc.FeedbackPoints }}</td>
+                                            <td scope="col"> {{hc.ShareAmount}}</td>
+                                            <td scope="col"> {{hc.status}}</td>
+                                            <!-- <td scope="col"> {{hc.VisitIDs}} </td> -->
+                                        </tr>
+                                        <tr scope="row">
+                                            <td scope="col" colspan="6"> </td>
+                                            <td scope="col" colspan="1"> {{UnproccessesShareSum}} &nbsp;
+                                            </td>
+                                            <td scope="col" > </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.processSection"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                    </ng-template>
+                    <ng-template #NoUnproccessedShareDataReqFoundSpace>
+                        <div class="alert p-c-alert-info text-center" style="text-align: center;">
+                            No Data Found <i class="fa fa-exclamation-triangle text-light" aria-hidden="true"></i>
+                        </div>
+                    </ng-template>
+                </div>
+                <!--HC Processed Share Data ::: Recommendation tab ::Begin-->
+                <div class="fade show active" [hidden]="visibleTab != 2" id="HC_processed_share" role="tabpanel"
+                    aria-labelledby="HC_processed_share">
+                    <mat-card class="mb-5 mt-6">
+                        <mat-card-content>
+                            <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                                <form [formGroup]="processedShareform" class="form-horizontal" name="form" role="form"
+                                    (ngSubmit)="getProccessedShareData()">
+                                    <div class="row">
+
+                                        <div class="col-md-4 col-lg-4 col-sm-12">
+                                            <!-- [hidden]="disableRiderDrpDown" -->
+                                            <div class="form-group">
+                                                <!-- <label for="periodMonthName" class="control-label">Fiscal Info</label> -->
+                                                <!--   [attr.disabled]="disableRiderDrpDown ? true : null" -->
+                                                <input disabled formControlName="periodMonthName" class="form-control"
+                                                    name="periodMonthName" type="text"
+                                                    value="{{currFiscalYearData.FiscalMonth}}" />
+                                            </div>
+                                        </div>
+                                        <!-- //here -->
+                                        <div class="col-md-4 col-lg-4 col-sm-12">
+                                            <mat-chip-listbox>
+                                                <mat-chip-option color="#1e8bc1" selected="true">
+                                                    HC Staff Count: {{this.proccessedShareData.length}}
+                                                </mat-chip-option>
+                                            </mat-chip-listbox>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <ng-container
+                        *ngIf="proccessedShareData.length; then proccessedShareDataSpace  else NoproccessedShareDataReqFoundSpace">
+                    </ng-container>
+                    <ng-template #proccessedShareDataSpace>
+                        <div class="table-responsive fixed-height-table">
+
+                            <input type="text" placeholder="Search Here" class="form-control form-control-sm "
+                                [(ngModel)]="searchIprocessedShareData" name="searchIprocessedShareData" />
+                            <table class="table table-sm tableBorder"
+                                style="overflow: scroll; border:lightblue solid 1px;overflow: scroll;font-size: small;">
+
+                                <thead>
+                                    <tr style="font-weight: bold;">
+                                        <th scope="col"> <input type="checkbox" (change)="checkUncheckproccessedAll()"
+                                                [attr.disabled]="IsMasterDisable ? true : null"
+                                                [(ngModel)]="masterSelected" name="list_name" value="m1" />
+                                        <th scope="col">HC Staff Name</th>
+                                        <th scope="col">Share Amount</th>
+                                        <th scope="col">Other Allowances</th>
+                                        <th scope="col">Net Payable</th>
+                                        <th scope="col">Avg Points</th>
+                                        <th scope="col">Recommended %</th>
+                                        <th scope="col">Recommended Amount</th>
+                                        <th scope="col">Recommendation Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="">
+                                    <tr scope="row"
+                                        *ngFor="let hc of proccessedShareData| filterByKey: searchIprocessedShareData:['RiderName', 'ShareAmount', 'RiderAvgFeedbackPoints']">
+                                        <td scope="col">
+                                            <input (change)="getProccessedSelData()" [(ngModel)]="hc.isSelected"
+                                                type="checkbox" class="" />
+                                        </td>
+                                        <td scope="row"> {{hc.RiderName}}</td>
+                                        <td scope="row"> {{hc.ShareAmount}}</td>
+                                        <td scope="row"> {{hc.OtherAllowance || '-'}}</td>
+                                        <td scope="row"> {{hc.OtherAllowance + hc.ShareAmount}}</td>
+                                        <td scope="row">{{hc.RiderAvgFeedbackPoints}}</td>
+                                        <td scope="row">
+                                            <input type="text" class="form-control"
+                                                (change)="recommendedPercentageChanged(hc)"
+                                                [(ngModel)]="hc.recommendedPercentage">
+                                        </td>
+                                        <td scope="row">
+                                            <input type="text" class="form-control"
+                                                (change)="recommendedShareAmountChanged(hc)"
+                                                [(ngModel)]="hc.pRecommendedShareAmount">
+                                        </td>
+                                        <td scope="row">
+                                            <input type="text" class="form-control"
+                                                [(ngModel)]="hc.recommendationRemarks">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row" style="float: right;">
+                            <!-- <button class="btn btn-primary mr-3" (click)="reccommendHCShareData()">
+                                
+                            </button> -->
+
+                            <button class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                ngbTooltip="Recommend HC Share" mwlConfirmationPopover
+                                [popoverTitle]="'Recommend HC Share'" [popoverMessage]="'Are you sure?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="reccommendHCShareData()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                Recommend
+                            </button>
+
+                        </div>
+
+                    </ng-template>
+                    <ng-template #NoproccessedShareDataReqFoundSpace>
+                        <div class="alert r-c-alert-info text-center" style="text-align: center;">
+                            No Data Found <i class="fa fa-exclamation-triangle text-light" aria-hidden="true"></i>
+                        </div>
+                    </ng-template>
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.recommendSection"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                </div>
+                <!--HC Recommended Share Data ::: Approval tab ::Begin-->
+                <div class="fade show active" [hidden]="visibleTab != 3" id="HC_Recommeded_share" role="tabpanel"
+                    aria-labelledby="HC_Recommeded_share">
+
+                    <mat-card class="mb-5 mt-6">
+                        <mat-card-content>
+                            <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                                <form [formGroup]="recemmendedShareform" class="form-horizontal" name="form" role="form"
+                                    (ngSubmit)="getReccomendedShareData()">
+                                    <div class="row">
+
+                                        <div class="col-md-4 col-sm-12">
+                                            <!-- [hidden]="disableRiderDrpDown" -->
+                                            <div class="form-group">
+                                                <!-- <label for="periodMonthName" class="control-label">Fiscal Info</label> -->
+                                                <!--   [attr.disabled]="disableRiderDrpDown ? true : null" -->
+                                                <input disabled formControlName="periodMonthName" class="form-control"
+                                                    name="periodMonthName" type="text"
+                                                    value="{{currFiscalYearData.FiscalMonth}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-lg-4 col-sm-12">
+                                            <mat-chip-listbox>
+                                                <mat-chip-option color="#1e8bc1" selected="true">
+                                                    HC Staff Count: {{this.recommendedShareData.length}}
+                                                </mat-chip-option>
+                                            </mat-chip-listbox>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <ng-container
+                        *ngIf="recommendedShareData.length; then recommendedShareDataSpace  else NorecommendedShareFoundSpace">
+                    </ng-container>
+
+                    <ng-template #recommendedShareDataSpace>
+                        <div class="table-responsive fixed-height-table">
+
+                            <input type="text" placeholder="Search Here" class="form-control form-control-sm "
+                                [(ngModel)]="searchInproccedShareOfSelriderData"
+                                name="searchInproccedShareOfSelriderData" />
+                            <table class="table table-sm tableBorder"
+                                style="overflow: scroll;border:lightblue solid 1px">
+                                <thead>
+                                    <tr style="font-weight: bold;">
+                                        <th scope="col"> <input type="checkbox" (change)="checkUncheckRecommendAll()"
+                                                [attr.disabled]="IsMasterDisable ? true : null"
+                                                [(ngModel)]="masterSelectedApproved" name="list_name" value="m1" />
+                                        <th scope="col">HC Staff Name</th>
+                                        <th scope="col">Generated ShareAmount</th>
+                                        <th scope="col">Recommended Percentage</th>
+                                        <th scope="col">Recommended ShareAmount</th>
+                                        <th scope="col">Recommended Remarks</th>
+                                        <th scope="col">Average Points</th>
+                                        <th scope="col">Approved Percentage</th>
+                                        <th scope="col">Approved Share Amount</th>
+                                        <th scope="col">Approved Share Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="">
+                                    <tr scope="row"
+                                        *ngFor="let hc of recommendedShareData| filterByKey: searchInproccedShareOfSelriderData:['RiderName', 'GeneratedShareAmount', 'RecommendedSharePercent', 'RecommendedShareAmount', 'RecommendedShareRemarks', 'RiderAvgFeedbackPoints']">
+                                        <td scope="col">
+                                            <input (change)="getRecommendSelData()" [(ngModel)]="hc.isSelected"
+                                                type="checkbox" class="" />
+                                        </td>
+                                        <td scope="row"> {{hc.RiderName}}</td>
+                                        <td scope="row"> {{hc.GeneratedShareAmount}}</td>
+                                        <td scope="row"> {{hc.RecommendedSharePercent}}</td>
+                                        <td scope="row"> {{hc.RecommendedShareAmount}}</td>
+                                        <td scope="row"> {{hc.RecommendedShareRemarks}}</td>
+                                        <td scope="row">{{hc.RiderAvgFeedbackPoints}} </td>
+                                        <td scope="row">
+                                            <input type="text" class="form-control"
+                                                (change)="approvedPercentageChanged(hc)"
+                                                [(ngModel)]="hc.approvedPercentage">
+                                        </td>
+                                        <td scope="row">
+                                            <input type="text" class="form-control"
+                                                (change)="approvededShareAmountChanged(hc)"
+                                                [(ngModel)]="hc.pApprovedShareAmount">
+                                        </td>
+                                        <td scope="row">
+                                            <input type="text" class="form-control" [(ngModel)]="hc.approvedRemarks">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" style="float: right;">
+                            <!-- <button class="btn btn-primary mr-3" (click)="approveHCShareData()">
+                                Approve
+                            </button> -->
+
+                            <button class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                ngbTooltip="Approve Share" mwlConfirmationPopover [popoverTitle]="'Approve Share'"
+                                [popoverMessage]="'Are you sure?'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="approveHCShareData()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                Approve
+                            </button>
+                        </div>
+
+                    </ng-template>
+
+                    <ng-template #NorecommendedShareFoundSpace>
+                        <div class="alert a-c-alert-info text-center" style="text-align: center;">
+                            No Data Found <i class="fa fa-exclamation-triangle text-light" aria-hidden="true"></i>
+                        </div>
+                    </ng-template>
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.approveSection"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

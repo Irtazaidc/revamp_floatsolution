@@ -1,0 +1,307 @@
+<div class="row">
+    <div class="col-12">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.TPQuestionsModalSection"
+            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div  class="row" style="margin-top: -16px; margin-bottom: 3px;">
+            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6" *ngIf="isMetal">
+                <span>
+                    <i aria-hidden="true" class="fa fa-exclamation-triangle blink-red"></i>
+                    <strong class="text-danger ml-2" style="font-size: 15px;">Caution: Metal components detected in
+                        patient's body! </strong>
+                </span>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6" *ngIf="!isMetal">
+                <span>
+                    <mat-checkbox [checked]="isMetalChecked" (click)="openConfirmationPopover($event)"
+                        mwlConfirmationPopover [popoverTitle]="confirmMetalPopup.popoverTitle"
+                        [popoverMessage]="confirmMetalPopup.popoverMessage"
+                        [confirmText]="confirmMetalPopup.confirmText" [cancelText]="confirmMetalPopup.cancelText"
+                        [placement]="confirmMetalPopup.placements[2]" (confirm)="confirmSelection()"
+                        (cancel)="cancelSelection()" confirmButtonType="btn btn-sm btn-primary"
+                        cancelButtonType="btn btn-sm btn-outline-secondary" [appendToBody]="true">
+                    </mat-checkbox>
+                    <strong class="ml-2" style="font-size: 15px;">Check If Metal components detected in patient's
+                        body</strong>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                 <!-- <label for="RadiologistID" class="control-label"
+                            style="margin-bottom: 0px; margin-bottom: -4px;">
+                                <strong class="text-danger ml-2 suggest-text">Does the patient want to suggest a reporting radiologist?</strong>
+                        </label> -->
+                        <div class="">
+                            <!-- <label for="RadiologistID" class="control-label"
+                                style="margin-bottom: 0px; margin-bottom: -4px;">Reporting Doctor
+                                <mat-checkbox class="ml-2 text-danger" name="isEmergencyAssign"
+                                    [(ngModel)]="isEmergencyAssign" (change)="onChangeIsEmergencyCheckbox($event)">
+                                    <strong class="text-danger">Emergency Assign?</strong>
+                                </mat-checkbox>
+                            </label> -->
+                            <ng-select class="red-placeholder" placeholder="Does the patient want to suggest a reporting radiologist?" [(ngModel)]="RadiologistID"
+                                [disabled]="false" [closeOnSelect]="true">
+                                <ng-option style="width: 100%;" [value]="dr.EmpId" *ngFor="let dr of radoiologistList">
+                                   {{dr.EmpNoWithPrefix}} - {{dr.FullName}}
+                                </ng-option>
+                            </ng-select>
+                            <!-- <ng-select [(ngModel)]="selectedCar">
+                                <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+                                </ng-select> -->
+                        </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="tests-box">
+                    <select name="moIntervenedTests" class="form-control form-control-sm" [(ngModel)]="TPID"
+                        (change)="getMOIntervenedTestsByTPID($event)">
+                        <option *ngFor="let row of visitTests" value="{{row.TPID}}">{{row.TPCode}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ng-template #popContentSrv>
+                    <app-ris-tp-services [VisitId]="VisitId"></app-ris-tp-services>
+                </ng-template>
+
+                <div class="tests-box">
+                    <label for="TPFullName" class="pt-2 control-label"
+                        [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}">
+                        <strong>{{ TPName }}<i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2"
+                                aria-hidden="true" ngbTooltip="Click to show services detail"
+                                [ngbPopover]="popContentSrv" [popoverTitle]="'Services Detail'"
+                                [popoverClass]="'custom-popover'"></i></strong>
+                    </label>
+                    <strong class="text-danger float-right mt-2">Current Status | {{ WorkflowStatus }}</strong>
+                </div>
+            </div>
+            <!-- <div class=" col-md-5 tests-box">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="Question" class="pt-2 control-label">Visit Test(s)</label>
+                    </div>
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
+                        <select name="moIntervenedTests" class="form-control form-control-sm" [(ngModel)]="TPID"
+                            (change)="getMOIntervenedTestsByTPID($event)">
+                            <option *ngFor="let row of visitTests" value="{{row.TPID}}">{{row.TPCode}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="offset-md-1 col-md-5 tests-box text-center" style="margin-left:100px;">
+                <label for="TPFullName" class="pt-2 control-label">{{TPFullName}}</label>
+
+            </div>
+            <div class="offset-md-4 col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"
+                style="margin-top: -17px; margin-bottom: 13px;">
+                <select name="moIntervenedTests" class="form-control form-control-sm"
+                    (change)="getMOIntervenedTestsByTPID($event)" style="background-color: #1bc5bd; color: #fff;">
+                    <option *ngFor="let row of visitTests" value="{{row.TPID}}">{{row.TPCode}}</option>
+                </select>
+            </div> -->
+            <!-- <div class="offset-md-1 col-md-5 tests-box text-center" style="margin-left:100px;">
+                <label for="TPFullName" class="pt-2 control-label">{{TPFullName}}</label> ikra? wait ple
+            </div> -->
+        </div>
+        <div class="row" *ngIf="!TPQuestions.length">
+            <div class="col-12 text-center">
+                <strong>No question associated</strong>
+            </div>
+        </div>
+        <!-- <form class=""> -->
+        <!-- <pre>{{TPQuestions|json}}</pre> -->
+        <div class="table-responsive fixed-height-table">
+            <div class="col-md-12" *ngFor="let q of TPQuestions; let i = index">
+                <!-- [innerHTML]="resHtml" -->
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                        <p><strong>{{i+1}} - {{q.Question}}</strong></p>
+                    </div>
+                    <!------------------------------------------------------------------------------->
+                    <!------------------------start:: Answere Section ------------------------------->
+                    <!------------------------------------------------------------------------------->
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" [ngSwitch]="q.AnsTypeId">
+                        <!-- <div *ngSwitchCase="1">
+                            <input type="text" [disabled]="creatinineStatusID>=9 && creatinineTPID && q.QuestionID==67" name="textAnswere" class="form-control form-control-sm"
+                                [(ngModel)]="q.Answer"
+                                [ngClass]="{'invalid': (q.IsRequired && !q.Answer)||isMinCharValid}"
+                                (blur)="validateMinChar(q.Answer,q.MinimumAnswerChar)">
+                            <small *ngIf="q.MinimumAnswerChar"
+                                [ngClass]="{'text-danger': ((q.Answer && (q.Answer.length<q.MinimumAnswerChar)))|| isMinCharValid}">Minimum
+                                answer characters are {{q.MinimumAnswerChar}}</small>
+                        </div> -->
+                        <div *ngSwitchCase="1">
+                            <input type="text"
+                                [disabled]="creatinineStatusID >= 9 && creatinineTPID && q.QuestionID == 67"
+                                name="textAnswere" class="form-control form-control-sm" [(ngModel)]="q.Answer"
+                                [ngClass]="{'invalid': (q.IsRequired && !q.Answer) || isMinCharValid}"
+                                (blur)="q.QuestionID == 67 ? validateCreatinineValue(q):null" (keypress)="q.QuestionID == 67 ? restrictCreatinineInput($event):null"
+                                (paste)="q.QuestionID == 67 ? onCreatininePaste($event, q):null"
+                                (ngModelChange)="q.QuestionID == 67 ? validateCreatinineValue(q) : null">
+
+                            <small *ngIf="q.MinimumAnswerChar"
+                                [ngClass]="{'text-danger': ((q.Answer && (q.Answer.length < q.MinimumAnswerChar))) || isMinCharValid}">
+                                Minimum answer characters are {{q.MinimumAnswerChar}}
+                            </small>
+                        </div>
+
+                        <div *ngSwitchCase="2">
+                            <textarea [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" name="paragraphQuestion"
+                                class="form-control form-control-sm" cols="" rows="3"
+                                [(ngModel)]="q.Answer">{{q.Answer}}</textarea>
+                            <small *ngIf="q.MinimumAnswerChar"
+                                [ngClass]="{'text-danger': (q.Answer && (q.Answer.length<q.MinimumAnswerChar))}">Minimum
+                                answer characters are {{q.MinimumAnswerChar}}</small>
+                        </div>
+                        <div *ngSwitchCase="3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <select [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" name="optionAnswere"
+                                        class="form-control form-control-sm" [(ngModel)]="q.Answer">
+                                        <option *ngFor="let item of q.QExpectedOptions; let i = index"
+                                            value="{{item.option}}">
+                                            {{item.option}}</option>
+                                    </select>
+                                </div>
+                                <!-- <div [ngClass]="{
+                                                    'col-9': q.QuestionID == 67,
+                                                    'col-12': q.QuestionID != 67
+                                                }">
+                                    <select [disabled]="creatinineStatusID>=9 && creatinineTPID && q.QuestionID==67"
+                                        [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" name="optionAnswere"
+                                        class="form-control form-control-sm" [(ngModel)]="q.Answer">
+                                        <option *ngFor="let item of q.QExpectedOptions; let i = index" value="{{item.option}}">
+                                            {{item.option}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-3" *ngIf="q.QuestionID==67">
+                                    <mat-checkbox [(ngModel)]="isOutsideReport"
+                                    [disabled]="MOBy"
+                                     ngbTooltip="Creatinine test done from outside lab"
+                                        class="example-margin mr-2"> <span>Outside Report</span>
+                                    </mat-checkbox>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <div *ngSwitchCase="4">
+                            <div class="row">
+                                <div class="col-6">
+                                    <select [disabled]="q.QuestionID==152 && MOBy"
+                                        [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" name="optionAnswere"
+                                        class="form-control form-control-sm" [(ngModel)]="q.Answer">
+                                        <option *ngFor="let item of q.QExpectedOptions; let i = index"
+                                            value="{{item.option}}">{{item.option}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" name="textAnswere" class="form-control form-control-sm"
+                                        [(ngModel)]="q.AnswerText">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div *ngSwitchCase="5">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input pointer" type="checkbox" value="1"
+                                [ngModelOptions]="{standalone: true}" [checked]="q.Answer" [(ngModel)]="q.Answer">
+                            <ng-container *ngIf="q.Answer; else chkNo">
+                                <strong>Yes</strong>
+                            </ng-container>
+                            <ng-template #chkNo>
+                                <strong>No</strong>
+                            </ng-template>
+                        </div>
+                        <div *ngSwitchCase="6">
+                            <input [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" readOnly #dStart type="text"
+                                class="form-control form-control-sm mr-1" (click)="dFrom_date.toggle()"
+                                placeholder="yyyy-mm-dd" autocomplete="off" name="dStart" ngbDatepicker
+                                value="{{q.DefaultAns|date:'yyyy-MM-dd'}}" #dFrom_date="ngbDatepicker"
+                                [(ngModel)]="q.Answer">
+                        </div>
+                        <div *ngSwitchCase="7">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-2 mt-2">Min:</div>
+                                        <div class="col-md-10">
+                                            <input [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" type="text"
+                                                name="minValAnswer" [(ngModel)]="q.AnswerMin"
+                                                class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-2 mt-2">Max:</div>
+                                        <div class="col-md-10">
+                                            <input [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" type="text"
+                                                name="maxValAnswer" [(ngModel)]="q.AnswerMax"
+                                                class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div *ngSwitchDefault>
+                            <input type="text" [ngClass]="{'invalid': (q.IsRequired && !q.Answer)}" name="textAnswere"
+                                [(ngModel)]="q.Answere" value="q.Answer" class="form-control form-control-sm">
+                        </div>
+
+                    </div>
+                    <!------------------------------------------------------------------------------------------------>
+                    <!------------------------end:: Answere Section -------------------------------------------------->
+                    <!------------------------------------------------------------------------------------------------>
+                    <div class="col-md-12 border-bottom-dash-gray mt-2 mb-2"> </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" *ngIf="RISStatusID<3">
+            <div class="col-12">
+                <button *ngIf="TPQuestions.length" type="button" [disabled]="disabledButton"
+                    class="btn btn-sm btn-primary pull-right mt-2 mr-8" mwlConfirmationPopover
+                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]" (confirm)="insertUpdateRISTPQAnswer()"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i [ngClass]="saveButtonIconClass"></i> {{saveButtonText}} <i class="spinner-border-custom"
+                        aria-hidden="true" [hidden]="isSpinner"></i>
+                </button>
+                <button *ngIf="TPQuestions.length" type="button" [disabled]="disabledButton"
+                    ngbTooltip="Mark test as Urgent OR Critical"
+                    class="btn btn-sm btn-outline-danger pull-right mt-2 mr-2"
+                    [ngClass]="{'btn-outline-warning': ProcessIDParent == 2, 'btn-outline-danger': (ProcessIDParent == 1 || ProcessIDParent == 3)}"
+                    (click)="markSensitivity()">
+                    <i class="ti-flag-alt cursor-pointer"></i>Mark Sensitivity<i class="spinner-border-custom"
+                        aria-hidden="true" [hidden]="isSpinner"></i>
+                </button>
+            </div>
+        </div>
+        <!-- </form> -->
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}" #visitRemarksComp
+                        [moduleName]="MOForm"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

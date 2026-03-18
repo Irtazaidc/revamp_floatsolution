@@ -1,0 +1,310 @@
+<mat-card>
+    <mat-card-content>
+        <mat-tab-group class="demo-tab-group" animationDuration="0ms" style="background-color: #fff;">
+            <mat-tab label="Data To Post">
+                <ng-template mat-tab-label>
+                    <i class="fa fa-paper-plane icon-lg text-danger custom-icons mr-2"></i>
+                    Data To Post
+                  </ng-template>
+                  <div class="container-fluid" *matTabContent>
+                    <div class="row" >
+                        <div class="col-md-12 mt-6"> 
+                            <form [formGroup]="GetDenPortal" class="form-horizontal" name="form" role="form">
+                                <div class="row form-group justify-content-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        <label class="control-label">Date From:</label>
+                                        <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                            placeholder="dd-mm-yyyy" ngbDatepicker value="1980-08-26"
+                                            formControlName="dateFrom" name="dateFrom" class="form-control mb-4" type="text"
+                                            value="" />
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-12">
+                                        <label class="control-label">Date To:</label>
+                                        <input (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker"
+                                            ngbDatepicker formControlName="dateTo" class="form-control mb-4" name="dateTo"
+                                            type="text" value="" />
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-12">
+                                        <label class="control-label">Branch:</label>
+                                        <div class="form-group">
+                                            <ng-select id="pat_branch" style="width: 100%;" formControlName="locID"
+                                                [items]="branchList" bindLabel="Title" bindValue="LocId"
+                                                placeholder="--Select branch Location--">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-12">
+                                        <label class="control-label">PIN:</label>
+                                        <input formControlName="PIN" placeholder="--Enter PIN--" class="form-control mb-4"
+                                            type="text" value="" />
+                                    </div>
+                                    <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+                                        <button (click)="getDengueDataToPost()" class="btn btn-primary" type="button">Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="min-height: 200px;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-sm btn-primary pull-right" (click)="checkdatatopost()">Post
+                                        Data</button>
+                                    <button
+                                        class="btn btn-sm btn-primary btn-outline-primary input-group-btn-custom mr-1 pull-right"
+                                        ngbTooltip="Export To Excel" (click)="exportAsExcel()"><i
+                                            class="fa fa-file-excel"></i></button>
+                                    <button class="btn btn-sm btn-outline-success pull-right mr-1"
+                                        (click)="optionalColumnsVisibility = !optionalColumnsVisibility"><span
+                                            *ngIf="!optionalColumnsVisibility">show all columns</span> <span
+                                            *ngIf="optionalColumnsVisibility">show less columns</span></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                                            [(ngModel)]="searchText" name="searchText" />
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="dengueData.length then dengueFound else dengueNotFound "></ng-container>
+                            <ng-template #dengueFound>
+                                <div class="table-responsive table-container fixed-height-table">
+                                    <table *ngIf="dengueData.length" class="table table-hover dengue-table"
+                                        style="width: 100%; overflow: hidden;" cellpadding="0"
+                                        cellspacing="0">
+                                        <thead>
+                                            <th>
+                                                <input [(ngModel)]="masterSelected" (change)="selectUnselectAllItem()"
+                                                    type="checkbox" />
+                                            </th>
+                                            <!-- <th></th> -->
+                                            <th>Name</th>
+                                            <th>Visit ID</th>
+                                            <th>Test Name</th>
+                                            <th class="optional"
+                                                [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Param Name
+                                            </th>
+                                            <th>Result</th>
+                                            <th>Current District</th>
+                                            <th>Current Tehsil</th>
+                                            <!-- <th class="optional"
+                                                [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Permanent
+                                                District</th>
+                                            <th class="optional"
+                                                [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Permanent
+                                                Tehsil</th> -->
+                                            <th>Current Address</th>
+                                            <!-- <th class="optional"
+                                                [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Permanent
+                                                Address</th> -->
+                                            <th>Branch</th>
+                                            <th>Last Visit</th>
+                                            <th class="optional"
+                                                [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Last Visit
+                                                Date</th>
+                                            <th class="optional"
+                                                [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Last Visit
+                                                Result</th>
+                                            <th>Action</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="cursor-pointer" [ngClass]="{'active': i==rowIndex}"
+                                                *ngFor="let den of dengueData | filterByKey: searchText:['VisitId', 'Result', 'PCode', 'Title']; let i = index" (dblclick)="editDengueDataToPost(den, i)">
+                                                <td><input [(ngModel)]="den.isSelected" type="checkbox" /></td>
+                                                <!-- <td>{{i + 1}}</td> -->
+                                                <td>{{den.PatientName || ' -- ' }}</td>
+                                                <td>{{den.VisitId || ' -- ' }}</td>
+                                                <td>{{den.Title || ' -- ' }}</td>
+                                                <td class="optional"
+                                                    [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">
+                                                    {{den.PCode || ' -- ' }}</td>
+                                                <td>
+                                                    <span
+                                                        [ngClass]="{'text-danger': den.Result === 'Positive', 'text-success': den.Result === 'Negative'}">
+                                                        <strong>{{ den.Result || ' -- ' }}</strong>
+                                                    </span>
+                                                </td>
+                                                <td>{{ den.District || ' -- ' }} </td>
+                                                <td>{{ den.Tehsil || ' -- ' }}
+    
+                                                </td>
+                                                <!-- <td class="optional"
+                                                    [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">
+                                                    {{ den.PerDistirct || ' -- ' }}
+    
+                                                </td> -->
+                                                <!-- <td class="optional"
+                                                    [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">
+                                                    {{ den.PerTehsil || ' -- ' }}
+    
+                                                </td> -->
+                                                <td>{{ den.Address || ' -- ' }}
+    
+                                                </td>
+                                                <!-- <td class="optional"
+                                                    [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">
+                                                    {{ den.PermanentAddress || ' -- ' }}
+    
+                                                </td> -->
+                                                <td>{{den.RegLoc || ' -- ' }}</td>
+                                                <td>{{den.PrevVisitID || ' -- ' }}</td>
+                                                <td class="optional"
+                                                    [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">
+                                                    {{den.PrevVisitDate | date:"dd MMM, yyyy, h:mm a"}}</td>
+                                                <td class="optional"
+                                                    [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">
+                                                    {{den.PrevLabResult || ' -- ' }}</td>
+                                                <td>
+                                                    <!-- <div class="btn-group" role="group">
+                                                        <button *ngIf="den.isEditing" (click)="updateDengueDataToPost(den)" class="btn btn-outline-success btn-mini" type="button" title="Save">
+                                                            <i class="fa fa-save"></i>
+                                                        </button> -->
+                                                    <button (click)="editDengueDataToPost(den,i)"
+                                                        class="btn btn-outline-danger ml-1 btn-mini pull-right">
+                                                        <!-- *ngIf="!den.isEditing" -->
+                                                        <i title="Edit" class="ti-pencil"></i>
+                                                        <!-- <i *ngIf="den.isEditing" title="Close" class="fa fa-times"></i> -->
+                                                    </button>
+                                                    <!-- </div> -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+    
+                                </div>
+                            </ng-template>
+                            <ng-template #dengueNotFound>
+                                <!-- <span>
+                                    <p style="text-align: centre;"></p> No Record Found
+                                </span> -->
+                                <div class="row ">
+                                    <div class="col-md-12 text-center">
+                                        <h3 class="text-primary card-tag mt-3">No Record(s) Found</h3>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                  </div>
+            </mat-tab>
+            <mat-tab label="Data To Update">
+                <ng-template mat-tab-label>
+                    <i class="flaticon-upload icon-lg text-danger custom-icons mr-2"></i>
+                    Data To Update
+                  </ng-template>
+                <app-upd-post-dengue-data></app-upd-post-dengue-data>
+            </mat-tab>
+            <mat-tab label="Posted Data">
+                <ng-template mat-tab-label>
+                    <i class="fa fa-check-circle icon-lg text-danger custom-icons mr-2"></i>
+                    Posted Data
+                  </ng-template>
+                <app-dengue-posted-data></app-dengue-posted-data>
+            </mat-tab>
+            <mat-tab label="Re-Post Data">
+                <ng-template mat-tab-label>
+                    <i class="flaticon-refresh icon-lg text-danger custom-icons mr-2"></i>
+                    Re Post Data
+                  </ng-template>
+                <app-repost-dengue-data></app-repost-dengue-data>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+<ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+    [fullScreen]="true">
+    <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>
+
+<ng-template #editPatientInfo let-editPatientInfo>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1rem;">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="card-title">
+                    Edit Patient Info - {{selectedRow.PatientName}}({{selectedRow.MRN}}/{{selectedRow.VisitId}})
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.editInfo" bdColor="rgba(0,0,0,0.8)" size="medium"
+            color="#fff" type="ball-atom" [fullScreen]="false">
+            <!-- <p style="color: white"> Loading... </p> -->
+        </ngx-spinner>
+        <div class="row">
+            <!-- <div class="col-md-12">
+                <app-patient-basic-info [VisitId]="selectedRow.VisitId"></app-patient-basic-info>
+            </div> -->
+            <div class=" col-lg-6 col-md-6 col-sm-12">
+                <label class="control-label">Current District:</label>
+                <div class="form-group">
+                    <ng-select class="selector-width" [items]="districts" bindLabel="Code"
+                        [(ngModel)]="selectedRow.DistrictID" 
+                        [ngClass]="{ 'invalid': !selectedRow.DistrictID ,'invalid-highlighted': !selectedRow.DistrictID  && isSubmitted }"
+                        bindValue="DistrictID">
+                    </ng-select>
+                </div>
+            </div>
+            <div class=" col-lg-6 col-md-6 col-sm-12">
+                <label class="control-label">Current Tehsil:</label>
+                <div class="form-group">
+                    <!-- [disabled]="den.isDisable" -->
+                    <ng-select class="selector-width" [items]="tehsils" bindLabel="Code"
+                        [(ngModel)]="selectedRow.TehsilID" 
+                        [ngClass]="{ 'invalid': !selectedRow.TehsilID ,'invalid-highlighted': !selectedRow.TehsilID  && isSubmitted }"
+                        bindValue="TehsilID">
+                    </ng-select>
+
+                </div>
+            </div>
+            <!-- <div class=" col-lg-6 col-md-6 col-sm-12">
+                <label class="control-label">Permanent District:</label>
+                <div class="form-group">
+                    <ng-select class="selector-width" [items]="districts" bindLabel="Code"
+                        [(ngModel)]="selectedRow.PermanentDistrictID" placeholder="-Permanent District-"
+                        [ngClass]="{ 'invalid': !selectedRow.PermanentDistrictID ,'invalid-highlighted': !selectedRow.PermanentDistrictID  && isSubmitted }"
+                        bindValue="DistrictID">
+                    </ng-select>
+                </div>
+            </div> -->
+            <!-- <div class=" col-lg-6 col-md-6 col-sm-12">
+                <label class="control-label">Permanent Tehsil:</label>
+                <div class="form-group">
+                    <ng-select class="selector-width" [items]="tehsils" bindLabel="Code"
+                        [(ngModel)]="selectedRow.PermanentTehsilID" placeholder="-Permanent Tehsil-"
+                        [ngClass]="{ 'invalid': !selectedRow.PermanentTehsilID ,'invalid-highlighted': !selectedRow.PermanentTehsilID  && isSubmitted }"
+                        bindValue="TehsilID">
+                    </ng-select>
+                </div>
+            </div> -->
+            <div class="col-md-12 col-sm-12">
+                <label class="control-label">Current Address:</label>
+                <div class="form-group">
+                    <textarea rows="2"  class="form-control input-width" type="text"
+                        [(ngModel)]="selectedRow.Address"></textarea>
+
+                </div>
+            </div>
+            <!-- <div class=" col-lg-6 col-md-6 col-sm-12">
+                <label class="control-label">Permanent Address:</label>
+                <div class="form-group">
+                    <textarea rows="3" placeholder="Permanent Address" class="form-control input-width" type="text"
+                        [(ngModel)]="selectedRow.PermanentAddress"></textarea>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-primary" (click)="updateDengueDataToPost()">
+            <i class="fa fa-save"></i>Save
+        </button>
+        <button type="button" class="ml-1 btn btn-sm btn-danger" data-dismiss="modal" (click)="editPatientInfo.close()">
+            <i class="fa fa-times-circle"></i>Close
+        </button>
+    </div>
+</ng-template>

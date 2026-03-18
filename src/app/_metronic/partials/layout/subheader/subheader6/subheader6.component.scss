@@ -1,0 +1,214 @@
+.user-main {
+  display: flex;
+  align-items: center;
+  padding: 10px 11px;
+  cursor: pointer;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px; /* Add spacing between picture and text */
+}
+
+// .user-picture-main {
+//   width: 50px;
+//   height: 50px;
+//   border-radius:30%;
+//   object-fit: cover;
+//   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+//   flex-shrink: 0; /* Prevent shrinking of the image */
+// }
+.user-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0; /* Prevent shrinking of the image */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.username strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.status {
+  font-size: 12px;
+  margin: 3px 0 0;
+  font-weight: 500;
+}
+
+.status.online {
+  color: #28a745; /* Green for online */
+}
+
+.status.offline {
+  color: #dc3545; /* Red for offline */
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  background-color: #fff;
+  padding: 12px;
+  min-width: 260px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  top: 35px;
+  right: 0;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.dropdown-content .dropdown-divider {
+  height: 1px;
+  background-color: #ddd;
+  margin: 10px 0;
+}
+
+.dropdown-content a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.signout {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.signout:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.fas {
+  transition: color 0.3s ease;
+}
+
+.signout:hover .fas {
+  color: #dc3545;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fa-caret-down {
+  color: grey;
+  font-size: 11px;
+}
+
+.badge {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #dc3545; /* Danger color */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}
+
+.badge.top-0 {
+    top: -5px;
+}
+
+.badge.right-0 {
+    right: -5px;
+}
+
+
+
+::ng-deep .dropdown-menu {
+    // transform: translate(4px, 30px) !important;
+    // min-width: 200px; /* Adjust this as needed */
+    // max-height: 200px; /* Adjust this as needed */
+    // max-width: 100%; /* Ensures the dropdown doesn't overflow */
+    word-wrap: break-word; /* Prevents text from overflowing */
+    left: -15px !important;
+}
+
+// @media (max-width: 768px) {
+//     ::ng-deep .dropdown-menu {
+//         transform: translate(0px, 30px) !important; /* Center align for smaller screens */
+//         width: auto; /* Auto adjusts to the content */
+//     }
+// }
+
+
+.action-btn {
+    font-size: 1.5rem;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s, transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .action-btn:hover {
+    background-color: #eef;
+    transform: scale(1.1);
+  }
+  
+  .action-btn .fa {
+    font-size: 1.4rem;
+  }
+::ng-deep .mat-checkbox-checked.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+      background-color: #0BB7AF !important;
+  }
+
+  .mat-checkbox-background,
+  .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+      background-color: #0BB7AF;
+  }
+
+  .mat-checkbox-frame,
+  .mat-checkbox-checkmark {
+      border-color: #0BB7AF;
+  }
+
+  .mat-checkbox-checkmark-path {
+      fill: #0BB7AF;
+  }
+}
+
+/* Unchecked state */
+::ng-deep .mat-checkbox.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+      background-color: #0BB7AF !important;
+  }
+
+  .mat-checkbox-frame {
+      border-color: #0BB7AF;
+  }
+}

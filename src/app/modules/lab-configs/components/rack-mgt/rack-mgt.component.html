@@ -1,0 +1,284 @@
+<div class="patient-search-page" style="position: relative;">
+    <div class="row">
+        <div class="col-md-6">
+            <app-card [title]="'Work List'" [cardClass]="'tim-card tim-card tim-card-primary'"
+                [cardHeaderClass]="'card-header-narrow'">
+                <div class="row">
+                    <div class="col-12">
+
+                        <button type="button" (click)="clearForms()" style="height: 35px;"
+                            class="btn btn-danger btn-sm pull-right col-2" ngbTooltip="Add New Rack"><i
+                                class="ti-plus"></i>New
+                        </button>
+                        <ng-select class="col-10" (change)="getRacksDetail('')" [items]="BranchesList" bindLabel="Code"
+                            placeholder="-Select Branch-" bindValue="LocId" [(ngModel)]="rackBranhID"
+                            [closeOnSelect]="true">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                    <span class="ng-value-icon right form-control form-control-sm" (click)="clear(item)"
+                                        aria-hidden="true">×</span>
+                                    <span class="ng-value-label"> {{item.Code}}</span>
+                                </div>
+                            </ng-template>
+                        </ng-select>
+
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <ng-container *ngIf="racksDetailData.length then rackDetail else rackDetailNotFound">
+
+                    </ng-container>
+                    <ng-template #rackDetail>
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.rackDetailSection" size="medium" color="#fff" type="square-loader"
+                                [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Rack Code</th>
+                                        <th>Rack Type</th>
+                                        <!-- <th>Status</th> -->
+                                        <th>Screen</th>
+                                        <th>LockedIn</th>
+                                        <th class="text-right">Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" *ngIf="!racksDetailData.length">
+                                            <div class="alert alert-primary text-center" role="alert">
+                                                No record available <i class="fa fa-exclamation-triangle text-light"
+                                                    aria-hidden="true"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let item of racksDetailData; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{item.RackNo}}</td>
+                                        <td>{{item.RackType}}</td>
+                                        <!-- <td>N/A</td> -->
+                                        <td>{{item.Screen}}</td>
+                                        <td>{{item.Section}}</td>
+                                        <td class="text-right">
+                                            <a (click)="getRacksDetail(item.RackNo)" class="cursor-pointer"
+                                                style="font-size: 17px;" ngbTooltip="View Detail">
+                                                <i class="fa fa-eye text-info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- <div class="d-flex justify-content-between p-2" *ngIf="collectionSize > pageSize">
+                                <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size="sm" [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                                </ngb-pagination>
+                            </div> -->
+                        </div>
+
+                    </ng-template>
+                    <ng-template #rackDetail1>
+                        <div class="mat-elevation-z12">
+                            <!-- <div  class="col-md-12 col-lg-12"> -->
+                            <mat-table #table [dataSource]="racksDetailData">
+                                <!-- Status Column -->
+                                <ng-container matColumnDef="RackCode">
+                                    <mat-header-cell *matHeaderCellDef> Rack Code </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.RackNo
+                                        }}
+                                    </mat-cell>
+                                </ng-container>
+                                <!-- Status Column -->
+                                <ng-container matColumnDef="RackType">
+                                    <mat-header-cell *matHeaderCellDef> Rack Type </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.RackType
+                                        }}
+                                    </mat-cell>
+                                </ng-container>
+                                <!-- Status Column -->
+                                <ng-container matColumnDef="Status">
+                                    <mat-header-cell *matHeaderCellDef> Status
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> N/A </mat-cell>
+                                </ng-container>
+                                <!-- LockedIn Column -->
+                                <ng-container matColumnDef="LockedIn">
+                                    <mat-header-cell *matHeaderCellDef> Locked In
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.LockedIn}}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="rackDetailDisplayedColumns">
+                                </mat-header-row>
+                                <mat-row *matRowDef="let row; columns: rackDetailDisplayedColumns;">
+                                </mat-row>
+                            </mat-table>
+                        </div>
+
+                    </ng-template>
+                    <ng-template #rackDetailNotFound>
+                        <ngb-alert style="text-align:center" [dismissible]="false" [type]="'info'">
+                            <strong>No Detail Found </strong>
+                        </ngb-alert>
+                    </ng-template>
+
+                </div>
+
+
+            </app-card>
+        </div>
+        <div class="col-md-6">
+            <app-card [title]="cardTitle" [cardClass]="'tim-card tim-card tim-card-primary'"
+                [cardHeaderClass]="'card-header-narrow'">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.rackFormSection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Please wait... </p>
+                </ngx-spinner>
+                <form class="container" #container class="" [formGroup]="rackForm">
+                    <!-- <div class="row">
+                        <div [hidden]="event == 'create'" class="col-6">
+                            <div class="form-group">
+                                <label for="rackCode" class="control-label">Rack Code</label>
+                                <div class="input-group" style="position: relative;">
+                                    <input style="pointer-events: none;" [disabled]="event == 'update'" #rackDesc type="text" class="form-control"
+                                        name="rackCode" formControlName="rackCode"
+                                        [ngClass]="{'invalid': rackForm.get('rackCode').errors && rackForm.get('rackCode').touched, 'invalid-highlighted': rackForm.get('rackCode').errors}">
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="rackDesc" class="control-label">Rack Desc</label>
+                                <div class="input-group" style="position: relative;">
+                                    <input #rackDesc type="text" class="form-control" name="rackDesc"
+                                        [ngClass]="{'invalid': rackForm.get('rackDesc').errors && rackForm.get('rackDesc').touched, 'invalid-highlighted': rackForm.get('rackDesc').errors}"
+                                        formControlName="rackDesc" placeholder="Enter Rack Description">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="rackCapacity" class="control-label">Rack Capacity</label>
+                                <input oninput="this.value = Math.abs(this.value)"
+                                    [ngClass]="{'invalid': rackForm.get('rackCapacity').errors && rackForm.get('rackCapacity').touched, 'invalid-highlighted': rackForm.get('rackCapacity').errors}"
+                                    #rackCapacity type="number" min="1"  class="form-control" name="rackCapacity"
+                                    formControlName="rackCapacity" placeholder="Enter Rack Capacity">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="rackType" class="control-label">Rack Type</label>
+                                <div class="input-group" style="position: relative;">
+                                    <ng-select formControlName="rackType"
+                                        [ngClass]="{'invalid': rackForm.get('rackType').errors && rackForm.get('rackType').touched, 'invalid-highlighted': rackForm.get('rackType').errors}"
+                                        style="width: 100%;" class=" mt-1 mr-1" [items]="rackTypesList"
+                                        bindLabel="RackType" placeholder="-Select Rack-" bindValue="RackTypeID"
+                                        [closeOnSelect]="true" [disabled]="true">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right form-control form-control-sm"
+                                                    (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.RackType}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="noOfRacks" class="control-label">No. Of Racks</label>
+                                <input #noOfRacks [disabled]="event == 'update'" 
+                                    [ngClass]="{'invalid': rackForm.get('noOfRacks').errors && rackForm.get('noOfRacks').touched && event == 'create', 'invalid-highlighted': rackForm.get('noOfRacks').errors && event == 'create'}"
+                                    type="text" class="form-control" name="noOfRacks" formControlName="noOfRacks"
+                                    placeholder="Enter No Of Racks">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="rackBranch" class="control-label">Rack Branch</label>
+                                <div class="input-group" style="position: relative;">
+                                    <ng-select
+                                        [ngClass]="{'invalid': rackForm.get('rackBranch').errors && rackForm.get('rackBranch').touched, 'invalid-highlighted': rackForm.get('rackBranch').errors}"
+                                        style="width: 100%;" class=" mt-1 mr-1" [items]="BranchesList" bindLabel="Code"
+                                        placeholder="-Select Branch-" bindValue="LocId" formControlName="rackBranch"
+                                        [closeOnSelect]="true" [disabled]="true">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right form-control form-control-sm"
+                                                    (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.Code}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-10">
+
+                            <button type="reset" class="btn btn-sm btn-danger  pull-right"><i
+                                    class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button> &nbsp;
+                            <!-- <button *ngIf="event == 'create'" type="submit" class="btn btn-sm btn-primary pull-right"><i
+                                    class="fa fa-save"></i></button> -->
+
+                            <button *ngIf="event == 'create'"
+                                class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                ngbTooltip="Create Rack" mwlConfirmationPopover [popoverTitle]="'Create Rack'"
+                                [popoverMessage]="'Are you sure want to save?'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="createRack()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"> <i class="fa fa-save"></i><i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                {{actionLabel}}
+                            </button>
+                            &nbsp;&nbsp;
+                            <button *ngIf="event == 'update'"
+                                class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                ngbTooltip="Update Rack" mwlConfirmationPopover [popoverTitle]="'Update Rack'"
+                                [popoverMessage]="'Are you sure want to update?'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="updateRack()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"> <i class="fa fa-edit"></i><i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                {{actionLabel}}
+                            </button>
+                            &nbsp;&nbsp;
+                            <button *ngIf="event == 'update'"
+                                class="btn btn-primary btn-sm waves-effect mr-2 text-center pull-right"
+                                ngbTooltip="Print Barcode" mwlConfirmationPopover [popoverTitle]="'Print Barcode'"
+                                [popoverMessage]="'Are you sure want to print?'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="printBarcode()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"> <i class="fa fa-print"></i><i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                Print
+                            </button>
+
+
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+    </div>
+</div>

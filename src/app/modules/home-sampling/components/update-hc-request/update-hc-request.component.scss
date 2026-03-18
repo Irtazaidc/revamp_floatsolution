@@ -1,0 +1,41 @@
+/* Solid border */
+hr.solid {
+    border-top: 1px solid #bbb;
+  }
+
+  .effective-date-time {
+    display: flex;
+    
+    .mini-input-field.date-picker {
+        width: 100px;
+    }
+    .mini-input-field {
+      width: 60px;
+      height: 50px;  
+        margin: auto;  
+    }
+    .mini-input-field.time-picker ::ng-deep fieldset {
+        padding: 0;
+        margin: 0;
+        .ngb-tp-input-container {
+            width: 40px;
+            height: 30px;
+            .ngb-tp-input {
+                height: 40px;
+                padding: 10px 1px;
+                width: 40px;
+            }
+        }
+    }
+}
+.invalid-highlight ::ng-deep .ngb-tp-input {
+    background-color: #ff000022;
+  } 
+
+  
+// ::ng-deep .dropdown-menu{
+//         transform: translate(100px, 40px) !important;        
+// }
+
+
+

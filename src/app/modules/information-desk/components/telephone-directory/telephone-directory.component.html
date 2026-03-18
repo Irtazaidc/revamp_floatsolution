@@ -1,0 +1,90 @@
+<div class="roles-page">
+    <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" >
+        <div class="card-body" style="min-height: 320px;">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                    <label for="branchIds">Location</label>
+                    <ng-select style="width: 100%;"
+                        class=" mt-1 mr-1"
+                        [items]="branchesList"
+                        bindLabel="Title" 
+                        placeholder="-Select Location-"
+                        bindValue="LocId"
+                        [(ngModel)]="LocID"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.Title}}</span>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                    <label for="departmentIds">Department</label>
+                    <ng-select style="width: 100%;"
+                        class=" mt-1 mr-1"
+                        [items]="departmentsList"
+                        bindLabel="DepartmentName" 
+                        placeholder="-Select Department-"
+                        bindValue="DepartmentId"
+                        [(ngModel)]="SubDepartmentID"
+                        >
+
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div class="ccol-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                    <label>&nbsp;</label>
+                    <div class="input-group">
+                        <button  type="submit" class="btn btn-primary float-right waves-effect" (click)="getExtension()" ><i class="ti-search m-0"></i>Search</button>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pull-right">
+                    <label>&nbsp;</label>
+                    <input type="text" class="form-control form-control" placeholder="Type to filter"  [(ngModel)]="FilterString"/>
+                </div>
+                <hr>
+            </div>
+            <hr>
+            <ng-container *ngIf="extensionList.length then resultArea else noResultArea"></ng-container>
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Please wait... </p>
+            </ngx-spinner>
+                <ng-template #resultArea>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div  style="max-height: 500px; overflow-y: auto;">
+                            <table class="table table-hover table-stripped compact">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Extension</th>
+                                        <th>Location</th>
+                                        <th>Department</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of extensionList | filterByKey:FilterString:['Title','ExtensionNo','LocationTitle','SubDepartmentName']; let i = index">
+                                        <td>{{item.Title}}</td>
+                                        <td><strong>{{item.ExtensionNo}}</strong></td>
+                                        <td>{{item.LocationTitle}}</td>
+                                        <td>{{item.SubDepartmentName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #noResultArea>
+                <div class="col-12 text-center text-primary"> <hr> <div>No record found...</div> </div>
+            </ng-template>
+        </div>
+    </app-card>
+</div>

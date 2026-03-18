@@ -1,0 +1,206 @@
+<div class="row">
+  <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="form-row d-flex justify-content-end">
+      <i
+        class="fa fa-clipboard text-danger cursor-pointer mr-5 float-right"
+        aria-hidden="true"
+        ngbTooltip="CMS Inquiry"
+        [ngbPopover]="popContentforInquiry"
+        placement="bottom"
+        [popoverTitle]="'CMS Inquiry'"
+        (click)="getCMSrequestInquiry()"
+      ></i>
+
+      <i
+        class="fa fa-phone text-danger cursor-pointer mr-1 float-right"
+        aria-hidden="true"
+        ngbTooltip="ContactBack History"
+        [ngbPopover]="popContentforContactHistory"
+        placement="bottom"
+        [popoverTitle]="'ContactBack History'"
+        (click)="getHistoryOfCMSContactBackTracking()"
+      ></i>
+
+      <i class="fa fa-arrow-right text-primary cursor-pointer mr-1 float-right" aria-hidden="true" ngbTooltip="Navigate to CMS Inquiry"  (click)="navigateToCmsInquiryPage()"></i>
+
+      <ng-template #popContentforInquiry>
+        <i
+          class="fas fa-arrow-alt-circle-right text-primary cursor-pointer float-right"
+          style="position: absolute; top: 14px; right: 25px"
+          aria-hidden="true"
+          ngbTooltip="Navigate to CMS Inquiry"
+          (click)="navigateToCmsInquiryPage()"
+        ></i>
+        <ng-container *ngIf="cmsInquiryList !== null && cmsInquiryList.length">
+          <div class="table-responsive">
+            <table class="table table-hover cursor-pointer compact">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>CreatedBy</th>
+                  <th>CreatedOn</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of cmsInquiryList; let i = index">
+                  <td>{{ item.CMSStatus }}</td>
+                  <td>{{ item.CreatedBy1 }}</td>
+                  <td>{{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}</td>
+                  <td>
+                    <span
+                      placement="left"
+                      ngbTooltip="{{ item.CMSStatusRemarks }}"
+                    >
+                      {{ truncate(item.CMSStatusRemarks, 13) }}</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="cmsInquiryList === null || !cmsInquiryList.length">
+          <p style="border-bottom: 1px dashed #cccdd3; text-align: center">
+            <strong class="text-primary">No history found</strong>
+          </p>
+        </ng-container>
+      </ng-template>
+       <ng-template #popContentforContactHistory>
+        <ng-container
+          *ngIf="contactBackHistory !== null && contactBackHistory.length"
+        >
+          <div class="table-responsive">
+            <table class="table cursor-pointer table-hover compact">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>CreatedBy</th>
+                  <th>CreatedOn</th>
+                  <th>Findings</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of contactBackHistory; let i = index">
+                  <td>{{ item.CMSStatus }}</td>
+                  <td>{{ item.CreatedBy }}</td>
+                  <td>{{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}</td>
+                  <td>
+                    <span
+                      placement="left"
+                      ngbTooltip="{{ item.ContactBackFindings }}"
+                    >
+                      {{ truncate(item.ContactBackFindings, 13) }}</span
+                    >
+                  </td>
+                  <td>
+                    <span
+                      placement="left"
+                      ngbTooltip="{{ item.ContactBackRemarks }}"
+                    >
+                      {{ truncate(item.ContactBackRemarks, 13) }}</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="contactBackHistory === null || !contactBackHistory.length"
+        >
+          <p style="border-bottom: 1px dashed #cccdd3; text-align: center">
+            <strong class="text-primary">No history found</strong>
+          </p>
+        </ng-container>
+      </ng-template> 
+    </div>
+  </div> -->
+  <form [formGroup]="InsertCMSContactBackTrackingForm" name="form" role="form"
+    (ngSubmit)="InsertCMSContactBackTracking(); emitFormValues(0)">
+    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.ContactBackStatusFormContainer" bdColor="rgba(0,0,0,0.8)"
+      size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="form-row">
+          <label for="StatusId" class="control-label">CallBack Status:</label>
+          <ng-select style="width: 100%" class="mt-1" [items]="StatusList" bindLabel="CMSContactBackStatusTitle"
+            placeholder="-Select Status-" bindValue="CMSContactBackStatusID" formControlName="contactBackStatus"
+            [ngClass]="{
+              'invalid':
+                InsertCMSContactBackTrackingForm.get('contactBackStatus')
+                  .errors,
+              'invalid-highlighted':
+                InsertCMSContactBackTrackingForm.get('contactBackStatus')
+                  .errors && isSubmited
+            }">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice : 0 : 2">
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                <span class="ng-value-label">
+                  {{ item.CMSContactBackStatusTitle }}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="form-row">
+          <label>CallBack Date&Time:</label>
+          <div class="effective-date-time mt-1">
+            <!-- <input formControlName="ContactBackTime" type="text" class="form-control"
+                        [ngClass]="{'invalid': InsertCMSContactBackTrackingForm.get('ContactBackTime').errors, 'invalid-highlighted': InsertCMSContactBackTrackingForm.get('ContactBackTime').errors && isSubmited }" /> -->
+            <input formControlName="ContactBackDate" class="mt-1" width="50%" (click)="dateFrom.toggle()"
+              #dateFrom="ngbDatepicker" placeholder="--Select Date--" autocomplete="off" ngbDatepicker
+              class="form-control date-picker" type="text" [maxDate]="maxDate" [ngClass]="{'invalid':InsertCMSContactBackTrackingForm.get('ContactBackDate').errors,'invalid-highlighted':
+                  InsertCMSContactBackTrackingForm.get('ContactBackDate').errors && isSubmited}" />
+            <ngb-timepicker #timePicker class="mini-input-field time-picker ml-1" formControlName="ContactBackTime"
+              [spinners]="false" 
+              [ngClass]="{'invalid-highlight':InsertCMSContactBackTrackingForm.get('ContactBackTime').errors && isSubmited }">
+            </ngb-timepicker>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="form-row">
+          <label>CallBack Findings:</label>
+          <input formControlName="ContactBackFindings" type="text" class="form-control"
+            (blur)="emitFormValues(InsertCMSContactBackTrackingForm.value)" [ngClass]="{
+              'invalid': InsertCMSContactBackTrackingForm.get(
+                'ContactBackFindings'
+              ).errors,
+              'invalid-highlighted':
+                InsertCMSContactBackTrackingForm.get('ContactBackFindings')
+                  .errors && isSubmited }" />
+        </div>
+      </div>
+      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="form-row">
+          <label>ContactBack Remarks:</label>
+          <input
+            formControlName="ContactBackRemarks"
+            type="text"
+            class="form-control"
+            [ngClass]="{
+              invalid:
+                InsertCMSContactBackTrackingForm.get('ContactBackRemarks')
+                  .errors,
+              'invalid-highlighted':
+                InsertCMSContactBackTrackingForm.get('ContactBackRemarks')
+                  .errors && isSubmited
+            }"
+          />
+        </div>
+      </div> -->
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <button class="btn btn-sm btn-primary mt-2 pull-right">
+          <span><i class="fa fa-check-circle" aria-hidden="true"></i>Submit</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,100 @@
+<div class="permissions-page">
+
+    <div class="row" *ngIf="selectedRole && selectedRole.UserRoleID">
+        <div class="col-sm-12">
+            <app-card [title]="'Permissions List'" [cardClass]="'tim-card tim-card tim-card-danger'">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.screenCheckBox" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="row" *ngIf="selectedRole && selectedRole.UserRoleID">
+                    <div class="col-12 mt-3 mb-4">
+                        <div> 
+                            <h3> <strong>Role: {{selectedRole.UserRoleTitle}}</strong></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-none">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <!-- <input type="text" placeholder="type to filter by PVNo OR Patient Name" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText" (keyup)="filterPermissionsList()"/> -->
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                            <button class="btn btn-mini btn-outline-danger" (click)="loadPermissions()"><i class="ti-reload"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive d-none">
+                    
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Screen</th>
+                                <th>Permission</th>
+                                <!-- <th>Key</th> -->
+                                <th>Allowed</th>
+                                <th>
+                                    <input type="checkbox" (change)="checkAllPermission($event)">
+                                    &nbsp; Select
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr *ngFor="let item of permissionsList; let i = index"> -->
+                            <tr *ngFor="let item of permissionsList | filterByKey: searchText:['Name', 'Permission']; let i = index">
+                                <td>{{(i+1)}}</td>
+                                <td>{{item.Name}}</td>
+                                <td>{{item.Permission}}</td>
+                                <!-- <td>{{item.state}}</td> -->
+                                <td>{{item.Allowed ? 'Allowed' : 'Not Allowed'}}</td>
+                                <td>
+                                    <input type="checkbox" [(ngModel)]="item.Allowed">
+                                    <!-- <button class="btn btn-outline-warning btn-mini" >Save</button> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ng-container *ngIf="(selectedRole && selectedRole.UserRoleID) || parentName != 'roles-and-permissions'; then permissionsContainer else noPermissionsMessage"></ng-container>
+                        <ng-template #permissionsContainer>
+                            <ngx-treeview [config]="config" [items]="items" (selectedChange)="onSelectedChange($event)" (filterChange)="onFilterChange($event)" (selectedChange)="values = $event"></ngx-treeview>
+                        </ng-template>
+                        <ng-template #noPermissionsMessage>
+                            <h4>Select Role to view/change it's permissions</h4>
+                        </ng-template>    
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="selectedRole && selectedRole.UserRoleID">
+                    <div class="col-12">
+                        <hr>
+                        <button
+                            class="btn btn-success btn-sm pull-right mr-8"
+                            title="Save Permissions Role"
+                            mwlConfirmationPopover
+                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="'left'"
+                            (confirm)="saveRolePermissions()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="success"
+                            cancelButtonType="outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true"
+                        > <i class="fa fa-save m-0"></i>
+                        Save
+                        </button>
+                        <!-- <button class="btn btn-success btn-mini pull-right" (click)="saveRolePermissions()">Save</button> -->
+                    </div>
+                </div>
+                <!-- <pre>{{permissionsList | json}}</pre> -->
+            </app-card>
+        </div>
+    </div>
+
+    
+</div>
+      

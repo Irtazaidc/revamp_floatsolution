@@ -1,0 +1,570 @@
+<div class="card card-custom mb-2 scrollable scrollable-element perfect-scrollbar">
+  <div class="card-header">
+      <div class="card-title">
+          <span class="card-icon">
+              <i class="fas fa-search text-primary"></i>
+          </span>
+          <h3 class="card-label">
+              CMS Inquiry
+              <small>Search CMS Inquiry</small>
+          </h3>
+          
+      </div>
+  </div>
+  <div class="card-body">
+      <div class="container">
+        <form  [formGroup]="filterFormforCMSInquiry" (ngSubmit)="getSearchCMSRequest()">
+          <div class="row mt-4" style="place-content: center">
+            <div class="">
+              <div class="form-group" style="text-align-last: center">
+                <div class="input-group" style="position: relative">
+                  <input  #byCMSrequestNo type="text" class="form-control mr-1 " name="byCMSrequestNo" (click)="patchRequestNo()"
+                    [ngClass]="{
+                      'invalid': filterFormforCMSInquiry.get('byCMSrequestNo').errors,
+                      'invalid-highlighted': filterFormforCMSInquiry.get('byCMSrequestNo').errors}"
+                    formControlName="byCMSrequestNo" placeholder="CMS-C-YYMM-####" (input)="clearFields('byCMSrequestNo')" />
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="form-group" style="text-align-last: center">
+                <div class="input-group" style="position: relative">
+                  <input #cmsRequestid type="text" class="form-control mr-1 " name="byCMSrequestID"
+                    [ngClass]="{
+                      'invalid': filterFormforCMSInquiry.get('byCMSrequestID').errors,
+                      'invalid-highlighted': filterFormforCMSInquiry.get('byCMSrequestID').errors}"
+                    formControlName="byCMSrequestID" placeholder="Request ID" (input)="clearFields('byCMSrequestID')" />
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="form-group" style="text-align-last: center">
+                <div class="input-group" style="position: relative">
+                  <input  type="text" class="form-control mr-1 " name="PIN" (input)="clearFields('PIN')"
+                    [ngClass]="{'invalid': filterFormforCMSInquiry.get('PIN').errors,
+                      'invalid-highlighted': filterFormforCMSInquiry.get('PIN').errors}" formControlName="PIN"
+                    placeholder="PIN" />
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="form-group" style="text-align-last: center">
+                <div class="input-group" style="position: relative">
+                  <input  type="text" class="form-control mr-1 " name="cellNo"
+                    (input)="clearFields('cellNo')" [ngClass]="{
+                      'invalid':
+                        filterFormforCMSInquiry.get('cellNo').errors,
+                      'invalid-highlighted': filterFormforCMSInquiry.get('cellNo').errors}" formControlName="cellNo"
+                    placeholder="Patient Reg Cell#" />
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="form-group" style="text-align-last: center">
+                <div class="input-group" style="position: relative">
+                  <input  type="text" class="form-control mr-1 " name="PatientCLI"
+                    (input)="clearFields('PatientCLI')" [ngClass]="{
+                      'invalid':
+                        filterFormforCMSInquiry.get('PatientCLI').errors,
+                      'invalid-highlighted': filterFormforCMSInquiry.get('cellNo').errors}" formControlName="PatientCLI"
+                    placeholder="Calling CLI/Cell#" />
+                </div>
+              </div>
+            </div>
+            &nbsp;
+            <div class="">
+              <button ngbTooltip="Search" class="btn btn-primary mr-1 pull-left" (click)="openSearchRecordPopUP()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </button>
+              <button ngbTooltip="Clear Text" type="reset" class="btn btn-danger pull-left">
+                <i class="fa fa-eraser" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+        <ng-template #openSearchRecord let-openSearchRecord>
+          <div class="modal-body">
+            <div class="row d-flex justify-content-center align-items-center">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card card-custom gutter-t">
+                  <div class="card-body px-4 py-4">
+                    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.cmsInquiryListTable" bdColor="rgba(0,0,0,0.8)"
+                      size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                      <p style="color: white">Loading...</p>
+                    </ngx-spinner>
+                    <div class="table-responsive table-container d-none d-md-block fixed-height-table mt-5"
+                      *ngIf="cmsInquiryTable">
+                      <table class="table table-hover compact">
+                        <thead>
+                          <tr>
+                            <th style="width:10%">Request ID</th>
+                            <th style="width:25%">Request NO</th>
+                            <th style="width:15%">Calling CLI/Cell NO</th>
+                            <th style="width:15%">Patient Registered No</th>
+                            <th style="width:10%">Created By</th>
+                            <th style="width:10%" class="text-right">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngIf="!cmsInquiryTable.length">
+                            <td colspan="7" style="text-align: center;">
+                              <strong class="text-primary">No Record Found..</strong>
+                            </td>
+                          </tr>
+                          <tr *ngFor="let patient of cmsInquiryTable">
+                            <td style="width:10%">{{patient.CMSRequestID}}</td>
+                            <td style="width:10%">{{patient.CMSRequestNo || 'NA'}}</td>
+                            <td style="width:15%">{{patient.PatientContactNumber || "NA"}}</td>
+                            <td style="width:15%">{{patient.PatientCLI || "NA"}}</td>
+                            <td style="width:10%">{{patient.CreatedBy?patient.CreatedBy:"NA"}}</td>
+                            <td style="width:10%" class="text-right">
+                              <button class="btn btn-success btn-sm mr-1" (click)="patientRowDoubleClick(patient)"
+                                ngbTooltip="Select Patient">Select</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal" (click)="openSearchRecord.close()">
+              <i class="fa fa-times-circle"></i>Close
+            </button>
+          </div>
+        </ng-template>
+        <!-- <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            
+          </div>
+        </div> -->
+      </div>
+  </div>
+</div>
+
+
+<!-- <app-card [cardClass]="'tim-card tim-card tim-card-primary'" [cardHeaderClass]="'card-header-narrow'">
+  
+</app-card> -->
+
+<div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar" *ngIf="CMSrequestID">
+  <div class="card-toolbar ">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <ngx-spinner class="spinner-warning" [name]="spinnerRefs.cmsInquiryListTable" bdColor="rgba(0,0,0,0.8)"
+            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+          <ng-template #openEmployeeCard let-openEmployeeCard>
+            <div class="modal-body">
+              <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                  <div class="card card-custom gutter-t" style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                    <div class="card-body px-4 py-4 bg-light">
+                      <app-cms-employee-card [UserID]="employeeID"></app-cms-employee-card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                (click)="openEmployeeCard.close()">
+                <i class="fa fa-times-circle"></i>Close
+              </button>
+            </div>
+          </ng-template>
+          <ng-container *ngIf="
+                cmsInquiryList && cmsInquiryList.length > 0;
+                then cmsInquirySpace;">
+          </ng-container>
+          <ng-template #cmsInquirySpace>
+            <div class="row">
+              <ng-container *ngIf="
+                    (patientId && patientId != 0) || getVisitID;
+                    then patientDataFound;
+                    else PatientIDNotFoundSpace
+                  ">
+              </ng-container>
+              <ng-template #patientDataFound>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <div class="card card-custom gutter-t" style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                    <div class="card-body px-4 py-4 bg-light">
+                      <app-patient-basic-info [PatientId]="patientId" [VisitId]="getVisitID">
+                      </app-patient-basic-info>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #PatientIDNotFoundSpace>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <div class="card card-custom bg-light gutter-t"
+                    style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                    <div class="card-body px-4 py-5 bg-light d-flex align-items-center justify-content-center">
+                      <h1>Patient Not Selected</h1>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-container *ngIf="PPuserID; then PPUserData; else PPUserDataNotFoundSpace">
+              </ng-container>
+              <ng-template #PPUserData>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <div class="card card-custom gutter-t" style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                    <div class="card-body px-4 py-4 bg-light">
+                      <app-patient-portal-user-card [PPUserId]="PPuserID">
+                      </app-patient-portal-user-card>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #PPUserDataNotFoundSpace>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <div class="card card-custom bg-light gutter-t"
+                    style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                    <div class="card-body px-4 py-5 bg-light d-flex align-items-center justify-content-center">
+                      <h3>Patient Portal User Record Not Found</h3>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card card-custom gutter-t">
+                  <fieldset class="fieldset-border-all-primary">
+                    <legend class="font-weight-bold text-danger" style="font-size: 1.1rem">
+                      Complaint Details
+                    </legend>
+                    <div style="max-height: 200px; min-height: 150px; overflow-y: auto">
+                      <div class="card-body px-4 py-4">
+
+                        <p class="card-title">
+                          <b>Patient Name:</b>  {{ complaintDetailsList.FullName ? complaintDetailsList.FullName : "NA"}}
+                          <span class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                            | <b>Complainant Name:</b> {{ complaintDetailsList.ComplainantName ?
+                            complaintDetailsList.ComplainantName : "NA"}}
+                          </span>
+                        </p>
+                        <div class="row">
+                          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 line-height">
+                            <p class="card-text">
+                              <b>Created On:</b>
+                              {{
+                              complaintDetailsList.RequestCreatedOn
+                              | date : "dd-MMM-yyyy HH:mm a"
+                              }}
+                            </p>
+                            <p class="card-text line-height cursor-pointer" *ngIf="complaintDetailsList.RequestSubject"
+                              ngbTooltip="Subject">
+                              <b>Subject:</b> {{ complaintDetailsList.RequestSubject ?
+                              complaintDetailsList.RequestSubject : "NA" }}
+                            </p>
+                            <p *ngIf="complaintDetailsList.VisitId" class="card-text line-height">
+                              <b>PIN:</b>
+                              {{
+                              complaintDetailsList.VisitId
+                              ? complaintDetailsList.VisitId
+                              : "NA"
+                              }}
+                            </p>
+                            <p *ngIf="complaintDetailsList.CellNo || complaintDetailsList.PatientCLI" class="card-text">
+                              <b>Contact:</b>
+                              <span class="cursor-pointer" *ngIf="complaintDetailsList.CellNo"
+                              ngbTooltip="Calling CLI/Cell No">
+                                {{complaintDetailsList.CellNo ? complaintDetailsList.CellNo : "NA" }}
+                              </span>
+                              <span class="cursor-pointer" *ngIf="complaintDetailsList.PatientCLI"
+                                 ngbTooltip="Patient Registered Contact">
+                                - {{complaintDetailsList.PatientCLI ? complaintDetailsList.PatientCLI : "NA" }}
+                              </span>
+                            </p>
+                            <p *ngIf="complaintDetailsList.Email" class="card-text">
+                              <b>Email:</b> {{complaintDetailsList.Email ? complaintDetailsList.Email : "NA" }}
+                            </p>
+                            <p *ngIf="complaintDetailsList.RequestSourceName" class="card-text">
+                              <br><b>Complain Medium/Source:</b> {{complaintDetailsList.RequestSourceName}}
+                            </p>
+                            
+                          </div>
+                          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 line-height">
+                            <p *ngIf="complaintDetailsList.VisitedBranchName" class="card-text">
+                              <b>Visited Branch:</b> {{
+                              complaintDetailsList.VisitedBranchName ? 
+                              complaintDetailsList.VisitedBranchName : "NA" }}</p>
+                            <p *ngIf="complaintDetailsList.TPID" class="card-text line-height">
+                              <b>Test Done:</b>
+                              {{
+                              complaintDetailsList.TPID
+                              ? complaintDetailsList.TPID
+                              : "NA"
+                              }}
+                            </p>
+                            <p *ngIf="complaintDetailsList.ReportedError" class="card-text line-height">
+                              <b>Reported Error:</b>
+                              {{
+                              complaintDetailsList.ReportedError
+                              ? complaintDetailsList.ReportedError
+                              : "NA"
+                              }}
+                            </p>
+                            <p *ngIf="complaintDetailsList.ReqAssignedToName" class="card-text line-height">
+                              <b>Request Assigned To:</b>
+                              {{
+                              complaintDetailsList.ReqAssignedToName
+                              ? complaintDetailsList.ReqAssignedToName
+                              : "NA"
+                              }}
+                            </p>
+                            <p class="card-text">
+                              <strong>Is Callback Required?:</strong>
+                              {{complaintDetailsList.IsCallBackRequired?'YES':'NO'}}
+                            </p>
+                          </div>
+                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-1 line-height">
+                            <p class="card-text">
+                              <b>Complaint Description:</b>
+                              {{
+                              complaintDetailsList.RequestMessage
+                              ? complaintDetailsList.RequestMessage
+                              : "NA"
+                              }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="contactBackHistory.length > 0">
+                <!-- <div class="card card-custom gutter-t">
+                                <div class="card-body px-4 py-4"> -->
+                <fieldset class="fieldset-border-all-primary">
+                  <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                    CallBack Details
+                  </legend>
+                  <div style="max-height: 200px;  overflow-y: auto">
+                    <!-- <ng-container *ngIf="contactBackHistory !==null && contactBackHistory.length"> -->
+                    <div class="table-responsive">
+                      <table class="table cursor-pointer table-hover compact">
+                        <thead>
+                          <tr>
+                            <th scope="col" width="2%">#</th>
+                            <th scope="col" width="17%">Status</th>
+                            <th scope="col" width="18%">CreatedBy</th>
+                            <th scope="col" width="18%">CreatedOn</th>
+                            <th scope="col" width="13%">Call Back Time</th>
+                            <th scope="col" width="30%">Findings</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of contactBackHistory; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{ item.CMSContactBackStatusTitle }}</td>
+                            <td>{{ item.CreatedBy?item.CreatedBy:"NA" }}</td>
+                            <td>
+                              {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                            </td>
+                            <td>
+                              {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                            </td>
+                            <td>
+                              {{ item.ContactBackFindings? item.ContactBackFindings:'NA' }}
+                              <!-- <span placement="left" ngbTooltip="{{ item.ContactBackFindings }}">
+                                  {{ truncate(item.ContactBackFindings, 15) }}</span> -->
+                            </td>
+                            <!-- <td>
+                                <span placement="left" ngbTooltip="{{ item.ContactBackRemarks }}">
+                                  {{ truncate(item.ContactBackRemarks, 15) }}</span>
+                              </td> -->
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- </ng-container> -->
+                    <!-- <ng-container *ngIf="contactBackHistory===null || !contactBackHistory.length">
+                          <p style="border-bottom: 1px dashed #cccdd3; text-align: center;"><strong class="text-primary">No
+                              history found</strong></p>
+                        </ng-container> -->
+                  </div>
+                </fieldset>
+                <!-- </div>
+                            </div> -->
+              </div>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <fieldset class="fieldset-border-all-primary">
+                  <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                    Inquiry Report
+                  </legend>
+                  <div style="max-height: 200px; overflow-y: auto">
+                    <div class="table-responsive">
+                      <table class="table table-hover cursor-pointer compact">
+                        <thead>
+                          <tr>
+                            <th scope="col" width="2%">#</th>
+                            <th scope="col" width="8%">Status</th>
+                            <th scope="col" width="10%">Created by</th>
+                            <th scope="col" width="10%">Created On</th>
+                            <th scope="col" width="17%">CMS Findings/Remarks</th>
+                            
+                            <th scope="col" width="18%">RootCause</th>
+                            <th scope="col" width="18%">Corrective Measure</th>
+                            <th scope="col" width="17%">Preventive Measure</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of cmsInquiryList; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{ item.CMSStatus }}</td>
+                            <td>
+                              {{ item.CreatedBy1?item.CreatedBy1:"NA" }}
+                              <span>
+                                <i *ngIf="screenPermissionsObj.cms_inquiry_user_ard" class="far fa-eye text-danger"
+                                  aria-hidden="true" (click)="OpenEmployeeCardPopUP(item)"></i>
+                              </span>
+                            </td>
+                            <td>
+                              {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                            </td>
+                            <td>
+                              <!-- {{item.CMSStatusRemarks}} -->
+                              {{ item.CMSStatusRemarks? item.CMSStatusRemarks:'NA' }}
+                              <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                  {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                            </td>
+                    
+                            <td>
+                              <!-- {{item.CMSStatusRemarks}} -->
+                              {{ item.RootCause? item.RootCause:'NA' }}
+                              <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                  {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                            </td>
+                            <td>
+                              <!-- {{item.CMSStatusRemarks}} -->
+                              {{ item.DirectCaseMeasure? item.DirectCaseMeasure:'NA' }}
+                              <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                  {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                            </td>
+                            <td>
+                              <!-- {{item.CMSStatusRemarks}} -->
+                              {{ item.PreventiveMeasure? item.PreventiveMeasure:'NA' }}
+                              <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                  {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </fieldset>
+                <!-- </div>
+                            </div> -->
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" *ngIf="responsiblePersonLIST.length > 0">
+                <fieldset class="fieldset-border-all-primary">
+                  <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                    Responsible Person
+                  </legend>
+                  <div style="max-height: 200px; min-height: 200px; overflow-y: auto">
+                    <div class="table-responsive">
+                      <table class="table table-hover cursor-pointer compact">
+                        <thead>
+                          <tr>
+                            <!-- <th>Status</th> -->
+                            <th>Created by</th>
+                            <th>Created On</th>
+                            <th>Responsible Person Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of responsiblePersonLIST; let i = index">
+                            <td>{{ item.CreatedByName?item.CreatedByName:"NA" }}</td>
+                            <td>
+                              {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                            </td>
+                            <td>
+                              {{ item.ResponsiblePersonName }}
+                              <span>
+                                <i *ngIf="screenPermissionsObj.cms_inquiry_user_ard" class="far fa-eye text-danger"
+                                  aria-hidden="true" (click)="openREsponsiblePersonCARD(item)"></i>
+                              </span>
+                            </td>
+                            <!-- <td>{{item.CMSStatusRemarks}}</td> -->
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </fieldset>
+                <!-- </div>
+                            </div> -->
+              </div>
+              
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" *ngIf="MeasuresTakenLIST.length > 0">
+                <fieldset class="fieldset-border-all-primary">
+                  <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                    Action Taken
+                  </legend>
+                  <div style="max-height: 200px; min-height: 200px; overflow-y: auto">
+                    <div class="table-responsive">
+                      <table class="table table-hover cursor-pointer compact">
+                        <thead>
+                          <tr>
+                            <th>Created by</th>
+                            <th>Created On</th>
+                            <th>Action Taken</th>
+
+                            <!-- <th>Remarks</th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of MeasuresTakenLIST; let i = index">
+                            <td>
+                              {{ item.CreatedByName?item.CreatedByName:"NA" }}
+                              <!-- <span>
+                                  <i class="far fa-eye text-danger" aria-hidden="true"
+                                    (click)="OpenEmployeeCardPopUP(item)"></i>
+                                </span> -->
+                            </td>
+                            <td>
+                              {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                            </td>
+                            <td>{{ item.ActionTaken }}</td>
+                            <!-- <td>{{item.CMSStatusRemarks}}</td> -->
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </fieldset>
+                <!-- </div>
+                            </div> -->
+              </div>
+              
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="docs-area mt-2">
+                  <app-visit-docs [forFilterComp]="filtercomp" [module]="screenIdentity"  [allowRemove]="allowRemove" [CMSrequestID]="CMSrequestID"
+                      [editing]="{insert:false,select: false, camera: false}" [sectionHead]="'View'"
+                      (outputDocs)="getLoadedDocs($event)"></app-visit-docs>   
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+          <!-- <ng-template #cmsInquirySpaceDataNotFoundSpace>
+              <ngb-alert style="text-align: center" [dismissible]="false" [type]="'info'">
+                <strong>No Detail Found </strong>
+              </ngb-alert>
+            </ng-template> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+.payment-summary-table {
+  font-size: 14px;
+  background-color: #fff;
+  border-collapse: collapse;
+}
+
+.payment-summary-table thead tr:first-child {
+  background-color: #e9ecef;
+  font-weight: 600;
+  border-bottom: 2px solid #adb5bd;
+}
+
+.payment-summary-table thead tr:nth-child(2) {
+  background-color: #f1f3f4;
+  font-weight: 500;
+}
+
+.payment-summary-table td,
+.payment-summary-table th {
+  vertical-align: middle;
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+.payment-summary-table .main-row {
+  background-color: #f8f9fa;
+}
+
+.payment-summary-table .inner-table thead {
+  background-color: #f1f3f4;
+  font-weight: 600;
+}
+
+.payment-summary-table .inner-table td,
+.payment-summary-table .inner-table th {
+  font-size: 13px;
+  padding: 6px;
+}
+
+.payment-summary-table .total-row {
+  background-color: #e9ecef;
+  font-weight: 600;
+}
+
+.payment-summary-table tbody tr:hover:not(.main-row) {
+  background-color: #f8f9fa;
+  transition: 0.2s ease-in-out;
+}
+
+.payment-summary-table button {
+  font-size: 13px;
+}
+
+table thead th[colspan="2"] {
+  background-color: #e9ecef;
+  border-bottom: 2px solid #dee2e6;
+}
+
+table thead tr:nth-child(2) th:last-child,
+table thead tr:nth-child(2) th:nth-last-child(2),
+tfoot td:nth-last-child(-n+2) {
+  background-color: #efefef;
+}

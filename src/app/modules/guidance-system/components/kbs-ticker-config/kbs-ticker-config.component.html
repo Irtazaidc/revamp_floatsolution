@@ -1,0 +1,616 @@
+<div class="container-fluid py-4">
+  <div class="card p-4">
+    <div class="card-header">
+      <div class="card-title">
+        <h2 class="card-label">Ticker Configuration</h2>
+      </div>
+    </div>
+
+    <div class="card-body mt-4">
+      <div class="row g-4">
+        <!-- Edit Section -->
+        <div class="col-md-9">
+          <mat-tab-group
+            class="demo-tab-group"
+            animationDuration="0ms"
+            style="background-color: #fff"
+          >
+            <mat-tab label="Active Tickers">
+              <ng-template mat-tab-label>
+                <i
+                  class="flaticon2-checkmark icon-lg text-danger custom-icons mr-2"
+                ></i>
+                Active Tickers
+              </ng-template>
+              <div
+                class="d-flex justify-content-between align-items-center mb-2 mt-2"
+              >
+                <span class="section-title"><strong>Tickers:</strong></span>
+                <input
+                  type="text"
+                  class="form-control form-control-sm w-50"
+                  placeholder="Type to filter"
+                  [(ngModel)]="searchTickerText"
+                />
+              </div>
+              <div class="table-responsive table-container fixed-height-table">
+                <table class="table table-bordered align-middle">
+                  <thead>
+                    <tr>
+                      <th style="width: 40px">#</th>
+                      <th style="width: 200px">Title</th>
+                      <th style="width: 260px">Details</th>
+                      <th style="width: 160px">Category</th>
+                      <th style="width: 130px">Start Date</th>
+                      <th style="width: 130px">End Date</th>
+                      <th style="width: 100px">Non-Expiry</th>
+                      <th style="width: 60px">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="
+                        activeTickerList
+                          | filterByKey
+                            : searchTickerText
+                            : [
+                                'TickerTitle',
+                                'TickerDetail',
+                                'StartDate',
+                                'EndDate',
+                                'NonExpiry',
+                                'IsCurrentlyActive'
+                              ] as filteredServices
+                      "
+                    >
+                      <!-- Table rows -->
+                      <tr *ngFor="let data of filteredServices; let i = index">
+                        <!-- Row number -->
+                        <td>{{ i + 1 }}</td>
+
+                        <!-- Title (Editable Always) -->
+                        <td>
+                          <div class="editor-wrapper">
+                            <div
+                              class="simple-editor"
+                              contentEditable="true"
+                              (blur)="
+                                onContentChange(data, 'TickerTitle', $event)
+                              "
+                              [innerHTML]="data.TickerTitle"
+                              maxlength="50"
+                              [ngbTooltip]="'Max 250 characters'"
+                              [attr.placeholder]="'Enter remarks...'"
+                            ></div>
+                          </div>
+                        </td>
+
+                        <!-- Details (Editable Always) -->
+                        <td>
+                          <div class="editor-wrapper">
+                            <div
+                              class="simple-editor"
+                              contentEditable="true"
+                              (blur)="
+                                onContentChange(data, 'TickerDetail', $event)
+                              "
+                              [innerHTML]="data.TickerDetail"
+                              maxlength="4000"
+                              [ngbTooltip]="'Max 4000 characters'"
+                              [attr.placeholder]="'Enter remarks...'"
+                            ></div>
+                          </div>
+                        </td>
+
+                        <!-- Category -->
+                        <td>
+                          <ng-select
+                            class="mr-1 w-200 ticker-select"
+                            [searchable]="true"
+                            [clearable]="false"
+                            [items]="categories"
+                            bindLabel="CategoryName"
+                            bindValue="DKBSTickerCategoryID"
+                            [(ngModel)]="data.DKBSTickerCategoryID"
+                            placeholder="-Select Category-"
+                            appendTo="body"
+                          ></ng-select>
+                        </td>
+
+                        <!-- Start Date -->
+                        <td>
+                          <input
+                            (click)="dateFrom.toggle()"
+                            #dateFrom="ngbDatepicker"
+                            placeholder="YYYY-MM-DD"
+                            autocomplete="off"
+                            [(ngModel)]="data.StartDate"
+                            ngbDatepicker
+                            class="form-control form-control-sm"
+                            style="min-width: 120px"
+                            type="text"
+                          />
+                        </td>
+
+                        <!-- End Date -->
+                        <td>
+                          <input
+                            (click)="!data.NonExpiry && dateTo.toggle()"
+                            #dateTo="ngbDatepicker"
+                            placeholder="YYYY-MM-DD"
+                            autocomplete="off"
+                            ngbDatepicker
+                            [(ngModel)]="data.EndDate"
+                            class="form-control form-control-sm"
+                            style="min-width: 120px"
+                            type="text"
+                            [disabled]="data.NonExpiry"
+                          />
+                        </td>
+
+                        <!-- Non-Expiry -->
+                        <td class="text-center non-expiry-col">
+                          <input
+                            class="form-check-input mt-6"
+                            type="checkbox"
+                            [(ngModel)]="data.NonExpiry"
+                            (change)="onNonExpiryChange(data)"
+                          />
+                        </td>
+
+                        <!-- Remove Button -->
+                        <td>
+                          <button
+                            class="btn btn-sm btn-outline-danger mt-3"
+                            type="button"
+                            [disabled]="disabledButton"
+                            mwlConfirmationPopover
+                            [popoverTitle]="'Please Confirm...!'"
+                            [popoverMessage]="
+                              'Are you sure you want to delete?'
+                            "
+                            [confirmText]="
+                              confirmationPopoverConfig.confirmText
+                            "
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="
+                              confirmationPopoverConfig.placements[0]
+                            "
+                            (confirm)="deleteActiveKBSTicker(data.TickerID)"
+                            (cancel)="
+                              confirmationPopoverConfig.confirmPopoverCancel()
+                            "
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="
+                              confirmationPopoverConfig.confirmClicked = false;
+                              confirmationPopoverConfig.cancelClicked = false
+                            "
+                            [appendToBody]="true"
+                          >
+                            <i class="fa fa-minus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="container">
+                <div class="row mt-6">
+                  <ngx-spinner
+                    class="spinner-warning"
+                    [name]="spinnerRefs.dataTable"
+                    bdColor="rgba(0,0,0,0.8)"
+                    size="medium"
+                    color="#fff"
+                    type="square-loader"
+                    [fullScreen]="false"
+                  >
+                    <p style="color: white">Loading...</p>
+                  </ngx-spinner>
+                  <div class="col-12 d-flex justify-content-end mt-4">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-success mr-2"
+                      (click)="addNewTicker()"
+                    >
+                      <i class="fa fa-plus"></i> Add New Ticker
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger mr-2"
+                      (click)="cancelNewTicker()"
+                    >
+                      <i class="fa fa-plus"></i> Cancel New Ticker/s
+                    </button>
+                    <button
+                      type="button"
+                      [disabled]="disabledButton"
+                      class="btn btn-primary"
+                      mwlConfirmationPopover
+                      [popoverTitle]="'Please Confirm...!'"
+                      [popoverMessage]="'Are you sure you want to save?'"
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]"
+                      (confirm)="insertUpdateActiveKBSTickerConfiguration()"
+                      (cancel)="
+                        confirmationPopoverConfig.confirmPopoverCancel()
+                      "
+                      confirmButtonType="btn btn-sm btn-primary"
+                      cancelButtonType="btn btn-sm btn-outline-secondary"
+                      (click)="
+                        confirmationPopoverConfig.confirmClicked = false;
+                        confirmationPopoverConfig.cancelClicked = false
+                      "
+                      [appendToBody]="true"
+                    >
+                      <i class="fa fa-save me-1"></i> Save Active Ticker
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="Archive Tickers">
+              <ng-template mat-tab-label>
+                <i
+                  class="flaticon2-folder icon-lg text-danger custom-icons mr-2"
+                ></i>
+                Archive Tickers
+              </ng-template>
+              <div
+                class="d-flex justify-content-between align-items-center mb-2 mt-2"
+              >
+                <span class="section-title"><strong>Tickers:</strong></span>
+                <input
+                  type="text"
+                  class="form-control form-control-sm w-50"
+                  placeholder="Type to filter"
+                  [(ngModel)]="searchTickerText"
+                />
+              </div>
+              <div
+                class="table-responsive table-container fixed-height-table"
+                style="overflow-x: hidden"
+              >
+                <table class="table table-bordered align-middle">
+                  <thead>
+                    <tr>
+                      <th style="width: 40px">#</th>
+                      <th style="width: 200px">Title</th>
+                      <th style="width: 260px">Details</th>
+                      <th style="width: 160px">Category</th>
+                      <th style="width: 130px">Start Date</th>
+                      <th style="width: 130px">End Date</th>
+                      <th style="width: 100px">Non-Expiry</th>
+                      <th style="width: 60px">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="
+                        archiveTickerList
+                          | filterByKey
+                            : searchTickerText
+                            : [
+                                'TickerTitle',
+                                'TickerDetail',
+                                'StartDate',
+                                'EndDate',
+                                'NonExpiry',
+                                'IsCurrentlyActive'
+                              ] as filteredServices
+                      "
+                    >
+                      <tr
+                        *ngFor="let data of filteredServices"
+                        [ngClass]="{ 'highlight-row': data.isSelected }"
+                      >
+                        <!-- Checkbox for selecting row -->
+                        <td class="text-center">
+                          <input
+                            class="cursor-pointer mt-6"
+                            type="checkbox"
+                            [(ngModel)]="data.isSelected"
+                            (change)="onRowSelectChange(data)"
+                          />
+                        </td>
+
+                        <!-- Title -->
+                        <td>
+                          <div class="editor-wrapper">
+                            <div
+                              class="simple-editor"
+                              [contentEditable]="data.isSelected"
+                               (input)="limitLength($event, 10)"
+                              [class.disabled-editor]="!data.isSelected"
+                              (blur)="
+                                onContentChange(data, 'TickerTitle', $event)
+                              "
+                              [innerHTML]="data.TickerTitle"
+                              [ngbTooltip]="'Max 250 characters'"
+                              [attr.placeholder]="'Enter title...'"
+                            ></div>
+                          </div>
+                        </td>
+
+                        <!-- Details -->
+                        <td>
+                          <div class="editor-wrapper">
+                            <div
+                              class="simple-editor"
+                              [contentEditable]="data.isSelected"
+                               (input)="limitLength($event, 4000)"
+                              [class.disabled-editor]="!data.isSelected"
+                              (blur)="
+                                onContentChange(data, 'TickerDetail', $event)
+                              "
+                              [innerHTML]="data.TickerDetail"
+                              maxlength="4000"
+                              [ngbTooltip]="'Max 4000 characters'"
+                              [attr.placeholder]="'Enter details...'"
+                            ></div>
+                          </div>
+                        </td>
+
+                        <!-- Category -->
+                        <td>
+                          <ng-select
+                            class="mr-1 w-200 ticker-select mt-4"
+                            [searchable]="true"
+                            [clearable]="false"
+                            [items]="categories"
+                            bindLabel="CategoryName"
+                            bindValue="DKBSTickerCategoryID"
+                            [(ngModel)]="data.DKBSTickerCategoryID"
+                            placeholder="-Select Category-"
+                            appendTo="body"
+                            [disabled]="!data.isSelected"
+                          ></ng-select>
+                        </td>
+
+                        <!-- Start Date -->
+                        <td>
+                          <input
+                            (click)="data.isSelected && dateFrom.toggle()"
+                            #dateFrom="ngbDatepicker"
+                            placeholder="YYYY-MM-DD"
+                            autocomplete="off"
+                            [(ngModel)]="data.StartDate"
+                            ngbDatepicker
+                            class="form-control form-control-sm mt-4"
+                            [disabled]="!data.isSelected"
+                          />
+                        </td>
+
+                        <!-- End Date -->
+                        <td>
+                          <input
+                            (click)="
+                              data.isSelected &&
+                                !data.NonExpiry &&
+                                dateTo.toggle()
+                            "
+                            #dateTo="ngbDatepicker"
+                            placeholder="YYYY-MM-DD"
+                            autocomplete="off"
+                            ngbDatepicker
+                            [(ngModel)]="data.EndDate"
+                            class="form-control form-control-sm mt-4"
+                            [disabled]="!data.isSelected || data.NonExpiry"
+                          />
+                        </td>
+
+                        <!-- Non Expiry -->
+                        <td class="text-center non-expiry-col">
+                          <input
+                            type="checkbox"
+                            class="form-check-input mt-6"
+                            [(ngModel)]="data.NonExpiry"
+                            (change)="
+                              data.isSelected && onNonExpiryChange(data)
+                            "
+                            [disabled]="!data.isSelected"
+                          />
+                        </td>
+
+                        <!-- Remove -->
+                        <td>
+                          <button
+                            class="btn btn-sm btn-outline-danger mt-3"
+                            type="button"
+                            [disabled]="disabledButton || !data.isSelected"
+                            mwlConfirmationPopover
+                            [popoverTitle]="'Please Confirm...!'"
+                            [popoverMessage]="
+                              'Are you sure you want to delete?'
+                            "
+                            [confirmText]="
+                              confirmationPopoverConfig.confirmText
+                            "
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="
+                              confirmationPopoverConfig.placements[0]
+                            "
+                            (confirm)="deleteArchiveKBSTicker(data.TickerID)"
+                            (cancel)="
+                              confirmationPopoverConfig.confirmPopoverCancel()
+                            "
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            [appendToBody]="true"
+                          >
+                            <i class="fa fa-minus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="container">
+                <div class="row mt-6">
+                  <ngx-spinner
+                    class="spinner-warning"
+                    [name]="spinnerRefs.dataTable"
+                    bdColor="rgba(0,0,0,0.8)"
+                    size="medium"
+                    color="#fff"
+                    type="square-loader"
+                    [fullScreen]="false"
+                  >
+                    <p style="color: white">Loading...</p>
+                  </ngx-spinner>
+                  <div class="col-12 d-flex justify-content-end mt-4">
+                    <button
+                      type="button"
+                      [disabled]="disabledButton"
+                      class="btn btn-primary mr-3"
+                      mwlConfirmationPopover
+                      [popoverTitle]="'Please Confirm...!'"
+                      [popoverMessage]="'Are you sure you want to save?'"
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]"
+                      (confirm)="insertUpdateArchiveKBSTickerConfiguration()"
+                      (cancel)="
+                        confirmationPopoverConfig.confirmPopoverCancel()
+                      "
+                      confirmButtonType="btn btn-sm btn-primary"
+                      cancelButtonType="btn btn-sm btn-outline-secondary"
+                      (click)="
+                        confirmationPopoverConfig.confirmClicked = false;
+                        confirmationPopoverConfig.cancelClicked = false
+                      "
+                      [appendToBody]="true"
+                    >
+                      <i class="fa fa-save me-1"></i> Save Archive Ticker
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+        <div class="col-md-3 mt-4">
+          <ngx-spinner
+            class="spinner-info"
+            bdColor="rgba(0,0,0,0.8)"
+            [name]="spinnerRefs.dataTable"
+            size="medium"
+            color="#fff"
+            type="square-loader"
+            [fullScreen]="false"
+          >
+            <p style="color: white">Please wait...</p>
+          </ngx-spinner>
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="section-title"><strong>Add Categories:</strong></span>
+            <button
+              class="btn btn-mini btn-outline-primary input-group-btn-custom"
+              (click)="getKBSTickerCategory()"
+            >
+              <i class="ti-reload"></i>
+            </button>
+          </div>
+
+          <div class="table-responsive table-container fixed-height-table mt-4">
+            <table class="table table-hover compact table-bordered">
+              <thead class="sticky-header">
+                <tr>
+                  <th>Category's Name</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cat of categories; let i = index">
+                  <td width="85%">
+                    <!-- Show input for new rows, text for existing rows -->
+                    <input
+                      *ngIf="isNewCategory(cat)"
+                      type="text"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="cat.CategoryName"
+                      placeholder="Enter category name"
+                      (blur)="validateCategoryName(cat)"
+                    />
+                    <span *ngIf="!isNewCategory(cat)">{{
+                      cat.CategoryName
+                    }}</span>
+                  </td>
+                  <td width="5%" class="text-center">
+                    <!-- Your existing button code remains the same -->
+                    <button
+                      class="btn btn-sm btn-outline-danger mt-3"
+                      type="button"
+                      [disabled]="disabledButton"
+                      mwlConfirmationPopover
+                      [popoverTitle]="'Please Confirm...!'"
+                      [popoverMessage]="'Are you sure you want to delete?'"
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]"
+                      (confirm)="removeRow(i)"
+                      (cancel)="
+                        confirmationPopoverConfig.confirmPopoverCancel()
+                      "
+                      confirmButtonType="btn btn-sm btn-primary"
+                      cancelButtonType="btn btn-sm btn-outline-secondary"
+                      (click)="
+                        confirmationPopoverConfig.confirmClicked = false;
+                        confirmationPopoverConfig.cancelClicked = false
+                      "
+                      [appendToBody]="true"
+                    >
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Debug info -->
+            <div class="mt-2">
+              <small class="text-muted">
+                Total Categories: {{ totalServicesCount }}, Non-empty:
+                {{ nonEmptyCategoriesCount }}
+              </small>
+            </div>
+          </div>
+          <div class="text-right mt-4">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-success mr-2"
+              (click)="addRow()"
+            >
+              <i class="fa fa-plus"></i> Add New Category
+            </button>
+            <button
+              type="button"
+              [disabled]="disabledButton"
+              class="btn btn-sm btn-outline-primary"
+              mwlConfirmationPopover
+              [popoverTitle]="'Please Confirm...!'"
+              [popoverMessage]="'Are you sure you want to save?'"
+              [confirmText]="confirmationPopoverConfig.confirmText"
+              [cancelText]="confirmationPopoverConfig.cancelText"
+              [placement]="confirmationPopoverConfig.placements[0]"
+              (confirm)="insertUpdateKBSTickerCategory()"
+              (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+              confirmButtonType="btn btn-sm btn-primary"
+              cancelButtonType="btn btn-sm btn-outline-secondary"
+              (click)="
+                confirmationPopoverConfig.confirmClicked = false;
+                confirmationPopoverConfig.cancelClicked = false
+              "
+              [appendToBody]="true"
+            >
+              <i class="fa fa-save"></i> Save Categories
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

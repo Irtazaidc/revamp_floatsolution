@@ -1,0 +1,374 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                   
+                    <!-- <div class="row"> 
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="testsList"
+                                    bindLabel="TestProfileCode" 
+                                    placeholder="-Select Test-"
+                                    bindValue="TPId"
+                                    >
+            
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.TestProfileCode}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>                                                                        
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <select class="form-control form-control-sm">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Both">Both</option>
+                                    <option value="Unknown">Unknown</option>
+                                </select>
+                            </div>
+                        </div>                                                                        
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 text-right">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-outline-primary btn-sm pull-right"><i class="ti-search"></i></button>
+                                
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="type atleast 2 characters to filter" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Add new template"><i class="ti-plus"></i>New</button>
+                            </div>
+                            <!-- <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getRISDictionaryByUserID()"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Add new extension"><i class="ti-plus"></i>New</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Template</th>
+                                    <th>Type</th>
+                                    <!-- <th>Code</th> -->
+                                    <!-- <th>Test</th>
+                                    <th>Paramter</th> -->
+                                    <!-- <th>Extension</th>
+                                    <th>Location</th>
+                                    <th>Department</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="!pagination.paginatedSearchResults.length"> <td colspan="5" class="text-center"> <strong class="text-primary"> No record found</strong></td></tr>
+                                <tr class="pointer" *ngFor="let item of pagination.paginatedSearchResults; let i = index" (click)="getSingleRow(item.RISTemplateID)"
+                                [ngClass]="{'active-rec-border-left': item.RISTemplateID==RISTemplateID}"
+                                >
+                                    <td>{{i+1}}</td>
+                                    <td>{{item.TemplateTitle}}</td>
+                                    <td>
+                                        <ng-container *ngIf="item.CategoryID == 1; else userCategory">
+                                           <label class="badge badge-warning text-white cursor-pointer"> Main Template</label>
+                                        </ng-container>
+                                        <ng-template #userCategory>
+                                            <label class="badge badge-primary cursor-pointer">  User Template</label>
+                                        </ng-template>
+
+                                    </td>
+                                    <!-- <td>{{item.TemplateCode}}</td> -->
+                                    <!-- <td>{{item.TPCode}}</td>
+                                    <td>{{item.PCode}}</td> -->
+                                    <!-- <td><strong>{{item.ExtensionNo}}</strong></td>
+                                    <td>{{item.LocationTitle}}</td>
+                                    <td>{{item.SubDepartmentName}}</td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between p-2">
+                                <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                                </ngb-pagination>
+                                <select class="form-control form-control-sm" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                                    <option [ngValue]="5">5 items</option>
+                                    <option [ngValue]="10">10 items</option>
+                                    <option [ngValue]="20">20 items</option>
+                                    <option [ngValue]="50">50 items</option>
+                                    <option [ngValue]="100">100 items</option>
+                                </select>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
+            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner>
+                    <form [formGroup]="_form">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <label for="TemplateCode">Code:</label> <strong class="text-danger"> *</strong>
+                                <input type="text" formControlName="TemplateCode" class="form-control form-control-sm"
+                                [ngClass]="{'invalid': _form.get('TemplateCode').errors && _form.get('TemplateCode').touched, 'invalid-highlighted': _form.get('TemplateCode').errors}" >
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="TemplateTitle" class="control-label">Title:</label> <strong class="text-danger"> *</strong>
+                                    <input type="text" class="form-control form-control-sm"  formControlName="TemplateTitle"
+                                    [ngClass]="{'invalid': _form.get('TemplateTitle').errors && _form.get('TemplateTitle').touched, 'invalid-highlighted': _form.get('TemplateTitle').errors}" >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="Gender" class="control-label">Gender:</label> <strong class="text-danger"> *</strong>
+                                    <select class="form-control form-control-sm" formControlName="Gender"
+                                    [ngClass]="{'invalid': _form.get('Gender').errors && _form.get('Gender').touched, 'invalid-highlighted': _form.get('Gender').errors}" >
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="B">Both</option>
+                                        <option value="U">Unknown</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                <div class="form-group">
+                                    <label for="Gender" class="control-label">Category:</label>
+                                    <select class="form-control form-control-sm" formControlName="CategoryID"
+                                    [ngClass]="{'invalid': _form.get('CategoryID').errors && _form.get('CategoryID').touched, 'invalid-highlighted': _form.get('CategoryID').errors}" >
+                                        <option value="1">Main Template</option>
+                                        <option value="2">User Template</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                                <label for="TPId">Test:</label>
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="testsList"
+                                    bindLabel="TestProfileName" 
+                                    placeholder="-Select Test-"
+                                    bindValue="TPId"
+                                    formControlName="TPIds"
+                                    [multiple]="true"
+                                    [closeOnSelect]="false"
+                                    [ngClass]="{'invalid': _form.get('TPIds').errors && _form.get('TPIds').touched, 'invalid-highlighted': _form.get('TPIds').errors}"
+                                    required="true"
+                                    >
+
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.TestProfileName}}</span>
+                                        </div>
+                                        <div class="ng-value" *ngIf="items.length > 2">
+                                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template ng-header-tmp>
+                                        <button (click)="onSelectAll()" class="btn btn-mini btn-outline-primary" type="button"><i class="ti-check"></i> Select all</button>
+                                        <button (click)="onUnselectAll()" class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect all</button>
+                                    </ng-template>
+                                </ng-select>
+                            </div> -->
+
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label class="">Tests:</label> <strong class="text-danger"> *</strong>
+                                <div class="form-check-inline">
+                                    <input  type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byName')" value="byName" id="byName1">
+                                    <label for="radio2" class="form-check-label">By Name</label>
+                                    <input  type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode" id="byCode1" checked>
+                                    <label for="radio1" class="form-check-label">By Code</label>
+                                    <input [ngModelOptions]="{standalone: true}" type="checkbox" *ngIf="rdSearchBy == 'byCode'" class="form-check-input ml-2" name="chkSearchByExactMatch" id="chkSearchByExactMatch" (click)="changeMaching($event.target.checked)" [(ngModel)]="chkSearchByExactMatch">
+                                    <label for="chkSearchByExactMatch" *ngIf="rdSearchBy == 'byCode'" class="form-check-label"> <small>Exact match</small></label>
+                                </div>
+                                <div>
+                                    <ng-select 
+                                        formControlName="TPID"
+                                        [items]="testsList" 
+                                        bindLabel="TestProfileName" 
+                                        bindValue="TPId"
+                                        placeholder="--Select Test--" 
+                                        [searchFn]="customSearchFn" 
+                                        (change)="testListChanged($event)"
+                                        [ngClass]="{'invalid': _form.get('TPID').errors && _form.get('TPID').touched, 'invalid-highlighted': _form.get('TPID').errors}"
+                                       >
+                                        <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                            <span><strong>{{ item.TestProfileCode }} </strong>- {{ item.TestProfileName }}</span>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+            
+                            </div>
+                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="form-group">
+                                    <label for="PId" class="control-label">Parameter:</label>
+                                    <select class="form-control form-control-sm" 
+                                        formControlName="PId"
+                                        [ngClass]="{'invalid': _form.get('PId').errors && _form.get('PId').touched, 'invalid-highlighted': _form.get('PId').errors}">
+                                        <option [value]="">--Select paramter--</option>
+                                        <option *ngFor="let item of TPParams" [value]="item.PId">{{item.PCode}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-12 col-xl-12">
+                                <div class="form-group">
+                                    <label for="TemplateParameterHTML" class="control-label">Template:</label>
+                                    <ckeditor formControlName="TemplateParameterHTML" [config]="config" debounce="500"
+                                        [(ngModel)]="TemplateParameterHTML">
+                                    </ckeditor>
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- <ng-container *ngIf="isShowReportMain then hasParam else hasNoParam"></ng-container>
+                        <ng-template #hasParam> -->
+                            <ng-container  *ngIf="isShowReportMain && TPID" >
+                                <div class="row" *ngFor="let p of TPParams">
+                                    <!-- <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-2 mb-2 mt-3">
+                                                <label for="TextDescription" class="control-label">Choose Template:</label>
+                                            </div>
+                                            <input type="hidden"  [(ngModel)]="p.PId">
+                                            <div class="col-md-4 mb-2 mt-2">
+                                                <select name="TemplateID" [(ngModel)]="RISTemplateID" class="form-control form-control-sm" (change)="getTemplateByID($event)">
+                                                    <option *ngFor="let row of templateList" value="{{row.RISTemplateID}}">{{row.TemplateCode}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mt-4">
+                                                <label for="Pcode" class="control-label">Paramter: <strong> {{p.Pcode}}</strong> </label>
+                                            </div>
+                                        
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-6 mt-4">
+                                        <label for="Pcode" class="control-label">Parameter: <strong> {{p.PCode}}</strong> </label>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <!-- <textarea name="html" id=""  [(ngModel)]="p.TemplateParameterHTML"  class="form-control form-control-sm mb-2"></textarea> -->
+                                            <ckeditor [config]="config" debounce="500" [(ngModel)]="p.TemplateParameterHTML"  [ngModelOptions]="{standalone: true}">
+                                            </ckeditor>
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </ng-container>
+                           
+                        <!-- </ng-template>
+                        <ng-template #hasNoParam> -->
+                            <div class="row mt-4" *ngIf="!isShowReportMain && TPID">
+                                <div class="col-12">
+                                    <!-- <strong>This study has no param (s)</strong> -->
+                                    <div class="alert alert-custom alert-light-danger" role="alert">
+                                        <div class="alert-icon"><span class="svg-icon svg-icon-danger svg-icon-xl"><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Tools/Compass.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <path d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z" fill="#000000" opacity="0.3"></path>
+                                        <path d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z" fill="#000000" fill-rule="nonzero"></path>
+                                    </g>
+                                    </svg><!--end::Svg Icon--></span></div>
+                                        <div class="alert-text">  
+                                            Please note that the <strong> {{TPName}} </strong> study <strong> {{TPCode}} </strong> does not have any parameters, and as a result, you are unable to save template against it. If you need to define parameters for the <strong> {{TPCode}} </strong> study, please contact the system support team.
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            <div class="row mt-4" *ngIf="!TPID">
+                                <div class="col-12">
+                                    <!-- <strong>This study has no param (s)</strong> -->
+                                    <div class="alert alert-custom alert-light-danger" role="alert">
+                                        <div class="alert-icon"><span class="svg-icon svg-icon-danger svg-icon-xl"><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Tools/Compass.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <path d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z" fill="#000000" opacity="0.3"></path>
+                                        <path d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z" fill="#000000" fill-rule="nonzero"></path>
+                                    </g>
+                                    </svg><!--end::Svg Icon--></span></div>
+                                        <div class="alert-text">  
+                                           To add report template, Please select any test having paramter (s). If dont have paramters, contact the system support team.
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        <!-- </ng-template> -->
+
+
+                        <div class="row">
+                            <div class="col-12 mt-3">
+                                
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm();"><i class="fa fa-plus"></i>New<i aria-hidden="true"></i></button>
+                                
+                                <button *ngIf="(RISTemplateID && CategoryID==1 && screenIdentity=='report-templates') || (RISTemplateID && CategoryID==2 && screenIdentity=='user-report-templates')"
+                                    [disabled]="disabledButtonDelete || !RISTemplateID"
+                                    class="btn btn-sm btn-danger pull-right ml-2"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Are you <b>sure </b> want to delete?'"
+                                    [popoverMessage]="'Your won\'t be able to revert it!'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="deleteRecord()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-times"></i>Delete <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerDelete" ></i>
+                                </button>
+                                <button *ngIf="(RISTemplateID && CategoryID==1 && screenIdentity=='report-templates') || (CategoryID==2 && screenIdentity=='user-report-templates') || !RISTemplateID && TPParams.length"
+                                    [disabled]="disabledButton"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    title=""
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertUpdateRISTemplate()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(RISTemplateID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>{{ActionLabel}} <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                </button>
+                                <mat-checkbox class="example-margin ml-2" formControlName="isDefault"> <span>Default Template</span> </mat-checkbox>
+                            </div>
+                            <!-- <div class="col-12">
+                                <p class="text-muted text-info">
+                                    <strong>Note:</strong> To add this form you need to fill all the required information
+                                </p>
+                            </div> -->
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+
+        </div>
+    </div>
+</div>

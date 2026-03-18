@@ -1,0 +1,384 @@
+<div class="row">
+  <div class="col-xl-3 col-lg-5 col-md-12 col-sm-12">
+    <div class="card card-custom mt-2 mb-2">
+      <div class="card-toolbar">
+        <div class="container mt-5 mb-5">
+          <div class="row mt-8 mb-8">
+            <ngx-spinner
+              class="spinner-warning"
+              [name]="spinnerRefs.logsCount"
+              bdColor="rgba(0,0,0,0.8)"
+              size="medium"
+              color="#fff"
+              type="square-loader"
+              [fullScreen]="false"
+            >
+              <p style="color: white">Loading...</p>
+            </ngx-spinner>
+            <div class="col-12 mb-4">
+              <h2 class="cms-tag">WhatsApp Stats</h2>
+            </div>
+            <div
+              *ngFor="let count of logsCount || []"
+              class="col-xl-6 col-lg-6 col-md-6 col-sm-12"
+            >
+              <div
+                class="box mb-3"
+                style="border-left: 10px solid rgb(15, 213, 239)"
+              >
+                <span class="hc-stats">
+                  <p>{{ count.InfobipGroupName }}</p>
+                  <!-- <p>Total</p>  -->
+                  <h1>{{ count.InfobipGroupNameCount || "00" }}</h1>
+                </span>
+              </div>
+            </div>
+            <!-- <div *ngIf="!logsCount?.length" class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                            <div >
+                                <span>
+                                    <strong class="text-center text-primary">
+                                        <p class="cms-tag">00</p>
+                                    </strong>
+                                </span>
+                            </div>
+                        </div> -->
+            <div
+              *ngIf="!logsCount?.length"
+              class="col-xl-6 col-lg-6 col-md-6 col-sm-12"
+            >
+              <div
+                class="box mb-1"
+                style="border-left: 10px solid rgb(15, 213, 239)"
+              >
+                <span class="hc-stats">
+                  <!-- <p>{{ count.InfobipGroupName }}</p> -->
+                  <p>Total</p>
+                  <h1>00</h1>
+                </span>
+              </div>
+            </div>
+            <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="box mb-6" style="border-left: 10px solid green;">
+                                <span class="hc-stats">
+                                    <p>Delivered</p>
+                                    <h1>{{logsCount.Delived || '00'}}</h1>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="box mt-4" style="border-left: 10px solid blue;">
+                                <span class="hc-stats">
+                                    <p>Pending</p>
+                                    <h1>{{logsCount.Pending || '00'}}</h1>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="box mt-4" style="border-left: 10px solid red;">
+                                <span class="hc-stats">
+                                    <p>Rejected</p>
+                                    <h1>{{logsCount.Rejected || '00'}}</h1>
+                                </span>
+                            </div>
+                        </div> -->
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="row mt-2 mb-5">
+          <div class="col-12">
+            <form
+              [formGroup]="filterForm"
+              class="form-horizontal"
+              name="form"
+              role="form"
+              (ngSubmit)="serachWhatsAppLogs()"
+            >
+              <div class="container-fluid">
+                <div class="row mt-2">
+                  <div class="col-12">
+                    <h2 class="cms-tag">Search</h2>
+                  </div>
+                  <div class="col-12">
+                    <div class="row input-group mt-5">
+                      <label for="dateFrom" class="col-5 col-form-label"
+                        >Date From:</label
+                      >
+                      <div class="col-7">
+                        <input
+                          (click)="dateFrom.toggle()"
+                          #dateFrom="ngbDatepicker"
+                          placeholder="YYYY-MM-DD"
+                          autocomplete="off"
+                          ngbDatepicker
+                          formControlName="dateFrom"
+                          name="dateFrom"
+                          class="form-control"
+                          [ngClass]="{
+                            invalid:
+                              filterForm.get('dateFrom').errors &&
+                              filterForm.get('dateFrom').touched,
+                            'invalid-highlighted':
+                              filterForm.get('dateFrom').errors && isSubmitted
+                          }"
+                          type="text"
+                          [value]=""
+                          [maxDate]="maxDate"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="row input-group mt-3">
+                      <label for="dateTo" class="col-5 col-form-label"
+                        >Date To:</label
+                      >
+                      <div class="col-7">
+                        <input
+                          (click)="dateTo.toggle()"
+                          #dateTo="ngbDatepicker"
+                          placeholder="YYYY-MM-DD"
+                          autocomplete="off"
+                          ngbDatepicker
+                          formControlName="dateTo"
+                          name="dateTo"
+                          class="form-control"
+                          [ngClass]="{
+                            invalid:
+                              filterForm.get('dateTo').errors &&
+                              filterForm.get('dateTo').touched,
+                            'invalid-highlighted':
+                              filterForm.get('dateTo').errors && isSubmitted
+                          }"
+                          type="text"
+                          [value]=""
+                          [maxDate]="maxDate"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="row input-group mt-3">
+                      <label for="byContact" class="col-5 col-form-label"
+                        >Contact:</label
+                      >
+                      <div class="col-7">
+                        <input
+                          class="form-control"
+                          mask="0000-0000000"
+                          [showMaskTyped]="true"
+                          type="text"
+                          [value]=""
+                          (keypress)="validateNo($event)"
+                          formControlName="byContact"
+                          placeholder="Enter Contact No"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="row input-group mt-3">
+                      <label for="byPIN" class="col-5 col-form-label"
+                        >PIN:</label
+                      >
+                      <div class="col-7">
+                        <input
+                          class="form-control"
+                          (input)="onPINInput()"
+                          placeholder="XXXX-XX-XXXXXX"
+                          type="text"
+                          [value]=""
+                          formControlName="byPIN"
+                          (keypress)="validateNo($event)"
+                          minlength="12"
+                          maxlength="15"
+                          [ngClass]="{
+                            invalid:
+                              filterForm.get('byPIN').errors &&
+                              filterForm.get('byPIN').touched,
+                            'invalid-highlighted':
+                              filterForm.get('byPIN').errors && isSubmitted
+                          }"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 d-flex justify-content-center mt-3">
+                    <button
+                      class="btn btn-primary text-center"
+                      style="padding-left: 30%; padding-right: 30%"
+                    >
+                      <i class="fa fa-search"></i>Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-9 col-lg-7 col-md-12 col-sm-12">
+    <div class="card card-custom mt-2 mb-2">
+      <div class="card-body">
+        <div class="row">
+          <ngx-spinner
+            class="spinner-warning"
+            [name]="spinnerRefs.logsTable"
+            bdColor="rgba(0,0,0,0.8)"
+            size="medium"
+            color="#fff"
+            type="square-loader"
+            [fullScreen]="false"
+          >
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+          <div class="col-md-8 col-sm-12">
+            <div class="d-flex flex-column flex-grow-1 my-lg-0 pt-1">
+              <span> <h2 class="cms-tag mb-5">WhatsApp Logs Details</h2> </span>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12">
+            <div class="d-flex justify-content-end">
+              <span class="pull-right">
+                <button
+                  class="btn btn-md btn-primary"
+                  (click)="openSearchPatientPopUp()"
+                >
+                  Search Patient
+                </button>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="type to filter"
+                class="form-control form-control-sm"
+                [(ngModel)]="searchText"
+                (keyup)="filterResults()"
+                name="searchText"
+              />
+              <!-- <button class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                (click)="serachWhatsAppLogs()"><i class="ti-reload"></i></button> -->
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="table-responsive table-container fixed-height-table">
+              <table
+                class="table table-hover compact table-bordered"
+                style="width: 100%"
+                cellpadding="0"
+                cellspacing="0"
+              >
+                <thead>
+                  <tr style="background-color: honeydew">
+                    <th width="12%">Patient Name</th>
+                    <th width="12%">PIN</th>
+                    <th width="12%">Contact No</th>
+                    <!-- <th width="12%">Status</th> -->
+                    <th width="12%">Created On</th>
+                    <th width="52%">WhatsApp Text</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class="text-center"
+                    *ngIf="pagination.paginatedSearchResults.length < 1"
+                  >
+                    <td colspan="100">No Record Found</td>
+                  </tr>
+                  <tr
+                    class="pointer"
+                    *ngFor="
+                      let item of pagination.paginatedSearchResults;
+                      let i = index
+                    "
+                  >
+                    <td>{{ item.PatientName || "NA" }}</td>
+                    <td>{{ item.VisitNo || "NA" }}</td>
+                    <td>{{ item.SentToNumber || "NA" }}</td>
+                    <!-- <td>{{item.Status || 'NA'}}</td> -->
+                    <td>
+                      {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                    </td>
+                    <td>{{ item.WhatsapText || "NA" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+              <div class="col-12">
+                <div class="d-flex justify-content-between p-2">
+                  <ngb-pagination
+                    [collectionSize]="pagination.collectionSize"
+                    [(page)]="pagination.page"
+                    [pageSize]="pagination.pageSize"
+                    [boundaryLinks]="true"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    (pageChange)="refreshPagination()"
+                  >
+                  </ngb-pagination>
+                  <select
+                    class="custom-select"
+                    style="width: auto"
+                    [(ngModel)]="pagination.pageSize"
+                    (ngModelChange)="refreshPagination()"
+                  >
+                    <option [ngValue]="5">5 items per page</option>
+                    <option [ngValue]="10">10 items per page</option>
+                    <option [ngValue]="20">20 items per page</option>
+                    <option [ngValue]="50">50 items per page</option>
+                    <option [ngValue]="100">100 items per page</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #showSearchPatient let-showSearchPatient>
+    <!-- <div
+          class="modal-header"
+          style="display: block !important; padding: 1rem 1.75rem"
+        >
+          <div class="row">
+            <div class="col-12">
+              <h4 class="card-title"></h4>
+            </div>
+          </div>
+        </div> -->
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="docs-area mt-2">
+            <!-- 'barcode',
+                'attachDocs',
+                'booking', -->
+            <app-patient-search
+              [buttonControls]="['visits', 'invoice', 'discountCardsViewBtn']"
+            >
+            </app-patient-search>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-info"
+        data-dismiss="modal"
+        (click)="showSearchPatient.close()"
+      >
+        <i class="fa fa-times-circle"></i>Close
+      </button>
+    </div>
+  </ng-template>
+</div>

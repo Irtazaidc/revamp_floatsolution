@@ -1,0 +1,195 @@
+<div class="roles-page">
+
+    <div class="row">
+        <div class="col-md-12"> <!-- [ngClass]="{'col-md-6': selectedRole && selectedRole.userRoleID}" -->
+            <app-card [title]="'Add/Edit Roles'" [cardClass]="'tim-card tim-card tim-card-danger'">
+                <!-- *ngIf="!parentName" -->
+                <div class="row" >
+                    <div class="col-12">
+                        <button class="btn btn-outline-success btn-mini pull-right" *ngIf="!showRoleForm==true" (click)="showAddRoleForm(true)"><i class="fa fa-plus"></i>Add Role</button>
+                        <button class="btn btn-outline-danger btn-mini pull-right" *ngIf="showRoleForm==true" (click)="showAddRoleForm(false)"><i class="fa fa-close"></i>Hide Form</button>
+                    </div>
+                    <div class="col-12" *ngIf="showRoleForm">
+                        <form class="md-float-material" [formGroup]="roleForm">
+                            <div class="row">
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.addRoleform" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+                                <div class="col-md-4 d-none">
+                                    <label>Role ID:</label>
+                                    <div class="input-group">
+                                        <input type="text" tabindex="1" class="form-control" formControlName="UserRoleID">
+                                        <span class="md-line"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Role Title: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" tabindex="1" class="form-control" [ngClass]="{'invalid': roleForm.get('UserRoleTitle').errors, 'invalid-highlighted': roleForm.get('UserRoleTitle').errors && roleFormSubmitted}" formControlName="UserRoleTitle" [required]="true">
+                                        <span class="md-line"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label>Role Desc:</label>
+                                    <div class="input-group">
+                                        <input type="text" tabindex="2" class="form-control" formControlName="UserRoleDesc" >
+                                        <span class="md-line"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Role Level:</label>
+                                    <select
+                                        class="form-control"
+                                        formControlName="UserRoleCategory"
+                                        >
+                                        <option *ngFor="let b of CategoryOptions" [value]="b.value">
+                                            {{ b.label }}
+                                        </option>
+                                        </select>
+                                </div>
+
+                                <div class="col-md-3 d-none">
+                                    <label>Role Status: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <select class="form-control" tabindex="3" formControlName="isDeleted" #roleIsDeleted [ngClass]="{'invalid': roleForm.get('isDeleted').errors, 'invalid-highlighted': roleForm.get('isDeleted').errors && roleFormSubmitted}" required>
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let s of roleStatus" [value]="s.id">{{s.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-3">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group">
+                                        <button
+                                            class="btn btn-danger btn-mini"
+                                            title="Save Role"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="submitRoleForm()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="danger"
+                                            cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                        > <i class="fa fa-save m-0"></i>
+                                        Save
+                                        </button>
+                                        <!-- <button type="button" tabindex="4" class="btn btn-success btn-sm" (click)="submitRoleForm()">Save</button> -->
+                                        <!-- &nbsp; -->
+                                        <button type="button" tabindex="5" class="btn btn-outline-danger btn-sm m-l-10 ml-1" (click)="cancelRoleForm()">Clear</button>
+                                    </div>
+                                </div>
+    
+                            </div>
+                
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <hr style="border-color: red;">
+                    </div>
+                </div>
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.tableList" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="row">
+                    <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                        <button class="btn btn-mini btn-outline-danger" (click)="getRoles()"><i class="ti-reload"></i></button>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive fixed-height-table">
+                    <!-- fixed-height-table -->
+                    <table class="table table-hover compact cursor-pointer">
+                        
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Role Name</th>
+                                <th>Role Desc</th>
+                                <th>Role Catg</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr *ngFor="let item of rolesList; let i = index"> -->
+                                <tr *ngIf="!rolesList.length">
+                                    <td colspan="4" style="text-align: center;"><strong class="text-primary">
+                                        No Record Found...</strong></td>
+                                </tr>   
+                            <tr *ngFor="let item of rolesList | filterByKey: searchText:['UserRoleTitle', 'UserRoleDesc']; let i = index" [ngClass]="{'active-rec-border-left': item.UserRoleID==UserRoleID}">
+                                <td>{{(i+1)}}</td>
+                                <td>{{item.UserRoleTitle}}</td>
+                                <td>{{item.UserRoleDesc}}</td>
+                               <td>
+                                    <span 
+                                        class="role-badge"
+                                        [ngClass]="getRoleCategoryClass(item.RoleCategory)">
+                                        {{ item.RoleCategory || '-' }}
+                                    </span>
+                                    </td>
+                                <td>
+                                    <!-- <button
+                                        class="btn btn-outline-danger btn-mini"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="popoverTitle"
+                                        [popoverMessage]="popoverMessage"
+                                        placement="left"
+                                        (confirm)="confirmClicked = true"
+                                        (cancel)="cancelClicked = true"
+                                        >
+                                        Click me!
+                                    </button> -->
+                                    <div class="btn-group" role="group">
+                                        <!-- <button
+                                        class="btn btn-danger btn-mini mr-1 mt-1"
+                                        title="Delete Role"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="removeRole(item)"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="danger"
+                                        cancelButtonType="outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    > <i class="fa fa-trash m-0"></i>
+                                    </button> -->
+                                    <!-- *ngIf="!parentName"  (click)=";"-->
+                                    <button class="btn btn-mini mr-1 mt-1" title="Edit Role" (click)="editRole(item); btnFilter(2)" [ngClass]="isAll && (item.UserRoleID==UserRoleID) ? 'btn-warning' : 'btn-outline-warning'"><i class="far fa-edit m-0"></i></button>
+                                    <!-- *ngIf="!parentName" -->
+                                    <button class="btn btn-mini mr-1 mt-1" title="Permissions" (click)="viewPermissions(item); btnFilter(1)" [ngClass]="isMain && (item.UserRoleID==UserRoleID)  ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-list m-0"></i></button>
+                                    <!-- *ngIf="parentName" -->
+                                    <button class="btn btn-mini mr-1 mt-1" title="Users" (click)="viewUsers(item); btnFilter(3)" [ngClass]="isMy && (item.UserRoleID==UserRoleID)  ? 'btn-info' : 'btn-outline-info'"><i class="fa fa-user-circle m-0"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <pre>{{rolesList | json}}</pre> -->
+            </app-card>
+        </div>
+
+        <!-- <div class="col-md-5">
+            <app-permissions [Role]="selectedRole" ></app-permissions>
+        </div> -->
+    </div>
+
+    
+</div>
+      

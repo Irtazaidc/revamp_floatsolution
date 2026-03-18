@@ -1,0 +1,130 @@
+<div *ngIf="RiderList" class="d-flex mt-1">
+    
+    <!--begin: Pic-->
+    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+        <div class="symbol symbol-50 symbol-lg-100">
+            <img class="" [src]=" defaultPatientPic" alt="rider image" />
+        </div>
+    </div>
+    <!--end::Pic-->
+    <!--begin::Info-->
+    <div class="flex-grow-1">
+        <!--begin::Title-->
+        <div class="d-flex justify-content-between flex-wrap mt-1">
+            <div class="d-flex flex-wrap mr-3 align-items-center">
+                <span
+                    class="text-dark-75 text-hover-danger font-size-h5 font-weight-bolder mr-3 cursor-pointer">{{RiderList.RiderFullName||
+                    ''}}
+                    <span class="text-danger d-block d-sm-inline">
+                        (<span ngbTooltip="EMPID">ID-{{RiderList.RiderEmpNo || '-'}}</span>)
+                    </span>
+                </span>
+                <!-- <a href="#">
+                <i class="flaticon2-correct text-success font-size-h5"></i>
+              </a> -->
+            </div>
+
+            <!-- <span class="text-dark-75 mr-lg-8 mr-5 mb-lg-0 mb-2">
+                <i class="fa fa-motorcycle" aria-hidden="true"></i>
+            </span> -->
+
+        </div>
+        <!--end::Title-->
+        <!--begin::Content-->
+        <div class="d-flex flex-wrap justify-content-between mt-1">
+            <div class="d-flex flex-column flex-grow-1 pr-8 ">
+                <div class="d-flex flex-wrap mb-2">
+                    <!-- <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">{{convertDate(  DateOfBirth)}} / {{  Age || ''}} {{  Gender || ''}}</span> -->
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger far fa-address-card mr-2 font-size-lg"></i> {{RiderList.CNIC || ''}}
+                    </span>
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-phone mr-2 font-size-lg"></i> {{RiderList.RiderCell||
+                        ''}}</span>
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-user mr-2 font-size-lg"></i> {{RiderList.RiderStatusID == 1 ?
+                        "Online" :
+                        "Offline"}}
+                    </span>
+                    <span *ngIf="RiderList.ZoneName" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-user mr-2 font-size-lg"></i> {{RiderList.ZoneName }}
+                    </span>
+
+                    <!-- <span *ngIf="  VisitPatientType &&   VisitPatientType!=''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="Patient Type" class="text-primary flaticon-user mr-2 font-size-lg"></i>{{  VisitPatientType}}</span>
+
+                    <span *ngIf="  VisitRefBy &&   VisitRefBy !=''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="RefBy Doctor" class="text-primary fa fa-user-md mr-2 font-size-lg"></i>{{  VisitRefBy}}</span>
+
+                    <span *ngIf="  VisitPanelName && patientData.VisitPanelName != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="Visit Panel" class="text-primary flaticon-network mr-2 font-size-lg"></i>{{  VisitPanelName}}</span> -->
+                    <span *ngIf="RiderList.Email != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger fa fa-envelope mr-2 font-size-md"></i> {{Email || 'NA'}}
+                    </span>
+                </div>
+                
+
+                <!-- <span *ngIf="  RegistrationLocation && patientData.RegistrationLocation != ''" class="text-dark-75 font-size-lg"><i ngbTooltip="Registered Location"  class="cursor-pointer text-primary fa fa-hospital mr-2 font-size-lg"></i> {{  RegistrationLocation || ''}}</span> -->
+
+            </div>
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Info-->
+</div>
+<!--end::Details-->
+<!-- <div class="separator separator-solid"></div> -->
+<!--begin::Items-->
+
+
+<div *ngIf="0" class="row patient-basic-info-container"> <!--*ngIf="0"-->
+    <div class="pic-area">
+        <img class="patient-img" [src]=" defaultPatientPic" alt="patient image" />
+        <!-- src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLe5PABjXc17cjIMOibECLM7ppDwMmiDg6Dw&usqp=CAU" -->
+    </div>
+    <div class="row col-sm info-area">
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <label>
+                <span class="label-name">EMPID: </span>
+                <br>
+                <strong class="label-value">{{EmpNo || '-'}}</strong>
+            </label>
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <label>
+                <span class="label-name">Name: </span>
+                <br>
+                <strong class="label-value"> {{FullName || ''}}</strong>
+            </label>
+        </div>
+        <!-- <div class="col-md-6 col-lg-6 col-xl-4">
+    <label>
+        <span class="label-name">DOB / Age / Gender: </span>
+        <br>
+        <strong class="label-value">{{convertDate(  DateOfBirth)}}</strong> / <strong class="label-value">{{  Age || ''}}</strong> / <strong>{{  Gender || ''}}</strong>
+    </label>
+</div> -->
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <label>
+                <span class="label-name">CNIC / Passport: </span>
+                <br>
+                <strong class="label-value">{{CNIC || ''}}</strong>
+            </label>
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <label>
+                <span class="label-name">Mobile / Phone: </span>
+                <br>
+                <strong class="label-value">{{RiderCell || ''}}</strong>s
+            </label>
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-4">
+            <label>
+                <span class="label-name">Email: </span>
+                <br>
+                <strong class="label-value">{{Email || ''}}</strong>
+            </label>
+        </div>
+
+    </div>
+</div>

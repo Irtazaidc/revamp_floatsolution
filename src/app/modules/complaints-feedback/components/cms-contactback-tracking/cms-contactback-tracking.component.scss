@@ -1,0 +1,48 @@
+::ng-deep .popover.fade {
+    max-width: 505px !important;
+    max-height: 400px !important;
+    // min-height: 400px !important;
+    min-width: 505px !important;
+    transform: translate(25px, 18px);
+
+    ::ng-deep .popover-body{
+        max-height: 350px !important;
+        max-width: 505px !important;
+        // min-height: 400px !important;
+        min-width: 505px !important;
+        overflow-y: auto;
+    }
+}
+
+.table th{
+    font-size: smaller;
+}
+
+.effective-date-time {
+    display: flex;
+    
+    .mini-input-field.date-picker {
+        width: 100px;
+    }
+    .mini-input-field {
+        width: 95px;
+        height: 30px;  
+        margin: auto;  
+    }
+    .mini-input-field.time-picker ::ng-deep fieldset {
+        padding: 0;
+        margin: 0;
+        .ngb-tp-input-container {
+            width: 40px;
+            height: 30px;
+            .ngb-tp-input {
+                height: 38px;
+                padding: 9px 0px;
+                width: 38px;
+            }
+        }
+    }
+}
+.invalid-highlight ::ng-deep .ngb-tp-input {
+    background-color: #ff000022;
+  } 

@@ -1,0 +1,603 @@
+<div class="card card-custom">
+    <div class="card-header" style="min-height: 0px">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                RIS Search
+            </h3>
+        </div>
+        <!-- <div class="card-toolbar">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button *ngIf="screenIdentity=='tech-audit'" type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
+                    ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button>
+            </div>
+        </div> -->
+    </div>
+    <!-- <div class="card-toolbar">
+    </div> -->
+    <div class="card-body">
+        <form [formGroup]="risParamsForm" class="form-horizontal" name="form" role="form" (ngSubmit)="getPeerReviewData()">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="dateFrom"
+                        name="dateFrom" class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(0)"
+                        [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}"
+                        />
+                </div>
+
+                <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date To</label>
+                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" formControlName="dateTo" name="dateTo"
+                        class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(1)"
+                        [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}"
+                        />
+                </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>PIN</label>
+                    <input class="form-control " placeholder="Search By PIN" name="visitID" formControlName="visitID" (blur)="searchByVisit()" /> <!--(blur)="searchByVisit()"-->
+                </div>
+
+                <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label for="subSectionIDs" class="control-label">Section</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList" 
+                        bindLabel="SubSectionTitle"
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        formControlName="subSectionIDs" 
+                        (change)="clearSearchedvalue()"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllSections()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+
+                <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Branch</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="branchList" 
+                        bindLabel="Title"
+                        placeholder="-Select Branch-" 
+                        bindValue="LocId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        #branch formControlName="branch"
+                        [ngClass]="{'invalid invalid-highlighted': (validateBranch)}"
+                        (change)="checkBranch($event)"
+                        >
+
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.Title}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllBranches()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                    <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-custom mt-2">
+    <!--Start::All worklists except Queue management-->
+    <div class="card-body">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <!--end::Search Filter-->
+
+        <!--start::Table and rows section-->
+        <!-- <pre>
+            {{ pagination.paginatedSearchResults|json}}
+        </pre> -->
+        <div class="row text-center" *ngIf="!risWorkist.length">
+            <div class="col-12">
+                <!-- <strong>No record found</strong> -->
+                
+                <ng-container *ngIf="screenIdentity=='peer-review'; else showNoRecSection">
+                    <app-no-record-found></app-no-record-found>
+                  </ng-container>
+                  
+                  <ng-template #showNoRecSection>
+                    <app-no-record-found></app-no-record-found>
+                  </ng-template>
+
+            </div>
+        </div>
+
+        <!--begin:: main visit tp section-->
+        <div class="row">
+            <div class="col-12" style="margin-top: -12px;" *ngIf="risWorkist.length">
+                <small class="pull-right text-danger"><strong>Total Records: {{risWorkist.length}}</strong></small>
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive" style="min-height: 330px;">
+                    <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
+                        <thead>
+                            <tr *ngIf="pagination.paginatedSearchResults.length">
+                                <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
+                                    <ng-container>
+                                        <th style="cursor: pointer"
+                                            *ngIf="(header !='id' && header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='RegistrationDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy' && header!='InitializedBy')">
+                                            {{header}}</th>
+                                    </ng-container>
+                                </ng-container>
+                                <th *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'peer-review'">TestStatus</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "  (dblclick)="openReportDetail(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
+                                <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                                    <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
+                                        *ngIf="(objKey != 'id' && objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='RegistrationDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy' && objKey!='InitializedBy')">
+                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                            <i 
+                                                [ngClass]="returnCopyClasses(i)"
+                                                class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                (click)="copyText(row,i)">&nbsp;</i>
+                                        </span>
+                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate' && objKey != 'DeliveryDate' && objKey != 'RemainingTime (hh:mm)')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy' && objKey != 'RemainingTime (hh:mm)')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+            
+                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <label *ngIf="objKey == 'RemainingTime (hh:mm)'">
+                                            <ng-container *ngIf="row.StatusId < 9; else dash">
+                                                <strong ngbTooltip="Remaining Time hh:mm" [ngClass]="getRemainingTimeBadgeColor(row['RemainingTime (hh:mm)'])" class="badge badge-border-white cursor-pointer" style="padding: 7px 3px !important;">
+                                                    {{ row[objKey] }}
+                                                </strong>
+                                            </ng-container>
+                                            <ng-template #dash>
+                                                --
+                                            </ng-template>
+                                        </label>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'DeliveryDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }} 
+                                        </span>
+                                    </td>
+                                </ng-container>
+                                <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'peer-review'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
+                                </td>
+                                <td>
+                                    <!-- <span class="cursor-pointer mr-2"><i (click)="showVisitDetail(row,i)" class="fa fa-info-circle" [ngClass]="rowIndex==i?'text-white':'text-warning'" ngbTooltip="Visit Detail"></i></span> -->
+                                    <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                            aria-label="Button group with nested dropdown">
+                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                <!-- <button (click)="openQuestionnaireModal(row)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-question-circle text-primary cursor-pointer"></i> MO
+                                                        Questionnaire</span>
+                                                </button> -->
+                                                <button (click)="openMOHistory(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
+                                                        History</span>
+                                                </button>
+                                                <button  (click)="printRadioLable(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-qrcode text-primary cursor-pointer"></i>
+                                                        Print Radio Lable</span>
+                                                </button>
+                                                <button *ngIf=" row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistoryReport(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-file text-primary cursor-pointer"></i>
+                                                        MO History Report </span>
+                                                </button>
+                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                        Vitals </span>
+                                                </button>
+                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                        EMR </span>
+                                                </button>
+                                                <!-- <button  (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
+                                                    <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
+                                                        Reporting </span>
+                                                </button> -->
+                                                <button  (click)="printReport(row,i)" class="dropdown-item pb-2">
+                                                    <span><i class="ti-printer text-primary cursor-pointer"></i>
+                                                        Print Report </span>
+                                                </button>
+                                                <button (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
+                                                    <span><i class="fas fa-x-ray text-primary cursor-pointer"></i>
+                                                        DICOM </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end::Reporting worklist section-->
+        
+        <!--end::Table and rows section-->
+
+        <!--start::Pagination-->
+        <div class="row" *ngIf="risWorkist.length">
+            <div class="col-12">
+                <div class="d-flex justify-content-between p-2">
+                    <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                    </ngb-pagination>
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                        <option [ngValue]="5">5 items per page</option>
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--end::Paginition-->
+        <!-- begin:: Visit Details Section -->
+        <!-- <div class="row" *ngIf="risWorkist.length && visitDetailBtnClicked" #detailArea> 
+            <div *ngIf="VisitIDWithDashes && visitDetailBtnClicked" class="col-md-12"><strong class="float-right mr-2">
+                <i class="far fa-hand-point-down text-primary mr-2 tagToggle"></i><span class="visit-tpname">  {{VisitIDWithDashes}} | {{TPName}}</span></strong>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="visit-docs-area mt-8">
+                            <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                                [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div *ngIf="VisitId && screenIdentity=='reporting-worklist'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-pacs [PIN]="VisitIDWithDashes"></app-pacs>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                        [moduleName]="'Tech-Worklist'"></app-visit-remarks>
+                </div>
+            </div>
+        </div> -->
+        <!-- end:: Visit Details Section -->
+    </div>
+</div>
+
+<!--MO History Modal-->
+<ng-template #moHistoryModal let-moHistoryModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="moHistoryModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> -->
+                <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="moHistoryModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"> -->
+                <!-- <div class="bg-light">
+                    <app-action-buttons-large [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                </div> -->
+                <!-- <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals>
+                    <app-action-buttons-small [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:false}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template> -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <app-mo-history [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,isShowVitalsCard:isShowVitalsCard}"></app-mo-history>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <!-- <app-visit-docs [propVisitNo]="VisitID" (outputDocs)="getLoadedDocs($event)" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs> -->
+                        <app-visit-docs [propVisitNo]="VisitID"  (outputDocs)="getLoadedDocs($event)"  [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitID" [editing]="{save: true}"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="padding-top: 8px;">
+        <div class="row">
+            <div class="col-12" *ngIf="!isTechDisclaimer">
+                <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal"
+                (click)="printMOHistoryReport(VisitID,TPId)">
+                <i class="fa fa-print"></i> Print
+                </button>
+                <button type="button" class="btn btn-sm btn-danger ml-2" data-dismiss="modal"
+                    (click)="moHistoryModal.close()">
+                    <i class="fa fa-times-circle"></i> Close
+                </button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="isTechDisclaimer">
+                <mat-checkbox  *ngIf="docsLength==0" class="example-margin" style="word-wrap: break-word; text-wrap: wrap;" [(ngModel)]="isConsentRead"> <span><strong [ngClass]="{'text-danger': !isConsentRead, 'text-primary': isConsentRead}">I have reviewed the Medical Officer's history thoroughly and agree to proceed with the technician's process accordingly.</strong></span> </mat-checkbox>
+                <mat-checkbox *ngIf="docsLength>0" class="example-margin" style="word-wrap: break-word; text-wrap: wrap;" [(ngModel)]="isConsentRead"> <span><strong [ngClass]="{'text-danger': !isConsentRead, 'text-primary': isConsentRead}">I have reviewed the Medical Officer's history and scanned documents thoroughly and agree to proceed with the technician's process accordingly.</strong></span> </mat-checkbox>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right" *ngIf="isTechDisclaimer">
+                <button 
+                [disabled]="!isConsentRead" 
+                type="button" 
+                class="btn btn-sm btn-primary mr-2" 
+                data-dismiss="modal"
+
+
+                [disabled]="!isConsentRead"
+                class="btn btn-sm btn-primary mr-2"
+                 mwlConfirmationPopover
+                [popoverTitle]="'Please Confirm'"
+                [popoverMessage]="'Are you <strong>sure</strong> want to accept?'"
+                [confirmText]="confirmationPopoverConfigCloseModal.confirmText"
+                [cancelText]="confirmationPopoverConfigCloseModal.cancelText"
+                [placement]="confirmationPopoverConfigCloseModal.placements[0]" 
+                (confirm)="readTechAgreement()"
+                (cancel)="confirmationPopoverConfigCloseModal.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary" 
+                cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="confirmationPopoverConfigCloseModal.confirmClicked = false; confirmationPopoverConfigCloseModal.cancelClicked = false"
+                [appendToBody]="true">
+                <i class="fa fa-check-circle"></i> Accept <i class="spinner-border-custom" aria-hidden="true"
+                    [hidden]="isSpinnerAccept"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-danger mr-2" data-dismiss="modal"
+                    (click)="moHistoryModal.close()">
+                    <i class="fa fa-times-circle"></i> Decline
+                </button>
+            </div>
+        </div>
+        
+    </div>
+</ng-template>
+
+<!--Vitals History Modal-->
+<ng-template #vitalsModal let-vitalsModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="vitalsModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:true, cardSection:false}"></app-vitals>
+    </div>
+</ng-template>
+
+<!--EMR History Modal-->
+<ng-template #emrModal let-emrModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="emrModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-emr [visitInfo]="visitInfo"></app-emr>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-info" data-dismiss="modal" (click)="emrModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+
+<!--begin:: Reporting Modal--------------------------------------------->
+<ng-template #reportingModal let-reportingModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="reportingModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> -->
+                <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="reportingModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <app-contrast-service [payload]="{VisitID:VisitID}"></app-contrast-service>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <!-- <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals (isVistalSaved)="isVistalSaved($event)" [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals>  -->
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{techHistory:true,vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-small>
+                <!-- </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+         <!------------++++++++++++++++++++++++++++++++++++++++++++++++++begin:: REPORTING BODY ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------->
+    <div class="row">
+        <div class="col-12">
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.editorSection"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <ng-template #popContentSrv>
+                        <app-ris-tp-services [VisitId]="VisitID"></app-ris-tp-services>
+                    </ng-template>
+        
+                    <div style="
+                    padding: 0px 8px;
+                    border: 1px solid #deefef;
+                    background-image: linear-gradient(90deg, #ffffff, #1bc5bd);
+                    ">
+                        <label for="TPFullName" class="pt-2 control-label" [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}"><strong>
+                            {{TPName}}<i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2"aria-hidden="true" ngbTooltip="Click to show services detail"
+                            [ngbPopover]="popContentSrv"
+                            [popoverTitle]="'Services Detail'"
+                            [popoverClass]="'custom-popover'"></i></strong>
+                            
+                        </label><strong class="text-white pull-right mt-2">Current Status | {{TestStatus}}</strong>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <section class="btn-section">
+                        <!-- <div class="col-12 text-center" *ngIf="TestStatus<7"> -->
+                            <button [disabled]="disabledButtonExport"
+                                class="btn btn-sm btn-danger pull-right mr-2" 
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please Confirm'"
+                                [popoverMessage]="'Are you sure want to export?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" 
+                                (confirm)="getPACSServers(VisitID,TPId, 2)" 
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary" 
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i class="fas fa-x-ray"></i>DICOM <i class="spinner-border-custom" aria-hidden="true"
+                                    [hidden]="isSpinnerExport"></i>
+                            </button>
+                            
+                            <button (click)="ViewReport('')" *ngIf="StatusId>=7" type="button" class="btn btn-sm btn-dark pull-right mr-2"><i class="fa fa-print"></i> Print Preview </button>
+                        <!-- </div> -->
+                    </section>
+                </div>
+            </div>
+    
+            <!-- start:: Main working area--->
+    
+            <!--Reporting area-->
+            
+    
+            <!--start:: Action buttons area-->
+            
+    
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="row">
+                        <div *ngIf="VisitID" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="visit-docs-area mt-8">
+                                <app-visit-docs [propVisitNo]="VisitID" [editing]="{save:true,select: true, camera: true}"
+                                    [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                            </div>
+                        </div>
+                        <div *ngIf="VisitID" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="visit-remarks-area  mt-8">
+                                <app-pacs [PIN]="VisitID"></app-pacs>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div *ngIf="VisitID" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="visit-remarks-area  mt-8">
+                        <app-visit-remarks [propVisitNo]="VisitID" [editing]="{save: true}"
+                            [moduleName]="'Tech-Worklist'"></app-visit-remarks>
+                    </div>
+                </div>
+            </div>
+    
+            <!--end:: Visit Documents and Visit Remarks area-->
+        </div>
+    </div>
+    <!------------++++++++++++++++++++++++++++++++++++++++++++++++++end:: REPORTING BODY ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------->
+   
+    </div>
+    <div class="modal-footer py-1">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
+            (click)="reportingModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Reporting Modal--------------------------------------------->

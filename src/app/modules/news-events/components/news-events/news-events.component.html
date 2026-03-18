@@ -1,0 +1,142 @@
+<div class="container" *ngIf="IsValidUser!=1">
+  <div class="card">
+      <div class="container mt-2">
+        <div class="row col-12 mb-5 mt-4">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 mb-2 text-center" >
+              <!-- <div class="card">
+                  <div class="card-body"> -->
+                      <!-- <strong class="card-title pt-5">To proceed this operation you need to login...!</strong><i class="fa fa-sign-in-alt fa-2x text-danger cursor-pointer ml-3" aria-hidden="true" (click)="openLoginModal()"></i> -->
+                  <!-- </div>
+              </div> -->
+              <!-- <p>
+                <ngb-alert>
+                  To proceed this operation you need to login...!<i class="fa fa-sign-in-alt fa-2x text-danger cursor-pointer ml-3" aria-hidden="true" (click)="openLoginModal()"></i>
+                </ngb-alert>
+              </p> -->
+              <div class="alert alert-danger text-center ml-12 col-12">
+                <strong>Warning!</strong> To proceed this operation you need to login...!<i class="fa fa-sign-in-alt fa-2x text-danger cursor-pointer ml-3" aria-hidden="true" (click)="openLoginModal()"></i>
+              </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="products-page" *ngIf="IsValidUser==1">
+<div class="row">
+    <div class="col-md-12"> 
+        <app-card [title]="'News and Events'" [cardClass]="'tim-card tim-card tim-card-primary'">
+            <div class="row">
+                <div class="col-12">
+                    <!-- <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-plus"></i>Add Product</button> -->
+                    <!-- <a [routerLink]="['../../product-promotion/addupdate-product-promotion']">
+                        <i class="image-remove fa fa-plus pull-right" placement="left" ngbTooltip="Add Recored"></i>
+                    </a> -->
+                    <a [routerLink]="['../edit-news-events']">
+                        <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-plus"></i>Add News / Event</button>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <hr style="border-color: #4680ff;">
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-2" *ngFor="let item of NewsEventsList">
+                    <div class="card">
+                        <a href="{{item.NewsAndEventsLink}}" target="_blank"><img src="{{item.NewsAndEventsPic}}" class="card-img-top" alt="News/Event Image" height="200"></a>
+                        <div class="card-body" style="margin-top: -10px">
+                            <h5 class="card-title mt-2">{{item.NewsAndEventsTitle}}</h5>
+                            <a href="{{item.NewsAndEventsLink}}" target="_blank"><p class="card-text">{{item.NewsAndEventsLink}}</p> </a>
+                            <span class="badge" [ngClass]="item.isActive ? 'badge-primary' : 'badge-danger'">{{item.isActive ? 'Active' : 'Deactive'}}</span>
+                            <span class="badge ml-2 badge-info">Display Order: {{item.DisplayOrder||0}}</span>
+                        </div>
+                        <section class="wow fadeIn bg-gray animated m-2" style="visibility: visible; animation-name: fadeIn;">
+                          <div class="container">
+                              <div class="row">
+                                  <div class="col-md-12 col-sm-12 center-col text-right">  
+                                    <a [routerLink]="['../edit-news-events', item.NewsAndEventsIDEnc]" class="btn btn-sm btn-success mr-2" placement="top" ngbTooltip="Edit Item"><i class="fa fa-edit btn-round"></i></a> 
+                                    <!-- <a href="javascript:void(0)" (click)="openDeletePromotionModal(item.ProductPromotionID,1)" class="btn btn-sm btn-danger  mr-2" placement="top" ngbTooltip="Delete Item"><i class="fa fa-trash btn-round" style="color: aliceblue;"></i></a> -->
+                                    <button
+                                    ngbTooltip="Delete Item"
+                                    class="btn btn-danger btn-sm mr-2"
+                                    title=""
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="deleteDeactiveNewsEvent(item.NewsAndEventsID,1)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="danger"
+                                    cancelButtonType="outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                > <i class="fa fa-trash m-0"></i>
+                                </button>
+
+                                
+                                    <label class="switch" placement="top" ngbTooltip="{{item.isActive==1 ? 'Deactivate Item' : 'Activate Item' }}">
+                                      <input type="checkbox" [(ngModel)]="item.isActive" [checked]="item.isActive"  (change)="activeDeactiveItem(item.NewsAndEventsID,$event);"> 
+                                      <span class=""></span>
+                                    </label>
+                                  </div>
+                              </div>
+                          </div>
+                      </section>
+                    </div>
+                </div>
+                <div class="alert alert-info text-center ml-12 col-12"  *ngIf="!NewsEventsList.length">
+                  <strong>Info!</strong> {{newsAndEventsMessage}}
+              </div>
+            </div>
+        </app-card>
+    </div>
+</div>
+</div>
+  
+
+
+
+
+<!------begin:: Authenticate Admin Popup-->
+<ng-template #authenticateAdmin  let-c="close" let-d="dismiss">
+<form class="pt-4">
+  <div class="modal-body">
+      <div class="container">
+        <div class="row login-header">
+          <div class="col-12">
+            <h4>Login to your admin account</h4>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex flex-column pb-3" >
+          <label for="uname">Username</label>
+          <input type="text"placeholder="Enter username" [(ngModel)]="username" name="uname" required
+            class="input-custom form-control">
+        </div>
+        <div class="d-flex flex-column pb-3" >
+          <label for="psw">Password</label>
+          <input type="password" placeholder="Enter Password" [(ngModel)]="password" name="psw" required
+            class="input-custom form-control">
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal" (click)="closeLoginModal()">
+      <i class="fa fa-times-circle"></i> Cancel</button>
+      <button class="btn btn-sm btn-outline-primary" (click)="Login()"  [disabled]="disabledButtonModal">
+        <i class="fa fa-check-circle"></i>  Login <i class="spinner-border-custom" aria-hidden="true"
+          [hidden]="isSpinner"></i></button>
+  </div>
+</form>
+</ng-template>
+
+
+
+
+
+
+
+

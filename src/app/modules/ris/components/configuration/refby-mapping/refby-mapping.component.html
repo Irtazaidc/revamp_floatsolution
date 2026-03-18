@@ -1,0 +1,99 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <app-card [title]="'RefBy Radiologist Mapping'" [cardClass]="'tim-card tim-card tim-card-primary'">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search Item" class="form-control form-control-sm"
+                                [(ngModel)]="searchText" name="searchText" [ngModelOptions]="{standalone: true}" />
+                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom"><i
+                                    class="ti-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive fixed-height-table" >
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.refBylistSection"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th width="6%">
+                                    <input type="checkbox" class=""
+                                        (change)="selectAllTestsSection($event.target.checked)" />
+                                </th>
+                                <th width="40%">Name</th>
+                                <th width="54%">RefBy Doctor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="pointer"
+                                *ngFor="let item of radoiologistList | filterByKey:searchText:['EmpNoWithPrefix','FullName']; let i = index">
+                                <td>
+                                    <input type="checkbox" class="" (change)="onSelectedSectionChange(item)"
+                                        [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}" />
+                                </td>
+                                <!-- <td><span ngbTooltip="{{item.FullName||''}}">{{item.EmpNoWithPrefix}}- {{item.FullName}}</span></td> -->
+                                <td>
+                                    <span
+                                        ngbTooltip="{{item.EmpNoWithPrefix}}-{{item.FullName}}">{{item.EmpNoWithPrefix+'
+                                        '+item.FullName || ''}} </span>
+                                </td>
+                                <td>
+                                    <ng-select id="refBy-doctor" style="width: 100%;"
+                                        [ngClass]="{ 'invalid': !item.refByIDs && item.checked, 'invalid-highlighted': !item.refByIDs && item.checked && isSubmitted }"
+                                        [(ngModel)]="item.refByIDs" 
+                                        [items]="refByDoctors" bindLabel="Name"
+                                        [multiple]="true" 
+                                        [closeOnSelect]="false" 
+                                        bindValue="RefId"
+                                        [virtualScroll]="true" 
+                                        placeholder="--Select RefBy Doctor--">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.Name}}</span>
+                                            </div>
+                                            <div class="ng-value" *ngIf="items.length > 2">
+                                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr>
+                        <div class="align-content-end input-group justify-content-end">
+                            <button type="button" [disabled]="disabledButton"
+                                class="btn btn-sm btn-primary pull-right mr-2" mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" 
+                                (confirm)="insertUpdateRefByRadiologistMapping()" 
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i class="fa fa-save"></i>Save Mapping<i class="spinner-border-custom" aria-hidden="true"
+                                    [hidden]="isSpinner"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-card>
+    </div>
+</div>

@@ -1,0 +1,401 @@
+<div class="card card-custom">
+    <!-- <div class="card-header">  
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label mt-1">
+                RIS Search
+            </h3>
+        </div>
+    </div> -->
+    <div class="card-header" style="min-height: 0px">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                RIS AI Assistance
+                <!-- <small>Search Patient Records</small> -->
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <!-- <button *ngIf="screenIdentity=='tech-audit'" type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
+                    ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button> -->
+            </div>
+        </div>
+    </div>
+    <div class="card-toolbar">
+    </div>
+    <div class="card-body">
+        <form [formGroup]="risParamsForm" class="form-horizontal" name="form" role="form" (ngSubmit)="getRISWorkList()">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                        class="form-control mb-4" type="text" value="" (dateSelect)="clearVisitID()"
+                        [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date To</label>
+                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" formControlName="dateTo" name="dateTo"
+                        class="form-control mb-4" type="text" value="" (dateSelect)="clearVisitID()"
+                        [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}" />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>PIN</label>
+                    <input class="form-control " placeholder="Search By PIN" name="visitID" formControlName="visitID"
+                        maxlength="14" (keypress)="allowOnlyDigitsAndDash($event)" (paste)="onPasteVisitID($event)"
+                        (input)="searchByVisit()" />
+                    <div *ngIf="risParamsForm.get('visitID')?.invalid && (risParamsForm.get('visitID')?.dirty || risParamsForm.get('visitID')?.touched)"
+                        class="text-danger mt-1">
+                        <!-- <div *ngIf="risParamsForm.get('visitID')?.errors?.required">Visit ID is required.</div> -->
+                        <div
+                            *ngIf="risParamsForm.get('visitID')?.errors?.minlength || risParamsForm.get('visitID')?.errors?.maxlength">
+                            <span class="text-danger">*</span> Visit ID must be between 12 and 14 characters.
+                        </div>
+                        <div *ngIf="risParamsForm.get('visitID')?.errors?.pattern">
+                            <span class="text-danger">*</span> Visit ID must be 12 digits or in format 2503-01-000020.
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- <div *ngIf="buttonControlsPermissions.modality" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Modality</label>
+                    <ng-select tabindex="1" placeholder="Select Modalities" formControlName="modality" name="modality"
+                        [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="m.ModalityID" *ngFor="let m of modalityList">
+                            {{m.ModalityTitle}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div *ngIf="buttonControlsPermissions.subsectionids" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label for="subSectionIDs" class="control-label">Section</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList" 
+                        bindLabel="SubSectionTitle"
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId" 
+                        [multiple]="multiple" 
+                        [closeOnSelect]="false"
+                        formControlName="subSectionIDs" 
+                        (change)="clearSearchedvalue()"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp *ngIf="techAudit">
+                            <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllSections()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+
+                <div *ngIf="buttonControlsPermissions.branch" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Branch</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="branchList" 
+                        bindLabel="Title"
+                        placeholder="-Select Branch-" 
+                        bindValue="LocId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        #branch formControlName="branch"
+                        [ngClass]="{'invalid invalid-highlighted': (validateBranch)}"
+                        (change)="checkBranch($event)"
+                        >
+
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.Title}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllBranches()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+
+                </div>
+                <div *ngIf="screenIdentity=='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                    <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div> -->
+
+
+
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                    <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card card-custom mt-2">
+    <div class="card-toolbar row">
+        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
+            <div class="row" >
+                <div class="col-12">
+                    <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pl-5 pt-1 test-summary-info-section" [ngClass]="noticeBoardStyle">
+                        <span *ngIf="!isAll" class="text-dark-75 font-weight-bolder font-size-lg text-white"> {{testSummaryInfoHeader}}</span>
+                        <span *ngIf="isAll" class="text-dark-75 font-weight-bolder font-size-lg text-white"> All Tests ({{risWorkist.length}})</span>
+                        <span *ngIf="!isAll && risWorkist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> There are <strong style="font-size: 14px;">({{risWorkist.length}})</strong> test(s) to be processed</span>
+                        <span *ngIf="!isAll && !risWorkist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> No test found</span>
+                        <span *ngIf="isAll" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> List of all tests</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
+            <div class="text-right mt-2 pr-2">
+                <mat-checkbox class="example-margin mr-2" name="isDrFeedback" [(ngModel)]="isDrCheckboxChecked" (change)="filterDrFeedback($event.checked)"> <span>Doctor's Feedback</span> </mat-checkbox>
+                <mat-checkbox *ngIf="isAudited||isAll" class="example-margin mr-2" name="isTechRemarks" [(ngModel)]="isCheckboxChecked" (change)="filterTechRemarks($event.checked)"> <span>Tech Remarks</span> </mat-checkbox>
+                <div class="btn-group " role="group" aria-label="Basic example">
+                    <button style="width: 82px;" (click)="getData(1);" type="button" class="btn btn-sm"  [ngClass]="isTodo ? 'btn-salmon' : 'btn-outline-salmon'"><i class="fa fa-th-large" [ngClass]="isTodo ? 'text-white' : 'text-salmon'" aria-hidden="true"></i>Todo</button>
+                    <button style="width: 82px;" (click)="getData(2);" type="button" class="btn btn-sm"  [ngClass]="isAudited ? 'btn-salmon' : 'btn-outline-salmon'"><i class="fa fa-check-square" [ngClass]="isAudited ? 'text-white' : 'text-salmon'" aria-hidden="true"></i>Audited</button>
+                    <button style="width: 82px;" (click)="getData(3);" type="button" class="btn btn-sm"  [ngClass]="isAll ? 'btn-salmon' : 'btn-outline-salmon'"><i class="fa fa-th" [ngClass]="isAll ? 'text-white' : 'text-salmon'" aria-hidden="true"></i>All</button>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <!--Start::Worklist-->
+    <div class="card-body">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <!--start::Search Filter-->
+        <div class="row" *ngIf="risWorkist.length" style="margin-top: -20px;">
+            <div class="col-12">
+                <div class="input-group">
+                    <input type="text" placeholder="type atleast 2 characters to filter" (keyup)="filterResults()"
+                        class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText" />
+                </div>
+            </div>
+        </div>
+        <!--end::Search Filter-->
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!='assign-bulk-test'">
+            <div class="col-12">
+                <img class="img-fluid" src="assets/images/brand/no-data-found-orange.svg" style="height: 178px;"
+                    alt="No Data Found image">
+                <p class="text-salmon" style="margin-top: -20px;">
+                    <strong>Info! </strong> No record found...
+                </p>
+            </div>
+        </div>
+        <div class="row" *ngIf="screenIdentity!='assign-bulk-test'">
+            <div class="col-md-12">
+                <div class="table-responsive" style="min-height: 330px;">
+                    <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
+                        <thead>
+                            <tr>
+                                <th>Visit No</th>
+                                <th>Patient Name</th>
+                                <th>Study</th>
+                                <th>Branch</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "
+                                class="cursor-pointer" [ngClass]="{'active': i==rowIndex}"
+                                (dblclick)="openFeedBackAuditModal(row,i)">
+                                <td>
+                                    <span class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        <i [ngClass]="returnCopyClasses(i)" class="ti-files" ngbPopover="copied"
+                                            triggers="click:mouseleave" (click)="copyText(row,i)">&nbsp;</i>
+                                    </span>{{row.VisitNo}}
+                                </td>
+                                <td>{{row.PatientName}}</td>
+                                <td>{{row.TPFullName}}</td>
+                                <td>{{row.BranchCode}}</td>
+                                <td style="width: 11%;">
+                                    <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group"
+                                            aria-label="Button group with nested dropdown">
+                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                <button (click)="openFeedBackAuditModal(row,i)" class="dropdown-item">
+                                                    <span><i class="fa fa-thumbs-up text-primary cursor-pointer"></i>
+                                                        Feedback</span>
+                                                </button>
+                                                <span (click)="getRowActive(row,i)">
+                                                    <app-dicom-dropdown-button  [btnPayload]="{TPID:row.TPId,VisitID:row.VisitNo, styleClass:'dropdown-item',iconClass:'fas fa-x-ray text-primary cursor-pointer', btnText:'DICOM'}"></app-dicom-dropdown-button>
+                                                </span>
+
+                                                <button (click)="getAndOpenDicomImageByButton(row,i)" class="dropdown-item pb-2">
+                                                    <span><i class="fas fa-image text-primary cursor-pointer"></i>
+                                                        AI Images </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end::Table and rows section-->
+
+        <!--start::Pagination-->
+        <div class="row" *ngIf="risWorkist.length">
+            <div class="col-12">
+                <div class="d-flex justify-content-between p-2">
+                    <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size=""
+                        [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                        (pageChange)="refreshPagination()">
+                    </ngb-pagination>
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize"
+                        (ngModelChange)="refreshPagination()">
+                        <option [ngValue]="5">5 items per page</option>
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--end::Paginition-->
+    </div>
+    <!--end::Worklist-->
+</div>
+
+
+<!------begin:: Doctore AI Assistant Feadback Popup---------------------------------->
+<ng-template #doctorAIAssistFeedback let-doctorAIAssistFeedback let-c="close" let-d="dismiss">
+    <!-- <div class="modal-header" style="display: block !important; padding-bottom: 10px; padding-top: 9px;">
+        <h4>Give your feedback for AI Assistince</h4>
+        <div class="row mt-2">
+            <div class="col-12">
+                <h4>Give your feedback for AI Assistince</h4>
+                <button type="button" class="close cursor-pointer" aria-label="Close"
+                    (click)="doctorAIAssistFeedback.close()" style="margin-top: 6px">
+                    <span class="cursor-pointer text-danger font-weight-bolder" aria-hidden="true"
+                        style="display: inline-block; margin-right: -6px; font-size: 23px;">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div> -->
+    <div class="modal-header">
+        <h5 class="modal-title" style="padding: 9px 0px;">
+            Doctor Feedback on AI Assistance
+        </h5>
+        <button type="button" class="close cursor-pointer" aria-label="Close" (click)="doctorAIAssistFeedback.close()"
+            style="margin-top: 6px">
+            <span class="cursor-pointer text-danger font-weight-bolder" aria-hidden="true"
+                style="display: inline-block; margin-right: -6px; font-size: 23px;">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="padding: 1.75rem 1.75rem 0px;">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div style="
+                    border: 1px solid #e7e1e1;
+                    margin: 9px 113px;
+                    border-radius: 11px;
+                    padding: 8px 0px;">
+
+                    <i ngbTooltip="Satisfied with the assistance" id="smileIcon" class="icon fa fa-smile text-primary" [ngClass]="{
+                        'cursor-pointer': !AuditorRadiologistID,
+                        'icon-selected': RadiologistRating == 1
+                        }" style="font-size: 57px; margin-right: 18px;" (click)="!AuditorRadiologistID && setRatingValue(1)">
+                    </i>
+
+                    <i ngbTooltip="Neutral experience" id="mehIcon" class="icon fas fa-meh text-warning" [ngClass]="{
+                        'cursor-pointer': !AuditorRadiologistID,
+                        'icon-selected': RadiologistRating == 2
+                        }" style="font-size: 57px; margin-right: 18px;" (click)="!AuditorRadiologistID && setRatingValue(2)">
+                    </i>
+
+                    <i ngbTooltip="Not satisfied with the assistance" id="frownIcon" class="icon fa fa-frown text-danger" [ngClass]="{
+                        'cursor-pointer': !AuditorRadiologistID,
+                        'icon-selected': RadiologistRating == 3
+                        }" style="font-size: 57px;" (click)="!AuditorRadiologistID && setRatingValue(3)">
+                    </i>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="otherInstructions" class="control-label">Feedback Remarks :</label>
+                    <textarea cols="" rows="" class="form-control form-control-sm" [disabled]="AuditorRadiologistID"
+                        [(ngModel)]="RadiologistRemarks" name="AIFeedbackRemarks"
+                        [ngClass]="{'invalid': (!RadiologistRemarks || RadiologistRemarks=='') && RadiologistRating == 3, 'invalid-highlighted': (!RadiologistRemarks || RadiologistRemarks=='') && clickSubmitAIRequestFeedback && RadiologistRating == 3}"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer-custom">
+        <button type="button" class="btn btn-sm btn-primary pull-right mr-2" data-dismiss="modal"
+            *ngIf="!AuditorRadiologistID" [disabled]="disabledButtonDoctorAIFeedback" mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverConfigAIFeadback.popoverTitle"
+            [popoverMessage]="confirmationPopoverConfigAIFeadback.popoverMessage"
+            [confirmText]="confirmationPopoverConfigAIFeadback.confirmText"
+            [cancelText]="confirmationPopoverConfigAIFeadback.cancelText"
+            [placement]="confirmationPopoverConfigAIFeadback.placements[0]" (confirm)="processAIAssistenceFeedBack()"
+            (cancel)="confirmationPopoverConfigAIFeadback.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverConfigAIFeadback.confirmClicked = false; confirmationPopoverConfigAIFeadback.cancelClicked = false"
+            [appendToBody]="true">
+            <i class="fa fa-save"></i>Save <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerDoctorAIFeedback"></i></button>
+        <ng-container >
+            <app-dicom-button  [btnPayload]="{TPID:TPID,VisitID:VisitId, styleClass:'btn btn-sm btn-danger  pull-right mr-2',iconClass:'fas fa-x-ray', btnText:'DICOM',breakIcon:false}"></app-dicom-button>
+        </ng-container>
+        
+        <button [disabled]="disabledButtonExport" class="btn btn-sm btn-danger pull-right mr-2"
+            mwlConfirmationPopover [popoverTitle]="'Please Confirm'"
+            [popoverMessage]="'Are you sure you want to export?'"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="getAndOpenDicomImageByButton(AIAssistanceRequestRow,rowIndex)"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary"
+            cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+            [appendToBody]="true">
+            <i class="fas fa-image"></i>AI Images <i class="spinner-border-custom"
+                aria-hidden="true" [hidden]="isSpinnerExport"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger pull-right mr-2" data-dismiss="modal"
+            (click)="doctorAIAssistFeedback.close()">
+            <i class="fa fa-times-circle"></i>Cancel</button>
+        
+    </div>
+</ng-template>
+<!------end:: Doctore AI Assistant Feadback Popup---------------------------------->

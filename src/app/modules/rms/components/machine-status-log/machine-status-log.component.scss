@@ -1,0 +1,14 @@
+.input-group-btn-custom{
+    border-radius:  0rem 0.28rem 0.28rem 0rem;
+ }
+ ::ng-deep .popover-title{
+    color: #dc3545;
+}
+
+.custom-popover-button ::ng-deep popover {
+    left: -49px !important;
+  }
+  ::ng-deep .popover {
+    left: -33px;
+  }
+ 

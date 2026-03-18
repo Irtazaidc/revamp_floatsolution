@@ -1,0 +1,188 @@
+<!-- <div class="card card-custom col-12  mb-3">
+    <div class="card-header">
+        <h5>Search Form</h5>
+    </div>
+    <div class="card-body">
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+            content.</p>
+    </div>
+</div> -->
+<!--[ngClass]="formHeaderBGClass"-->
+<div class="card card-custom">
+    <!-- <div class="card-header">  
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label mt-1">
+                RIS Search
+            </h3>
+        </div>
+    </div> -->
+    <div class="card-header" style="min-height: 0px">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                RIS Search
+                <!-- <small>Search Patient Records</small> -->
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button *ngIf="screenIdentity=='tech-audit'" type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
+                    ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-toolbar">
+    </div>
+    <div class="card-body">
+        <form [formGroup]="risParamsForm" class="form-horizontal" name="form" role="form" (ngSubmit)="passParams()">
+            <div class="row">
+                <div *ngIf="buttonControlsPermissions.dateFrom" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="dateFrom"
+                        name="dateFrom" class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(0)"
+                        [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}"
+                        />
+                </div>
+
+                <div *ngIf="buttonControlsPermissions.dateTo" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date To</label>
+                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" formControlName="dateTo" name="dateTo"
+                        class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(1)"
+                        [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}"
+                        />
+                </div>
+                
+                <div *ngIf="buttonControlsPermissions.visitID" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>PIN</label>
+                    <input class="form-control " placeholder="Search By PIN" name="visitID" formControlName="visitID" (blur)="searchByVisit()" /> <!--(blur)="searchByVisit()"-->
+                </div>
+
+                <div *ngIf="buttonControlsPermissions.modality" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Modality</label>
+                    <ng-select tabindex="1" placeholder="Select Modalities" formControlName="modality" name="modality"
+                        [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="m.ModalityID" *ngFor="let m of modalityList">
+                            {{m.ModalityTitle}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div *ngIf="buttonControlsPermissions.subsectionids" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label for="subSectionIDs" class="control-label">Section</label>
+                    <!-- <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList"
+                        bindLabel="SubSectionTitle" 
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId"
+                        formControlName="subSectionIDs" 
+                        name="subSectionIDs" 
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                        >
+                    </ng-select> -->
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList" 
+                        bindLabel="SubSectionTitle"
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId" 
+                        [multiple]="multiple" 
+                        [closeOnSelect]="false"
+                        formControlName="subSectionIDs" 
+                        (change)="clearSearchedvalue()"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp *ngIf="techAudit">
+                            <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllSections()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+
+                <div *ngIf="buttonControlsPermissions.branch" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Branch</label>
+                    <!-- <ng-select tabindex="1" placeholder="Select Branch" #branch formControlName="branch" name="branch"
+                        [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="b.LocId" *ngFor="let b of branchList">
+                            {{b.Title}}
+                        </ng-option>
+                    </ng-select> -->
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="branchList" 
+                        bindLabel="Title"
+                        placeholder="-Select Branch-" 
+                        bindValue="LocId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        #branch formControlName="branch"
+                        [ngClass]="{'invalid invalid-highlighted': (validateBranch)}"
+                        (change)="checkBranch($event)"
+                        >
+
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.Title}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllBranches()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+
+                </div>
+                <div *ngIf="screenIdentity=='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                    <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+                <div *ngIf="advancedSearchEnabled && screenIdentity=='tech-audit'" [@fadeInOutTranslate] class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                    <label for="TechnicianID">InitializedBy</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <ng-select style="width: 100%;"  
+                                [items]="employeesList" 
+                                tabindex="1" 
+                                placeholder="-Select Person-"
+                                formControlName="TechnicianID"
+                                bindLabel="FullName" 
+                                bindValue="UserId" 
+                                >
+                            </ng-select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div *ngIf="screenIdentity!='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                    <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

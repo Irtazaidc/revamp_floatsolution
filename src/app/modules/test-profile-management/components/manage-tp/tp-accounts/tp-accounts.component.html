@@ -1,0 +1,59 @@
+<div class="card card-custom gutter-t">
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form [formGroup]="formFortpAccounts" class="form-horizontal" name="form" role="form">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <label for="currency" class="control-label">Currency</label>
+                                    <ng-select style="width: 100%" class="mt-1" [items]=""
+                                        bindLabel="CMSContactBackStatusTitle" placeholder="-Currency-"
+                                        bindValue="sampleType" formControlName="currency">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset class="fieldset-border-all-primary">
+                                    <legend class="font-weight-bold text-primary" style="font-size: 1.0rem">
+                                        Doctor's Share
+                                    </legend>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="quantity">Quantity</label>
+                                                <input formControlName="quantity" type="text" class="form-control"
+                                                    [readonly]="true" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-row">
+                                                <label for="testTubeColor" class="control-label">Test Tube Color</label>
+                                                <ng-select style="width: 100%" class="mt-1" [items]=""
+                                                    bindLabel="CMSContactBackStatusTitle" placeholder="-Test tube Color-"
+                                                    bindValue="sampleType" formControlName="testTubeColor">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-row">
+                                                <label for="testPlace" class="control-label">Test Place</label>
+                                                <ng-select style="width: 100%" class="mt-1" [items]=""
+                                                    bindLabel="CMSContactBackStatusTitle" placeholder="-Test Place-"
+                                                    bindValue="sampleType" formControlName="testPlace">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                           
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+            
+        </div>
+</div>

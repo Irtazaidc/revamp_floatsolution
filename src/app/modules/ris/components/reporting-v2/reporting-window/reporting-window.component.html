@@ -1,0 +1,1155 @@
+<div class="row">
+    <div class="col-12">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.editorSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-5 col-xl-5">
+                <div class="tests-box-dropdown">
+                    <select name="moIntervenedTests" class="form-control form-control-sm" [(ngModel)]="TPID" disabled
+                        (change)="getTPName($event)">
+                        <option *ngFor="let row of visitTestsAssigner" value="{{row.TPID}}">{{row.TestProfileCode}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-1 col-xl-1 initialize-btn">
+                <button style="min-width: 103px; height: 32px " *ngIf="StatusId<7" [disabled]="disabledButtonInitial"
+                    (click)="initializedReportByDoctor()" class="btn btn-danger btn-sm pull-right mb-1"
+                    ngbTooltip="Please Initialize the test before start Editing"><i class="ti-time"></i>Initialize <i
+                        class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerInitial"></i></button>
+                <!-- <button *ngIf="StatusId>=7" class="btn btn-primary btn-sm pull-right mb-1" style="cursor: default; min-width: 92px; height: 33px "><i class="ti-control-play"></i>{{TestStatus}} </button> -->
+
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <ng-template #popContentSrv>
+                    <app-ris-tp-services [VisitId]="VisitId"></app-ris-tp-services>
+                </ng-template>
+
+                <div class="tests-box tests-box-small">
+                    <label for="TPFullName" class="pt-2 control-label"
+                        [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}"><strong>
+                            {{TPName}}<i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2"
+                                aria-hidden="true" ngbTooltip="Click to show services detail"
+                                [ngbPopover]="popContentSrv" [popoverTitle]="'Services Detail'"
+                                [popoverClass]="'custom-popover'"></i></strong>
+
+                    </label><strong class="text-white pull-right mt-2">Current Status | {{TestStatus}}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="TPParams.length && templateList.length">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 mb-2 mt-3" *ngIf="templateList.length">
+                <label for="TextDescription" class="control-label">Choose Template:</label>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3" *ngIf="templateList.length">
+                <select class="form-control form-control-sm" [(ngModel)]="RISTemplateID" name="RISTemplateID"
+                    (click)="onDropdownClick($event)"
+                    (change)="getRISTemplateDetailonChange($event)">
+                    <option *ngFor="let row of templateList" value="{{row.RISTemplateID}}">{{row.TemplateCode}}</option>
+                </select>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-1 col-xl-1">
+                <button *ngIf="StatusId>=7" style="min-width: 91px; height: 32px " (click)="reloadSavedReport()"
+                    class="btn btn-primary btn-sm pull-right" ngbTooltip="Reload Saved Report"><i
+                        class="ti-reload  cursor-pointer"></i> Reload</button>
+            </div>
+            <div class="col-6">
+                <div class="clock">
+                    <!-- Show Edit Expiry and Remaining Time only when tempDSDateTime is valid and time hasn't expired -->
+                    <span *ngIf="!isEditExpired && tempDSDateTime" class="text-danger">
+                        <strong>Edit Expiry: <span style="font-size: 26px;">{{EditExpiryTime}}</span></strong>
+                    </span>
+
+                    <span class="text-danger pull-right">
+                        <!-- Show Remaining Time when it is still valid -->
+                        <div *ngIf="!isEditExpired && remainingTime !== '00:00'">
+                            <strong>Remaining Time: <span style="font-size: 26px;">{{ remainingTime }}</span></strong>
+                        </div>
+
+                        <!-- Show '00:00' before the calculation or if expired -->
+                        <div *ngIf="!isEditExpired && remainingTime === '00:00'">
+                            <strong>Remaining Time: <span style="font-size: 26px;">00:00</span></strong>
+                        </div>
+
+                        <!-- Show 'Editing Time Expired!' only when the time has truly expired -->
+                        <div *ngIf="isEditExpired && tempDSDateTime">
+                            <strong>Editing Time Expired!</strong>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- start:: Main working area--->
+
+        <!--Reporting area-->
+        <ng-container *ngIf="isShowReportMain then hasParam else hasNoParam"></ng-container>
+        <ng-template #hasParam>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9 col-xl-9">
+                    <div class="row" *ngFor="let p of TPParams">
+                        <div class="col-12 mt-4">
+                            <label for="Pcode" class="control-label">Paramter: <strong> {{p.Title}}</strong></label>
+                            <strong *ngIf="!isEditingMode && (StatusId==7 || StatusId==8)"
+                                class="text-danger ml-2">(Editor is disabled, Please click Edit)</strong>
+                                <span *ngIf="isMetal" class="pull-right mr-35">
+                                    <i aria-hidden="true" class="fa fa-exclamation-triangle blink-red"></i>
+                                    <strong class="text-danger ml-2" style="font-size: 14px;">Caution: Metal components detected in patient's body! </strong>
+                                </span>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive fixed-height-table">
+                                <!-- <ckeditor [config]="getConfig()" debounce="500" [(ngModel)]="p.ParamReportHTML"  [ngModelOptions]="{standalone: true}" id="editor"  (ready)="onEditorReady($event)"> </ckeditor> -->
+                                <ckeditor [config]="getConfig()" debounce="500" [(ngModel)]="p.ParamReportHTML"
+                                    [ngModelOptions]="{standalone: true}" [readOnly]="!isEditingMode"
+                                    (click)="checkEdiortEnable()"> </ckeditor>
+                                <!-- <ckeditor [config]="config" debounce="500" [(ngModel)]="p.ParamReportHTML" [ngModelOptions]="{standalone: true}" id="editor"></ckeditor> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                    <!-- <strong *ngIf="contrastServices.length">Contrast:</strong>
+                    <span  *ngFor="let item of contrastServices; let indx = index">
+                        <span>{{item.TPName}}</span><br/>
+                    </span> -->
+                    <fieldset class="fieldset-border-all-primary">
+                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Comparative Studies
+                            <strong><span class="text-danger">({{comparativeStudies.length}})</span></strong>
+                        </legend>
+                        <div class="comparative-study">
+                            <!-- style="border: 1px solid #57d4ce;
+                            padding: 13px 11px;
+                            border-radius: 7px;
+                            margin-top: 33px;" -->
+                            <!-- <h3 style="background-color: #57d4ce;
+                            padding: 1px 10px;
+                            color: #fff;
+                            border-radius: 2px;
+                            text-align: center;">Comparative Study</h3> -->
+                            <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                                        <!-- <label for="DateFrom" class="control-label">Date  From:</label> -->
+                                        <input (click)="startDate.toggle()" #startDate="ngbDatepicker"
+                                            placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker value="1980-08-26"
+                                            formControlName="startDate" class="form-control form-control-sm" type="text"
+                                            value="" />
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                                        <!-- <label for="DateTo" class="control-label">Date To:</label> -->
+                                        <input #endData="ngbDatepicker" (click)="endData.toggle()"
+                                            placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker value="1980-08-26"
+                                            formControlName="endDate" class="form-control form-control-sm" type="text"
+                                            value=""
+                                            [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}" />
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9 col-xl-9 mb-2">
+                                        <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList"
+                                            bindLabel="SubSectionTitle" placeholder="-Select Section-"
+                                            bindValue="SubSectionId" formControlName="SubSectionID" [multiple]="false"
+                                            [closeOnSelect]="true">
+
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+                                        <button type="button" (click)="getTestProfileComparisonByPatientID()"
+                                            [disabled]="disabledButtonSearch"
+                                            class="btn btn-sm btn-primary pull-right"><span> <i
+                                                    class="spinner-border-custom" aria-hidden="true"
+                                                    [hidden]="isSpinnerSearch"></i> &nbsp;<i
+                                                    *ngIf="!disabledButtonSearch"
+                                                    class="fa fa-search"></i></span></button>
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="text" [(ngModel)]="searchText" name="searchText" placeholder="type to filter"
+                                            [ngModelOptions]="{standalone: true}" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="table-responsive" style="max-height: 360px; overflow-y: auto;">
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                    [name]="spinnerRefs.comparativeSection" size="medium" color="#fff"
+                                    type="square-loader" [fullScreen]="false">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <!-- <tr> <td colspan="5"><input type="text" [(ngModel)]="searchText" name="searchText"  class="form-control form-control-sm"></td></tr> -->
+                                            <th style="width: 1%;">#</th>
+                                            <th style="width: 1%;">
+                                                <!-- <mat-checkbox  class="example-margin mr-2" name="chkParent"> <span></span> </mat-checkbox> -->
+                                            </th>
+                                            <!-- <th style="width: 70%;" scope="col" class="col-md">PIN</th> -->
+                                            <th style="width: 80%;" scope="col" class="col-md">Study</th>
+                                            <th style="width: 18%;" scope="col" class="col-md">Actions</th>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container class="table-hover" *ngFor="let item of comparativeStudies | filterByKey:searchText:['PIN','TPCode']; let indx = index">
+                                            <tr
+                                            >
+                                            <td style="width: 1%;">{{indx+1}}</td>
+                                            <td style="width: 1%;" class="col-md">
+                                                <mat-checkbox (change)="onCheckboxChange();" [(ngModel)]="item.checked"
+                                                    [disabled]="flexCheckDisabled && selectedCount>=1 && !item.checked"
+                                                    class="example-margin mr-2" name="chkParent"> <span></span>
+                                                </mat-checkbox>
+                                            </td>
+                                            <!-- <td style="width: 70%;" class="col-md"> 
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave" (click)="copyText('2403-01-000024')">&nbsp;</i></span>
+                                                {{item.PIN}}
+                                            </td> -->
+                                            <td style="width: 80%;" class="col-md">
+                                                <strong ngbTooltip="{{item.TPName}}" class="cursor-pointer"
+                                                    style="font-size: 12px;">{{item.TPCode}}</strong><br>
+                                                  
+                                            </td>
+                                            <td style="width: 18%;" class="col-md">
+                                                <i aria-hidden="true" (click)="getPACSServers(item.PIN,item.TPID, 1)"
+                                                    class="fas fa-x-ray text-primary cursor-pointer"></i>
+                                                <!-- <i aria-hidden="true" (click)="getPACSServers(item)" class="fas fa-x-ray text-primary cursor-pointer"></i> -->
+                                                <i aria-hidden="true"
+                                                    *ngIf="item.StatusID>7 &&(item.StatusID!=13 && item.StatusID!=14 )"
+                                                    (click)="ViewReportComparative(item)"
+                                                    class="fa fa-print text-primary cursor-pointer ml-2"></i>
+                                                <i aria-hidden="true"
+                                                    *ngIf="item.StatusID<=7 || (item.StatusID==13 || item.StatusID==14)"
+                                                    (click)="reportNotReadyForPrint()"
+                                                    class="fa fa-print text-danger cursor-pointer ml-2"></i>
+                                                <!-- <div class="btn-group">
+                                                    <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                                        aria-label="Button group with nested dropdown">
+                                                        <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                            <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                            <button (click)="getPACSServers(item.PIN,item.TPID)"
+                                                                class="dropdown-item">
+                                                                <span><i class="fas fa-x-ray text-primary cursor-pointer"></i> DICOM</span>
+                                                            </button>
+                                                            <button *ngIf="item.StatusID>7 &&(item.StatusID!=13 && item.StatusID!=14 )" (click)="ViewReportComparative(item)"
+                                                                class="dropdown-item">
+                                                                <span><i class="fa fa-print text-primary cursor-pointer"></i> Report</span>
+                                                            </button>
+                                                            <button *ngIf="item.StatusID<=7 || (item.StatusID==13 || item.StatusID==14)" (click)="reportNotReadyForPrint()"
+                                                                class="dropdown-item">
+                                                                <span><i class="fa fa-print text-danger cursor-pointer"></i> Report</span>
+                                                            </button>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="width: 2%;" class="col-md"></td>
+                                            <td colspan="2" style="width: 98%;" class="col-md">
+                                                <span class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                    <i style="font-size: 12px;" class="ti-files" ngbPopover="copied"
+                                                        triggers="click:mouseleave"
+                                                        (click)="copyText(item.PIN)"></i></span>
+                                                <span class="ml-2" style="font-size: 12px;">{{item.PIN}}</span><br>
+                                                <small>
+                                                    <span class="ml-1 text-primary">{{item.CreatedOn | date: 'dd MMM, yyyy, h:mm a'}}</span>
+                                                </small>
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngIf="!comparativeStudies.length">
+                                            <td colspan="5" class="text-center">
+                                                <p class="text-dark bg-gray" style="padding: 8px 0px;">
+                                                    <strong>Info! </strong> No record found...
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-12">
+                                    <hr>
+                                    <button [disabled]="disabledButtonExport"
+                                        class="btn btn-sm btn-danger pull-right mr-4" 
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="'Please Confirm'"
+                                        [popoverMessage]="'Are you sure want to export?'"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]" 
+                                        (confirm)="exportComparativeStudy()"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="btn btn-sm btn-primary" 
+                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true">
+                                        <i class="fas fa-file-export"></i> Export <i class="spinner-border-custom" aria-hidden="true"
+                                            [hidden]="isSpinnerExport"></i>
+                                    </button>
+                                </div>
+                            </div> -->
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row" *ngIf="TPDisclaimerID">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-4">
+                  <fieldset class="fieldset-primary fieldset-reporting-disclaimer">
+                    <legend class="font-weight-bold text-white d-flex align-items-center" style="font-size: 1.1rem;">
+                        Disclaimer:
+                        <!-- Check if multiple disclaimers exist -->
+                        <ng-container *ngIf="TPDisclaimerRow.length >= 2 ;">
+                            <select class="form-control w-auto d-inline-block ms-2" style=" padding: 0px; height: 22px;"
+                                [(ngModel)]="selectedDisclaimer"
+                                [disabled]="disableDropdown"
+                                (change)="onDisclaimerChange(selectedDisclaimer)">
+                                <!-- {{ TPDisclaimerRow.indexOf(disclaimer) + 1 }} - {{ disclaimer.DisclaimerTitle }} -->
+                                <option *ngFor="let disclaimer of TPDisclaimerRow" [ngValue]="disclaimer">
+                                    {{ disclaimer.DisclaimerTitle }}
+                                </option>
+                            </select>
+                        </ng-container>
+                      </legend>
+                
+                      <!-- Display Disclaimer Content -->
+                      <div [innerHTML]="DisclaimerBodyHTML"></div>
+                  </fieldset>
+                </div>
+              </div>
+            <!-- <div class="row" *ngIf="TPDisclaimerID">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-4">
+                    <div class="form-group">
+                        <label for="DisclaimerBodyHTML" class="control-label">Disclaimer:</label>
+                        <div [innerHTML]="DisclaimerBodyHTML"></div>
+                    </div>
+                    <fieldset class="fieldset-primary fieldset-reporting-disclaimer">
+                        <legend class="font-weight-bold text-white" style="font-size: 1.1rem;">Disclaimer :</legend>
+                        <div [innerHTML]="DisclaimerBodyHTML"></div>
+                    </fieldset>
+                </div>
+            </div> -->
+        </ng-template>
+        <ng-template #hasNoParam>
+            <div class="row">
+                <div class="col-12">
+                    <!-- <strong>This study has no param (s)</strong> -->
+                    <div class="alert alert-custom alert-light-danger" role="alert">
+                        <div class="alert-icon"><span
+                                class="svg-icon svg-icon-danger svg-icon-xl"><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Tools/Compass.svg--><svg
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <path
+                                            d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z"
+                                            fill="#000000" opacity="0.3"></path>
+                                        <path
+                                            d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z"
+                                            fill="#000000" fill-rule="nonzero"></path>
+                                    </g>
+                                </svg><!--end::Svg Icon--></span></div>
+                        <div class="alert-text">
+                            Please note that the <strong> {{TPName}} </strong> study <strong> {{TPCode}} </strong> does
+                            not have any parameters, and as a result, the reporting process cannot be carried out. If
+                            you need to define parameters for the <strong> {{TPCode}} </strong> study, please contact
+                            the system support team.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </ng-template>
+
+
+        <!--start:: Action buttons area-->
+        <div class="row mt-2" *ngIf="TPParams.length">
+            <div class="col-12">
+                <section class="btn-section mt-2">
+                    <div class="col-12 text-center" *ngIf="TestStatus < 7">
+                        <h4 class="init-notice">To proceed with further operations, please initialize the study.</h4>
+                    </div>
+                    <!-- <strong class="text-primary" style="text-align: center;">To proceed with further operations, please initialize the study.</strong> -->
+                    <!-- (confirm)="getPACSServers(VisitId,TPID)" -->
+                    <div class="row">
+                        <div class="col-lg-1 col-md-6 col-sm-12">
+                            <mat-checkbox *ngIf="isMarkCaseStudy && (RISStatusID===10 || StatusId>7)" [disabled]="isCaseStudyTab" class="mt-2 ml-2" name="isCaseStudy" [(ngModel)]="isCaseStudy" (change)="reportMarking($event)">
+                            Mark as Case Study
+                            </mat-checkbox>
+                        </div>
+                        <div class="col-lg-11 col-md-6 col-sm-12">
+                            <div class="d-flex flex-wrap justify-content-end"> 
+                                <span *ngIf="!VerifiedUserID && !TranscribedBy && isEditingMode" class="blink-red mr-3 mt-3 pull-left">Please log in as an <strong>MT</strong> to begin composing the report.</span>
+                                <span class="pull-left" *ngIf="isEditingMode">
+                                    <mat-checkbox [(ngModel)]="isReportDelay" class="mt-3 mr-2"
+                                     name="isReportDelay" (change)="checkReportDelay($event)">
+                                     </mat-checkbox>
+                                    <strong class="mr-2 text-danger" style="font-size: 12px; margin-left: -4px;">Mark as delay for {{ReportDelayTime}} mintutes</strong>
+                                </span>
+                                <button *ngIf="!isDoctorFeedback && StatusId>6 && (ActiveTab!=8 || !isCaseStudyTab)"
+                                    type="button" [disabled]="disabledButtonFinalize"
+                                    class="btn btn-sm btn-warning mt-2 mr-2" mwlConfirmationPopover
+                                    [popoverTitle]="'Do you want to add <strong>feedback</strong>?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="postFeedbackProcess(3,9)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="far fa-thumbs-down"
+                                            ngbTooltip="Add feedback?"></i> Feedback <i class="spinner-border-custom"
+                                        aria-hidden="true" [hidden]="isSpinnerFinalize"></i>
+                                </button>
+
+                                <!--begin::AI Buttons------>
+                                <button [disabled]="disabledButtonAIRequest" class="btn btn-sm btn-success mt-2 mr-2"
+                                    *ngIf="isAIAssist && IsAIAssistEnable && !isAIImages && StatusId >= 7" mwlConfirmationPopover
+                                    [popoverTitle]="'Please Confirm'"
+                                    [popoverMessage]="'Are you sure you want to send the request to AI?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="requestAIAssistance(VisitId,TPID)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fas fa-brain"></i>Request AI 
+                                    <i class="spinner-border spinner-border-sm" [hidden]="isSpinnerAIRequest"></i>
+                                </button>
+
+                                <!-- AI Images Button -->
+                                <button [disabled]="disabledButtonAIImages" class="btn btn-sm btn-info mt-2 mr-2"
+                                    *ngIf="isAIAssist && IsAIAssistEnable && isAIImages" mwlConfirmationPopover
+                                    [popoverTitle]="'Please Confirm'"
+                                    [popoverMessage]="'Are you sure you want to view the AI images?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="getAndOpenDicomImageByButton()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-image"></i>AI Images 
+                                    <i class="spinner-border spinner-border-sm" [hidden]="isSpinnerAIImages"></i>
+                                </button>
+                                <!--end::AI Buttons-------->
+                                <button [disabled]="disabledButtonExport" class="btn btn-sm btn-danger mt-2 mr-2"
+                                    mwlConfirmationPopover [popoverTitle]="'Please Confirm'"
+                                    [popoverMessage]="'Are you sure you want to export?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="getPACSServers(VisitId,TPID, 2)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fas fa-x-ray"></i>DICOM <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerExport"></i>
+                                </button>
+                                <button [disabled]="disabledButtonCancel" (click)="updateRadioReportLock(false)"
+                                    *ngIf="isEditingMode" type="button"
+                                    class="btn btn-sm btn-danger mt-2 mr-2">
+                                    <i class="fa fa-times-circle"></i> Cancel <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerCancel"></i>
+                                </button>
+                                <span class="revert-status">
+                                    <!-- &&(StatusId == 7 || StatusId == 8) && (tempDSDateTime && !isEditExpired || !tempDSDateTime) -->
+                                    <button *ngIf="isEditingMode && (StatusId == 7 && RISStatusID == 10) && (!InitByEmpID && !DSByEmpID)"
+                                        type="button" [disabled]="disabledButtonFinalize" title="Revert back to unassigned"
+                                        class="btn btn-sm btn-warning mt-2 mr-2" mwlConfirmationPopover
+                                        [popoverTitle]="'Are you <strong>sure</strong> to revert back to unassigned?'"
+                                        [popoverMessage]="'The report will revert back to unassigned'"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="revertToUnassigned()"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="btn btn-sm btn-primary"
+                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true">
+                                        <i class="fa fa-undo"></i>Revert <i class="spinner-border-custom"
+                                            aria-hidden="true" [hidden]="isSpinnerFinalize"></i>
+                                    </button>
+                                </span>
+                                <!-- mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertUpdateRadioReport(9,null,1,10)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true" -->
+                                <button (click)="insertUpdateRadioReport(9,null,1,10)"
+                                    *ngIf="isEditingMode && (VerifiedUserID||TranscribedBy) && StatusId==7 && StatusId!=8 && (tempDSDateTime && !isEditExpired || !tempDSDateTime)"
+                                    type="button" [disabled]="disabledButtonDraft"
+                                    class="btn btn-sm btn-primary mt-2 mr-2" 
+                                    >
+                                    <i class="fa fa-edit"></i> Save Draft <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerDraft"></i>
+                                </button>
+                                <button *ngIf="isEditingMode && (VerifiedUserID||TranscribedBy) && StatusId >= 8" type="button"
+                                    class="btn btn-sm btn-primary mt-2 mr-2" disabled>
+                                    <i class="fa fa-edit"></i> Save Draft
+                                </button>
+            
+                                <button
+                                    *ngIf="isEditingMode && (VerifiedUserID||TranscribedBy) && (StatusId == 7) && (tempDSDateTime && !isEditExpired || !tempDSDateTime)"
+                                    type="button" [disabled]="disabledButtonPrimelinary"
+                                    class="btn btn-sm btn-primary mt-2 mr-2" mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfigPreliminary.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfigPreliminary.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfigPreliminary.confirmText"
+                                    [cancelText]="confirmationPopoverConfigPreliminary.cancelText"
+                                    [placement]="confirmationPopoverConfigPreliminary.placements[0]"
+                                    (confirm)="insertUpdateRadioReport(2,8,2,11)"
+                                    (cancel)="confirmationPopoverConfigPreliminary.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfigPreliminary.confirmClicked = false; confirmationPopoverConfigPreliminary.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-save"></i> Preliminary Report <i class="spinner-border-custom"
+                                        aria-hidden="true" [hidden]="isSpinnerPremilinary"></i>
+                                </button>
+                                <button *ngIf="isEditingMode && (StatusId == 8) && (tempDSDateTime && !isEditExpired || !tempDSDateTime)" 
+                                type="button"
+                                    class="btn btn-sm btn-primary mt-2 mr-2" disabled>
+                                    <i class="fa fa-save"></i> Preliminary Report
+                                </button>
+                                <!-- || (!InitByEmpID && !DSByEmpID) && (DSByEmpID == loggedInUser.empid || !DSByEmpID )-->
+                                <span class="final-popover">
+                                    <!-- <button (click)="reportFinalizationProcess(3,9)"
+                                        *ngIf="isEditingMode 
+                                        && (VerifiedUserID||TranscribedBy)
+                                        &&(StatusId == 8) 
+                                        && (tempDSDateTime && !isEditExpired || !tempDSDateTime) && (DSByEmpID==loggedInUser.empid || !DSByEmpID)"
+                                        type="button" [disabled]="disabledButtonFinalize"
+                                        class="btn btn-sm btn-primary mt-2 mr-2" 
+                                        >
+                                        <i class="fa fa-check-square"></i> Final Report <i class="spinner-border-custom"
+                                            aria-hidden="true" [hidden]="isSpinnerFinalize"></i>
+                                    </button> -->
+                                    <button (click)="reportFinalizationProcess(3,9, StatusId)"
+                                        *ngIf="isEditingMode 
+                                        && (VerifiedUserID||TranscribedBy)
+                                        && (tempDSDateTime && !isEditExpired || !tempDSDateTime)
+
+                                        
+                                        && (StatusId == 7 || StatusId == 8)
+                                        && (DSByEmpID==loggedInUser.empid || !DSByEmpID)"
+
+                                        type="button" [disabled]="disabledButtonFinalize"
+                                        class="btn btn-sm btn-primary mt-2 mr-2" 
+                                        >
+                                        <i class="fa fa-check-square"></i> Final Report <i class="spinner-border-custom"
+                                            aria-hidden="true" [hidden]="isSpinnerFinalize"></i>
+                                    </button>
+                                </span>
+                                
+                                <button [disabled]="disabledButtonLock" (click)="updateRadioReportLock(true)"
+                                    *ngIf="!isEditingMode && (StatusId == 7 || StatusId == 8) && (tempDSDateTime && !isEditExpired || !tempDSDateTime) && !isCaseStudyTab"
+                                    type="button" class="btn btn-sm btn-primary mt-2 mr-2"><i
+                                        class="fa fa-edit"></i> Edit <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerLock"></i></button>
+                                <!-- <button (click)="ViewReport('')" *ngIf="StatusId>7" type="button" class="btn btn-sm btn-dark pull-right mt-2 mr-2"><i class="fa fa-print"></i> Print </button> -->
+            
+                                <!--Note: For below addendum button; may be we will add condition of ilabteststatus greater than reported Like *ngIf="isShowAddendumButton && StatusId>8 or some greater than 8 which delivered"-->
+                                <!-- (click)="openAddendumForm()" -->
+                                <button (click)="showHideAddendumReview()"
+                                    *ngIf="isShowAddendumButton && showSecondOpinionButton" type="button"
+                                    class="btn btn-sm btn-danger mt-2 mr-2">
+                                    <i [ngClass]="isShowHideAddendumReview ? 'fas fa-minus-circle' : 'fas fa-plus-circle'"></i>
+                                    {{lebelType}}
+                                </button>
+                                <button (click)="openVerifyForm()" *ngIf="isEditingMode && !VerifiedUserID"
+                                    type="button" class="btn btn-sm btn-success mt-2 mr-2"><i class="fa fa-user"
+                                        ngbTooltip="Authenticate yourself for transcription"></i> MT </button>
+
+                                        <button  *ngIf="isEditingMode && VerifiedUserID"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="'Please confirm!'"
+                                        [popoverMessage]="'Are you <strong>sure</strong> want to logout?'"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="logoutMT()"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="btn btn-sm btn-primary"
+                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                        type="button" class="btn btn-sm btn-success mt-2 mr-2"> MT | {{VerifiedUserName}} <i class="fas fa-sign-out-alt"
+                                        ngbTooltip="If you want to logout please click"></i>
+                                    </button>
+            
+                                <button (click)="ViewReport('')"
+                                    *ngIf="StatusId >= 7 && (!RISStatusID || RISStatusID >= 10) && (TPParams[0].ParamReportHTML != null || TPParams[0].ParamReportHTML != '')"
+                                    type="button" class="btn btn-sm btn-dark mt-2 mr-2"><i
+                                        class="fa fa-print"></i> Print Preview </button>
+                            </div>
+                            <!-- Processing Message -->
+                            <div class="some mt-1 text-right"
+                                *ngIf="isAIAssist && IsAIAssistEnable && AIButtonClicked && isShowMessageDiv">
+                                <span class="ti-info-alt text-primary mr-1" style="font-size: 13px"></span>
+                                <span class="blink-green-slow mr-3" style="color: #7a7a7a; font-size: 13px">Please wait… AI is analyzing images for viewing or download.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+        </div>
+
+        <!--begin:: Addendum / Review Section-->
+        <!-- <div class="row">
+            <div class="col-12">
+                <div class="ckeditor-addendum">
+                    <label for="AddendumHTML">Addendum: </label>
+                    <ckeditor [config]="config" debounce="500" [(ngModel)]="AddendumHTML"  [ngModelOptions]="{standalone: true}">
+                    </ckeditor>
+                </div>
+            </div>
+        </div> -->
+        <div class="row" *ngIf="isShowHideAddendumReview">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-7">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="ckeditor-addendum">
+                            <label for="AddendumHTML" class="mt-2">{{lebelType}}: </label>
+                            <ckeditor [required]="true" [config]="config" debounce="500" [(ngModel)]="AddendumHTML"
+                                [ngModelOptions]="{standalone: true}">
+                            </ckeditor>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="buttons-row" style="margin-right: 98px; margin-top: 7px;">
+                            <div class="row" *ngIf="RISAddendumTypeID==2">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                                    <div class="form-group">
+                                        <label for="RISAssesmentCategoryID">Final Assesment Category: <small
+                                                class="text-danger">*</small> </label>
+                                        <!-- <ng-select style="width: 100%;"
+                                            class=" mt-1 mr-1"
+                                            [items]="assesmentCategories"
+                                            bindLabel="CategoryName" 
+                                            placeholder="-Select Assesment Category-"
+                                            bindValue="RISAssesmentCategoryID"
+                                            [(ngModel)]="RISAssesmentCategoryID"
+                                            [multiple]="false"
+                                            [closeOnSelect]="true"
+                                            >
+                
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.CategoryName}}</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select> -->
+                                        <ng-select style="width: 100%;" class="mt-1 mr-1" [items]="assesmentCategories"
+                                            bindLabel="CategoryName" placeholder="-Select Assessment Category-"
+                                            bindValue="RISAssesmentCategoryID" [(ngModel)]="RISAssesmentCategoryID"
+                                            [multiple]="false" [closeOnSelect]="true"
+                                            [ngClass]="{'invalid': !RISAssesmentCategoryID && RISAddendumTypeID=='2', 'invalid-highlighted': !RISAssesmentCategoryID && RISAddendumTypeID=='2' && clickSubmitBtn}">
+                                            <!-- [ngClass]="{'invalid': !RISAssesmentCategoryID && RISAddendumTypeID=='2', 'invalid-highlighted': !RISAssesmentCategoryID && RISAddendumTypeID=='2' && clickSubmitBtn}" -->
+                                            <ng-template #optionTemplate let-item="item">
+                                                <div class="option-item" [ngbTooltip]="item.CategoryName"
+                                                    container="body">
+                                                    {{ item.CategoryName.length > 40 ? item.CategoryName.slice(0, 40) +
+                                                    '...' : item.CategoryName }}
+                                                </div>
+                                            </ng-template>
+                                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                                                <div class="option-item" [ngbTooltip]="item.CategoryName"
+                                                    container="body">
+                                                    {{ item.CategoryName.length > 40 ? item.CategoryName.slice(0, 40) +
+                                                    '...' : item.CategoryName }}
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                                    <label for="RISErrorCategoryID">Error Category (Research): </label>
+                                    <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="errorCategories"
+                                        bindLabel="ErrorCategoryName" placeholder="-Select Research Error Category-"
+                                        bindValue="RISErrorCategoryID" [(ngModel)]="RISErrorCategoryID"
+                                        [multiple]="false" [closeOnSelect]="true">
+
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.ErrorCategoryName}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-sm btn-primary pull-right"
+                                [disabled]="disabledButtonAddendum" mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are you sure want to save final?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="insertUpdateVisitTestAddendum()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i class="fa fa-check-circle"></i>Save Final <i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinnerAddendum"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger pull-right  mr-2"
+                                (click)="showHideAddendumReview()">
+                                <i class="fas fa-minus-circle"></i>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-5">
+                <fieldset class="fieldset-border-all-primary mt-2">
+                    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">{{lebelType}} Detail
+                        <strong><span class="text-danger"></span></strong>
+                    </legend>
+                    <div class="comparative-study">
+                        <!-- <form [formGroup]="_form" class="form-horizontal" name="form" role="form"> -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="addendum-info mb-2">
+                                    <label style="border-bottom: 1px solid #1bc5bd;" for="TPFullName" class=""
+                                        [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}"><strong
+                                            class="text-primary">{{TPCode}}-{{TPName}}</strong></label>
+                                    <strong class="pull-right text-danger"><span *ngIf="RequestedBy"> Requested By:
+                                            {{RequestedBy}} </span> <span *ngIf="RequestedOn">| {{RequestedOn |
+                                            date:'dd-MMM-yyyy hh:mm a'}}</span></strong>
+                                    <!-- <p><strong>Remarks:</strong><br> {{AddendumRemarks||'No remkars recorded'}}</p> -->
+                                    <span class="pull-right text-primary">Source: {{RequestedSource||'No source
+                                        selected'}} <span
+                                            *ngIf="AddendumReviewSourceID==2 && RefByDoctorName">({{RefByDoctorName}})</span></span>
+                                    <p style="word-wrap: break-word;"><strong>Query/Objection/Reason:</strong><br>
+                                        {{QueryObjection ||'No query/objection recorded'}}</p>
+                                </div>
+                            </div>
+                            <!-- <div class="col-12">
+                                    <hr>
+                                </div> -->
+                            <!-- <div class="col-12">
+                                    <div class="addendum-info mb-2">
+                                        <strong class="pull-right text-danger">By: {{RequestedSource||'No source selected'}} <span *ngIf="AddendumReviewSourceID==2 && RefByDoctorName">({{RefByDoctorName}})</span></strong>
+                                        <p><strong>Query/Objection/Reason:</strong><br> {{QueryObjection ||'No query/objection recorded'}}</p>
+                                    </div>
+                                </div> -->
+                            <!-- <div class="col-12">
+                                    <hr>
+                                </div> -->
+                            <div class="col-12">
+                                <div class="mt-2 mb-2">
+                                    <label for="TPFullName" class="">Reviewer Remarks:</label>
+                                    <textarea name="DrQueryRemarks" rows="2" class="form-control form-control-sm"
+                                        [(ngModel)]="DrQueryRemarks"
+                                        [ngClass]="{'invalid': !DrQueryRemarks && btnReviewer, 'invalid-highlighted': !DrQueryRemarks && btnReviewer}"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2 mb-1">
+                                <button type="submit" class="btn btn-sm btn-primary pull-right"
+                                    [disabled]="disabledButtonDrRemarks" mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="'Are you sure want to save remarks?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="updateVisitTestAddendumDrQueryRemarks()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-check-circle"></i>Save <i class="spinner-border-custom"
+                                        aria-hidden="true" [hidden]="isSpinnerDrRemarks"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                                    <ng-select style="width: 100%;"
+                                        class=" mt-1 mr-1"
+                                        [items]="subSectionList"
+                                        bindLabel="SubSectionTitle" 
+                                        placeholder="-Select Section-"
+                                        bindValue="SubSectionId"
+                                        formControlName="SubSectionID"
+                                        [multiple]="false"
+                                        [closeOnSelect]="true"
+                                        >
+
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                                    <ng-select style="width: 100%;"
+                                        class=" mt-1 mr-1"
+                                        [items]="subSectionList"
+                                        bindLabel="SubSectionTitle" 
+                                        placeholder="-Select Section-"
+                                        bindValue="SubSectionId"
+                                        formControlName="SubSectionID"
+                                        [multiple]="false"
+                                        [closeOnSelect]="true"
+                                        >
+
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div> -->
+                        <!-- </form> -->
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <!--end:: Addendum / Review Section-->
+
+        <!--end:: Action buttons area-->
+        <!--end:: Main working area---->
+
+
+        <!--start:: Visit Documents and Visit Remarks area-->
+        <!-- <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                        [moduleName]="MOForm"></app-visit-remarks>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="row">
+                    <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="visit-docs-area mt-8">
+                            <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                                [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"
+                                [isLoadByDefault]="false"></app-visit-docs>
+                        </div>
+                    </div>
+                    <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="visit-remarks-area  mt-8">
+                            <app-pacs [PIN]="VisitId"></app-pacs>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                        [moduleName]="'Reporting Window'"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+
+        <!--end:: Visit Documents and Visit Remarks area-->
+    </div>
+</div>
+
+
+<!------begin:: Report Feadback Popup------------------------------------>
+<ng-template #reportFeedback let-reportFeedback let-c="close" let-d="dismiss">
+    <div class="modal-header" style="display: block !important; padding: 5px 10px 0px 24px !important;">
+        <div class="row mt-2">
+            <div class="col-12">
+                <h4>Report Review and Finalization</h4>
+                <button type="button" class="close cursor-pointer" aria-label="Close" (click)="reportFeedback.close()"
+                    style="margin-top: -22px; margin-bottom: 6px;">
+                    <span class="cursor-pointer text-danger font-weight-bolder" aria-hidden="true"
+                        style="display: inline-block; margin-right: -6px; font-size: 23px;">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" style="padding: 1.75rem 1.75rem 0px; margin-top: -18px;">
+        <div class="row"> <!--*ngIf="isDSFinal"-->
+            <div class="col-12">
+                <div class="finalization-popup-notes">
+                    <span>
+                        <strong>Please review all images, prior studies, and relevant clinical information carefully.</strong><br>
+                        If all findings are satisfactory, you may proceed to finalize the report.
+                        If any issues are identified, please document your observations by selecting the appropriate options below and providing details in the remarks section.
+                    </span>
+                </div>
+            </div>
+            <div class="col-12">
+                <ul style="padding-left: 0px !important;">
+                    <li *ngFor="let item of feedbackQuestions; let i = index"
+                        style="list-style-type: none; padding-bottom: 2px;">
+                        <mat-checkbox class="example-margin ml-2" [(ngModel)]="item.checked"> </mat-checkbox>
+                        <strong> &nbsp;{{ item.Description }}</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="otherInstructions" class="control-label">Additional comments / deficiencies / feedback:</label>
+                    <textarea cols="" rows="" class="form-control form-control-sm" [(ngModel)]="feedbackRemarks"
+                        name="feedbackRemarks" (blur)="feedbackRemarksTouched = true"
+                        [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit && isRepeat, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit && isRepeat}"></textarea>
+                </div>
+            </div>
+        </div>
+        <!--
+        <mat-checkbox class="example-margin ml-2" [(ngModel)]="isDSFinal">Finalize the report? Check this box to make it non-editable.</mat-checkbox>
+        <div class="row" *ngIf="!isDSFinal" style="border-top: 1px solid #bfbfbf;padding-top: 9px;">
+            <div class="col-md-2">
+                <img src="./assets/images/brand/info-icon3.png" alt="Draft Finalized Report Icon" style="height: 50px; width: 56px;margin-bottom: 10px;">
+            </div>
+            <div class="col-md-10" style="padding-left: 0px;">
+                <span>You are saving this report as a draft. It will remain editable until you check the box to finalize it.</span>
+            </div>
+        </div>
+        -->
+    </div>
+    <div class="modal-footer-custom">
+         <button type="button" class="btn btn-sm btn-outline-danger pull-right mr-2" data-dismiss="modal"
+            (click)="closeReportFeedback()">
+            <i class="fa fa-times-circle"></i>Cancel</button>
+        <button *ngIf="isDSFinal" type="button" class="btn btn-sm btn-warning ml-4"
+            [disabled]="disabledButtonRepeatPopup" (click)="repeatReport()">
+            <i class="fa fa-retweet"></i>Repeat <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerRepeatPopup"></i></button>
+        
+            <!--*ngIf="isDSFinal"-->
+            <button type="button" class="btn btn-sm btn-primary pull-right mr-3"
+                [disabled]="disabledButtonFinalizePopup"
+                ngbTooltip="Finalizes the report permanently. No further edits allowed."
+                mwlConfirmationPopover
+                [popoverTitle]="'Please Confirm Finalization'"
+                [popoverMessage]="'Are you <strong>sure</strong> you want to finalize this report?'"
+                [confirmText]="confirmationPopoverConfig.confirmText"
+                [cancelText]="confirmationPopoverConfig.cancelText"
+                [placement]="confirmationPopoverConfig.placements[0]"
+                (confirm)="finalizeReport()"
+                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary"
+                cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                [appendToBody]="true">
+                <i class="fa fa-check-circle"></i>Finalize <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerFinalizePopup"></i>
+            </button>
+
+        <!--*ngIf="!isDSFinal" -->
+        <button type="button" class="btn btn-sm btn-primary pull-right mr-3"
+        ngbTooltip="Save as draft. You can review and edit later before finalizing."
+            [disabled]="disabledButtonDraftFinalizePopup" (click)="selectFeedback(false,true)">
+            <i class="fa fa-edit"></i>Finalize Draft <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerDraftFinalizePopup"></i>
+        </button>
+    </div>
+</ng-template>
+<!------end:: Report Feadback Popup-------------------------------------->
+
+<!------begin:: User Verification Popup---------------------------------->
+<ng-template #userVerificationModal let-userVerificationModal let-c="close" let-d="dismiss">
+    <form class="pt-4" [formGroup]="userVerificationForm">
+        <div class="modal-body">
+            <!-- <div class="container"> -->
+            <div class="row login-header">
+                <div class="col-12 text-center pt-1">
+                    <h4>Enter Your Credentials</h4>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="uname">Username</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fa fa-user text-primary"></span>
+                        </span>
+                    </div>
+                    <input type="text" placeholder="Enter username" formControlName="techUsername"
+                        [ngClass]="{'invalid': userVerificationForm.get('techUsername').errors && userVerificationForm.get('techUsername').touched, 'invalid-highlighted': userVerificationForm.get('techUsername').errors}"
+                        class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="psw">Password</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-lock text-primary"></i>
+                        </span>
+                    </div>
+                    <input type="password" placeholder="Enter Password" formControlName="techPassword"
+                        [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                        class="form-control">
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal"
+                (click)="userVerificationModal.close()">
+                <i class="fa fa-times-circle"></i>Cancel</button>
+            <button type="submit" class="btn btn-sm btn-outline-primary" (click)="verifyUser()"
+                [disabled]="disabledButtonVerify">
+                <i class="fa fa-check-circle"></i>Verify <i class="spinner-border-custom" aria-hidden="true"
+                    [hidden]="isSpinnerVerify"></i></button>
+        </div>
+    </form>
+</ng-template>
+<!------end:: User Verification Popup------------------------------------>
+
+<!------begin::Addendum Modal popup-------------------------------------->
+<ng-template #addendumnModal let-addendumnModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24" (click)="addendumnModal.close()"
+                        class="close-btn mb-1 cursor-pointer">
+                        <path
+                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                        </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientID"
+                    [VisitId]="VisitId"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <div class="row">
+            <div class="col-12">
+                <div class="addendum-info mb-2">
+                    <label style="border-bottom: 1px solid #1bc5bd;" for="TPFullName" class=""
+                        [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}"><strong
+                            class="text-primary">{{TPCode}}-{{TPName}}</strong></label>
+                    <strong class="pull-right text-danger">Requested By: {{RequestedBy}} | {{RequestedOn |
+                        date:'dd-MMM-yyyy hh:mm a'}}</strong>
+                    <p><strong>Remarks:</strong><br> {{AddendumRemarks}}</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+
+                <div class="ckeditor-addendum">
+                    <label for="AddendumHTML">Addendum: </label>
+                    <ckeditor [config]="config" debounce="500" [(ngModel)]="AddendumHTML"
+                        [ngModelOptions]="{standalone: true}">
+                    </ckeditor>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer py-2">
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal"
+            (click)="addendumnModal.close()">
+            <i class="fa fa-times-circle"></i>Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary" (click)="insertUpdateVisitTestAddendum()"
+            [disabled]="disabledButtonAddendum">
+            <i class="fa fa-check-circle"></i>Save <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerAddendum"></i></button>
+    </div>
+</ng-template>
+<!------end::Addendum Modal popup---------------------------------------->
+<!------Start::Feedback Modal popup-------------------------------------->
+<ng-template #postFeedback let-postFeedback let-c="close" let-d="dismiss">
+    <div class="modal-header" style="padding: 6px 10px 7px 12px !important;">
+        <h4 class="modal-title" id="modal-basic-title">Feedback / Quality Review</h4>
+        <button type="button" class="close" aria-label="Close" (click)="postFeedback.close()">
+            <span aria-hidden="true" style="display: block !important; color: #000;">&times;</span>
+        </button>
+    </div>
+    <div class="row">
+        <div class="col-12" style="padding: 9px 25px;">
+            <table class="table table-hover compact table-bordered cursor-pointer"
+                style="width: 100%;" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr *ngFor="let data of feedbackQuestions; let i = index">
+                        <td >
+                            <mat-checkbox
+                            class="cursor-pointer"
+                            [(ngModel)]="data.checked"
+                            [ngModelOptions]="{ standalone: true }">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <strong> &nbsp;{{ data.Description }}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>      
+    </div>
+    <div class="col-12">
+            <div class="form-group">
+                <label for="otherInstructions" class="control-label">Additional comments / deficiencies / feedback:</label>
+                <textarea cols="" rows="" class="form-control form-control-sm" [(ngModel)]="feedbackRemarks"
+                    name="feedbackRemarks" (blur)="feedbackRemarksTouched = true"
+                    [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit}"></textarea>
+            </div>
+    </div>
+    <div class="modal-footer-custom">
+        <button type="button" class="btn btn-sm btn-primary pull-right mr-3"
+            [disabled]="disabledButtonFinalizePopup" (click)="savePostFeedabck()">
+            <i class="fa fa-check-circle"></i>Save<i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerFinalizePopup"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger pull-right mr-2" data-dismiss="modal"
+            (click)="postFeedback.close()">
+            <i class="fa fa-times-circle"></i>Cancel</button>
+    </div>
+</ng-template>

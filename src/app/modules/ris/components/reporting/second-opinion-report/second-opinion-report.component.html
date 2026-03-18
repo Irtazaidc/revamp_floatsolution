@@ -1,0 +1,296 @@
+<div class="card card-custom">
+    <div class="card-header" style="
+    margin-top: -18px;
+    margin-bottom: -13px;
+    min-height: 57px;
+">  
+        <div class="card-title" style="margin-bottom: -10px;">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label mt-1">
+                RIS Search
+            </h3>
+        </div>
+        <!-- <div class="card-toolbar" style="margin-top: 21px;">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
+                    ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button>
+            </div>
+        </div> -->
+    </div>
+    <div class="card-toolbar"></div>
+    <div class="card-body">
+        <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label for="RadiologistID" class="control-label">Date  From:</label>
+                    <input  (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" name="dateFrom"
+                        name="dateFrom" formControlName="dateFrom" class="form-control" type="text" value=""
+                        [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                        />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label for="RadiologistID" class="control-label">Date To:</label>
+                    <input  #dateTo="ngbDatepicker" (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" name="dateTo" formControlName="dateTo"
+                        class="form-control " type="text" value=""
+                        [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                        />
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label for="VisitID">PIN</label>
+                    <input class="form-control" placeholder="Search By PIN" name="VisitID" formControlName="VisitID" (blur)="clearAllOtherFields($event.target.value)"/> <!--(blur)="searchByVisit()"-->
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label for="subSectionIDs" class="control-label">Modality</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList" 
+                        bindLabel="SubSectionTitle"
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        formControlName="subSectionIDs" 
+                        (change)="clearSearchedvalue()"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllSections()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label>Location</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="branchList" 
+                        bindLabel="Title"
+                        placeholder="-Select Branch-" 
+                        bindValue="LocId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        #branch formControlName="branchIDs"
+                        [ngClass]="{'invalid invalid-highlighted': (validateBranch)}"
+                        (change)="checkBranch($event)"
+                        >
+
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.Title}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllBranches()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label>Assessment Category</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="assesmentCategories" 
+                        bindLabel="CategoryName"
+                        placeholder="-Select Category-" 
+                        bindValue="RISAssesmentCategoryID" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        formControlName="RISAssesmentCategoryIDs"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.CategoryName}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label>Radiologist</label>
+                    <ng-select style="width: 100%;"  
+                        class="mr-1"
+                        [items]="radoiologistList"
+                        bindLabel="FullName" 
+                        placeholder="--Select Doctor--"
+                        bindValue="EmpId"
+                        formControlName="RadiologistID"
+                        >
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2">
+                    <label>Report Type</label>
+                    <div class="form-group">
+                        <select class="form-control" placeholder="Select ReportType"
+                         [(ngModel)]="ReportTypeID" 
+                         [ngModelOptions]="{standalone: true}" 
+                        [ngClass]="{ 'invalid': !ReportTypeID,'invalid-highlighted': !ReportTypeID }">
+                            <!-- <option  [ngValue]="-1">Select All</option> -->
+                            <option  [ngValue]="1">Addendum</option>
+                            <option  [ngValue]="2">Second Opinion</option>              
+                        </select>
+                    </div> 
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2 mb-2 mt-12">
+                    <mat-checkbox class="example-margin ml-2" [ngModelOptions]="{standalone: true}"[(ngModel)]="isReviewerName"  > <span>Reviewer Name?</span> </mat-checkbox>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-8">
+                    <!-- <button style="height: 32px;"  [disabled]="disabledButtonSearch" type="button" (click)="getSecondOpinionSumaryReport();" class="btn btn-primary"><span><i class="fa fa-search" style="padding-bottom: 2px;"></i> <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerSearch" ></i></span></button> -->
+                    <button style="height: 35px;" [disabled]="disabledButtonSearch" type="button" (click)="getSecondOpinionSumaryReport();" class="btn btn-primary"><span><i class="fa fa-search"></i> Search<i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerSearch" ></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card card-custom mt-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <ng-container *ngIf="testList.length; else noRequestData">
+                    <div class="row">
+                        <div class="col-8">
+                            <span *ngIf="testList.length" class="text-warning pull-right mt-2"><strong> <span class="text-warning">Total Reports: {{testList.length}} </span> </strong></span>
+                        </div>
+                        <div class="col-4">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" >VisitNo</th>
+                                            <th scope="col" >Patient Name</th>
+                                            <th scope="col" >Study</th>
+                                            <th scope="col" >Reported By</th>
+                                            <th scope="col" >Reviewed By</th>
+                                            <th scope="col" >Branch Code</th>
+                                            <th scope="col" >Delivery Date</th>
+                                            <th scope="col" >Actions</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of testList | filterByKey:searchText:['VisitNo','TPCode','TPName','PatientName','BranchCode']; let i = index" class="cursor-pointer"
+                                        [ngClass]="{'active': i==rowIndex}" (dblclick)="printSecondOpinionReport(row,i)">
+                                            <td>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                    <i 
+                                                    [ngClass]="returnCopyClasses(i)"
+                                                    class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyText(row,i)">&nbsp;</i>
+                                            </span> {{ row.VisitNo }}</td>
+                                            <td>{{ row.PatientName }}</td>
+                                            <td>{{ row.TPCode }}-{{ row.TPName }}</td>
+                                            <td>{{ row.FinalBy }}</td>
+                                            <td>{{ row.AddendumBy }}</td>
+                                            <td>{{ row.BranchCode }}</td>
+                                            <td>{{ row.DeliveryDate | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</td>
+                                            <td>
+                                                <span class="cursor-pointer"><i  ngbTooltip="Print Report" class="fa fa-print"  [ngClass]="(i == rowIndex) ? 'text-white' : 'text-primary'" (click)="printSecondOpinionReport(row,i)"></i></span>
+                                                <!-- <div class="btn-group">
+                                                    <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                                        aria-label="Button group with nested dropdown">
+                                                        <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                            <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                            <button class="dropdown-item">
+                                                                <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                                    Vitals </span>
+                                                            </button>
+                                                            <button class="dropdown-item">
+                                                                <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                                    EMR </span>
+                                                            </button>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <hr>
+                            <button [disabled]="disabledButtonPrintSummary"  type="button" class="btn btn-sm btn-primary pull-right"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are you sure want to print?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="printSecondOpinionSummaryReport()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                                >
+                                <i class="fa fa-print"></i>Print <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerPrintSummary" ></i>
+                            </button>
+                            <button [disabled]="disabledButtonExportSummary"  type="button" class="btn btn-sm btn-primary pull-right mr-2"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are you sure want to export to excel?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="exportToExcel()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                                >
+                                <i class="fas fa-file-excel"></i>Export <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerExportSummary" ></i>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #noRequestData>
+                    <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

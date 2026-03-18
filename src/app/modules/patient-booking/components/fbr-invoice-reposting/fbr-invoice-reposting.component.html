@@ -1,0 +1,449 @@
+<div class="card card-custom">
+  <div class="card-header">
+    <div class="card-title">
+      <span class="card-icon"> </span>
+      <h3 class="card-label">
+        FBR Reposting
+      </h3>
+    </div>
+    <div class="card-toolbar"></div>
+  </div>
+  <div
+    class="card-body"
+    style="padding-left: 0; background-color: #f3f6f9; padding-right: 0"
+  >
+
+    <div class="col-12 d-none">
+      <div class="text-center">
+        <div class="text-danger" style="font-weight: bold; font-size: 1.5rem">
+          <div *ngIf="MACAndPOSAlert.POSID" class="text-primary">
+            (POSID: {{ MACAndPOSAlert.POSID || "" }})
+            <i
+              class="flaticon2-reload cursor-pointer"
+              (click)="getMACAddress(loggedInUser)"
+            ></i>
+          </div>
+          <div *ngIf="MACAndPOSAlert.MAC" class="text-danger">
+            {{ MACAndPOSAlert.MAC || "" }}
+            <i
+              class="flaticon2-reload cursor-pointer"
+              (click)="getMACAddress(loggedInUser)"
+            ></i>
+          </div>
+          <div *ngIf="MACAndPOSAlert.POS" class="text-danger">
+            {{ MACAndPOSAlert.POS || "" }}
+            <i class="flaticon2-reload cursor-pointer" (click)="getPOSID()"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <app-card
+          [title]="'Search Visits'"
+          [cardClass]="'tim-card tim-card tim-card-primary'"
+        >
+          <div class="">
+            <div class="row">
+              <div class="col">
+                <div class="search-filters-area p-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <form class="" [formGroup]="fbrRepostingForm">
+                        <div class="form-inline">
+                          <input
+                            (click)="dateFrom.toggle()"
+                            #dateFrom="ngbDatepicker"
+                            placeholder="dd-mm-yyyy"
+                            ngbDatepicker
+                            #dateFrom
+                            value="1980-08-26"
+                            formControlName="dateFrom"
+                            name="dateFrom"
+                            autocomplete="off"
+                            class="form-control mt-1 mr-1"
+                            type="text"
+                            value=""
+                            style="max-width: 100%"
+                          />
+                          <input
+                            (click)="dateTo.toggle()"
+                            value="1980-08-26"
+                            placeholder="dd-mm-yyyy"
+                            #dateTo="ngbDatepicker"
+                            #dateTo
+                            ngbDatepicker
+                            formControlName="dateTo"
+                            class="form-control mt-1 mr-1"
+                            name="dateTo"
+                            autocomplete="off"
+                            type="text"
+                            value=""
+                            style="max-width: 100%"
+                          />
+
+                          <button
+                            (click)="getUnpostedInvoices()"
+                            class="btn btn-sm btn-outline-primary mt-1"
+                            title="Fetch Record(s)"
+                            value=""
+                          >
+                            <i class="ti-search m-0"></i> Search
+                          </button>
+                        </div>
+
+                        <div class="">
+                          <hr class="mt-0" />
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="type to filter"
+                            #filterPIN
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12">
+                      <div
+                        style="
+                          border-top: 1px solid #eee;
+                          max-height: 350px;
+                          overflow-y: auto;
+                        "
+                        class="mt-2 pl-2"
+                      >
+                        <label
+                          ><small class="text-danger"
+                            >Total Records99999:
+                            <strong>{{
+                              unPostedInvoiceList.length
+                            }}</strong></small
+                          ></label
+                        >
+                        <ul class="visits-list">
+                          <li
+                            class="cursor-pointer"
+                            [ngClass]="{
+                              'bg-light':
+                                selectedVisit?.VisitID == visit.VisitID
+                            }"
+                            *ngFor="
+                              let visit of unPostedInvoiceList
+                                | filterByKey : filterPIN.value : ['VisitID'];
+                              let i = index
+                            "
+                            style="border-bottom: 1px solid #eee"
+                            (click)="getUnPotsedFBRVisitDetails(visit.VisitID)"
+                          >
+                            <a
+                              href="javascript:void(0)"
+                              [ngClass]="{
+                                'font-weight-bolder':
+                                  selectedVisit?.VisitID == visit.VisitID
+                              }"
+                              >{{ visit.VisitID }}</a
+                            >
+                          </li>
+                        </ul>
+                        <ngx-spinner
+                          class="spinner-info"
+                          bdColor="rgba(0,0,0,0.8)"
+                          [name]="spinnerRefs.pinsList"
+                          size="medium"
+                          color="#fff"
+                          type="square-loader"
+                          [fullScreen]="false"
+                        >
+                          <p style="color: white">Loading data...</p>
+                        </ngx-spinner>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </app-card>
+      </div>
+      <div class="col-sm-8">
+        <app-card
+          [title]="'Visit Details (' + (selectedVisit?.VisitID || '') + ')'"
+          [cardClass]="'tim-card tim-card tim-card-primary'"
+        >
+          <div>
+            <ng-container
+              *ngIf="
+                unPostedInvoiceList && unPostedInvoiceList.length;
+                then unpostedInvoicesContainer;
+                else noRecorFoundContainer
+              "
+            ></ng-container>
+            <ng-template #unpostedInvoicesContainer>
+              <div class="row">
+                <div class="col">
+                  <div>
+                    <div
+                      class="header"
+                      *ngIf="selectedVisit && selectedVisit.VisitID"
+                    >
+                      <div
+                        class="patient0-info-bar-container"
+                        style="position: relative"
+                      >
+                        <app-patient-basic-info
+                          class="mb-3"
+                          [VisitId]="selectedVisit?.VisitID"
+                        ></app-patient-basic-info>
+
+                        <ngx-spinner
+                          class="spinner-primary"
+                          bdColor="rgba(0,0,0,0.8)"
+                          [name]="spinnerRefs.patientInfoBar"
+                          size="medium"
+                          color="#fff"
+                          type="square-loader"
+                          [fullScreen]="false"
+                        >
+                          <p style="color: white">Loading...</p>
+                        </ngx-spinner>
+                      </div>
+                    </div>
+
+                    <div class="body" style="position: relative">
+                      <fieldset class="fieldset-primary fieldset-border-top">
+                        <div class="">
+                          <ng-container
+                            *ngIf="
+                              this.unPostedVisitDetails &&
+                              this.unPostedVisitDetails.Table2 &&
+                              this.unPostedVisitDetails.Table2.length
+                            "
+                          >
+                            <div
+                              class="loop"
+                              *ngFor="let v of this.unPostedVisitDetails.Table2"
+                            >
+
+                              <fieldset
+                                class="fieldset-primary fieldset-border-top"
+                              >
+                                <legend>
+                                  Details
+                                  <span *ngIf="selectedVisit?.VisitID"
+                                    >of (FBR Transaction
+                                    <strong class="text-primary">{{
+                                      v.FBRTransID
+                                    }}</strong
+                                    >)
+                                    <i
+                                      class="ml-2 fa fa-info-circle"
+                                      [title]="v.ResponseJSON | json"
+                                    ></i
+                                  ></span>
+                                </legend>
+
+                                <div class="table-responsive">
+                                  <table
+                                    class="table table-hover compact table-bordered"
+                                    style="background-color: #f3f6f9"
+                                  >
+                                    <thead>
+                                      <tr>
+                                        <th>Date Time</th>
+                                        <th>Inv.Type</th>
+                                        <th>Pay. Mode</th>
+                                        <th>Quantity</th>
+                                        <th>Sale Value</th>
+                                        <th>Tax</th>
+                                        <th>Discount</th>
+                                        <th>Bill Amount</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <ng-container>
+                                        <tr>
+                                          <td>
+                                            {{
+                                              v.RequestJSON.DateTime
+                                                | date : "dd-MMM-YYYY HH:mm:ss"
+                                            }}
+                                          </td>
+                                          <td>
+                                            {{
+                                              getInvoiceTypeText(
+                                                v.RequestJSON.InvoiceType
+                                              )
+                                            }}
+                                            ({{ v.RequestJSON.InvoiceType }})
+                                          </td>
+                                          <td>
+                                            {{
+                                              getPaymentModeText(
+                                                v.RequestJSON.PaymentMode
+                                              )
+                                            }}
+                                            ({{ v.RequestJSON.PaymentMode }})
+                                          </td>
+                                          <td>
+                                            {{ v.RequestJSON.TotalQuantity }}
+                                          </td>
+                                          <td>
+                                            {{ v.RequestJSON.TotalSaleValue }}
+                                          </td>
+                                          <td>
+                                            {{ v.RequestJSON.TotalTaxCharged }}
+                                          </td>
+                                          <td>{{ v.RequestJSON.Discount }}</td>
+                                          <td>
+                                            {{ v.RequestJSON.TotalBillAmount }}
+                                          </td>
+                                        </tr>
+
+                                        <tr *ngIf="v.RequestJSON.Items">
+                                          <td colspan="345">
+                                            <table
+                                              class="table table-hover compact table-bordered"
+                                            >
+                                              <thead>
+                                                <tr>
+                                                  <th>ItemName</th>
+                                                  <th>Inv.Type</th>
+                                                  <th>TaxRate</th>
+                                                  <th>SaleValue</th>
+                                                  <th>Discount</th>
+                                                  <th>TaxCharged</th>
+                                                  <th>TotalAmount</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr
+                                                  *ngFor="
+                                                    let t of v.RequestJSON.Items
+                                                  "
+                                                >
+                                                  <td>{{ t.ItemName }}</td>
+                                                  <td>
+                                                    {{
+                                                      getInvoiceTypeText(
+                                                        t.InvoiceType
+                                                      )
+                                                    }}
+                                                    ({{ t.InvoiceType }})
+                                                  </td>
+                                                  <td>{{ t.TaxRate }}</td>
+                                                  <td>{{ t.SaleValue }}</td>
+                                                  <td>{{ t.Discount }}</td>
+                                                  <td>{{ t.TaxCharged }}</td>
+                                                  <td>{{ t.TotalAmount }}</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </ng-container>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div class="pull-right">
+                                  <button
+                                    class="btn btn-primary btn-sm waves-effect text-center"
+                                    ngbTooltip="Repost"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Repost'"
+                                    [popoverMessage]="'Are you sure?'"
+                                    [confirmText]="
+                                      confirmationPopoverConfig.confirmText
+                                    "
+                                    [cancelText]="
+                                      confirmationPopoverConfig.cancelText
+                                    "
+                                    [placement]="
+                                      confirmationPopoverConfig.placements[0]
+                                    "
+                                    (cancel)="
+                                      confirmationPopoverConfig.confirmPopoverCancel()
+                                    "
+                                    (confirm)="repostFBRInvoice2(v.FBRTransID)"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="
+                                      confirmationPopoverConfig.confirmClicked = false;
+                                      confirmationPopoverConfig.cancelClicked = false
+                                    "
+                                    [appendToBody]="true"
+                                  >
+                                    <i class="fa-solid fa-right-left"></i>
+                                    <i
+                                      class="spinner-border-custom"
+                                      aria-hidden="true"
+                                      [hidden]="isSpinner"
+                                    ></i>
+                                    Repost
+                                  </button>
+                                </div>
+                              </fieldset>
+                            </div>
+                          </ng-container>
+                        </div>
+                        <!-- </div> -->
+                      </fieldset>
+
+                      <div *ngIf="selectedVisit && selectedVisit?.VisitID">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <app-visit-remarks
+                              [propVisitNo]="selectedVisit?.VisitID"
+                              [editing]="{ save: false }"
+                            ></app-visit-remarks>
+                          </div>
+                        </div>
+                      </div>
+
+                      <ngx-spinner
+                        class="spinner-primary"
+                        bdColor="rgba(0,0,0,0.8)"
+                        [name]="spinnerRefs.visitSamples"
+                        size="medium"
+                        color="#fff"
+                        type="square-loader"
+                        [fullScreen]="false"
+                      >
+                        <p style="color: white">Loading...</p>
+                      </ngx-spinner>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #noRecorFoundContainer>
+              <ngb-alert
+                style="text-align: center"
+                [dismissible]="false"
+                [type]="'info'"
+              >
+                <strong>No Detail Found </strong>
+              </ngb-alert>
+            </ng-template>
+          </div>
+        </app-card>
+      </div>
+    </div>
+
+    <!-- </ng-template> -->
+  </div>
+
+  <ngx-spinner
+    class="spinner-warning"
+    bdColor="rgba(0,0,0,0.8)"
+    size="medium"
+    color="#fff"
+    type="square-loader"
+    [fullScreen]="false"
+  >
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
+</div>

@@ -1,0 +1,201 @@
+::ng-deep .modal-content{
+    background-color: white;
+    border: 2px solid #1bc5bd;
+
+}
+hr.dash-primary {
+    border-top: 1px dashed #1bc5bd;
+}
+.border-bottom-dash-primary{
+    border-bottom: 1px dashed #1bc5bd;
+}
+.border-bottom-dash-gray{
+    border-bottom: 1px dashed #b5b9c7;
+}
+  
+
+.invalid {
+    border-left: 2px solid #ff0000;
+}
+.tests-box{
+    margin-top: -20px;
+    margin-bottom: 10px;
+    border: 1px solid #1bc5bd;
+    border-radius: 5px;
+    padding: 0px 7px 0px;
+    background-image: linear-gradient(90deg, #ffffff, #1bc5bd);
+}
+.tests-box-dropdown{
+    margin-top: -20px;
+    margin-bottom: 10px;
+    border: 1px solid #1bc5bd;
+    border-radius: 5px;
+    padding: 0px 0px 0px;
+    background-image: linear-gradient(90deg, #ffffff, #1bc5bd);
+}
+
+::ng-deep .popover{
+    max-width: 279px;
+}
+::ng-deep .swal2-html-container{
+    overflow: hidden;
+}
+
+.modal-footer-custom{
+    /* display: flex; */
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #EBEDF3;
+    border-bottom-right-radius: 0.42rem;
+    border-bottom-left-radius: 0.42rem;
+}
+::ng-deep .modal-md{
+    position: relative;
+    top: 30%;
+}
+// ul li::marker {
+//     color: #FFA800; /* Change the color to your desired value */
+//   }
+
+// .fa :hover {
+//     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Apply the shadow effect on hover */
+//   }
+//   .icon {
+//     font-size: 24px; /* Adjust the font size as needed */
+//     transition: text-shadow 0.3s ease-in-out; /* Add a smooth transition effect */
+//   }
+  
+  .icon:hover {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Apply the shadow effect on hover */
+  }
+
+  .icon-selected {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Apply the shadow effect on hover */
+  }
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+
+    .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #0BB7AF;
+    }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+}
+::ng-deep .tooltip-inner {
+    width: 400px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .tests-box-small{
+        margin-top: 0px !important;
+    }
+  }
+@media only screen and (min-width: 768px) {
+    .initialize-btn{
+        margin-top: -19px;
+    }
+  }
+  .login-header{
+    // background-color: #f44336;
+    background-color: #20afa7;
+    color: #fbf5f5;
+    padding: 8px;
+    margin-top: -25px;
+}
+.btn-section{
+    visibility: visible;
+    animation-name: fadeIn;
+    border: 1px dotted;
+    border-radius: 10px;
+    padding-bottom: 10px;
+    min-height: 46px;
+}
+fieldset.fieldset-reporting-disclaimer {
+    border: 1px solid #1BC5BD;
+    border-radius: 5px;
+    box-shadow: none;
+    background-color: #f0f0f0; /* Your desired grayish color */
+  
+    legend {
+      text-align: left;
+      color: #fff; /* Set the text color to white */
+      font-size: 1.1rem;
+      font-weight: 500;
+      background-color: #1BC5BD; /* Set the background color to black */
+      padding: 5px; /* Add some padding to separate legend from the border */
+      border-radius: 5px 5px 0 0; /* Rounds the top corners of the legend */
+    }
+  }
+
+  .init-notice{
+    padding: 5px 0px;
+    color: #fff;
+    border-radius: 4px;
+    background-image: linear-gradient(90deg, #186f9a, #2b7acc, #168a9c, #169e97);
+    margin-left: -5px;
+    margin-top: 6px;
+  }
+::ng-deep .ckeditor-addendum .cke_contents {
+    height: 200px !important;
+}
+
+::ng-deep .modal-header{
+    padding: 0rem 1.0rem 0rem 1.75rem !important;
+}
+
+.addendum-info {
+    visibility: visible;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    // border: 1px dotted;
+    border: 1px solid #bbbfbf;
+    border-radius: 11px;
+    padding: 8px 8px;
+}
+::ng-deep .custom-popover {
+    max-width: 800px; /* Set the desired width */
+    width: auto !important; /* Use !important to override default styles if needed */
+  }
+::ng-deep .ckeditor-addendum .cke {
+    width: 8.4in !important;
+    max-width: 8.4in !important;
+  }
+
+.ckeditor-addendum .cke {
+    width: 7.8in !important;
+    max-width: 7.8in !important;
+}
+tr td {
+    // padding-top: 1em;
+    padding-top: 2px;
+    padding-bottom: 1px;
+}
+
+::ng-deep .invalid {
+    border-left: none !important;
+}
+:host ::ng-deep ckeditor .ng-invalid.ng-touched .cke_contents,
+:host ::ng-deep ckeditor.ng-invalid.ng-touched .cke_contents {
+    border: 1px solid red;
+}
+
+.red-background {
+    background-color: red;
+  }
+
+ .finalization-popup-notes {
+    border: 1px solid #1bc5bd;
+    border-radius: 5px;
+    padding: 4px 9px;
+    margin-bottom: 9px;
+  }

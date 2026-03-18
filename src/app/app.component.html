@@ -1,0 +1,99 @@
+<router-outlet></router-outlet>
+
+
+
+<!-- <div
+    *ngIf="showTestingBadge"
+    style="position: fixed; top: 0; z-index: 111111111; margin: auto; text-align: center; width: 100%;">
+    <span style="background: red;font-size: 1.2rem;border-radius: 5px;color: #fff;padding: 0px 5px;">Testing</span>
+</div> -->
+
+<div
+    *ngIf="showTestingBadge"
+    style="
+        position: fixed;
+        top: 5px;
+        z-index: 9999;
+        margin: auto;
+        text-align: center;
+        width: 100%;
+        animation: pulse 2s infinite;
+    ">
+    <span
+        style="
+            background: linear-gradient(90deg, #ff0000, #d40000);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            color: #fff;
+            padding: 5px 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        ">
+        Testing
+    </span>
+</div>
+
+
+
+
+<!-- App Version -->
+<div class="app-version" (click)="openAppVersionUpdatePopup()" title="check for updates"><span class="mr-2">{{appVersion.version}}</span> => <span class="ml-2">{{appVersion_new.version}}</span></div>
+<ng-template #appVersionUpdatesPopup let-appVersionUpdatesPopup>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">App Updates</h4>
+      <button type="button" class="close" aria-label="Close" (click)="appVersionUpdatesPopup.dismiss('Cross click')">
+        <span aria-hidden="true"><i class="ti-close"></i></span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+
+            <div [innerHTML]="appUpdatesPopupBody"></div>
+
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-outline-dark" *ngIf="appVersion.versionId == appVersion_new.versionId" (click)="appVersionUpdatesPopup.dismiss('close button clicked')"><i class="ti-close"></i>Close</button>
+      <!-- <button type="button" class="btn btn-sm btn-outline-dark" *ngIf="appVersion.versionId < appVersion_new.versionId" (click)="appVersionUpdatesPopup.dismiss('close button clicked')"><i class="ti-close"></i>Not Now</button> -->
+      <button type="submit" class="btn btn-sm btn-outline-primary ml-1" *ngIf="appVersion.versionId < appVersion_new.versionId" (click)="updateVersion()"><i class="ti-reload"></i>Update</button>
+    </div>
+
+    <!-- <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.appVersionLoading" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+      <p style="color: white"> Loading... </p>
+    </ngx-spinner> -->
+  </ng-template>
+
+  <ng-template #inactivityWarningPopup let-inactivityWarningPopup>
+    <div class="modal-header" style="background: linear-gradient(90deg, #ff9800, #f44336); color: #fff; border-bottom: none;">
+        <h4 class="modal-title" style="font-weight: bold; display: flex; align-items: center;">
+            <i class="ti-alert text-white" style="font-size: 1.5rem; margin-right: 10px;"></i>
+            Inactivity Warning
+        </h4>
+    </div>
+    <div class="modal-body" style="background: #fff3e0; padding: 20px;">
+        <div style="text-align: center;">
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">
+                <strong>Warning:</strong> You have been inactive for <strong>{{inactivityDuration}} minutes</strong>. For security reasons, the application will automatically log you out to protect your data.
+            </p>
+            <p style="font-size: 1.2rem; color: #d32f2f; font-weight: bold;">
+              Logout in: <span style="font-size: 1.5rem;">{{ warningDuration }}</span> Second(s)
+          </p>
+            <p style="font-size: 0.9rem; color: #555; margin-top: 10px;">
+                To continue using the application, click "Stay Logged In" below. Otherwise, you will be redirected to the login page shortly.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer" style="background: #fff3e0; border-top: none; justify-content: center;">
+        <button 
+            type="button" 
+            class="btn btn-sm btn-outline-primary" 
+            style="font-weight: bold; padding: 8px 20px;"
+            (click)="resetInactivityTimer(1); inactivityWarningPopup.dismiss('Stay logged in')">
+            <i class="ti-check" style="margin-right: 5px;"></i> Stay Logged In
+        </button>
+    </div>
+</ng-template>

@@ -1,0 +1,156 @@
+<div class="card card-custom">
+    <div class="card-body">
+        <form [formGroup]="formObj" class="form-horizontal" name="form" role="form" (ngSubmit)="getVisitTestReset()">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="dateFrom"
+                        name="dateFrom" class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(0)"/>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+                    <label>Date To</label>
+                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" formControlName="dateTo" name="dateTo"
+                        class="form-control mb-4" type="text" value="" (dateSelect)="validateDateDifference(1)"/>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                    <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card card-custom mt-2">
+    <div class="card-body">
+        <div class="row">
+            <div [ngClass]="{'col-12': !resetRequests.length, 'col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6': resetRequests.length}">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <fieldset class="fieldset-primary fieldset-border-top">
+                    <legend ><i class="fas fa-clipboard-list text-primary cursor-pointer ng-star-inserted"></i> Worklist </legend>
+                    <ng-container *ngIf="resetRequests.length; else noRequestData">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                    
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th scope="col" >PIN</th>
+                                                <th scope="col" >Test(Code - Name)</th>
+                                                <th scope="col" >Req. Remarks</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of resetRequests; let i = index" class="cursor-pointer" (click)="getRowData(item,i)"
+                                            [ngClass]="{'active-rec-border-left': rowIndex==i}">
+                                                <td  >{{i+1}}</td>
+                                                <td>{{ item.PIN }}</td>
+                                                <td >{{ item.TPCode }}-{{item.TPName}}</td>
+                                                <!-- <td ><span ngbTooltip="{{item.ReqRemarks}}" [innerHTML]="truncate(item.ReqRemarks,40)"></span></td> -->
+                                                <td> <span ngbTooltip="{{item.ReqRemarks}}"> {{truncate(item.ReqRemarks,40)}}</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noRequestData>
+                        <!-- <div class="container"> -->
+                            <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found>
+                        <!-- </div> -->
+                    </ng-template>
+                </fieldset>
+        
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" *ngIf="resetRequests.length">
+                <div class="row">
+                    <div class="col-12">
+                        <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID"></app-patient-basic-info>
+                    </div>
+                </div>
+                <fieldset class="fieldset-primary fieldset-border-top">
+                    <legend ><i class="fas fa-file-signature text-primary cursor-pointer ng-star-inserted"></i> Proceed Request </legend>
+                    <div class="row remarks-container mb-2">
+                        <div class="col-12 mt-2">
+                            <div class="row">
+                                <div class="col-4"><label for="RequetRemarks"><strong> Request Remarks:</strong></label></div>
+                                <div class="col-8"><strong *ngIf="RequestedBy" class="mx-2 text-warning pull-right">Requested By: {{RequestedBy}} | {{RequestedOn | date:'dd-MMM-yyyy hh:mm a'}} </strong></div>
+                            </div>
+                            
+                            <p>{{ResetRequestRemarks}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 ">
+                            <div class="form-group">
+                                <label for="RejectRecommendRequestRemarks" class="control-label"><strong>Recommendation Remarks:</strong></label>
+                                <textarea
+                                [ngClass]="{'invalid': characterCount<15 && clickSubmitBtn, 'invalid-highlighted': characterCount<15 && clickSubmitBtn}"
+                                 class="form-control form-control-sm" name="RejectRecommendRequestRemarks" [(ngModel)]="RejectRecommendRequestRemarks" rows="4" (input)="updateCharacterCount()"></textarea>
+                                <small [ngClass]="{'over-limit': characterCount < maxCharacterCount}">{{ characterCount }}/15</small>
+                             </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                            <button [disabled]="disabledButtonRecommend"
+                                class="btn btn-sm btn-primary pull-right"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessageRecommend"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="updateVisitTestResetStatus(14)"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i 
+                                class="fa fa-check-square"
+                                ></i>Recommend <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerRecommend" ></i>
+                            </button>
+                            <button [disabled]="disabledButtonReject" style="width: 92px;"
+                                class="btn btn-sm btn-danger pull-right mr-2"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessageReject"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="updateVisitTestResetStatus(9)"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i 
+                                class="fa fa-window-close"
+                                ></i>Reject <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerReject" ></i>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row" *ngIf="resetRequests.length">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitID" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitID" [editing]="{save: true}"
+                        [moduleName]="'Tech-Worklist'"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

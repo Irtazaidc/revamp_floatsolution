@@ -1,0 +1,17 @@
+.demo-tab-group {
+    border: 1px solid #e8e8e8;
+  }
+  .demo-tab-content {
+    padding: 16px;
+  }
+  ::ng-deep .popover-top {
+    left: -80px !important;
+}
+  
+::ng-deep .popover-title{
+  color: #1BC5BD;
+}
+
+::ng-deep .mat-tab-body-content {
+  overflow: hidden !important;
+}

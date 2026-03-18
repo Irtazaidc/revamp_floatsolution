@@ -1,0 +1,459 @@
+<div class="roles-pages">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+      <div class="card custom-card shadow-sm">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Generator Activation Status</h5>
+        </div>
+        <div class="card-body">
+          <form
+            [formGroup]="generatorForm"
+            class="form-horizontal mb-4"
+            (ngSubmit)="getGeneratorOnOffLogList()"
+          >
+            <div class="row g-3">
+              <div class="col-sm-12 col-md-6">
+                <label class="form-label">Date From:</label>
+                <input
+                  (click)="dateFrom.toggle()"
+                  #dateFrom="ngbDatepicker"
+                  placeholder="dd-mm-yyyy"
+                  ngbDatepicker
+                  formControlName="dateFrom"
+                  name="dateFrom"
+                  class="form-control mb-4"
+                  type="text"
+                  [ngClass]="{
+                    invalid: generatorForm.get('dateFrom').errors,
+                    'invalid-highlighted':
+                      generatorForm.get('dateFrom').errors && isSubmitted
+                  }"
+                  [maxDate]="maxDate"
+                />
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <label class="form-label">Date To:</label>
+                <input
+                  (click)="dateTo.toggle()"
+                  placeholder="dd-mm-yyyy"
+                  #dateTo="ngbDatepicker"
+                  ngbDatepicker
+                  formControlName="dateTo"
+                  class="form-control mb-4"
+                  name="dateTo"
+                  type="text"
+                  [ngClass]="{
+                    invalid: generatorForm.get('dateTo').errors,
+                    'invalid-highlighted':
+                      generatorForm.get('dateTo').errors && isSubmitted
+                  }"
+                  [maxDate]="maxDate"
+                />
+              </div>
+              <div class="col-sm-12 col-md-6 mt-2">
+                <label class="form-label">Generator:</label>
+                <ng-select
+                  id="pat_branch"
+                  style="width: 100%"
+                  formControlName="generatorId"
+                  [items]="GeneratorList"
+                  bindLabel="GeneratorName"
+                  bindValue="GeneratorID"
+                  placeholder="--Select Generator--"
+                >
+                </ng-select>
+              </div>
+              <div class="col-sm-12 col-md-6 mt-10">
+                <button type="submit" class="btn btn-primary w-100">
+                  Search
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div
+            class="table-responsive"
+            style="max-height: 400px; overflow-y: auto"
+          >
+            <table
+              class="table table-hover table-striped mb-0"
+              style="min-height: 300px; cursor: pointer"
+            >
+              <thead class="table-primary">
+                <tr>
+                  <th>#</th>
+                  <th>Generator Name</th>
+                  <th>Created BY/ON</th>
+                  <th>Branch</th>
+                  <th>Status</th>
+                  <th>View Report</th>
+                </tr>
+              </thead>
+              <tbody
+                class="align-items-center"
+                *ngIf="generatorOnOffList.length > 0; else noRecord"
+              >
+                <tr
+                  *ngFor="let item of generatorOnOffList; let i = index"
+                  (click)="populateForm(item); populateFormData(item);"
+                >
+                  <td>{{ i + 1 }}</td>
+                  <td class="text-center">{{ item.GeneratorName }}</td>
+                  <td>{{ item.LogCreatedon }}</td>
+                  <td>{{ item.Location }}</td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="
+                        item.Status === 'On' ? 'bg-success' : 'bg-danger'
+                      "
+                    >
+                      {{ item.Status }}
+                    </span>
+                  </td>
+                  <td>
+                    <div
+                      class="btn-group"
+                      role="group"
+                      aria-label="Basic example"
+                    >
+                      <button
+                        class="btn btn-outline-success btn-mini ml-1"
+                        title="Edit"
+                        (click)="edit()"
+                      >
+                        <i class="ti-pencil m-0"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-7">
+      <mat-card>
+        <mat-card-content>
+          <mat-tab-group
+            class="demo-tab-group"
+            animationDuration="0ms"
+            style="background-color: #fff"
+          >
+            <!-- Generator insertion -->
+            <mat-tab label="Insert Generator">
+              <ng-template mat-tab-label>
+                <i
+                  class="fas fa-file-signature icon-lg text-danger custom-icons mr-2"
+                ></i>
+                Activation Log
+              </ng-template>
+              <app-card
+                title="Configure Generator"
+                [cardClass]="'tim-card tim-card tim-card-primary'"
+                *matTabContent
+              >
+                <button
+                  type="button"
+                  class="btn btn-sm btn-success pull-right"
+                  (click)="onNewGeneratorClick()"
+                >
+                  <i class="fa fa-plus"></i> New
+                </button>
+                <div class="class card-body">
+                  <form [formGroup]="generatorConfigForm">
+                    <div class="row">
+                      <!-- Generator -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 mt-4"
+                      >
+                        <div
+                          class="form-group"
+                          [ngClass]="{
+                            'has-error':
+                              generatorConfigForm.get('generatorId')?.invalid &&
+                              generatorConfigForm.get('generatorId')?.touched
+                          }"
+                        >
+                          <label for="Generator" class="control-label">
+                            Generator*:
+                          </label>
+                          <ng-select
+                            id="pat_branch"
+                            style="width: 100%"
+                            formControlName="generatorId"
+                            [items]="GeneratorList"
+                            bindLabel="GeneratorName"
+                            bindValue="GeneratorID"
+                            placeholder="--Select Generator--"
+                            [ngClass]="{
+                              invalid:
+                                generatorConfigForm.get('generatorId').errors,
+                              'invalid-highlighted':
+                                generatorConfigForm.get('generatorId').errors &&
+                                isSubmitted
+                            }"
+                          >
+                          </ng-select>
+                        </div>
+                      </div>
+                      <!-- Start Time -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-7 mt-2"
+                      >
+                        <div
+                          class="form-group"
+                          [ngClass]="{
+                            'has-error':
+                              generatorConfigForm.get('StartDate')?.invalid &&
+                              generatorConfigForm.get('StartDate')?.touched
+                          }"
+                        >
+                          <label>Start Date&Time*:</label>
+                          <div
+                            class="effective-date-time mt-1 d-flex align-items-center"
+                          >
+                            <input
+                              formControlName="StartDate"
+                              class="form-control date-picker mt-1 mr-2"
+                              placeholder="--Select Date--"
+                              autocomplete="off"
+                              ngbDatepicker
+                              #dateStart="ngbDatepicker"
+                              (click)="dateStart.toggle()"
+                              (ngModelChange)="calculateDuration()"
+                              type="text"
+                              [ngClass]="{
+                                invalid:
+                                  generatorConfigForm.get('StartDate').errors,
+                                'invalid-highlighted':
+                                  generatorConfigForm.get('StartDate').errors &&
+                                  isSubmitted
+                              }"
+                            />
+                            <ngb-timepicker
+                              #timeStartPicker
+                              formControlName="StartTime"
+                              [spinners]="false"
+                              class="mini-input-field time-picker"
+                              (ngModelChange)="calculateDuration()"
+                              [ngClass]="{
+                                invalid:
+                                  generatorConfigForm.get('StartTime').errors,
+                                'invalid-highlighted':
+                                  generatorConfigForm.get('StartTime').errors &&
+                                  isSubmitted
+                              }"
+                            ></ngb-timepicker>
+                            <div
+                              *ngIf="
+                                generatorConfigForm
+                                  .get('StartTime')
+                                  .hasError('invalidTime') && isSubmitted
+                              "
+                              class="error-message"
+                            >
+                              Time must be between 00:00 and 23:59.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Duration -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 mt-4"
+                      >
+                        <div class="form-group">
+                          <label for="Duration" class="control-label"
+                            >Duration:</label
+                          >
+                          <input
+                            formControlName="Duration"
+                            type="text"
+                            class="form-control form-control-sm"
+                            readonly
+                          />
+                        </div>
+                      </div>
+
+                      <!-- End Time -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-7 mt-2"
+                      >
+                        <div
+                          class="form-group"
+                          [ngClass]="{
+                            'has-error':
+                              generatorConfigForm.get('EndDate')?.invalid &&
+                              generatorConfigForm.get('EndDate')?.touched
+                          }"
+                        >
+                          <label>End Date&Time:</label>
+                          <div class="effective-date-time mt-1">
+                            <input
+                              formControlName="EndDate"
+                              class="mt-1"
+                              width="50%"
+                              (click)="dateEnd.toggle()"
+                              #dateEnd="ngbDatepicker"
+                              placeholder="--Select Date--"
+                              autocomplete="off"
+                              ngbDatepicker
+                              class="form-control date-picker"
+                              (ngModelChange)="calculateDuration()"
+                              type="text"
+                            />
+                            <ngb-timepicker
+                              #timeEndPicker
+                              class="mini-input-field time-picker ml-1"
+                              formControlName="EndTime"
+                              [spinners]="false"
+                              (ngModelChange)="calculateDuration()"
+                            ></ngb-timepicker>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Remarks -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 mt-4"
+                      >
+                        <div class="form-group">
+                          <label for="Remarks" class="control-label">
+                            Remarks:
+                          </label>
+                          <input
+                            formControlName="Remarks"
+                            type="text"
+                            class="form-control form-control-sm"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- ON/OFF status -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 mt-4"
+                      ></div>
+
+                      <!-- Attachment -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-4"
+                      >
+                        <div class="form-group">
+                          <label for="Attachments" class="control-label">
+                            Attachment:
+                          </label>
+                          <br />
+                          <!-- File input with formControlName -->
+                          <input
+                            type="file"
+                            class="form-control-file mt-1"
+                            id="attachments"
+                            formControlName="Attachments"
+                            (change)="onFileSelected($event)"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 mt-3">
+                        <button
+                          type="reset"
+                          class="btn btn-sm btn-outline-danger ml-2 pull-right"
+                        >
+                          <i class="fa fa-eraser"></i>clear<i
+                            aria-hidden="true"
+                          ></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-primary pull-right mr-1"
+                          mwlConfirmationPopover
+                          [popoverTitle]="'Please Confirm...!'"
+                          [popoverMessage]="'Are you sure want to save?'"
+                          [confirmText]="confirmationPopoverConfig.confirmText"
+                          [cancelText]="confirmationPopoverConfig.cancelText"
+                          [placement]="confirmationPopoverConfig.placements[0]"
+                          (confirm)="updateGeneratorLog()"
+                          (cancel)="
+                            confirmationPopoverConfig.confirmPopoverCancel()
+                          "
+                          confirmButtonType="btn btn-sm btn-primary"
+                          cancelButtonType="btn btn-sm btn-outline-secondary"
+                          (click)="
+                            confirmationPopoverConfig.confirmClicked = false;
+                            confirmationPopoverConfig.cancelClicked = false
+                          "
+                          [appendToBody]="true"
+                        >
+                          <i class="fa fa-save"></i>
+                          <span>{{ isEditMode ? "Update" : "Save" }}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </app-card>
+            </mat-tab>
+            <!-- Generator Report -->
+            <mat-tab label="Generator Report">
+              <ng-template mat-tab-label>
+                <i class="fa fa-eye icon-lg text-danger custom-icons mr-2"></i>
+                Generator Report
+              </ng-template>
+              <div class="card custom-card shadow-sm">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5 class="mb-0">Logs</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                      <thead class="table-primary">
+                        <tr>
+                          <th>Generator Name</th>
+                          <th>Start Date/Time</th>
+                          <th>End Date/Time</th>
+                          <th>Status</th>
+                          <th>Modified By</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="selectedRow">
+                          <td>{{ selectedRow.GeneratorName }}</td>
+                          <td>{{ selectedRow.GeneratorOnTime || "N/A" }}</td>
+                          <td>{{ selectedRow.GeneratorOffTime || "N/A" }}</td>
+                          <td>{{ selectedRow.Status || "N/A" }}</td>
+                          <td>{{ selectedRow.LogCreatedon || "N/A" }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <ng-template #noRecord>
+    <div
+      class="no-record-message"
+      style="
+        text-align: center;
+        padding: 1rem;
+        position: absolute;
+        width: 100%;
+        top: 70%;
+        transform: translateY(-50%);
+      "
+    >
+      <strong>No Record Found</strong>
+    </div>
+  </ng-template>
+</div>

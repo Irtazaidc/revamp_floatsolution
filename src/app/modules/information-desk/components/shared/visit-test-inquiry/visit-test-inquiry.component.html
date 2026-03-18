@@ -1,0 +1,37 @@
+<ng-container *ngIf="inquiryList.length; else noInquiryData">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive" style="max-height: 435px; overflow-y: auto;">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.inquiryListSection"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="table-responsive table-container">
+                    <table class="table">
+                        <thead class="sticky-header">
+                            <tr>
+                                <th>#</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Change By</th>
+                                <th scope="col">Change On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of inquiryList; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ item.TestStatus }}</td>
+                                <td>{{ item.EmpName }}, {{ item.LocCode || 'NA' }}</td>
+                                <td>{{ item.ChangedOn | date: 'dd-MMM-yyyy  hh:mm a' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-template #noInquiryData>
+    <div class="container">
+        <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="'No inquiry found'"></app-no-record-found>
+    </div>
+</ng-template>

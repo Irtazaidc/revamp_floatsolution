@@ -1,0 +1,69 @@
+
+.panel-dropdown ::ng-deep .ng-value-container {
+    max-height: 209px;
+    overflow: auto;
+}
+.ref-by-doc-control ::ng-deep ngb-typeahead-window {
+    overflow: auto;
+    max-height: 250px;
+}
+
+
+/* Align QR code and button in a responsive way */
+
+  
+  /* Button Styling */
+  c-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+  
+  c-button:hover {
+    background-color: #0056b3; /* Darker blue when hovering */
+  }
+  
+  c-button:focus {
+    outline: none;
+  }
+  
+  /* QR Code Container */
+  .qr-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    // padding: 10px;
+    // background-color: #f9f9f9;
+  }
+  
+  /* QR Value Text */
+  .qr-value {
+    font-size: 14px;
+    color: #333;
+    word-wrap: break-word; /* To handle long QR code data */
+    text-align: center;
+  }
+  
+.qr-container {
+  text-align: center;
+}
+
+.qr-card {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.qr-value {
+  margin-top: 10px;
+  font-weight: 600;
+  word-break: break-word;
+}

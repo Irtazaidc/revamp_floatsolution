@@ -1,0 +1,129 @@
+<!-- <div class="col-md-6"> -->
+<div class="card mb-2">
+    <!-- card-custom gutter-t -->
+    <div class="card-body px-4 py-4">
+        <ng-container *ngIf="visitDetailsList && visitDetailsList.length; then PatientCardSpace  else NoVisitDetailFound">
+
+        </ng-container>
+        <ng-template #PatientCardSpace>
+
+            <ng-container *ngIf="visitDetailsList && visitDetailsList.length; then VisitTestDetailSpace else NoTestDetailSpace">
+            </ng-container>
+
+            <ng-template #VisitTestDetailSpace>
+                <div class="col-lg-12" style="float: right;margin-bottom: 2px;">
+                    <div class=""> <input type="text" placeholder="Search Test Here"
+                            style="float: right;border: none; border-bottom: grey solid 1px; border-radius: 0px;"
+                            class="col-lg-12 col-sm-12 form-control form-control-sm " [(ngModel)]="searchInTestDetail"
+                            name="searchInTestDetail" /></div>
+                </div>
+                <div class="table-responsive">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                        [name]="spinnerRefs.visitDetailListSection" size="medium" color="#fff" type="square-loader"
+                        [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <table aria-hidden="true" class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th hidden scope="col"> <input type="checkbox"
+                                        [attr.disabled]="IsMasterDisable ? true : null" [(ngModel)]="masterSelected"
+                                        name="list_name" value="m1" />
+                                </th>
+                                <th scope="col">Code</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Delivery Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="col-xs-12 col-sm-12 col-md-6 col-lg-4"
+                            *ngFor="let vd of visitDetailsList | filterByKey: searchInTestDetail:['PROFILETESTS', 'PROFILETESTSDESC', 'STATUS']">
+                            <tr [attr.disabled]="vd.isDisabled ? true : null">
+                                <td>
+                                    <input [attr.disabled]="vd.isDisabled ? true : null" (change)="isAllSelected()"
+                                        [(ngModel)]="vd.isSelected" type="checkbox" class="" />
+                                </td>
+                                <td>{{vd.PROFILETESTS}}</td>
+                                <td>{{vd.PROFILETESTSDESC}}</td>
+                                <td>{{vd.STATUS}}</td>
+                                <td>{{vd.REPORTINGTIME | dateFormat: 'DD-MM-YYYY h:mm:ss a'}}</td>
+                                <td>
+                                    <ng-container *ngIf="vd.SECTIONID==7 && !vd.isService">
+                                        <app-dicom-button style="margin-top: -12px;" [btnPayload]="{TPID:vd.PROFILETESTID,VisitID:vd.ACCOUNTNO, styleClass:'btn btn-mini btn-icon tooltip-custom',iconClass:'fas fa-x-ray text-danger', btnText:'', btnStyle:'margin-top: -10px'}"></app-dicom-button>
+                                    </ng-container>
+                                    <button *ngIf="vd.MOBy" style="margin-top: -10px;" ngbTooltip="MO History" class="btn btn-mini btn-icon tooltip-custom" (click)="openMoconsent(vd)"><i  class="ti-file text-primary"></i></button>
+                                    <!-- <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                            aria-label="Button group with nested dropdown" >
+                                            <button ngbTooltip="Report" class="btn btn-mini btn-icon tooltip-custom" (click)="openMoconsent(vd)"><i  class="fa fa-eye"></i></button> -->
+                                            <!-- <button ngbTooltip="PACs" class="btn btn-mini btn-icon tooltip-custom" style="width: 25px;" ngbDropdownToggle>
+                                                <i class="fas fa-x-ray cursor-pointer" style="font-size: 14px;"></i>
+                                            </button> -->
+                                            <!-- <div class="dropdown-menu pb-2" style=" left: -100px !important;" ngbDropdownMenu>
+                                                <button class="dropdown-item" *ngFor="let pacs of PACSStudiesList;let i = index">
+                                                    <span><i class="fa fa-file-image text-primary cursor-pointer"></i> Study-{{i+1}}</span>
+                                                </button>
+                                                <button *ngIf="!PACSStudiesList.length" class="dropdown-item" >
+                                                    <label class="badge badge-warning text-white cursor-pointer">No Study</label>
+                                                </button>
+                                            </div> -->
+                                        <!-- </div>
+                                    </div> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer px-2 text-right">
+                    <div *ngIf="isDueBalance" class="blink_me">
+                        <p><strong style="color:red">Balance Due: {{DueBalanceAmount}}</strong></p>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <!-- <button type="button" class="btn btn-danger" (click)="viewInvoice()">View Invoice</button> -->
+                        <!-- <button type="button" class="btn btn-success"
+                            [attr.disabled]="isDeliverButtonAllowed ? true  : null"
+                            title="{{confirmationPopoverConfig.popoverTitle}}" mwlConfirmationPopover
+                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]" (confirm)="DeliverReports()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="success"
+                            cancelButtonType="outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false">Deliver
+                            Report(s)</button> -->
+                        <button type="button" class="btn btn-primary pull-right" style="float:right;"
+                            [attr.disabled]="isDueBalance ? true  : null" (click)="ViewReport('')">View
+                            Report(s)</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <app-pacs [PIN]="selPIN"></app-pacs>
+                    </div>
+                </div>
+                <!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.deliverReportsSpinnerRef" size="large" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>  
+                        
+                        <div class="visit-remarks-area mb-2">
+                            <app-visit-remarks [propVisitNo]="SelRow.VisitId" [editing]="{save: true}">
+                            </app-visit-remarks>
+                        </div> -->
+
+
+            </ng-template>
+
+            <ng-template #NoTestDetailSpace>
+                No Test(s) Found
+            </ng-template>
+        </ng-template>
+
+        <ng-template #NoVisitDetailFound>
+            <div style="font-weight: bold;text-align: center;">No Record Found</div>
+        </ng-template>
+    </div>
+</div>
+
+<!-- </div> -->

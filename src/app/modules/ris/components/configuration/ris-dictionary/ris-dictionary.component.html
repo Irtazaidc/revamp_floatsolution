@@ -1,0 +1,165 @@
+
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+            <app-card [title]="screenIdentity=='ris-dictionary' ? 'Worklist (Default Dictionary)': 'Worklist (My Dictionary)'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getRISDictionaryByUserID()"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Add new dictionary word"><i class="ti-plus"></i>New</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-12">
+                        <small *ngIf="dataList.length" class="text-danger">Total records:  <strong>{{countAll}}</strong></small>
+                        <div class="row" *ngIf="dataList.length && screenIdentity=='ris-user-dictionary'">
+                            <div class="col-12 mb-2">
+                                <button (click)="dictionaryFilter(1);"  class="btn btn-mini mr-3" [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th" aria-hidden="true"></i> All Shortcuts <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAll}}</span></button>
+                               
+                                <button (click)="dictionaryFilter(2)" class="btn btn-mini mr-3" [ngClass]="isMain ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th-large" aria-hidden="true"></i>Default Shortcuts <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countMain}}</span></button>
+    
+                                <button (click)="dictionaryFilter(3)"  class="btn btn-mini " [ngClass]="isMy ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-check-square" aria-hidden="true"></i> Self Shortcuts 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countMy}}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table" style="overflow-x: hidden;">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%">#</th>
+                                    <th style="width: 8%">Category</th>
+                                    <th style="width: 20%">Text Code</th>
+                                    <th style="width: 70%">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="!dataList.length">
+                                    <td class="text-center" colspan="4"><strong class="text-primary">No record found</strong></td>
+                                </tr>
+                                <tr class="pointer" *ngFor="let item of dataList | filterByKey:searchText:['CategoryTitle','TextCode','TextDesc']; let i = index" (click)="getSingleRow(item.RISDictionaryID,item.CategoryID,item.TextCode,i)"
+                                    [ngClass]="{'active-rec-border-left': rowIndex==i}" >
+                                    <td style="width: 2%" >{{i+1}}</td>
+                                    <td style="width: 8%"><label class="cursor-pointer"
+                                        [ngClass]="[item.CategoryID == 2 ? 'badge badge-inverse-warning' : 'badge badge-inverse-success']"
+                                        >{{item.CategoryTitle}}</label></td>
+                                    <td style="width: 10%">{{item.TextCode}}</td>
+                                    <td style="width: 80%">
+                                     <span [innerHTML]="item.TextHTMLTag"></span>
+                                </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
+            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner>
+                    <form class="" [formGroup]="_form">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10">
+                                <div class="form-group">
+                                    <label for="TextCode" class="control-label">Text Code:</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="TextCode"
+                                    [ngClass]="{'invalid': _form.get('TextCode').errors && _form.get('TextCode').touched, 'invalid-highlighted': _form.get('TextCode').errors}">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                <div class="form-group">
+                                    <label for="TextDescription" class="control-label">Text Desctription:</label>
+                                    <ckeditor [required]="true" [config]="config" formControlName="TextDescription" name="TextDescription" 
+                                        [(ngModel)]="TextDescription" [ngClass]="{'invalid': _form.get('TextDescription').errors && _form.get('TextDescription').touched, 'invalid-highlighted': _form.get('TextDescription').errors}">
+                                    </ckeditor>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                <div class="form-group">
+                                    <label for="TextDescription" class="control-label">Text Desctription:</label>
+                                    <textarea class="form-control form-control-sm" formControlName="TextDescription"  [ngClass]="{'invalid': _form.get('TextDescription').errors && _form.get('TextDescription').touched, 'invalid-highlighted': _form.get('TextDescription').errors}" rows="4"></textarea>
+                                
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                <mat-checkbox class="example-margin" formControlName="isBold"> <span>Bold</span> </mat-checkbox>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                <div class="checkbox-inline">
+                                    <mat-checkbox class="example-margin" formControlName="isItalic"> <span>Italic</span> </mat-checkbox>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                <div class="checkbox-inline">
+                                    <mat-checkbox class="example-margin" formControlName="isUnderline"> <span>Underline</span> </mat-checkbox>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                <div class="pull-right">
+                                    <input class="pull-right" type="color" id="color-picker" [(ngModel)]="selectedColor" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button *ngIf="(RISDictionaryID && CategoryID==1 && screenIdentity=='ris-dictionary') || (CategoryID==2 && screenIdentity=='ris-user-dictionary') RISDictionaryID"
+                                    [disabled]="disabledButtonDelete || !RISDictionaryID"
+                                    class="btn btn-sm btn-danger pull-right ml-2"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Are you <b>sure </b> want to delete?'"
+                                    [popoverMessage]="'Your won\'t be able to revert it!'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="deleteRISDictionary()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-times"></i>Remove <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerDelete" ></i>
+                                </button>
+                                <button *ngIf="(RISDictionaryID && CategoryID==1 && screenIdentity=='ris-dictionary') || (CategoryID==2 && screenIdentity=='ris-user-dictionary') || !RISDictionaryID"
+                                    [disabled]="disabledButton || _form.invalid"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertUpdateDictionary()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(RISDictionaryID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>{{ActionLabel}} <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+
+        </div>
+    </div>
+</div>

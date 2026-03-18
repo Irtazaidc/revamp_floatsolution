@@ -1,0 +1,7 @@
+<app-ris-worklist-params (risParamsValues)="risParamsReceived($event)"
+    [buttonControls]="['branch', 'subsectionids', 'visitid', 'datefrom', 'dateto', 'visitid']"
+    [(paramsValuesForWorkListHeader)]="paramsValuesForWorkListHeader" [checkDoctorFeedback]="checkDoctorFeedback"
+    ></app-ris-worklist-params>
+
+<app-tech-audit-worklist *ngIf="paramsValuesForWorkList" (paramFormHeaderInfo)="getParamFormHeaderInfo($event)"  [paramsValuesForWorkList]="paramsValuesForWorkList" [actionsPermission] = "['ques']"
+    [colNamesForMOScreen]="colNamesForMOScreen" (selectedDoctorFeedback)="getFeedbackValue($event)"></app-tech-audit-worklist>

@@ -1,0 +1,328 @@
+<div class="card card-custom">
+  <div class="card-body pb-0">
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row container form-group justify-content-center">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            value="1980-08-26"
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateFrom').errors,
+              'invalid-highlighted':
+                filterForm.get('dateFrom').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            placeholder="dd-mm-yyyy"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control mb-4"
+            name="dateTo"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateTo').errors,
+              'invalid-highlighted':
+                filterForm.get('dateTo').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Branch:</label>
+
+          <div class="form-group">
+            <ng-select
+              id="pat_branch"
+              style="width: 100%"
+              [ngClass]="{
+                invalid: filterForm.get('locID').errors,
+                'invalid-highlighted':
+                  filterForm.get('locID').errors && isSubmitted
+              }"
+              formControlName="locID"
+              [items]="branchList"
+              bindLabel="Title"
+              [closeOnSelect]="true"
+              bindValue="LocId"
+              placeholder="--Select Branch--"
+              
+            >
+              <!-- <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.Title}}</span>
+                                    </div>
+                                    <div class="ng-value" *ngIf="items.length > 2">
+                                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template ng-header-tmp>
+                                    <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                                        type="button"><i class="ti-check"></i>Select all</button>
+                                    <button (click)="onUnselectAllBranches()"
+                                        class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                            class="ti-close"></i>Unselect all</button>
+                                </ng-template> -->
+            </ng-select>
+          </div>
+        </div>
+        <!-- <div class="col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Payment Method:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              value=""
+              [items]="paymentModesList"
+              bindLabel="Title"
+              placeholder="-Select Status-"
+              bindValue="ModeId"
+              formControlName="ModeId"
+              name="ModeId"
+            >
+            </ng-select>
+          </div>
+        </div> -->
+
+        <div class="mt-8 col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <div
+            (click)="getCashTallyData()"
+            class="btn btn-primary"
+            type="button"
+          >
+            Search
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-warning"
+      [name]="spinnerRefs.TallyReportTable"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-sm-12">
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="type to filter"
+            class="form-control form-control-sm"
+            [(ngModel)]="searchText"
+             (ngModelChange)="onSearchChange($event)"
+            name="searchText"
+          />
+          <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom"
+            (click)="getCashTallyData()"
+          >
+            <i class="ti-reload"></i>
+          </button>
+          <!-- <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+            ngbTooltip="Export To Excel"
+            (click)="exportAsExcel()"
+          >
+            <i class="fa fa-file-excel"></i>
+          </button> -->
+        </div>
+       
+      </div>
+       <span *ngIf="cashTallyDataList.length" class="text-danger pull-right mt-4"><strong> <span class="text-danger">Total Records: {{cashTallyDataList.length}} </span>  </strong></span>
+    </div>
+    <div class="table-container">
+      <table class="table compact table-bordered">
+        <thead>
+           <tr>
+            <th width="8">ReceiptNo</th>
+            <th width="18">PIN</th>
+            <th width="10">Total Amount</th>
+            <th width="10">Cash</th>
+            <th width="10">Credit Card</th>
+            <th width="10">Cheque</th>
+            <th width="10">Demand Draft</th>
+            <th width="10">RP</th>
+            <th width="7">Refund</th>
+            <th width="7">Balance</th>
+           </tr>
+          
+          <!-- <th width="18">Remarks</th> -->
+        </thead>
+        <tbody>
+          <tr
+            class="text-center"
+            *ngIf="!cashTallyDataList || cashTallyDataList == ''"
+          >
+            <td colspan="10">
+              <app-no-record-found></app-no-record-found>
+            </td>
+          </tr>
+          <tr
+            *ngFor="
+              let data of cashTallyDataList
+                | filterByKey : searchText : ['VisitID', 'ReceiptNo']
+            "
+          >
+            <td>{{ data.ReceiptNo || "-" }}</td>
+            <td>{{ data.VisitID }}</td>
+            <td>
+              {{
+                data.TotalAmount
+                  ? (data.TotalAmount | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <td>
+              {{
+                data.Cash
+                  ? (data.Cash | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <td>
+              {{
+                data.CreditCard
+                  ? (data.CreditCard | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <td>
+              {{
+                data.Cheque
+                  ? (data.Cheque | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <td>
+              {{
+                data.DemandDraft
+                  ? (data.DemandDraft | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <td>
+              {{
+                data.RewardPoint
+                  ? (data.RewardPoint | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <td>{{ data.Refund || "-" }}</td>
+            <td>
+              {{
+                data.Balance
+                  ? (data.Balance | currency : "Rs." : "symbol" : "1.0-0")
+                  : "0"
+              }}
+            </td>
+            <!-- <td style="word-break: break-word">{{ data.Remarks || "-" }}</td> -->
+          </tr>
+          <!-- Total Row -->
+          <tr
+            class="text-white sticky-footer"
+            style="
+              background-image: linear-gradient(
+                90deg,
+                #186f9a,
+                #2b7acc,
+                #168a9c,
+                #169e97
+              ) !important;
+            "
+            *ngIf="cashTallyDataList"
+          >
+            <td colspan="2"><strong>Total</strong></td>
+            <td>
+              {{
+                totalAmounts.TotalAmount
+                  ? (totalAmounts.TotalAmount
+                    | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                totalAmounts.Cash
+                  ? (totalAmounts.Cash | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                totalAmounts.CreditCard
+                  ? (totalAmounts.CreditCard | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                totalAmounts.Cheque
+                  ? (totalAmounts.Cheque
+                    | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                totalAmounts.DemandDraft
+                  ? (totalAmounts.DemandDraft
+                    | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                totalAmounts.RewardPoints
+                  ? (totalAmounts.RewardPoints
+                    | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+            <td>{{ totalAmounts.Refund ? totalAmounts.Refund : "-" }}</td>
+            <td>
+              {{
+                totalAmounts.Balance
+                  ? (totalAmounts.Balance
+                    | currency : "Rs." : "symbol" : "1.0-0")
+                  : "-"
+              }}
+            </td>
+
+            <!-- <td></td> -->
+            <!-- Empty cell for Remarks -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

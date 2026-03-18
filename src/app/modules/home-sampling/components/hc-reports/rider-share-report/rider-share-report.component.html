@@ -1,0 +1,92 @@
+<div class="card card-custom mt-5 mb-5">
+  <div class="card-toolbar">
+    <div class="row mt-8">
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12">
+        <div class="ml-3">
+          <h4>Rider Share Report</h4>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+        <div class="row form-group mr-5">
+          <label class="col-4 col-form-label">Filter By Date:</label>
+          <div class="col-8">
+            <select
+              class="form-control"
+              [(ngModel)]="StatsDate"
+              (change)="onDateChangeofStats($event.target.value)"
+            >
+              <option value="" selected hidden>--Select--</option>
+              <option [value]="2">This Month</option>
+              <option [value]="3">Previous Month</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="card card-custom">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row">
+      <div class="col-12">
+        <small class="pull-right text-danger">
+          <strong>Total Records: {{ shareList.length }}</strong>
+        </small>
+        <div class="table-responsive">
+          <table class="table table-hover table-custom">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Patient Name</th>
+                <th>Mobile No</th>
+                <th>Test Name</th>
+                <th>Share Amount</th>
+                <th>Created On</th>
+                <th>Request ID</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="shareList.length > 0; else noRecord">
+              <tr *ngFor="let data of shareList; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ data.PatientName }}</td>
+                <td>{{ data.MobileNo }}</td>
+                <td>{{ data.TestName }}</td>
+                <td>{{ data.ShareAmount | currency }}</td>
+                <td>{{ data.ShareCreatedOn | date : "short" }}</td>
+                <td>{{ data.HCRequestID }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noRecord>
+  <div
+    class="no-record-message"
+    style="
+      text-align: center;
+      padding: 1rem;
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      transform: translateY(-50%);
+    "
+  >
+    <strong>No Record Found</strong>
+  </div>
+</ng-template>

@@ -1,0 +1,35 @@
+.role-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 70px;
+  text-align: center;
+  color: #fff;
+}
+
+/* Different Role Colors */
+.badge-normal {
+  background-color: #6c757d;   /* Gray */
+}
+
+.badge-manager {
+  background-color: #007bff;   /* Blue */
+}
+
+.badge-mo {
+  background-color: #17a2b8;   /* Teal */
+}
+
+.badge-agm {
+  background-color: #fd7e14;   /* Orange */
+}
+
+.badge-clevel {
+  background-color: #dc3545;   /* Red */
+}
+
+.badge-default {
+  background-color: #343a40;
+}

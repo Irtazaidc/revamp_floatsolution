@@ -1,0 +1,172 @@
+<!--begin::Subheader-->
+
+<div class="subheader py-1 py-lg-1" [ngClass]="subheaderCSSClasses" id="kt_subheader">
+  <div [ngClass]="subheaderContainerCSSClasses"
+    class="d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+    <!--begin::Info-->
+    <div class="d-flex align-items-center mr-1">
+      <ng-container *ngIf="subheaderMobileToggle">
+        <!--begin::Mobile Toggle-->
+        <button class="burger-icon burger-icon-left mr-4 d-inline-block d-lg-none" id="kt_subheader_mobile_toggle">
+          <span></span>
+        </button>
+        <!--end::Mobile Toggle-->
+      </ng-container>
+
+      <!--begin::Page Heading-->
+      <div class="d-flex align-items-baseline flex-wrap mr-5">
+        <!--begin::Page Title-->
+        <ng-container *ngIf="title$ | async as _title">
+          <h3 class="d-flex align-items-center text-primary font-weight-bold my-1 mr-3">
+            {{ _title }}
+            <ng-container *ngIf="subheaderDisplayDesc">
+              <ng-container *ngIf="description$ | async as _description">
+                <small>{{ _description }}</small>
+              </ng-container>
+            </ng-container>
+          </h3>
+        </ng-container>
+        <!--end::Page Title-->
+        <!--begin::Breadcrumb-->
+        <ul *ngIf="0" class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0">
+          <li class="breadcrumb-item" *ngFor="let bc of breadcrumbs$ | async" routerLinkActive="active">
+            <a [routerLink]="bc.linkPath" class="text-muted">
+              {{ bc.linkText }}
+            </a>
+          </li>
+        </ul>
+        <!--end::Breadcrumb-->
+      </div>
+      <!--end::Page Heading-->
+    </div>
+    <!--end::Info-->
+    <!--Start::Notification-->
+
+
+    <!--End::Notification-->
+
+
+    <!-- begin:User Details -->
+    <!-- <div class="container-fluid"> -->
+    <div class="row">
+      <!-- <div class="offset-sm-0"></div> -->
+      <!-- begin::Notification Dropdown -->
+      <!-- <div class="col-md-2 col-sm-4">
+              <div class="d-flex align-items-end justify-content-end">
+                
+                <div class="dropdown" data-toggle="tooltip" title="Notification" data-placement="left"
+                  placement="bottom-right" ngbDropdown>
+                  <a class="action-btn cursor-pointer font-weight-bold px-2 px-lg-5 px-md-1 px-sm-0 mr-lg-2 mr-sm-0 mt-5 position-relative" 
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle 
+                    >
+                      <i class="flaticon-bell text-primary icon-lg"></i>
+                      <span class="badge badge-danger position-absolute top-0 right-0">24</span>
+                  </a>
+                  <div class="dropdown-menu p-0 m-0 " ngbDropdownMenu>
+                    <app-notifications-offcanvas></app-notifications-offcanvas>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+      <div class="col-md-12 col-sm-12">
+        <div class="d-flex align-items-end justify-content-end" *ngIf="user$ | async as _user">
+          <mat-checkbox ngbTooltip="If you are connected via VPN, please check this box to view PACS images from the main server."
+            class="example-margin ml-2" 
+            style="margin-bottom: 25px;" 
+            [(ngModel)]="isVPN" 
+            (change)="setVPNStatus($event)">
+            VPN?
+          </mat-checkbox>
+          <div class="user-main" (click)="toggleDropdown(); preventCloseOnClick()">
+            <!-- <img [src]="empUserPic ? empUserPic : './assets/media/users/blank.png'" class="user-picture" [ngClass]="{'circled': true}" style="height: 40px;width: 40px;margin-top: -6px;margin-bottom: -6px;"> -->
+
+            <div class="user-details">
+              <strong>{{ _user.fullname || ''}}</strong>
+              <!-- <strong>{{ _user | json }}</strong> -->
+              <p class="status online">{{ _user.username }}</p>
+              <!-- <strong class="status offline">{{ _user.empid }}</strong> -->
+              <!-- <p *ngIf="webDeskStatus" class="status online">MetaDesk Online</p> -->
+              <!-- <p *ngIf="!webDeskStatus" class="status offline">MetaDesk Offline</p> -->
+            </div>
+
+            <div class="symbol">
+              <img [src]="empUserPicture || defaultPatientPic" class="user-picture" />
+              <i class="symbol-badge" [style.background-color]="webDeskStatus ? 'green' : 'red'"></i>
+            </div>
+            <!-- <i class="fa fa-caret-down" aria-hidden="true" ></i> -->
+            <div class="dropdown" *ngIf="showDropdown" (mouseleave)="showDropdown=false">
+              <div class="dropdown-content" #dropdown (click)="preventCloseOnClick()">
+                <div class="user-info">
+                  <img class="user-picture" [src]="empUserPicture || defaultPatientPic" alt="User Picture" />
+                  <div class="user-details">
+                    <strong>{{ _user.fullname || '' }}</strong>
+                    <p class="status online">{{ _user.username }}</p> 
+                    <p *ngIf="webDeskStatus" class="status online">MetaDesk Online</p>
+                    <p *ngIf="!webDeskStatus" class="status offline">MetaDesk Offline</p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item myprofile" (click)="myProfile('emp-profile/personal-info')">
+                  <i class="fas fa-user-circle text-primary mr-2"></i> My Profile
+                </a>
+                <a class="dropdown-item myprofile" (click)="myProfile('emp-profile/emp-change-password')">
+                  <i class="fas fa-unlock text-primary mr-2"></i> Change Password
+                </a>
+                <a class="dropdown-item myprofile" (click)="myProfile('emp-profile/security-key-generator')">
+                  <i class="fas fa-key text-primary mr-2"></i> Generate Security PIN
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item signout text-danger" (click)="signOut()">
+                  <strong>Sign Out <i class="fas fa-sign-out-alt text-danger ml-2"></i></strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+
+    <!-- (mouseleave)="showDropdown=false" -->
+    <!-- {{_user.username || ''}} -->
+    <!-- {{ (_user.firstname || _user.lastname) ? (_user.firstname + ' ' + _user.lastname) : _user.fullname}} -->
+
+
+    <!-- end:User Details -->
+    <!--begin::Toolbar-->
+    <div class="d-flex align-items-center flex-wrap" *ngIf="0">
+      <!--begin::Button-->
+      <a class="btn btn-primary btn-fixed-height font-weight-bold px-2 px-lg-5 mr-2">
+        <span [inlineSVG]="'./assets/media/svg/icons/Communication/Add-user.svg'" cacheSVG="true"
+          class="svg-icon svg-icon-lg"></span>
+        <span class="d-none d-md-inline">New Member</span>
+      </a>
+      <!--end::Button-->
+
+      <!--begin::Dropdown-->
+      <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions" data-placement="left"
+        placement="bottom-right" ngbDropdown>
+        <a class="btn btn-primary btn-fixed-height font-weight-bold px-2 px-lg-5 mr-2" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+          <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+            class="svg-icon svg-icon-lg"></span>
+          <span class="d-none d-md-inline">New Report</span>
+        </a>
+        <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right" ngbDropdownMenu>
+          <app-dropdown-menu1></app-dropdown-menu1>
+        </div>
+      </div>
+      <!--end::Dropdown-->
+      <!--begin::Button-->
+      <a class="btn btn-primary btn-icon font-weight-bold" data-toggle="modal" data-target="#kt_chat_modal">
+        <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group-chat.svg'" cacheSVG="true"
+          class="svg-icon svg-icon-lg"></span>
+      </a>
+      <!--end::Button-->
+    </div>
+    <!--end::Toolbar-->
+  </div>
+</div>
+
+
+<!--end::Subheader-->

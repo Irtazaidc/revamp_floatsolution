@@ -1,0 +1,13 @@
+// ::ng-deep .bs-tooltip-top {
+//     width: 500px !important;
+//     // background-color: aqua;
+//     // color: white;
+//     // min-height: 400px;
+//   }
+.msgTooltip{   
+    ::ng-deep .tooltip-inner {
+        text-align: left;
+        min-width: 300px !important;
+        max-width: 500px !important;
+    }
+}

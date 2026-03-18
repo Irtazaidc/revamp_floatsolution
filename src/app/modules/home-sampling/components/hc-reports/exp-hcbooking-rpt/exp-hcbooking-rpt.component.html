@@ -1,0 +1,107 @@
+<app-card [title]="'Export HC Booking Detail'" [cardClass]="'tim-card tim-card tim-card-primary'"
+    [cardHeaderClass]="'card-header-narrow'">
+
+    <form class="container" #container class="" [formGroup]="hcBookingDetailForm">
+
+        <div class="row">
+
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label class="control-label">Date From</label>
+                    <input autocomplete="off" (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                         value="1980-08-26" formControlName="dateFrom" name="dateFrom" class="form-control"
+                        type="text" value="" />
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label class="control-label">Date To</label>
+                    <input autocomplete="off" (click)="dateTo.toggle()" value="1980-08-26" placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker"
+                     ngbDatepicker formControlName="dateTo" class="form-control" name="dateTo" type="text"
+                        value="" />
+                </div>
+            </div>
+            <div class="mt-6">
+                <button ngbTooltip="Search" class="btn  btn-primary pull-left mr-2" (click)="getHCBookingDeatil()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                <button ngbTooltip="export as excel" *ngIf="hcBookingDetailData.length" class="btn  btn-primary mr-2 pull-left" (click)="exportAsXLSX()">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </button>
+                <button ngbTooltip="Clear Text" type="reset" class="btn  btn-danger  pull-left "><i class="fa fa-eraser"
+                        aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </form>
+</app-card>
+
+
+<app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" [cardHeaderClass]="'card-header-narrow'">
+    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.hcRequesDetail" bdColor="rgba(0,0,0,0.8)"
+        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+    <ng-container *ngIf="hcBookingDetailData.length; then hcbookingRptSpace  else NohcbookingDataFoundSpace">
+    </ng-container>
+    <ng-template #hcbookingRptSpace>
+        
+        <div class="table-responsive table-container">
+            <table style="font-size: xx-small;table-layout: fixed;" class="table table-sm table-bordered" style="overflow: scroll;">
+                <thead>
+                    <tr style="font-weight: bold;">
+                        <th scope="col">Booking Date</th>
+                        <th scope="col">Booking Time</th>
+                        <th scope="col">Booking ID</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Patient Mobile Number</th>
+                        <th scope="col">Appointment Datetime</th>
+                        <!-- <th scope="col">Booked By</th> -->
+                        <th scope="col">Booking Assign At</th>
+                        <th scope="col">Booking Assign By</th>
+                        <th scope="col">HC Staff Name</th>
+                        <th scope="col">Request Accepted At</th>
+                        <th scope="col">Booking Completd By</th>
+                        <th scope="col">Booking Completd At</th>
+                        <th scope="col">Sample Not Collected By</th>
+                        <th scope="col">Sample Collected By</th>
+                        <th scope="col">Booking Close By</th>
+                        <th scope="col">Booking Close At</th>
+                        <th scope="col">Last Status</th>
+                        <th scope="col">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="">
+                   
+                    <tr scope="row" *ngFor="let hcRpt of hcBookingDetailData; let i = index">
+                        <td scope="row"> {{hcRpt.BookingDate | date : "dd MMM, yyyy, h:mm a"}}</td>
+                        <td scope="row"> {{hcRpt.bookingTime?moment(hcRpt.bookingTime, "HH:mm:ss.SSSSSSS").format("h:mm A"):'-' }}</td>
+                        <td scope="row"> {{hcRpt.BookingPatientID }}</td>
+                        <td scope="row"> {{hcRpt.SalutationTitle}} {{hcRpt.FirstName}} {{hcRpt.LastName}} </td>
+                        <td scope="row"> {{hcRpt.MobileNO}} </td>
+                        <td scope="row"> {{hcRpt.AppointmentDateTime | date : "dd MMM, yyyy, h:mm a"}} </td>
+                        <!-- <td scope="row"> {{hcRpt.BookedByName || '-'}} </td> -->
+                        <td scope="row"> {{ hcRpt.BookingAssignedAt ? (hcRpt.BookingAssignedAt | date: "dd MMM, yyyy, h:mm a") : '-' }} </td>
+                        <td scope="row"> {{hcRpt.BookingAssignedByEmpName || '-'}} </td>
+                        <td scope="row"> {{hcRpt.RiderName || '-'}} </td>
+                        <td scope="row"> {{hcRpt.RequestAcceptedAt ? (hcRpt.RequestAcceptedAt | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
+                        <td scope="row"> {{hcRpt.BookingCompletedBy || '-'}} </td>
+                        <td scope="row"> {{hcRpt.BookingCompletedAt ? (hcRpt.BookingCompletedAt | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
+                        <td scope="row"> {{hcRpt.SampleNotCollectedBy || '-'}} </td>
+                        <td scope="row"> {{hcRpt.SampleCollectedBy || '-'}} </td>
+                        <td scope="row"> {{hcRpt.BookingCloseByStaf || '-'}} </td>
+                        <td scope="row"> {{hcRpt.BookingCloseAtStaf ? (hcRpt.BookingCloseAtStaf | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
+                        <td scope="row"> {{hcRpt.LastStatus || '-'}} </td>
+                        <td scope="row">{{hcRpt.TotalAmount || '-'}} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-template>
+
+    <ng-template #NohcbookingDataFoundSpace>
+        <div style="text-align: center;">
+            <p>No Record Found</p>
+        </div>
+    </ng-template>
+
+</app-card>

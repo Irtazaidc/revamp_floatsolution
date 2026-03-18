@@ -1,0 +1,518 @@
+<div class="card card-custom">
+    <div class="card-header" style="
+    margin-top: -18px;
+    margin-bottom: -13px;
+    min-height: 57px;
+">  
+        <div class="card-title" style="margin-bottom: -10px;">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label mt-1">
+                RIS Search
+            </h3>
+        </div>
+        <div class="card-toolbar" style="margin-top: 21px;">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
+                    ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-toolbar"></div>
+    <div class="card-body">
+        <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='radiologist-audit-findings'">
+                    <label for="RadiologistID" class="control-label">Radiologst:</label>
+                    <ng-select style="width: 100%;"  
+                        class="mr-1"
+                        [ngClass]="{'invalid': _form.get('RadiologistID').errors && _form.get('RadiologistID').touched, 'invalid-highlighted': _form.get('RadiologistID').errors}"
+                        [items]="radoiologistList"
+                        bindLabel="FullName" 
+                        placeholder="-Please select radiologist"
+                        bindValue="EmpId"
+                        formControlName="RadiologistID" 
+                        (change)="getRadiologistAuditByRadiologistID($event)"
+                        >
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                    <label for="RadiologistAuditID" class="control-label">Audit:</label>
+                    <ng-select style="width: 100%;"  
+                        class="mr-1"
+                        [items]="AuditList"
+                        bindLabel="RadiologistAuditCode" 
+                        placeholder="-Please select audit-"
+                        bindValue="RadiologistAuditID"
+                        formControlName="RadiologistAuditID" 
+                        (change)="getRadiologistAuditID($event)"
+                        >
+                    </ng-select>
+                </div>
+                <!-- <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                    <label for="RadiologistID" class="control-label">Date  From:</label>
+                    <input  (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                        autocomplete="off" ngbDatepicker value="1980-08-26" name="dateFrom"
+                        name="dateFrom" formControlName="dateFrom" class="form-control form-control-sm" type="text" value=""
+                        [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                        />
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                    <label for="RadiologistID" class="control-label">Date To:</label>
+                    <input  #dateTo="ngbDatepicker" (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" autocomplete="off"
+                        ngbDatepicker value="1980-08-26" name="dateTo" formControlName="dateTo"
+                        class="form-control form-control-sm" type="text" value=""
+                        [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                        />
+                </div> -->
+                <div  *ngIf="advancedSearchEnabled" [@fadeInOutTranslate] class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                    <label for="RadiologistID" class="control-label">Rating with Condition:</label>
+                    <div class="input-group">
+                        <select name="RatingCondition" formControlName="RatingCondition" class="form-control form-control-sm">
+                            <option value="">-All-</option>
+                            <option value="=">= Equal</option>
+                            <option value="<">< Less Then</option>
+                            <option value=">">> Greater Then</option>
+                            <option value="<>">! Not Equal</option>
+                        </select> 
+                        <input placeholder="" type="number" min="0" max="5"
+                            class="form-control form-control-sm"   name="Rating" formControlName="Rating"
+                            [ngClass]="{'invalid': _form.get('Rating').errors && _form.get('Rating').touched, 'invalid-highlighted': _form.get('Rating').errors}"
+                            />
+                        <span class="md-line"></span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 col-xl-1">
+                    <mat-checkbox class="example-margin mt-9" name="CriticalFindings" formControlName="CriticalFindings"> <span>Critical</span> </mat-checkbox>
+                </div>
+                <div *ngIf="advancedSearchEnabled" [@fadeInOutTranslate] class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                    <label for="subSectionIDs" class="control-label">Section</label>
+                    <ng-select style="width: 100%;" 
+                        class=" mt-1 mr-1" 
+                        [items]="subSectionList" 
+                        bindLabel="SubSectionTitle"
+                        placeholder="-Select Section-" 
+                        bindValue="SubSectionId" 
+                        [multiple]="true" 
+                        [closeOnSelect]="false"
+                        formControlName="subSectionIDs" 
+                        (change)="clearSearchedvalue()"
+                        >
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                type="button"><i class="ti-check"></i> Select all</button>
+                            <button (click)="onUnselectAllSections()"
+                                class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                    class="ti-close"></i> Unselect all</button>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 col-xl-1 mt-8">
+                    <button type="button" (click)="getRISRadiologistAuditSummary();" class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card card-custom mt-2">
+    <div class="card-body">
+        <div class="row">
+            <div *ngIf="risWorklist.length" class="col-12" style="margin-top: -22px; margin-bottom: 6px; border-bottom: 1px solid #c5c5c5;">
+                <span>
+                    <span class="mr-2"><i aria-hidden="true" class="fas fa-square text-danger"></i><small class="text-danger"><strong> Critical <= 2</strong></small></span>
+                    <span class="mr-2"><i aria-hidden="true" class="fas fa-square text-warning"></i><small class="text-warning"><strong> Fair <= 3</strong></small></span>
+                    <span><i aria-hidden="true" class="fas fa-square text-primary"></i><small class="text-primary"><strong> Good > 3</strong></small></span>
+                </span>
+                <small class="pull-right text-danger"><strong>Total Records: {{risWorklist.length}}</strong></small>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                    <ng-container *ngIf="risWorklist.length; else noRequestData">
+                        <div class="row">
+                            <!-- begin:: Star Rating  -->
+                            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 text-right">
+                                <ng-container *ngIf="RadiologistAuditID && AuditStatusID>=7">
+                                    <strong class="float-left mr-3 mt-5">Audit Rating:</strong>
+                                    <ng-container *ngFor="let element of starRatingElements" class="text-right">
+                                        <tr data-th="Star Rating">
+                                            <td>
+                                                <star-rating [(value)]="element.value" [(totalstars)]="element.totalstars"
+                                                    checkedcolor="{{'#1BC5BD'}}" uncheckedcolor="{{element.uncheckedcolor}}"
+                                                    size="{{element.size}}" readonly={{element.readonly}} #starrating>
+                                                </star-rating>
+                                            </td>
+                                        </tr>
+                                    </ng-container >
+                                </ng-container>
+                            </div>
+                            <!-- end:: Star Rating  -->
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 text-right"> <!--offset-8 -->
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/> 
+                                    <!-- <button *ngIf="screenIdentity!='radiologist-audit-findings'  && RadiologistAuditID" type="button" class="btn btn-sm btn-danger pull-right ml-3" [ngbTooltip]="screenIdentity === 'audit-summary-report' ? 'Finalized Audit Report' : (screenIdentity === 'audit-findings' ? 'Share with Radiologist' : 'Share with Radiologist')"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="'Please confirm...!'"
+                                        [popoverMessage]="getMessageBasedOnScreenIdentity()"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="updateRadiologistVisitTPAuditShareFinalized()"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="btn btn-sm btn-primary"
+                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    >
+                                    <span *ngIf="screenIdentity==='audit-summary-report'"><i  class="fas fa-check-square"></i>Finalize <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i></span>
+                                    <span  *ngIf="screenIdentity==='audit-findings'"><i class="far fa-share-square"></i>Share <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i></span>
+                                    </button> -->
+
+                                    <button *ngIf="screenIdentity!='radiologist-audit-findings' && RadiologistAuditID && AuditStatusID==6 && screenIdentity==='audit-summary-report'" 
+                                [disabled]="disabledButtonShare" 
+                                type="button" 
+                                class="btn btn-sm btn-danger pull-right ml-2" 
+                                [ngbTooltip]="screenIdentity === 'audit-summary-report' ? 'Finalized Audit Report' : (screenIdentity === 'audit-findings' ? 'Share with Radiologist' : 'Share with Radiologist')"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="getMessageBasedOnScreenIdentity()"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="updateRadiologistVisitTPAudit()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                    >
+                                    <i  class="fas fa-check-square"></i>Finalize <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i>
+                                </button>
+
+                                <button *ngIf="screenIdentity==='audit-findings'" 
+                                [disabled]="disabledButtonShare"  
+                                type="button" 
+                                class="btn btn-sm btn-danger pull-right ml-2" 
+                                [ngbTooltip]="screenIdentity === 'audit-summary-report' ? 'Finalized Audit Report' : (screenIdentity === 'audit-findings' ? 'Share with Radiologist' : 'Share with Radiologist')"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="getMessageBasedOnScreenIdentity()"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="updateRadiologistVisitTPAuditShare()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                    >
+                                    <i class="far fa-share-square"></i>Share <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i>
+                                </button>
+
+                                    <button (click)="printAuditSummaryReport()" type="button" class="btn btn-sm btn-primary pull-right ml-3">
+                                        <i class="fa fa-print"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- <div class="col-12">
+                                <small class="text-danger"><strong>Total {{risWorklist.length}}</strong></small>
+                            </div> -->
+                            <div class="col-12">
+                                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;"> <!--style="max-height: 500px; overflow-y: auto;"-->
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th *ngIf="screenIdentity=='audit-findings'" style="width: 1%;"><input type="checkbox" class="cursor-pointer" (change)="selectAllReports($event)" [disabled]="isFieldDisabled" ngbTooltip="{{checkboxTooltip}}" /></th>
+                                                <th style="width: 11%;" scope="col" >PIN Number</th>
+                                                <th style="width: 10%;" scope="col" >PatientName</th>
+                                                <th style="width: 10%;" scope="col" >Section</th>
+                                                <th style="width: 15%;" scope="col" >TPName</th>
+                                                <th style="width: 18%;" scope="col" >Missed Important Findings</th>
+                                                <th style="width: 18%;" scope="col" >Findings That May/Should Have Been Mentioned</th>
+                                                <th style="width: 18%;" scope="col" >Additional Remarks</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let row of risWorklist | filterByKey:searchText:['PIN','TPCode','TPName','PatientName','Section']; let i = index" class="cursor-pointer" 
+                                            [ngClass]="{'active': i==rowIndex}">
+                                            <td style="width: 1%;" *ngIf="screenIdentity=='audit-findings'"> 
+                                                <input
+                                                    type="checkbox"
+                                                    class="cursor-pointer"
+                                                    [(ngModel)]="row.checked"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [disabled]="(row.AuditStatusID === 3  && screenIdentity === 'audit-findings') || ((row.AuditStatusID === 3 || row.AuditStatusID === 7) && screenIdentity === 'audit-summary-report')"
+                                                />
+                                            </td>
+                                                <td style="width: 11%;">
+                                                    <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                        <i 
+                                                        [ngClass]="returnCopyClasses(i)"
+                                                        class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                        (click)="copyText(row,i)">&nbsp;</i>
+                                                </span> {{ row.PIN }} 
+                                            </td>
+                                                <td style="width: 10%;">{{ row.PatientName }}</td>
+                                                <td style="width: 10%;">{{ row.Section }}</td>
+                                                <td style="width: 15%;">{{ row.TPCode }}<br *ngIf="screenIdentity!='radiologist-audit-findings'">
+                                                <!-- <small class="text-danger" *ngIf="row.isShared && screenIdentity!='radiologist-audit-findings'">(Shared)</small><br> -->
+                                                <small *ngIf="screenIdentity!='radiologist-audit-findings'" class="text-danger">({{ row.AuditStatus }})</small><br>
+                                                    <ng-container *ngFor="let element of starRatingElementsInner" class="text-right">
+                                                        <tr data-th="Star Rating">
+                                                            <td>
+                                                                <star-rating [(value)]="row.Rating" [(totalstars)]="element.totalstars"
+                                                                    checkedcolor="{{'#1BC5BD'}}" uncheckedcolor="{{element.uncheckedcolor}}"
+                                                                    size="{{element.size}}" readonly={{element.readonly}} #starrating>
+                                                                </star-rating>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container >
+                                                </td>
+                                                <td style="width: 18%;" [ngClass]="{'important-findings': row.isCritical}">{{ row.MissedFinding ||'Nil' }}</td>
+                                                <td style="width: 18%;">{{row.MissedExtraFinding ||'Nil'}}</td>
+                                                <td style="width: 18%;">{{row.Remarks ||'Nil'}}</td>
+                                                <!-- <td style="width: 6%;">
+                                                    <span class="cursor-pointer mr-2"><i (click)="showVisitDetail(row,i)" class="fa fa-info-circle" [ngClass]="rowIndex==i?'text-white':'text-warning'" ngbTooltip="Visit Detail"></i></span>
+                                                    <div class="btn-group">
+                                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                                            aria-label="Button group with nested dropdown">
+                                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                                        Vitals </span>
+                                                                </button>
+                                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                                        EMR </span>
+                                                                </button>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td> -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                             <!-- begin:: Star Rating  -->
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-right" *ngIf="RadiologistAuditID && AuditStatusID>=7">
+                                <strong class="float-left mr-3 mt-5">Audit Rating:</strong>
+                                <ng-container *ngFor="let element of starRatingElements" class="text-right">
+                                    <tr data-th="Star Rating">
+                                        <td>
+                                            <star-rating [(value)]="element.value" [(totalstars)]="element.totalstars"
+                                                checkedcolor="{{'#1BC5BD'}}" uncheckedcolor="{{element.uncheckedcolor}}"
+                                                size="{{element.size}}" readonly={{element.readonly}} #starrating>
+                                            </star-rating>
+                                        </td>
+                                    </tr>
+                                </ng-container >
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 text-right" *ngIf="RadiologistAuditID && AuditStatusID<7">
+                                <strong class="float-left mr-3 mt-5">Audit Rating:</strong>
+                                <ng-container *ngFor="let element of starRatingElements" class="text-right">
+                                    <tr data-th="Star Rating">
+                                        <td>
+                                            <star-rating [(value)]="element.value" [(totalstars)]="element.totalstars"
+                                                checkedcolor="{{'#1BC5BD'}}" uncheckedcolor="{{element.uncheckedcolor}}"
+                                                size="{{element.size}}"  (rate)="onRate($event)" #starrating>
+                                            </star-rating>
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <select name="Rating"  class="form-control form-control-sm" [(ngModel)]="element.value" [(value)]="starrating.value"(change)="getStarRatingValue($event)">
+                                                <option value="0">--</option>
+                                                <option value="0.5">0.5</option>
+                                                <option value="1">1</option>
+                                                <option value="1.5">1.5</option>
+                                                <option value="2">2</option>
+                                                <option value="2.5">2.5</option>
+                                                <option value="3">3</option>
+                                                <option value="3.5">3.5</option>
+                                                <option value="4">4</option>
+                                                <option value="4.5">4.5</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </ng-container >
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 mt-2" *ngIf="RadiologistAuditID">
+                                <div class="form-group pt-1">
+                                    <label for="RelativeCaseDistID">Relative Case Distribution:</label>
+                                    <select class="form-control" name="RelativeCaseDistID" [(ngModel)]="RelativeCaseDistID"  [disabled]="AuditStatusID>=7">
+                                        <option value="null">--Relative Case Distribution--</option>
+                                        <option *ngFor="let item of relativeDistlist" [value]="item.RelativeCaseDistID">{{item.RelativeCaseDist}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12" *ngIf="RadiologistAuditID">
+                                <div class="form-group">
+                                    <label for="AdditionalRemarks" class="control-label">Audit Remarks:</label>
+                                    <textarea class="form-control form-control-sm" name="AuditRemarks" rows="2"  [disabled]="AuditStatusID>=7"
+                                    [ngClass]="{'invalid': !AuditRemarks, 'invalid-highlighted': (!AuditRemarks && btnFinalizedClick)}"
+                                     [(ngModel)]="AuditRemarks"></textarea>
+                                </div>
+                            </div>
+                            <!-- end:: Star Rating  -->
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <button (click)="printAuditSummaryReport()"
+                                    class="btn btn-sm btn-primary pull-right"><i class="fa fa-print"></i>Print
+                                </button>
+                                <button *ngIf="RadiologistAuditID && screenIdentity==='audit-summary-report'" 
+                                [disabled]="disabledButtonShare" 
+                                type="button" 
+                                class="btn btn-sm btn-danger pull-right mr-2" 
+                                [ngbTooltip]="screenIdentity === 'audit-summary-report' ? 'Finalized Audit Report' : (screenIdentity === 'audit-findings' ? 'Share with Radiologist' : 'Share with Radiologist')"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="getMessageBasedOnScreenIdentity()"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="updateRadiologistVisitTPAudit()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                    >
+                                    <!-- <span *ngIf="screenIdentity==='audit-summary-report'"> -->
+                                        <i  class="fas fa-check-square"></i>Finalize <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i>
+                                    <!-- </span> -->
+                                    <!-- <span  *ngIf="screenIdentity==='audit-findings'"> -->
+                                        <!-- <i class="far fa-share-square"></i>Share <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i> -->
+                                    <!-- </span> -->
+                                </button>
+
+                                <button *ngIf="screenIdentity==='audit-findings'" 
+                                [disabled]="disabledButtonShare"  
+                                type="button" 
+                                class="btn btn-sm btn-danger pull-right mr-2" 
+                                [ngbTooltip]="screenIdentity === 'audit-summary-report' ? 'Finalized Audit Report' : (screenIdentity === 'audit-findings' ? 'Share with Radiologist' : 'Share with Radiologist')"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="getMessageBasedOnScreenIdentity()"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="updateRadiologistVisitTPAuditShare()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                    >
+                                    <!-- <span *ngIf="screenIdentity==='audit-summary-report'"><i  class="fas fa-check-square"></i>Finalize <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i></span>
+                                    <span  *ngIf="screenIdentity==='audit-findings'"><i class="far fa-share-square"></i>Share <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i></span> -->
+                                    <i class="far fa-share-square"></i>Share <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i>
+                                </button>
+                                <strong *ngIf="AuditStatus==6"  class="text-danger pull-right mr-2 mt-2"><i aria-hidden="true" class="fa fa-check text-danger mr-1"></i>Audit has been {{AuditStatus}}</strong>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noRequestData>
+                        <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found>
+                    </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-custom mt-2" *ngIf="risWorklist.length && visitDetailBtnClicked">
+    <div class="card-body">
+        <div class="row" *ngIf="risWorklist.length && visitDetailBtnClicked" #detailArea> 
+            <div *ngIf="VisitIDWithDashes && visitDetailBtnClicked" class="col-md-12"><strong class="float-right mr-2">
+                <i class="far fa-hand-point-down text-primary mr-2 tagToggle"></i><span class="visit-tpname">  {{VisitIDWithDashes}} | {{TPName}}</span></strong>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                        [moduleName]="'Send-Studies-for-audit'"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-----------------------------------------begin::Modal Popups---------------------------------------->
+
+<!-- EMR Modal Popup-->
+<ng-template #vitalsModal let-vitalsModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="vitalsModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:true, cardSection:false}"></app-vitals>
+    </div>
+</ng-template>
+
+
+<!--EMR Modal Popup-->
+<ng-template #emrModal let-emrModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="emrModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-emr [visitInfo]="visitInfo"></app-emr>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-info" data-dismiss="modal" (click)="emrModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!-----------------------------------------end::Modal Popups------------------------------------------>

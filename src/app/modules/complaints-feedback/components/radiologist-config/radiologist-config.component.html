@@ -1,0 +1,192 @@
+<app-card [cardClass]="'tim-card tim-card-primary'">
+  <div class="card-header">
+    <div class="card-title">
+      <h2 class="card-label">
+        Radiologist Availability Configuration
+        <small>configuration</small>
+      </h2>
+    </div>
+  </div>
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0,0,0,0.8)"
+      [name]="spinnerRefs.tableFormSection"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Please wait...</p>
+    </ngx-spinner>
+
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-6">
+        <input
+          type="text"
+          placeholder="Type Here To Search"
+          class="form-control form-control-sm"
+          [(ngModel)]="searchText"
+          name="searchText"
+        />
+      </div>
+    </div>
+    <small class="pull-right text-danger mb-2">
+  <strong>
+    Total Records:
+    {{
+      (radoiologistList
+        | filterByKey : searchText : ['FullName', 'LocationFromIorgLoc', 'status']
+      )?.length
+    }}
+  </strong>
+</small>
+
+    <div class="table-responsive table-container fixed-height-table mt-4">
+      <table class="table table-hover compact table-bordered">
+        <thead class="sticky-header">
+          <tr>
+            <th>
+              <input
+                type="checkbox"
+                [(ngModel)]="mainChk"
+                class="cursor-pointer"
+                [ngModelOptions]="{ standalone: true }"
+                (change)="selectAllItems($event.target.checked)"
+                [disabled]="isFieldDisabled"
+              />
+            </th>
+            <th>Doctor Name</th>
+            <th>Location</th>
+            <th>Available Time</th>
+            <th>Work Week</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center"   *ngIf="(radoiologistList | filterByKey : searchText : ['FullName', 'LocationFromIorgLoc', 'status'])?.length === 0">
+            <td colspan="7">
+              <div class="container-fluid">
+                <app-no-record-found></app-no-record-found>
+              </div>
+            </td>
+          </tr>
+          <tr
+            *ngFor="
+              let data of radoiologistList
+                | filterByKey
+                  : searchText
+                  : ['FullName', 'LocationFromIorgLoc', 'status'];
+              let i = index
+            "
+          >
+            <td>
+              <input
+                type="checkbox"
+                class="cursor-pointer"
+                (change)="onSelectedDoctor(data)"
+                [(ngModel)]="data.checked"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="isDissabledChk"
+              />
+            </td>
+            <td>
+              <span class="d-inline-block w-250"
+                >{{ data.FullName }} - {{ data.EmpNoWithPrefix }}</span
+              >
+            </td>
+            <td>
+              <span class="d-inline-block w-130">{{
+                data.LocationFromIorgLoc
+              }}</span>
+            </td>
+            <td>
+              <ng-select
+                class="mr-1 w-200"
+                [items]="radoiologistTime"
+                bindLabel="GeneralShiftName"
+                [(ngModel)]="data.GeneralShiftId"
+                placeholder="-Select Time-"
+                [ngClass]="{
+                  invalid: !data.GeneralShiftId && data.checked,
+                  'invalid-highlighted': !data.GeneralShiftId && data.checked
+                }"
+                bindValue="GeneralShiftId"
+              ></ng-select>
+            </td>
+            <td>
+              <ng-select
+                class="mr-1 w-180"
+                [items]="radoiologistWorkWeek"
+                bindLabel="WorkWeekName"
+                [(ngModel)]="data.WorkWeekId"
+                placeholder="-Select Time-"
+                [ngClass]="{
+                  invalid: !data.WorkWeekId && data.checked,
+                  'invalid-highlighted': !data.WorkWeekId && data.checked
+                }"
+                bindValue="WorkWeekID"
+              ></ng-select>
+            </td>
+            <td>
+              <label class="form-check-inline mt-3">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="data.isAvailable"
+                  name="status{{ i }}"
+                />
+                Is Active?
+              </label>
+            </td>
+            <td>
+              <textarea
+                [(ngModel)]="data.isAvailableRemarks"
+                class="form-control form-control-sm w-200"
+                [ngClass]="{
+                  invalid: !data.isAvailableRemarks && data.checked,
+                  'invalid-highlighted':
+                    !data.isAvailableRemarks && data.checked
+                }"
+                rows="2"
+                placeholder="Enter Remarks"
+                required
+              ></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="(radoiologistList | filterByKey : searchText : ['FullName', 'LocationFromIorgLoc', 'status'])?.length > 0" class="text-right mt-4">
+      <button
+        type="button"
+        [disabled]="disabledButton"
+        class="btn btn-primary"
+        mwlConfirmationPopover
+        [popoverTitle]="'Please Confirm...!'"
+        [popoverMessage]="'Are you sure you want to save?'"
+        [confirmText]="confirmationPopoverConfig.confirmText"
+        [cancelText]="confirmationPopoverConfig.cancelText"
+        [placement]="confirmationPopoverConfig.placements[0]"
+        (confirm)="updateRadiologistAvailability()"
+        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+        confirmButtonType="btn btn-sm btn-primary"
+        cancelButtonType="btn btn-sm btn-outline-secondary"
+        (click)="
+          confirmationPopoverConfig.confirmClicked = false;
+          confirmationPopoverConfig.cancelClicked = false
+        "
+        [appendToBody]="true"
+      >
+        <i class="fa fa-save"></i> Save
+        <i
+          class="spinner-border-custom"
+          aria-hidden="true"
+          [hidden]="isSpinner"
+        ></i>
+      </button>
+    </div>
+  </div>
+</app-card>

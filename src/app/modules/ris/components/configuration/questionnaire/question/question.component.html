@@ -1,0 +1,359 @@
+
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <!-- <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                            <label for="branchIds">Location</label>
+                            <ng-select style="width: 100%;"
+                                class=" mt-1 mr-1"
+                                [items]="branchesList"
+                                bindLabel="Title" 
+                                placeholder="-Select Location-"
+                                bindValue="LocId"
+                                [(ngModel)]="LocID"
+                                >
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.Title}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                            <label for="departmentIds">Department</label>
+                            <ng-select style="width: 100%;"
+                                class=" mt-1 mr-1"
+                                [items]="departmentsList"
+                                bindLabel="DepartmentName" 
+                                placeholder="-Select Department-"
+                                bindValue="DepartmentId"
+                                [(ngModel)]="SubDepartmentID"
+                                >
+        
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 text-right">
+                            <label>&nbsp;</label>
+                            <div class="input-group text-right">
+                                <button type="submit" class="btn btn-primary" (click)="getQuestion()"><i class="ti-search m-0"></i>Search</button>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" placeholder="type atleast 2 characters to filter" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getQuestion()"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Add new question"><i class="ti-plus"></i>New</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <ng-select  class="custom w-100 "  [items]="questionGroupTypeList"
+                                bindLabel="QuestionGroupType" 
+                                bindValue="QuestionGroupTypeID"
+                                placeholder="--Filter By Question Group--"
+                                [(ngModel)]="QfilterKey" (change)="filterByQuestion(QfilterKey)">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive"> <!--fixed-height-table-->
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Question</th>
+                                    <th>Question Group Type</th>
+                                    <!-- <th>Extension</th>
+                                    <th>Location</th>
+                                    <th>Department</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="pointer" *ngFor="let item of pagination.paginatedSearchResults; let i = index" (click)="getSingleRow(item.QuestionID)"
+                                [ngClass]="{'active': item.QuestionID==QuestionID}"
+                                >
+                                    <td>{{i+1}}</td>
+                                    <td><span ngbTooltip="{{item.Question||''}}">{{truncate(item.Question || '',40)}} </span></td>
+                                    <td>{{item.QuestionGroupType}}</td>
+                                    <!-- <td><strong>{{item.ExtensionNo}}</strong></td>
+                                    <td>{{item.LocationTitle}}</td>
+                                    <td>{{item.SubDepartmentName}}</td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between p-2">
+                                <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                                </ngb-pagination>
+                                <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                                    <option [ngValue]="5">5 items per page</option>
+                                    <option [ngValue]="10">10 items per page</option>
+                                    <option [ngValue]="20">20 items per page</option>
+                                    <option [ngValue]="50">50 items per page</option>
+                                    <option [ngValue]="100">100 items per page</option>
+                                </select>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner>
+                    <form class="" [formGroup]="objForm" style="min-height: 500px;">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label for="DepartmentId">Question Group Type</label>
+                                <ng-select style="width: 100%;"
+                                    class="mr-1"
+                                    [items]="questionGroupTypeList"
+                                    bindLabel="QuestionGroupType" 
+                                    placeholder="-Select Question Group Type-"
+                                    bindValue="QuestionGroupTypeID"
+                                    [(ngModel)]="selectedGroupType"
+                                    formControlName="QuestionGroupTypeID"
+                                    (change)="setQuestionGroupTypeSetting($event)"
+                                    [readonly]="isQuestionGroupTypReadOnly"
+                                    [ngClass]="{'invalid': objForm.get('QuestionGroupTypeID').errors && objForm.get('QuestionGroupTypeID').touched, 'invalid-highlighted': objForm.get('QuestionGroupTypeID').errors}"
+                                    >
+            
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.QuestionGroupType}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label for="LocId">Answer Type</label>
+                                <ng-select style="width: 100%;"
+                                    class="mr-1"
+                                    [items]="ansTypeList"
+                                    bindLabel="AnswerType" 
+                                    placeholder="-Select Answere Type-"
+                                    bindValue="AnsTypeId"
+                                    [readonly]="isAnsTypeReadOnly"
+                                    formControlName="AnsTypeID"
+                                    (change)='getAnstypeID($event)'
+                                    [ngClass]="{'invalid': objForm.get('AnsTypeID').errors && objForm.get('AnsTypeID').touched, 'invalid-highlighted': objForm.get('AnsTypeID').errors}"
+                                    >
+                                    <!-- (ngModelChange)='getAnstypeID($event)' -->
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="form-group mt-2">
+                                    <label for="Question" class="control-label">Question</label>
+                                    <textarea cols="" rows="" class="form-control form-control-sm" formControlName="Question"
+                                    [ngClass]="{'invalid': objForm.get('Question').errors && objForm.get('Question').touched, 'invalid-highlighted': objForm.get('Question').errors}"></textarea>
+                                    <!-- <input type="text" class="form-control form-control-sm" formControlName="Question"
+                                    [ngClass]="{'invalid': objForm.get('Question').errors && objForm.get('Question').touched, 'invalid-highlighted': objForm.get('Question').errors}"> -->
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3" *ngIf="isMinCharLimit">
+                                <div class="form-group mt-2">
+                                    <label for="MinimumAnswerChar" class="control-label">Min Ans Characters</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="MinimumAnswerChar"
+                                    (keypress)="validateNo($event)"
+                                    [ngClass]="{'invalid': objForm.get('MinimumAnswerChar').errors && objForm.get('MinimumAnswerChar').touched, 'invalid-highlighted': objForm.get('MinimumAnswerChar').errors}" >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2" *ngIf="isMandatory">
+                                <div class="form-check mt-15 text-right">
+                                    <input class="form-check-input pointer" type="checkbox" value="1" formControlName="IsRequired">
+                                    <label class="form-check-label pointer" for="IsRequired">
+                                        <strong>Mandatory</strong> 
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="(isOptionBox||isYesNo) && !isChecklist">
+                                <div class="form-check mt-15" [ngClass]="{'mt-8': isNextQuestion}">
+                                    <input class="form-check-input pointer" type="checkbox" value="1" id="anyChild" #anyChild formControlName="anyChild" (change)="checkChildQuestion($event)">
+                                    <label class="form-check-label pointer" for="anyChild">
+                                        <strong>Any Child Question</strong> 
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6" *ngIf="isMinMax && !isChecklist">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="MinimumAnswerChar" class="control-label">Min</label>
+                                        <input type="text" class="form-control form-control-sm" formControlName="minVal"
+                                        
+                                        #MinVal 
+                                        > <!-- (blur)="validateMinMaxVal($event.target.value, MaxVal.value)"-->
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="MinimumAnswerChar" class="control-label">Max</label>
+                                        <input  type="text" class="form-control form-control-sm" formControlName="maxVal"
+                                        
+                                        #MaxVal>
+                                    </div> <!--  (blur)="validateMinMaxVal(MinVal.value, $event.target.value)"-->
+                                    <small class="text-danger ml-2 mt-1" *ngIf="minMaxError">Max value should be greater then Min value</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6" *ngIf="isDataPicker">
+                                <div class="form-group">
+                                    <label for="isDataPicker" class="control-label">Date</label>
+                                    <input 
+                                    readOnly 
+                                    #dStart
+                                    type="text"
+                                    class="form-control form-control-sm mr-1"
+                                    (click)="dFrom_date.toggle()"
+                                    placeholder="dd-mm-yyyy"
+                                    autocomplete="off"
+                                    name="dStart"
+                                    ngbDatepicker
+                                    #dFrom_date="ngbDatepicker"
+                                    formControlName="qDate"
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="isNextQuestion">
+                                <label for="DepartmentId">Child Question</label>
+                                <ng-select style="width: 100%;"
+                                    class="mr-1"
+                                    [items]="questionList"
+                                    bindLabel="Question" 
+                                    placeholder="-Select Child Question-"
+                                    bindValue="QuestionID"
+                                    formControlName="ChildQuestionID"
+                                    >
+            
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.Question}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6"  *ngIf="(isYesNo || isOptionBox || isOptionBoxText) && isNextQuestion">
+                                <div class="form-group">
+                                    <label for="NextQuestionOnOption" class="control-label">Further Option </label>
+                                    <select name="NextQuestionOnOption" formControlName="NextQuestionOnOption" class="form-control form-control-sm" (change)="getDefaultValue($event.target.value)">
+                                        <option value="">-Select-</option>
+                                        <option *ngFor="let item of arrExpectedOptions; let i = index"  value="{{item.option}}" >{{item.option}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="isOptionBox && !isChecklist">
+                                <div class="form-group">
+                                    <label for="DefaultAns" class="control-label">Default Answer </label>
+                                    <select name="DefaultAns" formControlName="DefaultAns" class="form-control form-control-sm" (change)="getDefaultValue($event.target.value)">
+                                        <option value="">-Select-</option>
+                                        <option *ngFor="let item of arrExpectedOptions; let i = index"  value="{{item.option}}" >{{item.option}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="!isYesNo && isMinCharLimit !isChecklist">
+                                <div class="form-group" *ngIf="!isChecklist">
+                                    <label for="DefaultAns" class="control-label">Dafault Answer</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="DefaultAns" [readonly]="isReadonly"
+                                    [ngClass]="{'invalid': objForm.get('DefaultAns').errors && objForm.get('DefaultAns').touched, 'invalid-highlighted': objForm.get('DefaultAns').errors}">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="isYesNo && !isMinCharLimit && !isChecklist">
+                                <div class="form-check">
+                                    <label for="DefaultAns" class="control-label">Dafault Answer</label><br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input pointer" type="checkbox" value="1" formControlName="DefaultAns" [(ngModel)]="existingYesNo" (change)="setYesNoLabelValue($event)">
+                                    <label class="form-check-label pointer" for="DefaultAns">
+                                        <strong>{{yesNoLabel}}</strong> 
+                                    </label>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <!-- *ngIf="isOptionBox && isNextQuestion" -->
+                            <div class="col-12" *ngIf="isOptionBox && !isChecklist">
+                                  <mat-form-field class="demo-chip-list">
+                                    <mat-chip-list #chipList>
+                                      <mat-chip
+                                        *ngFor="let item of arrExpectedOptions"
+                                        [selectable]="selectable"
+                                        [removable]="removable"
+                                        (removed)="remove(item)"
+                                      >
+                                        {{ item.option }}
+                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                      </mat-chip>
+                                      <input
+                                        placeholder="Enter expected option"
+                                        [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        [matChipInputAddOnBlur]="addOnBlur"
+                                        (matChipInputTokenEnd)="add($event)"
+                                      />
+                                    </mat-chip-list>
+                                  </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="isOptionBoxText && !isChecklist">
+                                <div class="form-group">
+                                    <label for="DefaultAnsText" class="control-label">Remarks</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="DefaultAnsText">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button
+                                    [disabled]="disabledButton"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    title=""
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertUpdateQuestion()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(QuestionID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>{{ActionLabel}} <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+
+        </div>
+    </div>
+</div>

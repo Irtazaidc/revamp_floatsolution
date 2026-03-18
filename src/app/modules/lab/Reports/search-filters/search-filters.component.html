@@ -1,0 +1,35 @@
+<div class="card card-custom">
+    <div class="card-body pb-0">
+        <form [formGroup]="searchfilterform" class="form-horizontal" name="form" role="form">
+            <div class="row form-group justify-content-center">
+                <div class="col-md-2 col-sm-12">
+                    <label class="control-label">Date From:</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                         value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                        class="form-control mb-4" type="text" value="" [ngClass]="{'invalid': searchfilterform.get('dateFrom').errors , 'invalid-highlighted': searchfilterform.get('dateFrom').errors && isSubmitted }" [maxDate]="maxDate"/>
+                </div>
+                <div class="col-md-2 col-lg-2 col-sm-12">
+                    <label class="control-label">Date To:</label>
+                    <input (click)="dateTo.toggle()"  placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker"  ngbDatepicker
+                        formControlName="dateTo" class="form-control mb-4" name="dateTo" type="text" value=""
+                        [ngClass]="{'invalid': searchfilterform.get('dateTo').errors , 'invalid-highlighted': searchfilterform.get('dateTo').errors && isSubmitted }" [maxDate]="maxDate" />
+                </div>
+                <div class="col-md-2 col-lg-2 col-sm-12">
+                    <label class="control-label">Branch:</label>
+                    
+                        <div class="form-group">
+                            <ng-select id="pat_branch" style="width: 100%;"  [ngClass]="{'invalid': searchfilterform.get('locID').errors, 'invalid-highlighted': searchfilterform.get('locID').errors && isSubmitted}" 
+                                formControlName="locID" [items]="branchList" bindLabel="Title"
+                                bindValue="LocId" placeholder="--Select Branch--">
+                            </ng-select>
+                          
+                        </div> 
+                </div>
+               
+                <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+                    <div (click)="getSampleTransportationList()" class="btn btn-primary" type="button">Search</div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

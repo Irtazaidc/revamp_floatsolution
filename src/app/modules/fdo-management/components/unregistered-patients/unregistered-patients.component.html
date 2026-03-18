@@ -1,0 +1,167 @@
+<div class="container-fluid">
+  <div class="card card-custom">
+    <div class="card-body pb-0">
+      <form
+        [formGroup]="filterForm"
+        class="form-horizontal"
+        name="form"
+        role="form"
+      >
+        <div class="row container form-group justify-content-center">
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+            <label class="control-label">Date:</label>
+            <input
+              (click)="dateFrom.toggle()"
+              #dateFrom="ngbDatepicker"
+              placeholder="dd-mm-yyyy"
+              ngbDatepicker
+              value="1980-08-26"
+              formControlName="date"
+              name="date"
+              class="form-control mb-4"
+              type="text"
+              value=""
+              [ngClass]="{
+                invalid: filterForm.get('date').errors,
+                'invalid-highlighted':
+                  filterForm.get('date').errors && isSubmitted
+              }"
+              [maxDate]="maxDate"
+            />
+          </div>
+          <div class="mt-7 col-xl-2 col-lg-4 col-md-2 col-sm-12">
+            <div
+              (click)="getUnregisteredPatientsData()"
+              class="btn btn-primary"
+              type="button"
+            >
+              Search
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <ngx-spinner
+        class="spinner-warning"
+        [name]="spinnerRefs.dataTable"
+        bdColor="rgba(0,0,0,0.8)"
+        size="medium"
+        color="#fff"
+        type="square-loader"
+        [fullScreen]="false"
+      >
+        <p style="color: white">Loading...</p>
+      </ngx-spinner>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12">
+          <div class="input-group">
+            <input
+              type="text"
+              placeholder="type to filter"
+              class="form-control form-control-sm"
+              [(ngModel)]="searchText"
+              (ngModelChange)="filterSearchResults()"
+              name="searchText"
+            />
+            <button
+              class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+              ngbTooltip="Export To Excel"
+              (click)="exportAsExcel()"
+            >
+              <i class="fa fa-file-excel"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <small class="pull-right text-danger">
+        <strong
+          >Total Records: {{ pagination.filteredSearchResults.length }}</strong
+        >
+      </small>
+      <div
+        class="table-responsive table-container fixed-height-table mt-3"
+        style="overflow: auto"
+      >
+        <table class="table table-hover" cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>MRN</th>
+              <th>Patient Name</th>
+              <th>Age</th>
+              <th>Cell</th>
+              <th>Gender</th>
+              <!-- <th>VisitID</th>
+                            <th>VisitDate</th>
+                            <th>RegInvoiceAmt</th>
+                            <th>Location</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="text-center"
+              *ngIf="
+                !unRegisteredPatientsList || unRegisteredPatientsList == ''
+              "
+            >
+              <td colspan="6">
+                <div class="container-fluid">
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+            <tr
+              *ngFor="
+                let data of pagination.paginatedSearchResults;
+                let i = index
+              "
+            >
+              <td>{{ i + 1 }}</td>
+              <td>{{ data.PatientMRNo }}</td>
+              <td>{{ data.PatientName }}</td>
+              <td>{{ data.Age }}</td>
+              <td>{{ data.Cell }}</td>
+              <td>{{ data.Gender }}</td>
+              <td>{{ data.VisitID }}</td>
+              <td>{{ data.VisitDate }}</td>
+              <td>{{ data.RegInvoiceAmt }}</td>
+              <td>{{ data.LocCode }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+        <div class="col-md-6 col-sm-12">
+          <ngb-pagination
+            [collectionSize]="pagination.collectionSize"
+            [(page)]="pagination.page"
+            [pageSize]="pagination.pageSize"
+            [boundaryLinks]="true"
+            [maxSize]="5"
+            [rotate]="true"
+            (pageChange)="refreshPagination()"
+          >
+          </ngb-pagination>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <select
+            class="custom-select pull-right"
+            style="width: auto"
+            [(ngModel)]="pagination.pageSize"
+            (ngModelChange)="refreshPagination()"
+          >
+            <option [ngValue]="5">5 items per page</option>
+            <option [ngValue]="10">10 items per page</option>
+            <option [ngValue]="20">20 items per page</option>
+            <option [ngValue]="50">50 items per page</option>
+            <option [ngValue]="100">100 items per page</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

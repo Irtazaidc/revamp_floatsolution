@@ -1,0 +1,77 @@
+<div *ngIf="UserDetailsList" class="d-flex mt-1">
+    
+    <!--begin: Pic-->
+    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+        <div class="symbol symbol-50 symbol-lg-100">
+            <img class="" [src]=" defaultPatientPic" alt="rider image" />
+        </div>
+    </div>
+    <!--end::Pic-->
+    <!--begin::Info-->
+    <div class="flex-grow-1">
+        <!--begin::Title-->
+        <div class="d-flex justify-content-between flex-wrap mt-1">
+            <div class="d-flex flex-wrap mr-3 align-items-center">
+                <span
+                    class="text-dark-75 text-hover-danger font-size-h5 font-weight-bolder mr-3 cursor-pointer">{{UserDetailsList.Name ||
+                    ''}}
+                    <span class="text-danger text-hover-primary d-block d-sm-inline">
+                        (<span ngbTooltip="Login Name" placement="right">{{UserDetailsList.LoginName || '-'}}</span>)
+                    </span>
+                </span>
+                <!-- <a href="#">
+                <i class="flaticon2-correct text-success font-size-h5"></i>
+              </a> -->
+            </div>
+
+            <!-- <span class="text-dark-75 mr-lg-8 mr-5 mb-lg-0 mb-2">
+                <i class="fa fa-motorcycle" aria-hidden="true"></i>
+            </span> -->
+
+        </div>
+        <!--end::Title-->
+        <!--begin::Content-->
+        <div class="d-flex flex-wrap justify-content-between mt-1">
+            <div class="d-flex flex-column flex-grow-1 pr-8 ">
+                <div class="d-flex flex-wrap mb-2">
+                    <!-- <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">{{convertDate(  DateOfBirth)}} / {{  Age || ''}} {{  Gender || ''}}</span> -->
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger fas fa-shield-alt mr-2 font-size-lg" ngbTooltip="OTP"></i> 
+                        {{UserDetailsList.MobileOTPisVerified==true?'Verified':'Not Verified'}}
+                    </span>
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-phone mr-2 font-size-lg" ngbTooltip="Cell Number"></i>
+                         {{UserDetailsList.CellNumber||
+                        ''}}</span>
+                    <!-- <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-user mr-2 font-size-lg"></i> {{UserDetailsList.RiderStatusID == 1 ?
+                        "Online" :
+                        "Offline"}}
+                    </span> -->
+                    <!-- <span *ngIf="UserDetailsList.ZoneName" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-user mr-2 font-size-lg"></i> {{UserDetailsList.ZoneName }}
+                    </span> -->
+
+                    <!-- <span *ngIf="  VisitPatientType &&   VisitPatientType!=''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="Patient Type" class="text-primary flaticon-user mr-2 font-size-lg"></i>{{  VisitPatientType}}</span>
+
+                    <span *ngIf="  VisitRefBy &&   VisitRefBy !=''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="RefBy Doctor" class="text-primary fa fa-user-md mr-2 font-size-lg"></i>{{  VisitRefBy}}</span>
+
+                    <span *ngIf="  VisitPanelName && patientData.VisitPanelName != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="Visit Panel" class="text-primary flaticon-network mr-2 font-size-lg"></i>{{  VisitPanelName}}</span> -->
+                    <span *ngIf="UserDetailsList.Email != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger fa fa-envelope mr-2 font-size-md" ngbTooltip="Email"></i> {{UserDetailsList.Email || 'NA'}}
+                    </span>
+                </div>
+                
+
+                <!-- <span *ngIf="  RegistrationLocation && patientData.RegistrationLocation != ''" class="text-dark-75 font-size-lg"><i ngbTooltip="Registered Location"  class="cursor-pointer text-primary fa fa-hospital mr-2 font-size-lg"></i> {{  RegistrationLocation || ''}}</span> -->
+
+            </div>
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Info-->
+</div>
+<!--end::Details-->

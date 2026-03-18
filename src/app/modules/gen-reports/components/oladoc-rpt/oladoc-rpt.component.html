@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="card-header">
+        <form [formGroup]="rptForm" class="form-horizontal" name="form" role="form" (ngSubmit)="getRptData()">
+            <div class="row" style="place-content: center;">
+                <div class="col-md-2 col-sm-2 col-lg-2 form-group">
+                    <label>Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="YYYY-MM-DD"
+                        autocomplete="off" ngbDatepicker formControlName="dateFrom" name="dateFrom" class="form-control"
+                        type="text" [value]="" />
+                </div>
+                <div class="col-md-2 col-sm-2 col-lg-2 form-group">
+                    <label>Date To</label>
+                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="YYYY-MM-DD" autocomplete="off"
+                        ngbDatepicker formControlName="dateTo" name="dateTo" class="form-control" type="text"
+                        [value]="" />
+                </div>
+                <div class="col-md-2 col-sm-2 col-lg-2 form-group">
+                    <label>Mobile No</label>
+                    <input placeholder="Mobile Number" class="form-control" name="mobileno" type="text" value=""
+                        formControlName="mobileno" class="form-control" type="text" [value]="" />
+                </div>
+                <div class="col-md-2 col-sm-2 col-lg-2 form-group">
+                    <label>Report Type</label>
+                    <select class="form-control" formControlName="rptType">
+                        <option value="1">Not Registered</option>
+                        <option value="3">Registered</option>
+                        <option value="2">OlaDoc Bookings</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="col-md-2 col-sm-2 col-lg-2 " style="margin-top: 26px;" type="submit"
+                        class="form-control btn btn-primary"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="card-body">
+        <app-oladoc-reg-data [formParams]="formData"></app-oladoc-reg-data>
+    </div>
+</div>

@@ -1,0 +1,372 @@
+<div class="card card-custom">
+  <div class="card-body">
+    <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form"
+      (ngSubmit)="getPatientFeedbackData()">
+      <div class="row">
+        <!-- *ngIf="buttonControlsPermissions.dateFrom" -->
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-12">
+          <label>Date From:</label>
+          <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="YYYY-MM-DD" autocomplete="off"
+            ngbDatepicker formControlName="dateFrom" name="dateFrom" name="dateFrom" class="form-control mb-4"
+            type="text" [value]="" />
+        </div>
+        <!-- //[value]="defaultDateFrom | date:'yyyy-MM-dd'" -->
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-12">
+          <label>Date To:</label>
+          <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="YYYY-MM-DD" autocomplete="off"
+            ngbDatepicker formControlName="dateTo" name="dateTo" class="form-control mb-4" type="text" [value]="" />
+        </div>
+
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-12">
+          <label>Email:</label>
+          <input class="form-control" matInput placeholder="example@domain.com" formControlName="email" />
+        </div>
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-12">
+          <label>Contact:</label>
+          <input class="form-control" matInput placeholder="Enter Contact" formControlName="contact" />
+        </div>
+        <div class="col-md-4 col-lg-3 col-xl-2 col-sm-12">
+          <label>PIN:</label>
+          <input class="form-control" matInput placeholder="Enter PIN" formControlName="pin" />
+        </div>
+
+        <!-- *ngIf="buttonControlsPermissions.email" -->
+
+        <div class="col-md-4 col-lg-2 col-sm-12 mt-8">
+          <button class="btn btn-primary">
+            <span><i class="fa fa-search"></i>Search</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group class="demo-tab-group" style="background-color: #fff" fxLayout="row">
+      <mat-tab fxFlex="50%" label="COMPLAINT'S">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.FeedBackContent" bdColor="rgba(0,0,0,0.8)"
+          size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+          <p style="color: white">Loading...</p>
+        </ngx-spinner>
+        <div class="row" *ngIf="rmsComplaint.length">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card card-custom gutter-t">
+              <div class="dashboard row">
+                <div class="feedback-list col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                  <div class="card-body px-4 py-4">
+                    <fieldset class="fieldset-border-all-primary">
+                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                        Recent Complaint
+                      </legend>
+                      <div style="
+                          min-height: 500px;
+                          max-height: 500px;
+                          overflow-y: auto;
+                        ">
+                        <table class="table table-hover compact" cellspacing="0" style="border-collapse: collapse">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Name</th>
+                              <th>Rating</th>
+                              <th>Visit No</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="ng-star-inserted" *ngFor="
+                                let complaint of rmsComplaint;
+                                let i = index" (click)="selectComplaint(complaint)"
+                              [ngClass]="{'active-rec-border-left': complaint.FBId==FBId}">
+                              <td>{{ i + 1 }}</td>
+                              <td>
+                                <img [src]="defaultPatientPic" style="
+                                    vertical-align: middle;
+                                    border-style: none;
+                                    width: 23px;
+                                    margin-right: 6px;
+                                  " />
+                                {{ complaint.FBId }}
+                                <p class="m-0">
+                                  {{ complaint.FeedBackDate | date:"dd MMM, yyyy, h:mm a" }}
+                                </p>
+                              </td>
+                              <!-- <td>
+                                {{ complaint.FeedbackRating }}
+                              </td> -->
+                              <td [ngSwitch]="complaint.FeedbackRating">
+                                <img class="feedbackratingImg" *ngSwitchCase="1" [src]="veryHappyImg"
+                                  alt="very happy" />
+                                <img class="feedbackratingImg" *ngSwitchCase="2" [src]="happyImg" alt="happy" />
+                                <img class="feedbackratingImg" *ngSwitchCase="3" [src]="normalImg" alt="normal" />
+                                <img class="feedbackratingImg" *ngSwitchCase="4" [src]="SadImg" alt="sad" />
+                                <img class="feedbackratingImg" *ngSwitchCase="5" [src]="verySadImg" alt="verysad" />
+                                <img class="feedbackratingImg" *ngSwitchDefault [src]="normalImg" alt="default">
+                                <!-- <img *ngSwitchDefault src="" alt="default"> -->
+                              </td>
+                              <td>
+                                {{
+                                complaint.AccountNo
+                                ? complaint.AccountNo
+                                : "NA"
+                                }}
+                              </td>
+                              <td>
+                                <button class="btn btn-primary btn-mini mr-1"
+                                  (click)="navigateToComplaintRegPage(complaint)" ngbTooltip="Create Complaint">
+                                  <i class="fas fa-arrow-alt-circle-right" aria-hidden="true"></i></button>
+                                <!-- <button *ngIf="complaint.AccountNo" class="btn btn-primary btn-mini mr-1"
+                                  (click)="navigateToInformationDesk(complaint.AccountNo)"
+                                  ngbTooltip="Information Desk">
+                                  <i class="fas fa fa-info-circle" aria-hidden="true"></i> </button> -->
+                                <button *ngIf="complaint.AccountNo" class="btn btn-primary btn-mini mr-1"
+                                  (click)="openInvoice(complaint.AccountNo)" ngbTooltip="Open Invoice"><i
+                                    class="ti-receipt"></i>Invoice</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <div class="feedback-details col-xl-6 col-lg-6 col-md-6 col-sm-12" *ngIf="selectedComplaint">
+                  <div class="card-body px-4 py-4">
+                    <fieldset class="fieldset-border-all-primary">
+                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                        Description
+                      </legend>
+                      <div class="container" style="
+                          min-height: 500px;
+                          max-height: 500px;
+                          overflow-y: auto;
+                        ">
+                        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.FeedbackDetails" bdColor="rgba(0,0,0,0.8)"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white">Loading...</p>
+                      </ngx-spinner>
+                        <h3>
+                          Name:
+                          {{
+                          selectedComplaint.userName
+                          ? selectedComplaint.userName
+                          : "NotAvailable"
+                          }}
+                        </h3>
+                        <p>
+                          <b>Date:</b>
+                          {{ selectedComplaint.FeedBackDate | date:"dd MMM, yyyy, h:mm a" }}
+                        </p>
+                        <p>
+                          <b>Subject:</b>
+
+                          {{
+                          selectedComplaint.Subject
+                          ? selectedComplaint.Subject
+                          : "NA"
+                          }}
+                        </p>
+
+                        <p>
+                          <b>Contact Details:</b>
+                          {{
+                          selectedComplaint.Cell
+                          ? selectedComplaint.Cell
+                          : "NA"
+                          }},{{
+                          selectedComplaint.Cell1
+                          ? selectedComplaint.Cell1
+                          : "NA"
+                          }}
+                        </p>
+                        <p>
+                          <b> Email:</b>
+
+                          {{
+                          selectedComplaint.Email
+                          ? selectedComplaint.Email
+                          : "NA"
+                          }}
+                        </p>
+                        <p>
+                          <b>Description:</b>
+                          {{
+                          selectedComplaint.Feedback
+                          ? selectedComplaint.Feedback
+                          : "NA"
+                          }}
+                        </p>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab fxFlex="50%" label="FEEDBACK'S">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.FeedBackContent" bdColor="rgba(0,0,0,0.8)"
+          size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+          <p style="color: white">Loading...</p>
+        </ngx-spinner>
+        <div class="row" *ngIf="rmsFeedback.length">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card card-custom gutter-t">
+              <div class="dashboard row">
+                <div class="feedback-list col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                  <div class="card-body px-4 py-4">
+                    <fieldset class="fieldset-border-all-primary">
+                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                        Recent Feedback
+                      </legend>
+                      <div style="
+                          min-height: 500px;
+                          max-height: 500px;
+                          overflow-y: auto;
+                        ">
+                        <table class="table table-hover compact" cellspacing="0" style="border-collapse: collapse">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Name</th>
+                              <th>Rating</th>
+                              <th>Visit No</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="ng-star-inserted" *ngFor="
+                                let feedback of rmsFeedback;
+                                let i = index
+                              " (click)="selectFeedback(feedback)"
+                              [ngClass]="{'active-rec-border-left': feedback.FBId==FBId}">
+                              <td>{{ i + 1 }}</td>
+                              <td>
+                                <img [src]="defaultPatientPic" style="
+                                    vertical-align: middle;
+                                    border-style: none;
+                                    width: 23px;
+                                    margin-right: 6px;
+                                  " />
+                                {{ feedback.FBId }}
+                                <p class="m-0">
+                                  {{ feedback.FeedBackDate | date:"dd MMM, yyyy, h:mm a" }}
+                                </p>
+                              </td>
+                              <td [ngSwitch]="feedback.FeedbackRating">
+                                <img class="feedbackratingImg" *ngSwitchCase="1" [src]="veryHappyImg"
+                                  alt="very happy" />
+                                <img class="feedbackratingImg" *ngSwitchCase="2" [src]="happyImg" alt="happy" />
+                                <img class="feedbackratingImg" *ngSwitchCase="3" [src]="normalImg" alt="normal" />
+                                <img class="feedbackratingImg" *ngSwitchCase="4" [src]="SadImg" alt="sad" />
+                                <img class="feedbackratingImg" *ngSwitchCase="5" [src]="verySadImg" alt="verysad" />
+                                <img class="feedbackratingImg" *ngSwitchDefault [src]="normalImg" alt="default">
+                              </td>
+                              <td>
+                                {{
+                                feedback.AccountNo ? feedback.AccountNo : "NA"
+                                }}
+
+                              </td>
+                              <td>
+                                <button class="btn btn-primary btn-mini mr-1"
+                                  (click)="navigateToComplaintRegPage(feedback)" ngbTooltip="Create Complaint">
+                                  <i class="fas fa-arrow-alt-circle-right" aria-hidden="true"></i></button>
+                                <!-- <button *ngIf="feedback.AccountNo" class="btn btn-primary btn-mini mr-1"
+                                  (click)="navigateToInformationDesk(feedback.AccountNo)" ngbTooltip="Information Desk">
+                                  <i class="fas fa fa-info-circle" aria-hidden="true"></i> </button> -->
+                                <button *ngIf="feedback.AccountNo" class="btn btn-primary btn-mini mr-1"
+                                  (click)="openInvoice(feedback.AccountNo)" ngbTooltip="Print Registration Invoice"><i
+                                    class="ti-receipt"></i>Invoice</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <!-- </div> -->
+
+                        <!-- </div> -->
+
+                        <!-- </div> -->
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <div class="feedback-details col-xl-6 col-lg-6 col-md-6 col-sm-12" *ngIf="selectedFeedback">
+                  <div class="card-body px-4 py-4">
+                    <fieldset class="fieldset-border-all-primary">
+                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                        Description
+                      </legend>
+                      <div class="container" style="
+                          min-height: 500px;
+                          max-height: 500px;
+                          overflow-y: auto;
+                        ">
+                         <ngx-spinner class="spinner-warning" [name]="spinnerRefs.FeedbackDetails" bdColor="rgba(0,0,0,0.8)"
+                         size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                         <p style="color: white">Loading...</p>
+                       </ngx-spinner>
+                        <h3>
+                          Name:
+                          {{
+                          selectedFeedback.userName
+                          ? selectedFeedback.userName
+                          : "NotAvailable"
+                          }}
+                        </h3>
+                        <p>
+                          <b>Date:</b>
+                          {{ selectedFeedback.FeedBackDate | date:"dd MMM, yyyy, h:mm a" }}
+                        </p>
+                        <p>
+                          <b>Subject:</b>
+                          {{
+                          selectedFeedback.Subject
+                          ? selectedFeedback.Subject
+                          : "NA"
+                          }}
+                        </p>
+                        <p>
+                          <b> Contact Details:</b>
+                          {{
+                          selectedFeedback.Cell
+                          ? selectedFeedback.Cell
+                          : "NA"
+                          }},{{
+                          selectedFeedback.Cell1
+                          ? selectedFeedback.Cell1
+                          : "NA"
+                          }}
+                        </p>
+                        <p>
+                          <b>Email:</b>
+                          {{
+                          selectedFeedback.Email
+                          ? selectedFeedback.Email
+                          : "NA"
+                          }}
+                        </p>
+
+                        <p>
+                          <b>Description:</b>
+                          {{
+                          selectedFeedback.Feedback
+                          ? selectedFeedback.Feedback
+                          : "NA"
+                          }}
+                        </p>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,2315 @@
+<div class="card card-custom mt-2">
+    <!-- <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label mt-1">
+                RIS Serarch
+                
+            </h3>
+        </div>
+    </div> -->
+    <div class="card-toolbar row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-3">
+            <div class="row" >
+                <div class="col-12">
+                    <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pl-5 pt-1 test-summary-info-section" [ngClass]="noticeBoardStyle">
+                        <span *ngIf="active!=7"  class="text-dark-75 font-weight-bolder font-size-lg text-white"> {{testSummaryInfoHeader}}</span>
+                        <span *ngIf="active==7"  class="text-dark-75 font-weight-bolder font-size-lg text-white"> All Tests ({{risWorkist.length}})</span>
+                        <span *ngIf="active!=7 && risWorkist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> There are <strong style="font-size: 14px;">({{risWorkist.length}})</strong> test(s) to be processed</span>
+                        <span *ngIf="active!=7 && !risWorkist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> No test found</span> <!--{{testSummaryInfoHeader}}-->
+                        <span *ngIf="active==7" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> List of all tests</span>
+                    </div>
+                    <!-- <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pl-5 pt-1 test-summary-info-section bg-primary"  *ngIf="screenIdentity==='reporting-worklist' && risWorkist.length">
+                        <span *ngIf="active!=7"  class="text-dark-75 font-weight-bolder font-size-lg text-white"> Reporting Worklist</span>
+                        <span *ngIf="active!=7 && risWorkist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> There are <strong style="font-size: 14px;">({{risWorkist.length}})</strong> test(s) to be processed</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <!-- <div style="float: right;"><button class="btn btn-primary"></button></div> -->
+        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="screenIdentity==='reporting-worklist'">
+            <div class="form-group  text-right text-left pt-2">
+                <select class="form-control form-control-sm" (change)="filterReportingList($event.target.value)">
+                    <option value="4">All</option>
+                    <option value="10">Pending</option>
+                    <option value="8">Reported</option>
+                    <option value="9">Final</option>
+                </select>
+            </div>
+        </div> -->
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-9" *ngIf="screenIdentity==='reporting-worklist'">
+            <div class="text-right mt-2">
+                <!-- {{countAssignerSubAll}} -->
+                <!-- <button tabindex="1" class="btn mr-1" [ngClass]="active==1 ? 'btn-warning' : 'btn-outline-warning'" (click)="getActiveReporting(1,null,5,'bg-warning','Peding');">
+                    <i class="flaticon-list"></i> Pending <span class="badge badge-light badge-light-custom">
+                        {{risWorkist.length}}
+                    </span>
+                </button> -->
+                <!-- {{countCheckinWorklist}} -->
+                <!-- <button tabindex="2" class="btn mr-1" [ngClass]="active==2 ? 'btn-success' : 'btn-outline-success'" (click)="getActiveReporting(2,2,6,'bg-success','Reported');">
+                    <i class="flaticon2-arrow-down"></i> Reported <span class="badge badge-light badge-light-custom">
+                        {{risWorkist.length}}
+                    </span>
+                </button>  -->
+                <button tabindex="3" class="btn mr-1" [ngClass]="active==2 ? 'btn-salmon' : 'btn-outline-salmon'" (click)="getActiveReporting(2,2,5,'bg-salmon','Pending');">
+                    <i class="fas fa-hourglass-end"  [ngClass]="active==2 ? 'text-white' : 'text-salmon'"></i>Unassigned<span class="badge badge-light badge-light-custom"> <!--Reported(Me)-->
+                        {{countRadioPending}}
+                    </span>
+                </button>
+                <button tabindex="4" class="btn mr-1" [ngClass]="active==1 ? 'btn-warning' : 'btn-outline-warning'" (click)="getActiveReporting(1,null,8,'bg-warning','Assigned to me');">
+                    <i class="fas fa-user-tag"></i>Assigned<span class="badge badge-light badge-light-custom"> <!--Assigned(Me)-->
+                        {{countRadioAssigned}}
+                    </span>
+                </button>
+                <button tabindex="3" class="btn mr-1" [ngClass]="active==3 ? 'btn-success' : 'btn-outline-success'" (click)="getActiveReporting(3,2,6,'bg-success','Saved As Draft');">
+                    <i class="flaticon-edit-1"></i>Saved Draft<span class="badge badge-light badge-light-custom">
+                        {{countRadioDrafted}}
+                    </span>
+                </button>
+                <button tabindex="3" class="btn mr-1" [ngClass]="active==4 ? 'btn-munselblue' : 'btn-outline-munselblue'" (click)="getActiveReporting(4,2,7,'bg-munselblue','Reported by me');">
+                    <i class="fas fa-file-contract"  [ngClass]="active==4 ? 'text-white' : 'text-munselblue'"></i>Initial Report<span class="badge badge-light badge-light-custom">
+                        {{countRadioReported}}
+                    </span>
+                </button>
+                <button tabindex="3" class="btn mr-1" [ngClass]="active==6 ? 'btn-danger' : 'btn-outline-danger'" (click)="getActiveReporting(6,2,10,'bg-danger','Amendment test list');" ngbTooltip="Addendum/Second Opinion">
+                    <i class="fas fa-user-edit"></i>Adden/2nd Opin<span class="badge badge-light badge-light-custom">
+                        {{countRadioAddendumed}}
+                    </span>
+                </button>
+                <button tabindex="5" class="btn mr-1" [ngClass]="active==5 ? 'btn-primary' : 'btn-outline-primary'" (click)="getActiveReporting(5,null,9,'bg-primary','Finalized');">
+                    <i class="fa fa-check-square"></i>Finalized<span class="badge badge-light badge-light-custom">
+                        {{countRadioFinal}}
+                    </span>
+                </button>
+                <!-- <button tabindex="3" class="btn mr-1" [ngClass]="active==6 ? 'btn-orange' : 'btn-outline-orange'" (click)="getActiveReporting(6,2,6,'bg-orange','Saved As Draft');">
+                    <i class="flaticon-edit-1" [ngClass]="active==2 ? 'text-white' : 'text-orange'"></i>Addendum<span class="badge badge-light badge-light-custom">
+                        {{countRadioReported}}
+                    </span>
+                </button> -->
+                <button tabindex="6" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActiveReporting(7,-1,4,'bg-purple','All List');">
+                    <i class=" flaticon2-grids" [ngClass]="showAllTab || active==7 ? 'text-white' : 'text-purple'"></i> All
+                </button>
+            </div>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-9" *ngIf="screenIdentity!='reporting-worklist'">
+            <div class="text-right mt-2">
+                <!-- MO Worklist Filter -->
+                <button tabindex="1" class="btn mr-1" [ngClass]="active==2 ? 'btn-primary' : 'btn-outline-primary'" (click)="getActive(2,null,1,'bg-primary','MO');setAssignerLayout(0)">
+                    <i class="flaticon-edit-1"></i> MO Worklist <span class="badge badge-light badge-light-custom">{{countMOWorklist}}</span>
+                </button>
+
+                <!-- Checkin -->
+                <button tabindex="2" class="btn mr-1" [ngClass]="active==3 ? 'btn-success' : 'btn-outline-success'" (click)="getActive(3,2,2,'bg-success','Checked In');setAssignerLayout(0)">
+                    <i class="flaticon2-arrow-down"></i> Checkin <span class="badge badge-light badge-light-custom">{{countCheckinWorklist}}</span>
+                </button>
+
+                <!-- Pended -->
+                <button tabindex="3" class="btn mr-1" [ngClass]="active==8 ? 'btn-salmon' : 'btn-outline-salmon'" (click)="getActive(8,7,2,'bg-salmon','Pended');setAssignerLayout(0)">
+                    <i class="flaticon2-reply-1 text-salmon"  [ngClass]="active==8 ? 'text-white' : 'text-salmon'"></i> Pended <span class="badge badge-light badge-light-custom">{{countPendWorklist}}</span>
+                </button>
+
+                <!-- Checkout -->
+                <button tabindex="4" class="btn mr-1" [ngClass]="active==4 ? 'btn-danger' : 'btn-outline-danger'" (click)="getActive(4,3,2,'bg-tomato','Checked Out');setAssignerLayout(0)">
+                    <i class="flaticon2-arrow-up"></i> Checkout <span class="badge badge-light badge-light-custom">{{countCheckoutWorklist}}</span>
+                </button>
+
+                <!-- Assigner -->
+                <button tabindex="5" class="btn mr-1" [ngClass]="active==6 ? 'btn-warning' : 'btn-outline-warning'" (click)="getActive(6,null,12,'bg-warning','Assigner');setAssignerLayout(1)" *ngIf="screenIdentity!='tech-worklist'">
+                    <i class="flaticon-list"></i> Assigner <span class="badge badge-light badge-light-custom">{{countAssignerSubAll}}</span>
+                </button>
+                 <!-- Reset and will be make function when fully shift to web -->
+                 <!-- <button tabindex="4" class="btn mr-1" [ngClass]="active==9 ? 'btn-orange' : 'btn-outline-orange'" (click)="getActive(9,3,2,'bg-orange','Checked Out');setAssignerLayout(0)">
+                    <i class="fa fa-retweet"  [ngClass]="active==9 ? 'text-white' : 'text-orange'"></i> Reset <span class="badge badge-light badge-light-custom">{{countCheckoutWorklist}}</span>
+                </button> -->
+
+                <!-- All  Layout for assigner-->
+                <button tabindex="6" *ngIf="screenIdentity=='tech-worklist'" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-100,'bg-purple','All List');setAssignerLayout(1)">
+                    <i class="flaticon2-grids" [ngClass]="showAllTab || active==7 ? 'text-white' : 'text-purple'"></i> All
+                </button>
+                <!-- All  Layout for other then assigner-->
+                <button tabindex="6" *ngIf="screenIdentity!='tech-worklist'" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-99,'bg-purple','All List');setAssignerLayout(0)">
+                    <i class=" flaticon2-grids" [ngClass]="showAllTab || active==7 ? 'text-white' : 'text-purple'"></i> All
+                </button>
+
+
+                <!-- old style -->
+                <!-- <span  tabindex="2" class="badge badge-primary cursor-pointer" [ngClass]="{'lable-active': active==2}"
+                (click)="getActive(2,null,1,'bg-primary','MO');setAssignerLayout(0)"><i aria-hidden="true" class="ti-receipt text-white"></i> MO Worklist<span class="badge badge-light badge-light-custom">{{this.countMOWorklist}}</span></span> -->
+                <!-- <span *ngIf="screenIdentity=='mo-worklist'" tabindex="2" class="badge badge-warning cursor-pointer" [ngClass]="{'lable-active': active==9}"
+                (click)="getActive(9,2,1,'bg-primary','MO');setAssignerLayout(0)"><i aria-hidden="true" class="ti-check text-white"></i> MO Done<span class="badge badge-light badge-light-custom">{{this.countMOWorklist}}</span></span> -->
+                <!-- <span tabindex="3" class="badge badge-success cursor-pointer" [ngClass]="{'lable-active': active==3}"
+                    (click)="getActive(3,2,2,'bg-success','Checked In');setAssignerLayout(0)"><i aria-hidden="true" class="ti-arrow-down text-white"></i> Checkin<span class="badge badge-light badge-light-custom">{{countCheckinWorklist}}</span></span>
+                <span tabindex="5" class="badge bg-salmon cursor-pointer" [ngClass]="{'lable-active': active==8}"
+                    (click)="getActive(8,7,2,'bg-salmon','Pend');setAssignerLayout(0)"><i aria-hidden="true" class="ti-back-left text-white"></i> Pended<span class="badge badge-light badge-light-custom">{{countPendWorklist}}</span></span>
+                <span tabindex="4" class="badge bg-tomato cursor-pointer" [ngClass]="{'lable-active': active==4}"
+                    (click)="getActive(4,3,2,'bg-tomato','Checked Out');setAssignerLayout(0)"><i aria-hidden="true" class="ti-arrow-up text-white"></i> Checkout<span class="badge badge-light badge-light-custom">{{countCheckoutWorklist}}</span></span> -->
+                <!-- <span tabindex="5" class="badge bg-blue cursor-pointer" [ngClass]="{'lable-active': active==5}"
+                    (click)="getActive(5,4,2,'bg-blue','Initial');setAssignerLayout(0)"><i aria-hidden="true" class="ti-thumb-up text-white"></i> Initial<span class="badge badge-light badge-light-custom">{{countInitialWorklist}}</span></span> -->
+
+                <!-- <span tabindex="6" class="badge badge-warning cursor-pointer" [ngClass]="{'lable-active': active==6}" *ngIf="screenIdentity!='tech-worklist'"
+                    (click)="getActive(6,null,3,'bg-warning','Assigner');setAssignerLayout(1)"><i aria-hidden="true" class="ti-pencil-alt text-white"></i> Assigner<span class="badge badge-light badge-light-custom">{{countAssignerSubAll}}</span></span> -->
+
+                <!-- <span *ngIf="screenIdentity=='tech-worklist'" tabindex="7" class="badge bg-purple cursor-pointer text-white" [ngClass]="{'lable-active': showAllTab || active==7}"
+                    style="color: #fff;" (click)="getActive(7,-1,5,'bg-purple','All List');setAssignerLayout(1)" style="padding: 7px 21px;"><i aria-hidden="true"
+                        class="fa fa-list-alt text-white"></i> All  -->
+                        <!--<span class="badge badge-light badge-light-custom">{{countAllWorklist}}</span>-->
+                    <!-- </span> -->
+                <!-- <span *ngIf="screenIdentity!='tech-worklist'" tabindex="7" class="badge bg-purple cursor-pointer text-white" [ngClass]="{'lable-active': showAllTab || active==7}"
+                    style="color: #fff;" (click)="getActive(7,-1,2,'bg-purple','All List');setAssignerLayout(0)" style="padding: 7px 21px;"><i aria-hidden="true"
+                        class="fa fa-list-alt text-white"></i> All  -->
+                        <!--<span class="badge badge-light badge-light-custom">{{countAllWorklist}}</span>-->
+                    <!-- </span> -->
+            </div>
+        </div>
+    </div>
+    <!--Start::All worklists except Queue management-->
+    <div class="card-body" *ngIf="!isAssigner">
+        <!-- <h1>No Queue Management</h1> -->
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <!--start::Search Filter-->
+        <div class="row" *ngIf="risWorkist.length">
+            <div [ngClass]="{'col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6': countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist', 'col-12': !(countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist')}">
+                <div class="input-group">
+                    <input type="text" placeholder="type atleast 2 characters to filter" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                </div>
+            </div>
+            <div [ngClass]="{'col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6': countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist', 'col-12': (countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist')}" *ngIf="countCheckoutWorklist>0 && screenIdentity=='tech-worklist'">
+                <div class="news-container" style="display: flex; justify-content: center; align-items: flex-start; height: 34px; color: white; border-radius: 4px; background-color: #99201c; background-image: linear-gradient(316deg, #99201c 0%, #f56545 74%); overflow: hidden; font-family: monospace;"
+                >
+                    <div *ngIf="showUrdu" class="news-alert urdu-slide" style="padding-top: 4px;">{{ urduNews }}</div>
+                    <div *ngIf="!showUrdu" class="news-alert english-slide" style="padding-top: 4px;">{{ englishNews }}</div>
+                  </div>
+            </div>
+        </div>
+        <!--end::Search Filter-->
+
+        <!--start::Table and rows section-->
+        <!-- <pre>
+            {{ pagination.paginatedSearchResults|json}}
+        </pre> -->
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!='bulk-queue-manager'">
+            <div class="col-12">
+                <!-- <strong>No record found</strong> -->
+                
+                <ng-container *ngIf="screenIdentity=='reporting-worklist'; else showNoRecSection">
+                    <app-no-record-found></app-no-record-found>
+                  </ng-container>
+                  
+                  <ng-template #showNoRecSection>
+                    <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
+                        <p class="text-primary" style="margin-top: -20px;">
+                            <strong>Info! </strong> No record found...
+                        </p>
+                  </ng-template>
+
+            </div>
+        </div>
+        <!--begin:: MO worklist and Tech worklist-->
+        <div class="row" *ngIf="screenIdentity!='bulk-queue-manager' && screenIdentity!='reporting-worklist'">
+            <div class="col-md-12">
+                <div class="table-responsive" style="min-height: 330px;">
+                    <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
+                        <thead>
+                            <tr *ngIf="pagination.paginatedSearchResults.length">
+                                <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
+                                    <ng-container>
+                                        <th style="cursor: pointer"
+                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='DeliveryDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy')">
+                                            {{header}}</th>
+                                    </ng-container>
+                                </ng-container>
+                                <th *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'reporting-worklist'">TestStatus</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody> <!--(click)="showVisitDetail(row,i)"-->
+                            <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "  (dblclick)="verifyUserBiomateric(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
+                                <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                                    <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
+                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy')">
+                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                            <i 
+                                                [ngClass]="returnCopyClasses(i)"
+                                                class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                (click)="copyText(row,i)">&nbsp;</i>
+                                        </span>
+                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+            
+                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <!-- Add ngbTooltip to TPCode column -->
+                                        <!-- <span class="cursor-pointer" *ngIf="objKey == 'TPCode'" ngbTooltip="{{row.TPName}}">{{ row[objKey] }}</span> -->
+                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
+                                    </td>
+                                </ng-container>
+                                <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'reporting-worklist'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
+                                </td>
+                                <td>
+                                    <span class="cursor-pointer mr-2"><i (click)="showVisitDetail(row,i)" class="fa fa-info-circle" [ngClass]="rowIndex==i?'text-white':'text-warning'" ngbTooltip="Visit Detail"></i></span>
+                                    <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                            aria-label="Button group with nested dropdown">
+                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                <!-- <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="showVisitDetail(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-info-circle text-primary cursor-pointer"></i>
+                                                        Visit Detail</span>
+                                                </button> -->
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='mo-worklist'" (click)="openQuestionnaireModal(row)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-question-circle text-primary cursor-pointer"></i> MO
+                                                        Questionnaire</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && (screenIdentity=='tech-worklist' || screenIdentity=='queue-management' || screenIdentity=='queue-manager') && row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistory(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
+                                                        History</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="openPopupModal(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
+                                                        CheckIn/Out</span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-qrcode text-primary cursor-pointer"></i>
+                                                        Print Radio Lable</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistoryReport(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-file text-primary cursor-pointer"></i>
+                                                        MO History Report </span>
+                                                </button>
+                                                <button *ngIf="(screenIdentity=='tech-worklist' && row.RISStatusID>=4 && row.RISStatusID!=7)" (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
+                                                    <span><i class="fas fa-x-ray text-primary cursor-pointer"></i>
+                                                        DICOM </span>
+                                                </button>
+                                                <!-- <button (click)="openPopupModal(row)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
+                                                        Check In</span>
+                                                </button> -->
+                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                        Vitals </span>
+                                                </button>
+                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                        EMR </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity!='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
+                                                    <span><i class="ti-flag-alt text-danger cursor-pointer"></i>
+                                                        Mark Sensitivity </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
+                                                    <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
+                                                        Reporting </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <button *ngIf="actionsPermission[0]=='ques'" class="btn btn-primary" type="button" (click)="openMOQuestionnaire()"><i aria-hidden="true" class="fa fa-save" ></i></button>  -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end:: MO worklist and Tech worklist-->
+
+        <!--begin::Reporting worklist section-->
+        <div class="row" *ngIf="screenIdentity=='reporting-worklist'">
+            <div class="col-md-12">
+                <div class="table-responsive" style="min-height: 330px;">
+                    <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
+                        <thead>
+                            <tr *ngIf="pagination.paginatedSearchResults.length">
+                                <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
+                                    <ng-container>
+                                        <th style="cursor: pointer"
+                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='RegistrationDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy')">
+                                            {{header}}</th>
+                                    </ng-container>
+                                </ng-container>
+                                <th *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'reporting-worklist'">TestStatus</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody> <!--(click)="showVisitDetail(row,i)"-->
+                            <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "  (dblclick)="verifyUserBiomateric(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
+                                <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                                    <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
+                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='RegistrationDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy')">
+                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                            <i 
+                                                [ngClass]="returnCopyClasses(i)"
+                                                class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                (click)="copyText(row,i)">&nbsp;</i>
+                                        </span>
+                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate' && objKey != 'DeliveryDate' && objKey != 'RemainingTime (hh:mm)')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy' && objKey != 'RemainingTime (hh:mm)')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+            
+                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <!-- <label *ngIf="objKey == 'RemainingTime (hh:mm)'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label> -->
+                                        <label *ngIf="objKey == 'RemainingTime (hh:mm)'">
+                                            <ng-container *ngIf="row.StatusId < 9; else dash">
+                                                <strong ngbTooltip="Remaining Time hh:mm" [ngClass]="getRemainingTimeBadgeColor(row['RemainingTime (hh:mm)'])" class="badge badge-border-white cursor-pointer" style="padding: 7px 3px !important;">
+                                                    {{ row[objKey] }}
+                                                </strong>
+                                            </ng-container>
+                                            <ng-template #dash>
+                                                --
+                                            </ng-template>
+                                        </label>
+                                        <!-- <label *ngIf="objKey == 'DeliveryDate' " >{{ row[objKey]}} ({{row.RemainingTime}})</label> -->
+                                        <!-- Add ngbTooltip to TPCode column -->
+                                        <!-- <span class="cursor-pointer" *ngIf="objKey == 'TPCode'" ngbTooltip="{{row.TPName}}">{{ row[objKey] }}</span> -->
+                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'DeliveryDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }} 
+                                            <!-- <strong *ngIf="row.StatusId<9" ngbTooltip="Remaining Time hh:mm<br>akjlds" [ngClass]="getRemainingTimeBadgeColor(row.RemainingTime)" class="badge  badge-border-white cursor-pointer" style="padding: 7px 3px !important;">{{row.RemainingTime}} (hh:mm)</strong>  -->
+                                        </span>
+                                    </td>
+                                </ng-container>
+                                <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'reporting-worklist'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
+                                </td>
+                                <td>
+                                    <span class="cursor-pointer mr-2"><i (click)="showVisitDetail(row,i)" class="fa fa-info-circle" [ngClass]="rowIndex==i?'text-white':'text-warning'" ngbTooltip="Visit Detail"></i></span>
+                                    <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                            aria-label="Button group with nested dropdown">
+                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                <!-- <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="showVisitDetail(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-info-circle text-primary cursor-pointer"></i>
+                                                        Visit Detail</span>
+                                                </button> -->
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='mo-worklist'" (click)="openQuestionnaireModal(row)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-question-circle text-primary cursor-pointer"></i> MO
+                                                        Questionnaire</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && (screenIdentity=='tech-worklist' || screenIdentity=='queue-management' || screenIdentity=='queue-manager') && row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistory(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
+                                                        History</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="openPopupModal(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
+                                                        CheckIn/Out</span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-qrcode text-primary cursor-pointer"></i>
+                                                        Print Radio Lable</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistoryReport(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-file text-primary cursor-pointer"></i>
+                                                        MO History Report </span>
+                                                </button>
+                                                <!-- <button (click)="openPopupModal(row)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
+                                                        Check In</span>
+                                                </button> -->
+                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                        Vitals </span>
+                                                </button>
+                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                        EMR </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity!='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
+                                                    <span><i class="ti-flag-alt text-danger cursor-pointer"></i>
+                                                        Mark Sensitivity </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
+                                                    <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
+                                                        Reporting </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="printReport(row,i)" class="dropdown-item pb-2">
+                                                    <span><i class="ti-printer text-primary cursor-pointer"></i>
+                                                        Print Report </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
+                                                    <span><i class="fas fa-x-ray text-primary cursor-pointer"></i>
+                                                        DICOM </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <button *ngIf="actionsPermission[0]=='ques'" class="btn btn-primary" type="button" (click)="openMOQuestionnaire()"><i aria-hidden="true" class="fa fa-save" ></i></button>  -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end::Reporting worklist section-->
+        
+        <!--end::Table and rows section-->
+
+        <!--start::Pagination-->
+        <div class="row" *ngIf="risWorkist.length && screenIdentity!='bulk-queue-manager'">
+            <div class="col-12">
+                <div class="d-flex justify-content-between p-2">
+                    <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                    </ngb-pagination>
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                        <option [ngValue]="5">5 items per page</option>
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--end::Paginition-->
+        <!-- begin:: Visit Details Section -->
+        <div class="row" *ngIf="risWorkist.length && visitDetailBtnClicked" #detailArea> 
+            <div *ngIf="VisitIDWithDashes && visitDetailBtnClicked" class="col-md-12"><strong class="float-right mr-2">
+                <i class="far fa-hand-point-down text-primary mr-2 tagToggle"></i><span class="visit-tpname">  {{VisitIDWithDashes}} | {{TPName}}</span></strong>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="visit-docs-area mt-8">
+                            <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                                [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div *ngIf="VisitId && screenIdentity=='reporting-worklist'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-pacs [PIN]="VisitIDWithDashes"></app-pacs>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="VisitId" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                    [moduleName]="moduleScreenName"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+        <!-- end:: Visit Details Section -->
+
+        <!--Start::Queue management Bulk-->
+        <div  class="row" *ngIf="screenIdentity=='bulk-queue-manager'">
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"  (click)="assignerFilter(6,null,12,'bg-warning','Assigner',1);setAssignerLayout(1)" type="button" class="btn btn-mini "><i class="fa fa-th" aria-hidden="true"></i>All <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerSubAll}}</span></button>
+
+                    <button [ngClass]="isUnassigned ? 'btn-primary' : 'btn-outline-primary'" (click)="assignerFilter(6,null,12,'bg-warning','Assigner',3);setAssignerLayout(1)" type="button" class="btn btn-mini"><i class="fa fa-th-large" aria-hidden="true"></i>Unassigned <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerUnassigned}}</span></button>
+
+                    <button [ngClass]="isAssigned ? 'btn-primary' : 'btn-outline-primary'" (click)="assignerFilter(6,null,12,'bg-warning','Assigner',2);setAssignerLayout(1)" type="button" class="btn btn-mini"><i class="fa fa-check-square" aria-hidden="true"></i>Assigned <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerAssigned}}</span></button>
+                    <mat-checkbox class="ml-2 text-primary pull-right" name="isPreMedicalFitness"
+                        [(ngModel)]="isPreMedicalFitness">
+                        <strong class="text-primary" ngbTooltip="X-Ray for Medical Fitness">Is Medical</strong>
+                    </mat-checkbox>
+
+                </div>
+                <span class="text-warning pull-right"><strong>Total Selected Tests: {{checkedItemCount}}</strong></span>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                                <label for="EmpId">Initializer:</label>
+                                <ng-select style="width: 100%;"  
+                                    class="mr-1"
+                                    [items]="radoiologistList"
+                                    [(ngModel)]="InitByEmpID"
+                                    bindLabel="FullName" 
+                                    placeholder="-Select Doctor-"
+                                    bindValue="EmpId"
+                                    (change)="selectRadiologistForAllinit($event)">
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                                <label for="EmpId">Section:</label>
+                                <ng-select style="width: 100%;"  
+                                    class="mt-1 mr-1" 
+                                    [items]="subSectionList" 
+                                    placeholder="-Select Section-"
+                                    bindLabel="SubSectionTitle" 
+                                    name="subSectionIDs" 
+                                    bindValue="SubSectionId" 
+                                    [(ngModel)]="SubSectionId"
+                                    (change)="getRadiologistSummary($event)"
+                                    >
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-11" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.readiologinstSummarySection" size="medium"
+                                    color="#fff" type="square-loader" [fullScreen]="false" style="opacity: 0.7;">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+                                <!-- All Studies -->
+                                <ng-template #popContentAll>
+                                    <ng-container *ngIf="AllInitStudies !==null && AllInitStudies.length">
+                                        <div *ngFor="let s of AllInitStudies; let i = index">
+                                            <p>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                            </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="AllInitStudies===null || !AllInitStudies.length">
+                                        <p style="text-align: center;">No Visit found</p>
+                                    </ng-container>
+                                </ng-template>
+                
+                                <!-- Final Studies -->
+                                <ng-template #popContentFinal>
+                                    <ng-container *ngIf="FinalInitRadioStudies !==null && FinalInitRadioStudies.length">
+                                        <div *ngFor="let s of FinalInitRadioStudies; let i = index">
+                                            <p>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                            </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="FinalInitRadioStudies===null || !FinalInitRadioStudies.length">
+                                        <p style="text-align: center;">No Visit found</p>
+                                    </ng-container>
+                                </ng-template>
+                
+                                <!-- Pending Studies -->
+                                <ng-template #popContentPending>
+                                    <ng-container *ngIf="PendingInitStudies !==null && PendingInitStudies.length">
+                                        <div *ngFor="let s of PendingInitStudies; let i = index">
+                                            <p>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                            </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="PendingInitStudies===null || !PendingInitStudies.length">
+                                        <p style="text-align: center;">No Visit found</p>
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #popContentAllTitle>
+                                    <span><i *ngIf="AllInitStudies.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(AllInitStudies)" ngbTooltip="Copy all PINs to clipboard"></i> All Studies</span>
+                                </ng-template>
+                                <!-- <label class="badge-border-white badge badge-primary dr-counter cursor-pointer" [ngbPopover]="popContentAll" [popoverTitle]="popContentAllTitle" ngbTooltip="Click to view all Studies">
+                                    <i class="fa fa-list text-white" aria-hidden="true"></i> All 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{AllStudies.length}}</span>
+                                </label> -->
+                                    <!-- <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" 
+                                    style="
+                                        position: absolute;
+                                        opacity: 0.9;
+                                        top: 2px;
+                                        left: 15px;
+                                        width: 28px;
+                                        height: 29px;"
+                                        [name]="spinnerRefs.drPic" size="small" color="#fff"
+                                        type="square-loader" [fullScreen]="false">
+                                    </ngx-spinner>
+                                    <img *ngIf="EmpID" class="radiologist-img" [src]="radiologistPic || defaultPatientPic" alt="Doctors Pic"/> -->
+                                <ng-template #popContenFinalTitle>
+                                    <span><i *ngIf="FinalInitRadioStudies.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(FinalInitRadioStudies)" ngbTooltip="Copy all PINs to clipboard"></i> Peding Studies(datewise)</span>
+                                </ng-template>
+                                <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadInitSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentFinal" [popoverTitle]="popContenFinalTitle" ngbTooltip="Click to view date wise Studies">
+                                    <i class="fa fa-check-square text-white" aria-hidden="true"></i> Current 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{FinalInitRadioStudies.length}}</span>
+                                </label>
+                                <ng-template #popContenPendingTitle>
+                                    <span><i *ngIf="PendingInitStudies.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(PendingInitStudies)" ngbTooltip="Copy all PINs to clipboard"></i> Pending Studies</span>
+                                </ng-template>
+                                <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadInitSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentPending" [popoverTitle]="popContenPendingTitle" ngbTooltip="Click to view all pending Studies">
+                                    <i class="fa fa-clock text-white" aria-hidden="true"></i> Pending 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{PendingInitStudies.length}}</span>
+                                </label>
+                                <i aria-hidden="true" class="ti-reload text-primary cursor-pointer mt-2 doctor-history-reload" [ngClass]="isLoadInitSummaryMethodCalled ? 'text-primary' : 'text-warning'" ngbTooltip="Load data" (click)="loadInitRadiologistSummary()"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                                <label for="EmpId">DS:</label>
+                                <ng-select style="width: 100%;"  
+                                    class="mr-1"
+                                    [items]="radoiologistList"
+                                    [(ngModel)]="DSByEmpID"
+                                    bindLabel="FullName" 
+                                    placeholder="-Select Doctor-"
+                                    bindValue="EmpId"
+                                    (change)="selectRadiologistForAllDS($event)">
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                                <label for="EmpId">Section:</label>
+                                <ng-select style="width: 100%;"  
+                                    class="mt-1 mr-1" 
+                                    [items]="subSectionList" 
+                                    placeholder="-Select Section-"
+                                    bindLabel="SubSectionTitle" 
+                                    name="subSectionIDs" 
+                                    bindValue="SubSectionId" 
+                                    [(ngModel)]="SubSectionIdDSBy"
+                                    (change)="getRadiologistSummary($event)"
+                                    >
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-11" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.readiologinstSummarySectionDSBy" size="medium"
+                                    color="#fff" type="square-loader" [fullScreen]="false" style="opacity: 0.7;">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+                                <!-- All Studies -->
+                                <ng-template #popContentAll>
+                                    <ng-container *ngIf="AllStudiesDSBy !==null && AllStudiesDSBy.length">
+                                        <div *ngFor="let s of AllStudiesDSBy; let i = index">
+                                            <p>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                            </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="AllStudiesDSBy===null || !AllStudiesDSBy.length">
+                                        <p style="text-align: center;">No Visit found</p>
+                                    </ng-container>
+                                </ng-template>
+                
+                                <!-- Final Studies -->
+                                <ng-template #popContentFinal>
+                                    <ng-container *ngIf="FinalStudiesDSBy !==null && FinalStudiesDSBy.length">
+                                        <div *ngFor="let s of FinalStudiesDSBy; let i = index">
+                                            <p>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                            </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="FinalStudiesDSBy===null || !FinalStudiesDSBy.length">
+                                        <p style="text-align: center;">No Visit found</p>
+                                    </ng-container>
+                                </ng-template>
+                
+                                <!-- Pending Studies -->
+                                <ng-template #popContentPending>
+                                    <ng-container *ngIf="PendingStudiesDSBy !==null && PendingStudiesDSBy.length">
+                                        <div *ngFor="let s of PendingStudiesDSBy; let i = index">
+                                            <p>
+                                                <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                            </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="PendingStudiesDSBy===null || !PendingStudiesDSBy.length">
+                                        <p style="text-align: center;">No Visit found</p>
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #popContentAllTitle>
+                                    <span><i *ngIf="AllStudiesDSBy.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(AllStudiesDSBy)" ngbTooltip="Copy all PINs to clipboard"></i> All Studies</span>
+                                </ng-template>
+                                <!-- <label class="badge-border-white badge badge-primary dr-counter cursor-pointer" [ngbPopover]="popContentAll" [popoverTitle]="popContentAllTitle" ngbTooltip="Click to view all Studies">
+                                    <i class="fa fa-list text-white" aria-hidden="true"></i> All 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{AllStudies.length}}</span>
+                                </label> -->
+                                    <!-- <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" 
+                                    style="
+                                        position: absolute;
+                                        opacity: 0.9;
+                                        top: 2px;
+                                        left: 15px;
+                                        width: 28px;
+                                        height: 29px;"
+                                        [name]="spinnerRefs.drPic" size="small" color="#fff"
+                                        type="square-loader" [fullScreen]="false">
+                                    </ngx-spinner>
+                                    <img *ngIf="EmpIDforDS" class="radiologist-img" [src]="radiologistPicDS || defaultPatientPic" alt="Doctors Pic"/> -->
+                                <ng-template #popContenFinalTitle>
+                                    <span><i *ngIf="FinalStudiesDSBy.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(FinalStudiesDSBy)" ngbTooltip="Copy all PINs to clipboard"></i> Peding Studies(datewise)</span>
+                                </ng-template>
+                                <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadDSSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentFinal" [popoverTitle]="popContenFinalTitle" ngbTooltip="Click to view date wise Studies">
+                                    <i class="fa fa-check-square text-white" aria-hidden="true"></i> Current 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{FinalStudiesDSBy.length}}</span>
+                                </label>
+                                <ng-template #popContenPendingTitle>
+                                    <span><i *ngIf="PendingStudiesDSBy.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(PendingStudiesDSBy)" ngbTooltip="Copy all PINs to clipboard"></i> Pending Studies</span>
+                                </ng-template>
+                                <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadDSSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentPending" [popoverTitle]="popContenPendingTitle" ngbTooltip="Click to view all pending Studies">
+                                    <i class="fa fa-clock text-white" aria-hidden="true"></i> Pending 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{PendingStudiesDSBy.length}}</span>
+                                </label>
+                                <i aria-hidden="true" class="ti-reload text-primary cursor-pointer mt-2 doctor-history-reload" [ngClass]="isLoadDSSummaryMethodCalled ? 'text-primary' : 'text-warning'" ngbTooltip="Load data" (click)="loadDSRadiologistSummary()"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <!-- <button type="button" [disabled]="isDisabledAssignment"
+                    class="btn btn-sm btn-primary pull-right mr-8" 
+                    mwlConfirmationPopover
+                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]" 
+                    (confirm)="assignTestToDoctorBulk(8)"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" 
+                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i class="ti-check-box"></i> Assign <i class="spinner-border-custom" aria-hidden="true"
+                        [hidden]="isSpinnerAssignment"></i>
+                </button> -->
+                <div *ngIf="pagination.paginatedSearchResults.length" class="table-responsive" style="max-height: 440px; min-height: 300px;">
+                    <table *ngIf="pagination.paginatedSearchResults.length" class="table table-hover" cellpadding=0 cellspacing=0>
+                        <thead>
+                            <tr *ngIf="pagination.paginatedSearchResults.length">
+                                <th style="width: 2%;"><input type="checkbox" [(ngModel)]="mainChk" class="cursor-pointer" (change)="selectAllTPStoreItems($event)" [disabled]="isFieldDisabled" /></th>
+                                <th style="width: 13%;">Initializer</th>
+                                <th style="width: 12%;">DS</th>
+                                <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
+                                    <ng-container>
+                                        <th style="cursor: pointer"
+                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header!='TPCode' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='checked'  && header !='PhoneNumber' && header !='RegistrationDate' && header !='DeliveryDate' && header !='isConsentRead' && header !='TestStatus' && header !='SubSectionId' && header !='InitializedBy' && header !='InitializedOn' && header !='InitByEmpID' && header !='DSByEmpID' && header!='isMetal' && header !='isPreMedical' && header !='RadiologistID')">
+                                            {{header}}</th>
+                                    </ng-container>
+                                </ng-container>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index " class="cursor-pointer" [ngClass]="{'active': i==rowIndexBulk}" (dblclick)="openVisitDetailModal(row,i)">
+                                <td style="width: 2%;"> 
+                                    <input
+                                        class="cursor-pointer"
+                                        type="checkbox"
+                                        [(ngModel)]="row.checked"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="row.RISStatusID==8 && !isDissabledChk"
+                                        (change)="countCheckedItems()"
+                                    />
+                                </td>
+                                <td style="width: 12%;"> 
+                                    <ng-select style="width: 100%;"  
+                                        class="mr-1"
+                                        [items]="radoiologistList"
+                                        bindLabel="FullName" 
+                                        placeholder="-Please select the doctor-"
+                                        bindValue="EmpId"
+                                        [(ngModel)]="row.InitByEmpID"
+                                        [disabled]="row.RISStatusID==8"
+                                        [ngClass]="{'invalid': !row.InitByEmpID && row.checked, 'invalid-highlighted': (row.checked && buttonClicked && !row.InitByEmpID)}"
+                                       >
+                                    </ng-select>
+                                </td>
+                                <td style="width: 13%;"> 
+                                    <ng-select style="width: 100%;"  
+                                        class="mr-1"
+                                        [items]="radoiologistList"
+                                        bindLabel="FullName" 
+                                        placeholder="-Please select the doctor-"
+                                        bindValue="EmpId"
+                                        [(ngModel)]="row.DSByEmpID"
+                                        [disabled]="row.RISStatusID==8"
+                                        [ngClass]="{'invalid': !row.DSByEmpID && row.checked, 'invalid-highlighted': (row.checked && buttonClicked && !row.DSByEmpID)}"
+                                       >
+                                    </ng-select>
+                                </td>
+                                <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                                    <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
+                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='TPCode' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention'&& objKey!='EmpId' && objKey!='checked' && objKey!='PhoneNumber' && objKey!='RegistrationDate' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TestStatus' && objKey!='SubSectionId' && objKey!='InitializedBy' && objKey!='InitializedOn' && objKey!='InitByEmpID' && objKey!='DSByEmpID' && objKey!='isMetal' && objKey!='isPreMedical' && objKey!='RadiologistID')">
+                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                            <i
+                                                [ngClass]="returnCopyClassesBulk(i)"
+                                                ngbPopover="copied" triggers="click:mouseleave"
+                                                (click)="copyText(row,i)">&nbsp;</i>
+                                        </span>
+                                        <!-- <lable  *ngIf="row.ProcessId==1" [ngClass]="{'badge badge-primary badge-border-white': (objKey == 'Workflow Status' && (objKey!=null || objKey!=''))}" >{{ row[objKey]||'MO Pending' }}</lable>
+                                        <lable  *ngIf="row.ProcessId==2" [ngClass]="{'badge badge-danger badge-border-white': (objKey == 'Workflow Status' && (objKey!=null || objKey!=''))}" >{{ row[objKey]||'MO Pending' }}</lable> -->
+            
+                                        <!-- <lable [ngClass]="{'{{row.StatusBadgeClass}} badge-border-white': (objKey == 'Workflow Status' && (objKey!=null || objKey!=''))}" >{{ row[objKey]||'MO Pending' }}-{{row.StatusBadgeClass}}</lable> -->
+            
+                                        <label class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'TPName')" >{{ row[objKey]||'Registered' }}</label>
+                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!=''))" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+            
+                                        <label *ngIf="objKey == 'TPCode'" ngbTooltip="{{row.TPName}}"  class="cursor-pointer" >{{ row[objKey]}}</label>
+                                        <label *ngIf="objKey == 'TestStatus'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        &nbsp;<span *ngIf="(objKey == 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Assigned">
+                                            <i class="fa fa-check text-primary" [ngClass]="{'text-white': i==rowIndexBulk}" aria-hidden="true" style="font-size: 12px;"></i>
+                                        </span>
+                                        &nbsp;<span *ngIf="(objKey == 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Un-assigned">
+                                            <button *ngIf="row.RISStatusID==8 && row.StatusId<9" type="button" [disabled]="isDisabledUnassignmentBulk"
+                                                class="btn btn-mini btn-warning" mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="'Are you sure want to Unassign?'"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]" 
+                                                (confirm)="unAssignTestBulk(i,row)"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="btn btn-sm btn-primary" 
+                                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i class="fa fa-times-circle"></i>Unassign <i class="spinner-border-custom" aria-hidden="true"
+                                                    [hidden]="isSpinnerUnassignmentBulk"></i>
+                                            </button>
+                                        </span>
+                                        <!-- <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span> -->
+                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">
+                                            {{ row[objKey] }} 
+                                            <i style="font-size: 12px;" 
+                                               *ngIf="objKey == 'PatientName' && row.isMetal" 
+                                               class="fa fa-exclamation-triangle blink-red" 
+                                               [ngbTooltip]="'This patient has metal implants.'" 
+                                               placement="bottom" 
+                                               tooltipClass="metal-tooltip">
+                                            </i>
+                                        </span>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'TPName'" >
+                                            {{ row[objKey] }} 
+                                            <i style="font-size: 15px;" 
+                                               *ngIf="objKey == 'TPName' && row.isPreMedical" 
+                                               class="fas fa-notes-medical text-danger" 
+                                               [ngbTooltip]="'Study for Medical Fitness'">
+                                            </i>
+                                          </span>
+                                    </td>
+                                </ng-container>
+                                
+                                <td>
+                                    <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='bulk-queue-manager'"  (click)="openVisitDetailModal(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-eye text-primary cursor-pointer"></i> View Detail</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='bulk-queue-manager' && row.RISStatusID==8 && row.StatusId<9"  (click)="getRowInfoForUnassign(row)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-times-circle text-primary cursor-pointer"></i> Unassign</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && (screenIdentity=='tech-worklist' || screenIdentity=='queue-management' || screenIdentity=='queue-manager') && row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistory(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
+                                                        History</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="openPopupModal(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
+                                                        CheckIn/Out</span>
+                                                </button>
+                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                    (click)="openMOHistoryReport(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-file text-primary cursor-pointer"></i>
+                                                        MO History Report </span>
+                                                </button>
+                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                        Vitals </span>
+                                                </button>
+                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                        EMR </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity!='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
+                                                    <span><i class="ti-flag-alt text-danger cursor-pointer"></i>
+                                                        Mark Sensitivity </span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item">
+                                                    <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
+                                                        Reporting </span>
+                                                </button>
+                                                <span (click)="getRowActiveBulk(i)">
+                                                    <app-dicom-dropdown-button  [btnPayload]="{TPID:row.TPId,VisitID:row.VisitNo, styleClass:'dropdown-item',iconClass:'fas fa-x-ray text-primary cursor-pointer', btnText:'DICOM'}"></app-dicom-dropdown-button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager' && !isAssigned">
+                <hr>
+                <button type="button" 
+                    [disabled]="isDisabledAssignmentBulk"
+                    class="btn btn-sm btn-primary pull-right mr-8" 
+                    mwlConfirmationPopover
+                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]" 
+                    (confirm)="assignTestToDoctorBulk(8)"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" 
+                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i class="ti-check-box"></i> Assign <i class="spinner-border-custom" aria-hidden="true"
+                        [hidden]="isSpinnerAssignmentBulk"></i>
+                </button>
+            </div>
+            <div class="col-12" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager' && isAssigned">
+                <hr>
+                <button type="button" 
+                    [disabled]="isDisabledAssignmentBulk"
+                    class="btn btn-sm btn-warning pull-right mr-8" 
+                    mwlConfirmationPopover
+                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]" 
+                    (confirm)="assignTestToDoctorBulk(9)"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" 
+                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i class="fa fa-times-circle"></i> Unassign <i class="spinner-border-custom" aria-hidden="true"
+                        [hidden]="isSpinnerAssignmentBulk"></i>
+                </button>
+
+            </div>
+        </div>
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity=='bulk-queue-manager'">
+            <div class="col-12">
+                <!-- <strong>No record found</strong> -->
+                <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
+                <p class="text-primary" style="margin-top: -20px;">
+                    <strong>Info! </strong> No record found...
+                </p>
+            </div>
+        </div>
+         <!--End::Queue management Bulk-->
+    </div>
+    <!--end::All worklists except Queue management-->
+
+    <!--Start::Queue management-->
+    <div class="card-body" *ngIf="isAssigner && (screenIdentity=='queue-management' || screenIdentity=='queue-manager')">
+        <!-- <h1>Queue Management</h1> -->
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <!--start::Search Filter-->
+        <div class="row" *ngIf="true">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="p-2" style="border: 1px solid #eee; ">
+                    <div class="row" *ngIf="true">
+                        <div class="col-12 mb-2">
+                            <!-- <button (click)="assignerFilter(6,null,3,'bg-warning','Assigner',1);setAssignerLayout(1)"  class="btn btn-mini mr-3 mb-2" [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th" aria-hidden="true"></i> All <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerSubAll}}</span></button>
+                           
+                            <button (click)="assignerFilter(6,null,3,'bg-warning','Assigner',3);setAssignerLayout(1)" class="btn btn-mini mr-3 mb-2" [ngClass]="isUnassigned ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th-large" aria-hidden="true"></i>Unassigned <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerUnassigned}}</span></button>
+
+                            <button (click)="assignerFilter(6,null,3,'bg-warning','Assigner',2);setAssignerLayout(1)"  class="btn btn-mini mb-2" [ngClass]="isAssigned ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-check-square" aria-hidden="true"></i> Assigned <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerAssigned}}</span></button> -->
+                            <!-- total: <span class="text-danger">{{risWorkist.length}}</span> -->
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"  (click)="assignerFilter(6,null,12,'bg-warning','Assigner',1);setAssignerLayout(1)" type="button" class="btn btn-mini "><i class="fa fa-th" aria-hidden="true"></i>All <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerSubAll}}</span></button>
+                                <button [ngClass]="isUnassigned ? 'btn-primary' : 'btn-outline-primary'" (click)="assignerFilter(6,null,12,'bg-warning','Assigner',3);setAssignerLayout(1)" type="button" class="btn btn-mini"><i class="fa fa-th-large" aria-hidden="true"></i>Unassign <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerUnassigned}}</span></button>
+                                <button [ngClass]="isAssigned ? 'btn-primary' : 'btn-outline-primary'" (click)="assignerFilter(6,null,12,'bg-warning','Assigner',2);setAssignerLayout(1)" type="button" class="btn btn-mini"><i class="fa fa-check-square" aria-hidden="true"></i>Assigned <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerAssigned}}</span></button>
+
+                                <mat-checkbox class="ml-2 text-primary pull-right" name="isPreMedicalFitness"
+                                    [(ngModel)]="isPreMedicalFitness">
+                                    <strong class="text-primary" ngbTooltip="X-Ray for Medical Fitness">Is Medical</strong>
+                                </mat-checkbox>
+
+                                <!-- Reset and will be make function when fully shift to web -->
+                                <!-- <button [ngClass]="isReset ? 'btn-primary' : 'btn-outline-primary'" (click)="assignerFilter(6,null,3,'bg-primary','Assigner',4);setAssignerLayout(1)" type="button" class="btn btn-mini"><i class="fa fa-retweet" aria-hidden="true"></i>Reset <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerAssigned}}</span></button> -->
+                            </div>
+                            <!-- Total: <span class="text-danger">{{risWorkist.length}}</span> -->
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="type atleast 2 characters" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button
+                                (click)="openEmergencyAssignerModal()"
+                                type="button"
+                                ngbTooltip="View Emergency Assigner List"
+                                class="btn btn-outline-primary btn-mini py-1 emergency-btn">
+                                <i class="fa fa-bolt thunder-icon" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Search Filter-->
+            
+                    <!--start::Table and rows section-->
+                    <div class="row">
+                        <div class="col-12">
+                            <div style="max-height: 500px; overflow-y: auto;">
+                                <table *ngIf="risWorkist.length" class="table table-hover" style="width: 100%;" cellpadding=0 cellspacing=0 (keydown)="onKeyDown($event)" tabindex="0">
+                                    <tbody>
+                                        <tr #firstRow *ngFor="let row of pagination.paginatedSearchResults; let i = index " [ngClass]="{'text-danger': (row.ProcessId == 2)}" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
+                                            <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                                                <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
+                                                    *ngIf="(objKey == 'VisitNo' || objKey == 'TPCode')">
+                                                    <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                        <i 
+                                                            [ngClass]="returnCopyClasses(i)"
+                                                            ngbPopover="copied" triggers="click:mouseleave"
+                                                            (click)="copyText(row,i)">&nbsp;</i>
+                                                    </span>
+                                                    <span (click)="assignTest(row,i)" >
+                                                        <span *ngIf="(objKey == 'VisitNo' && objKey != 'TPCode')" class="cursor-pointer">{{ row[objKey]}} </span>
+                                                        <i  style="font-size: 12px;"
+                                                            *ngIf="row.isMetal && objKey == 'VisitNo' && objKey != 'TPCode'" 
+                                                            class="fa fa-exclamation-triangle blink-red" 
+                                                            [ngbTooltip]="'This patient has metal implants.'" 
+                                                            placement="top" 
+                                                            tooltipClass="metal-tooltip">
+                                                        </i>
+                                                        <span *ngIf="(objKey == 'TPCode')" class="cursor-pointer"  ngbTooltip="{{row.TPName}}">{{ row[objKey]}} </span>
+                                                        <span *ngIf="(objKey == 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Assigned">&nbsp;
+                                                            <i class="fa fa-check text-primary" [ngClass]="{'text-white': i==rowIndex}" aria-hidden="true" style="font-size: 12px;"></i>
+                                                        </span>
+                                                        <i  style="font-size: 15px;"
+                                                            *ngIf="row.isPreMedical && objKey == 'TPCode' && objKey != 'VisitNo'" 
+                                                            class="fas fa-notes-medical text-danger pull-right" 
+                                                            [ngClass]="{'text-white': i==rowIndex}"
+                                                            [ngbTooltip]="'Study for Medical Fitness'" 
+                                                            placement="top" >
+                                                        </i>
+                                                        
+                                                    </span>
+                                                    
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="!risWorkist.length">
+                        <div class="col-12 text-center">
+                            <p class="text-primary" >
+                                <strong>Info! </strong> No visit found...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Table and rows section-->
+
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8 col-xl-8" *ngIf="TPId">
+                <div class="p-2" style="border: 1px solid #eee; ">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+                        </div>
+                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                            <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                                <app-vitals (isVistalSaved)="isVistalSaved($event)" [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals> 
+                                <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-small>
+                            </ng-container>
+                            <ng-template #actionButtonLarge>
+                                <div class="bg-light">
+                                    <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                                </div>
+                            </ng-template>
+                        </div> -->
+                    </div>
+                    
+                    <!--start:: Assigner------------------------------------>
+                    <div class="assigner-container">
+                        <!-- <app-assigner [ComponentPayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId, TPCode:TPCode,TPName:TPName, PatientName:PatientName,RISWorkListID:RISWorkListID,RISStatusID:RISStatusID,isShowVitalsCard:isShowVitalsCard,rowIndex:rowIndex}"></app-assigner> -->
+                        <div class="row">
+                            <!-- <div class="col-md-6 text-center" *ngIf="!isShowVitalsCard &&TPCode">
+                                <h4 class="ml-2 tp-name"><strong>{{TPCode}} - {{TPName}}</strong></h4>
+                            </div> -->
+                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-5 mt-2">
+                                <div class="tests-box_">
+                                    <!-- <label for="TPID">Test</label> -->
+                                    <select name="moIntervenedTests" class="form-control form-control-sm" style="height: 37px;" [(ngModel)]="TPIds" (change)="getStudyName($event,VisitID)">
+                                        <option *ngFor="let row of visitTestsAssigner" value="{{row.TPID}}">{{row.TPFullName}}</option>
+                                    </select>
+                                    <!-- <ng-select style="width: 100%;" 
+                                        [items]="visitTests" 
+                                        bindLabel="TPCode"
+                                        placeholder="--Select Test--" 
+                                        bindValue="TPID"
+                                        [(ngModel)]="TPIds"
+                                        [multiple]="true"
+                                        [clearable]="false"
+                                        [ngClass]="{'invalid': !TPIds.length, 'invalid-highlighted': !TPIds.length}"
+                                        >
+                                    </ng-select> -->
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-7 mt-2">
+                                <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{techHistory:true,vitals: true, emr:true, moConsent:true, pacs:false,dicom:true}"></app-action-buttons-small>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-2">
+                                <label for="InitByEmpID">Who Can Initialize?<span class="badge badge-light badge-light-custom text-primary" style="margin-right: -2px;">{{radiologistListFiltered.length}}</span></label>
+                                <ngx-spinner
+                                    class="spinner-warning"
+                                    bdColor="rgba(0,0,0,0.8)"
+                                    [name]="spinnerRefs.doctorsDropdownSpinner"
+                                    size="small"
+                                    color="#fff"
+                                    type="square-loader"
+                                    [fullScreen]="false"
+                                    >
+                                    <p style="color: white">Loading...</p>
+                                </ngx-spinner>
+                                <ng-select style="width: 100%;"  
+                                    class="mr-1"
+                                    [items]="radiologistListFiltered"
+                                    bindLabel="FullName" 
+                                    placeholder="-Please select the init doctor-"
+                                    bindValue="EmpId"
+                                    [(ngModel)]="InitByEmpID"
+                                    (change)="getRadiologistInfoByID($event,1);"
+                                    [ngClass]="{'invalid': !InitByEmpID && isInitSubmitted, 'invalid-highlighted': !InitByEmpID && isInitSubmitted}">
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-2">
+                                <label for="DSByEmpID">Who Can DS?<span class="badge badge-light badge-light-custom text-primary" style="margin-right: -2px;">{{radiologistListFiltered.length}}</span></label>
+                                <ngx-spinner
+                                    class="spinner-warning"
+                                    bdColor="rgba(0,0,0,0.8)"
+                                    [name]="spinnerRefs.doctorsDropdownSpinner"
+                                    size="small"
+                                    color="#fff"
+                                    type="square-loader"
+                                    [fullScreen]="false"
+                                    >
+                                    <p style="color: white">Loading...</p>
+                                </ngx-spinner>
+                                <ng-select style="width: 100%;"  
+                                    class="mr-1"
+                                    [items]="radiologistListFiltered"
+                                    bindLabel="FullName" 
+                                    placeholder="-Please select the ds doctor-"
+                                    bindValue="EmpId"
+                                    [(ngModel)]="DSByEmpID"
+                                    (change)="getRadiologistInfoByID($event,2);"
+                                    [ngClass]="{'invalid': !DSByEmpID && isDSSubmitted, 'invalid-highlighted': !DSByEmpID && isDSSubmitted}">
+                                </ng-select>
+                            </div>
+                            <div *ngIf="(InitByEmpID || DSByEmpID) && (InitByEmpID == DSByEmpID); else separateCards" class="col-12 mt-2">
+                            <app-radiologist-infov2
+                                [paramPayload]="{EmpID: InitByEmpID,
+                                dateFrom: paramsValuesForWorkList.dateFrom,
+                                dateTo: paramsValuesForWorkList.dateTo}" ></app-radiologist-infov2>
+                            </div>
+                            <!-- Case: Separate cards -->
+                            <ng-template #separateCards>
+                            <!-- Init Doctor Card -->
+                            <div *ngIf="InitByEmpID" class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-2">
+                                <app-radiologist-infov2
+                                [paramPayload]="{EmpID: InitByEmpID,
+                                    dateFrom: paramsValuesForWorkList.dateFrom,
+                                    dateTo: paramsValuesForWorkList.dateTo }"></app-radiologist-infov2>
+                            </div>
+                            <!-- DS Doctor Card -->
+                            <div *ngIf="DSByEmpID" class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-2">
+                                <app-radiologist-infov2
+                                [paramPayload]="{
+                                    EmpID: DSByEmpID,
+                                    dateFrom: paramsValuesForWorkList.dateFrom,
+                                    dateTo: paramsValuesForWorkList.dateTo }"></app-radiologist-infov2>
+                            </div>
+                            </ng-template>
+                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-12 mt-2">                                
+                                <div *ngIf="RISStatusID==8" class="alert alert-custom alert-light-primary alert-dismissible d-flex align-items-center fade show" style="padding: 0.5rem 2rem;">
+                                    <i class="fa fa-check-circle text-primary"></i>
+                                    <!-- <strong class="mx-2" *ngIf="assigneeInItName">Assigned for Init to {{assigneeInItName}}</strong>
+                                    <strong class="mx-2" *ngIf="assigneeDSName">Assigned for DS to {{assigneeDSName}}</strong>
+                                    <strong class="mx-2" *ngIf="!assigneeDSName && !assigneeInItName">Assigned to {{assigneeName}}</strong> -->
+
+
+                                    <strong *ngIf="assigneeInItName && assigneeDSName" class="ml-2">
+                                    <ng-container *ngIf="assigneeInItName === assigneeDSName; else differentDoctors">
+                                        Init & DS → {{ assigneeInItName }}
+                                    </ng-container>
+                                    </strong>
+
+                                    <ng-template #differentDoctors>
+                                    <strong>
+                                        Init → {{ assigneeInItName }} 
+                                    </strong>
+                                    <strong >
+                                    | DS →  {{ assigneeDSName }}
+                                    </strong>
+                                    </ng-template>
+
+
+                                    <!-- <strong *ngIf="assigneeDSName" class="mx-2">
+                                    Assigned to {{ assigneeDSName }} for Preliminary Reporting
+                                    <ng-container *ngIf="assigneeDSName === assigneeInItName; else differentAssignee">
+                                        and Review/Final DS.
+                                    </ng-container>
+                                    </strong>
+
+                                    <ng-template #differentAssignee>
+                                    and {{ assigneeName }} for Review/Final DS.
+                                    </ng-template> -->
+
+                                </div>
+                                <div *ngIf="EmpID">
+                                    <div class="col-12">
+                                        <span *ngIf="radiologistRefByMappingInfo.length">
+                                            <i style="font-size: 12px;" aria-hidden="true" class="flaticon2-arrow blink-red"></i>
+                                            <small style="font-size: 12px;">
+                                                <strong class="text-warning">RefBy: </strong>
+                                                <span class="text-primary"> {{refByDrName}}</span> 
+                                                <strong class="text-warning ml-2">Associated Radiologist(s):</strong>
+                                                <span class="text-primary">{{associatedRadiologists}}</span>
+                                            </small>
+                                        </span>
+                                        <br *ngIf="radiologistRefByMappingInfo.length">
+                                        <span *ngIf="RadiologistID">
+                                            <small style="font-size: 12px;" >
+                                                <strong class="text-danger">Tech Suggested Doctor: </strong>
+                                                <span class="text-primary"> {{AssigneeNameSuggestedByTech}}</span> 
+                                            </small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div *ngIf="RISStatusID!=8" class="alert alert-custom alert-light-warning alert-dismissible d-flex align-items-center fade show"  style="padding: 0.5rem 2rem;">
+                                    <i class="fa fa-exclamation-circle text-warning"></i>
+                                    <strong class="mx-2">Un-Assigned</strong>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <!-- <div  *ngIf="EmpID" class="row">
+                            <div class="col-12">
+                                <app-radiologist-info [paramPayload]="{EmpID:EmpID,dateFrom:paramsValuesForWorkList.dateFrom,dateTo:paramsValuesForWorkList.dateTo}"></app-radiologist-info>
+                            </div>
+                        </div> -->
+                        
+                        <div class="row">
+                            <!--Start:: Initital Doctor Summary-------------------------------------->
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 container-fluid">
+                                <fieldset class="fieldset-primary fieldset-border-top">
+                                    <legend style="font-size: .9rem;">Initial Doctor's Summary </legend>
+                                    <div class="row">
+                                        <div class="col-md-auto">
+                                            <ng-select style="width: 100%; min-width: 100px !important;"  
+                                                class="mt-1 mr-1 " 
+                                                [items]="subSectionList" 
+                                                placeholder="-Select Section-"
+                                                bindLabel="SubSectionTitle" 
+                                                name="subSectionIDs" appendTo="body"
+                                                bindValue="SubSectionId" 
+                                                [(ngModel)]="SubSectionId"
+                                                (change)="getInintByRadiologistSummary($event)">
+                                            </ng-select>
+                                        </div>
+                                        <div class="col-md-auto mt-1 sumery-section d-flex flex-row align-items-center">
+                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.readiologinstSummarySection" size="medium"
+                                                color="#fff" type="square-loader" [fullScreen]="false" style="opacity: 0.7;">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+
+                                            <!-- begin:: popup content Initial Studies -->
+                                            <!-- All Studies -->
+                                            <ng-template #popContentAll>
+                                                <ng-container *ngIf="AllInitStudies !==null && AllInitStudies.length">
+                                                    <div *ngFor="let s of AllInitStudies; let i = index">
+                                                        <p>
+                                                            <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                                (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                                        </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="AllInitStudies===null || !AllInitStudies.length">
+                                                    <p style="text-align: center;">No Visit found</p>
+                                                </ng-container>
+                                            </ng-template>
+        
+                                            <!-- Final Studies -->
+                                            <ng-template #popContentFinal>
+                                                <ng-container *ngIf="FinalInitRadioStudies !==null && FinalInitRadioStudies.length">
+                                                    <div *ngFor="let s of FinalInitRadioStudies; let i = index">
+                                                        <p>
+                                                            <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                                (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                                        </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="FinalInitRadioStudies===null || !FinalInitRadioStudies.length">
+                                                    <p style="text-align: center;">No Visit found</p>
+                                                </ng-container>
+                                            </ng-template>
+        
+                                            <!-- Pending Studies -->
+                                            <ng-template #popContentPending>
+                                                <ng-container *ngIf="PendingInitStudies !==null && PendingInitStudies.length">
+                                                    <div *ngFor="let s of PendingInitStudies; let i = index">
+                                                        <p>
+                                                            <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                                (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                                        </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="PendingInitStudies===null || !PendingInitStudies.length">
+                                                    <p style="text-align: center;">No Visit found</p>
+                                                </ng-container>
+                                            </ng-template>
+                                            <!-- end:: popup content Initial Studies -->
+
+                                            <!-- begin:: popup title Initial Studies -->
+                                            <ng-template #popContentAllTitle>
+                                                <span><i *ngIf="AllInitStudies.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(AllInitStudies)" ngbTooltip="Copy all PINs to clipboard"></i> All Studies</span>
+                                            </ng-template>
+                                            <ng-template #popContenFinalTitle>
+                                                <span><i *ngIf="FinalInitRadioStudies.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(FinalInitRadioStudies)" ngbTooltip="Copy all PINs(Init) to clipboard"></i> Pending Studies(datewise)</span>
+                                            </ng-template>
+                                            
+                                            <ng-template #popContenPendingTitle>
+                                                <span><i *ngIf="PendingInitStudies.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(PendingInitStudies)" ngbTooltip="Copy all PINs(Init) to clipboard"></i> Pending Studies</span>
+                                            </ng-template>
+                                            <!-- end:: popup title Initial Studies -->
+
+                                            <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadInitSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentFinal" [popoverTitle]="popContenFinalTitle" ngbTooltip="Click to view date wise Studies">
+                                                <i class="fa fa-check-square text-white" aria-hidden="true"></i> Current 
+                                                <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{FinalInitRadioStudies.length}}</span>
+                                            </label>
+
+                                            <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadInitSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentPending" [popoverTitle]="popContenPendingTitle" ngbTooltip="Click to view all pending Studies">
+                                                <i class="fa fa-clock text-white" aria-hidden="true"></i> Pending 
+                                                <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{PendingInitStudies.length}}</span>
+                                            </label>  <i style="margin-top: -8px !important;" aria-hidden="true" class="ti-reload cursor-pointer mt-2 doctor-history-reload" [ngClass]="isLoadInitSummaryMethodCalled ? 'text-primary' : 'text-warning'" ngbTooltip="Load data" (click)="loadInitRadiologistSummary()"></i>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <!--End:: Initital Doctor Summary-------------------------------------->
+                            
+                            <!--Start:: DS Doctor Summary-------------------------------------->
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6">
+                                <fieldset class="fieldset-primary fieldset-border-top">
+                                    <legend style="font-size: .9rem;">DS Doctor's Summary </legend>
+                                    <div class="row">
+                                        <div class="col-md-auto">
+                                            <ng-select style="width: 100%; min-width: 100px !important;" 
+                                                class="mt-1 mr-1" 
+                                                [items]="subSectionList" 
+                                                placeholder="-Select Section-"
+                                                bindLabel="SubSectionTitle" 
+                                                name="subSectionIDs"  appendTo="body"
+                                                bindValue="SubSectionId" 
+                                                [(ngModel)]="SubSectionIdDSBy"
+                                                (change)="getDSByRadiologistSummary($event)"
+                                                >
+                                            </ng-select>
+                                        </div>
+                                        <div class="col-md-auto mt-1 sumery-section d-flex justify-content-center">
+                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.readiologinstSummarySectionDSBy" size="medium"
+                                                color="#fff" type="square-loader" [fullScreen]="false" style="opacity: 0.7;">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                            <!-- begin:: popup content DSBy Studies -->
+                                            <!-- All Studies -->
+                                            <ng-template #popContentAllDSBy>
+                                                <ng-container *ngIf="AllStudiesDSBy !==null && AllStudiesDSBy.length">
+                                                    <div *ngFor="let s of AllStudiesDSBy; let i = index">
+                                                        <p>
+                                                            <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                                (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                                        </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="AllStudiesDSBy===null || !AllStudiesDSBy.length">
+                                                    <p style="text-align: center;">No Visit found</p>
+                                                </ng-container>
+                                            </ng-template>
+        
+                                            <!-- Final Studies -->
+                                            <ng-template #popContentFinalDSBy>
+                                                <ng-container *ngIf="FinalStudiesDSBy !==null && FinalStudiesDSBy.length">
+                                                    <div *ngFor="let s of FinalStudiesDSBy; let i = index">
+                                                        <p>
+                                                            <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                                (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                                        </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="FinalStudiesDSBy===null || !FinalStudiesDSBy.length">
+                                                    <p style="text-align: center;">No Visit found</p>
+                                                </ng-container>
+                                            </ng-template>
+        
+                                            <!-- Pending Studies -->
+                                            <ng-template #popContentPendingDSBy>
+                                                <ng-container *ngIf="PendingStudiesDSBy !==null && PendingStudiesDSBy.length">
+                                                    <div *ngFor="let s of PendingStudiesDSBy; let i = index">
+                                                        <p>
+                                                            <span  class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                                (click)="copyVisitNo(s.VisitId)">&nbsp;</i>
+                                                        </span> {{s.VisitId}} - <strong ngbTooltip="{{s.TPName}}">{{s.Code}}</strong></p>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="PendingStudiesDSBy===null || !PendingStudiesDSBy.length">
+                                                    <p style="text-align: center;">No Visit found</p>
+                                                </ng-container>
+                                            </ng-template>
+                                            <!-- end:: popup content DSBy Studies -->
+
+
+                                            <!-- begin:: popup title DSBy Studies -->
+                                            <ng-template #popContentAllTitleDSBy>
+                                                <span><i *ngIf="AllStudiesDSBy.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(AllStudies)" ngbTooltip="Copy all PINs to clipboard"></i> All Studies</span>
+                                            </ng-template>
+                                            <ng-template #popContenFinalTitleDSBy>
+                                                <span><i *ngIf="FinalStudiesDSBy.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(FinalStudiesDSBy)" ngbTooltip="Copy all PINs(DSBy) to clipboard"></i> Pending Studies(datewise)</span>
+                                            </ng-template>
+                                            
+                                            <ng-template #popContenPendingTitleDSBy>
+                                                <span><i *ngIf="PendingStudiesDSBy.length>1" class="ti-files cursor-pointer pr-2" (click)="copyAllVisitNo(PendingStudiesDSBy)" ngbTooltip="Copy all PINs(DSBy Pending) to clipboard"></i> Pending Studies</span>
+                                            </ng-template>
+                                            <!-- end:: popup title DSBy Studies -->
+
+                                            <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadDSSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentFinalDSBy" [popoverTitle]="popContenFinalTitleDSBy" ngbTooltip="Click to view date wise Studies">
+                                                <i class="fa fa-check-square text-white" aria-hidden="true"></i> Current 
+                                                <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{FinalStudiesDSBy.length}}</span>
+                                            </label>
+
+                                            <label class="badge-border-white badge dr-counter cursor-pointer" [ngClass]="isLoadDSSummaryMethodCalled ? 'badge-primary' : 'badge-warning'" [ngbPopover]="popContentPendingDSBy" [popoverTitle]="popContenPendingTitleDSBy" ngbTooltip="Click to view all pending(DSBy) Studies">
+                                                <i class="fa fa-clock text-white" aria-hidden="true"></i> Pending 
+                                                <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{PendingStudiesDSBy.length}}</span>
+                                            </label>  <i aria-hidden="true" class="ti-reload cursor-pointer mt-2 doctor-history-reload" [ngClass]="isLoadDSSummaryMethodCalled ? 'text-primary' : 'text-warning'" ngbTooltip="Load data" (click)="loadDSRadiologistSummary()"></i>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <!--End:: DS Doctor Summary-------------------------------------->
+                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-12" style="margin-top: -18px;">
+                                <hr>
+                                <ng-template #popContentSrv>
+                                    <app-ris-tp-services [VisitId]="VisitId"></app-ris-tp-services>
+                                </ng-template>
+                                <strong *ngIf="InitializedBy" class="mx-2 text-warning">Initialized By: {{InitializedBy}} | {{InitializedOn | date:'dd-MMM-yyyy hh:mm a'}} <i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4"aria-hidden="true" ngbTooltip="Click to show services detail"
+                                    [ngbPopover]="popContentSrv"
+                                    [popoverTitle]="'Services Detail'"
+                                    [popoverClass]="'custom-popover'"></i></strong>
+                                <button *ngIf="TPId && RISStatusID!=8" type="button" [disabled]="isDisabledAssignment"
+                                    class="btn btn-sm btn-primary pull-right mr-8" 
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]" 
+                                    (confirm)="assignTestToDoctor(8,'')"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary" 
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="ti-check-box"></i> Assign <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerAssignment"></i>
+                                </button>
+                                <button *ngIf="TPId && RISStatusID==8  && StatusId<=9" type="button" [disabled]="isDisabledUnassignment"
+                                    class="btn btn-sm btn-warning pull-right mr-2" 
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="'Are you sure want to Unassign?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]" 
+                                    (confirm)="assignTestToDoctor(9,'')"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary" 
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-times-circle"></i> Unassign <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerUnassignment"></i>
+                                </button>
+                                <button 
+                                    class="btn btn-sm btn-outline-danger pull-right mr-2" ngbTooltip="Mark test as Urgent OR Critical"
+                                    [ngClass]="{'btn-outline-warning': ProcessIDParent == 2, 'btn-outline-danger': (ProcessIDParent == 1 || ProcessIDParent == 3)}"
+                                    (click)="markSensitivityAssigner({
+                                        TPId:TPId, VisitNo:VisitID
+                                    })">
+                                    <i class="ti-flag-alt cursor-pointer"></i>Mark Sensitivity
+                                </button>
+                                <button *ngIf="isLocked"  [disabled]="disabledButtonUnlock"
+                                    class="btn btn-sm btn-outline-danger pull-right mr-2" ngbTooltip="Unlock the study"
+                                    (click)="updateRadioReportLock()">
+                                    <i class="ti-unlock cursor-pointer"></i>Unlock <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerUnlock"></i>
+                                </button>
+                                <mat-checkbox *ngIf="TPId && RISStatusID!=8" class="mt-3 pull-right mr-2" name="withRemarks" [(ngModel)]="withRemarks"> <span>With Remarks</span> </mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:: Assigner-------------------------------------->
+
+                    <div class="row" style="margin-top: -5px">
+                        <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+                            <div class="visit-docs-area mt-8">
+                                <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                                    [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+                            <div class="visit-remarks-area  mt-8">
+                                <app-visit-remarks [moduleName]="moduleScreenName" [propVisitNo]="VisitId" [editing]="{save: true}" ></app-visit-remarks>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row" *ngIf="!TPId"> -->
+                <div class="col-xs-12 col-sm-3 col-lg-3 col-xl-3 text-center pt-20" *ngIf="!TPId">
+                    <p class="text-primary" style="margin-top: -20px;">
+                        <strong>Info! </strong> Please select any test
+                    </p>
+                </div>
+            <!-- </div> -->
+            
+        </div>
+        <div class="row text-center" *ngIf="!risWorkist.length">
+            <div class="col-12">
+                <!-- <strong>No record found</strong> -->
+                <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
+                <p class="text-primary" style="margin-top: -20px;">
+                    <strong>Info! </strong> No record found...
+                </p>
+            </div>
+        </div>
+        <!--end::Paginition-->
+    </div>
+    <!--end::Queue management-->
+</div>
+
+
+<!--MO Questionnaire modal---------------------------------------------->
+<ng-template #questionnaireModal let-questionnaireModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="questionnaireModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> -->
+                <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="questionnaireModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <!-- PatitenName = {{PatientName}}-
+               PatientId = {{PatientId}}-
+               VisitID = {{VisitID}}-
+               TPId = {{TPId}}-
+               TPCode = {{TPCode}} -->
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <!-- <div class="bg-light">
+                    <app-action-buttons-large [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                </div> -->
+               <!-- <h1>vitalRefresh-{{vitalRefresh}} </h1> -->
+                <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals (isVistalSaved)="isVistalSaved($event)" [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals> 
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <!-- <div class="container"> -->
+        <app-mo-questionnaire (isStatusChanged)="isStatusChangedRec($event)" (isDropDownChange)="isDropDownChangeRec($event)"
+            [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId, TPCode:TPCode,TPName:TPName, PatientName:PatientName,RISWorkListID:RISWorkListID,ProcessIDParent:ProcessIDParent,RISStatusID:RISStatusID,WorkflowStatus:WorkflowStatus}">
+        </app-mo-questionnaire>
+        <!-- </div> -->
+    </div>
+    <div class="modal-footer py-1">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
+            (click)="questionnaireModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+    <!-- <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"  size="medium" color="#fff" type="square-loader" [fullScreen]="false"> 
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner> -->
+</ng-template>
+
+<!--MO History Modal---------------------------------------------------->
+<ng-template #moHistoryModal let-moHistoryModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="moHistoryModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> -->
+                <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="moHistoryModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"> -->
+                <!-- <div class="bg-light">
+                    <app-action-buttons-large [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                </div> -->
+                <!-- <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals>
+                    <app-action-buttons-small [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:false}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template> -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <app-mo-history [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,isShowVitalsCard:isShowVitalsCard}"></app-mo-history>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <!-- <app-visit-docs [propVisitNo]="VisitID" (outputDocs)="getLoadedDocs($event)" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs> -->
+                        <app-visit-docs [propVisitNo]="VisitID"  (outputDocs)="getLoadedDocs($event)"  [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks  [moduleName]="moduleScreenName" [propVisitNo]="VisitID" [editing]="{save: true}"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="padding-top: 8px;">
+        <div class="row">
+            <div class="col-12" *ngIf="!isTechDisclaimer">
+                <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal"
+                (click)="printMOHistoryReport(VisitID,TPId)">
+                <i class="fa fa-print"></i> Print
+                </button>
+                <button type="button" class="btn btn-sm btn-danger ml-2" data-dismiss="modal"
+                    (click)="moHistoryModal.close()">
+                    <i class="fa fa-times-circle"></i> Close
+                </button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="isTechDisclaimer">
+                <mat-checkbox  *ngIf="docsLength==0" class="example-margin" style="word-wrap: break-word; text-wrap: wrap;" [(ngModel)]="isConsentRead"> <span><strong [ngClass]="{'text-danger': !isConsentRead, 'text-primary': isConsentRead}">I have reviewed the Medical Officer's history thoroughly and agree to proceed with the technician's process accordingly.</strong></span> </mat-checkbox>
+                <mat-checkbox *ngIf="docsLength>0" class="example-margin" style="word-wrap: break-word; text-wrap: wrap;" [(ngModel)]="isConsentRead"> <span><strong [ngClass]="{'text-danger': !isConsentRead, 'text-primary': isConsentRead}">I have reviewed the Medical Officer's history and scanned documents thoroughly and agree to proceed with the technician's process accordingly.</strong></span> </mat-checkbox>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right" *ngIf="isTechDisclaimer">
+                <button 
+                [disabled]="!isConsentRead" 
+                type="button" 
+                class="btn btn-sm btn-primary mr-2" 
+                data-dismiss="modal"
+
+
+                [disabled]="!isConsentRead"
+                class="btn btn-sm btn-primary mr-2"
+                 mwlConfirmationPopover
+                [popoverTitle]="'Please Confirm'"
+                [popoverMessage]="'Are you <strong>sure</strong> want to accept?'"
+                [confirmText]="confirmationPopoverConfigCloseModal.confirmText"
+                [cancelText]="confirmationPopoverConfigCloseModal.cancelText"
+                [placement]="confirmationPopoverConfigCloseModal.placements[0]" 
+                (confirm)="readTechAgreement()"
+                (cancel)="confirmationPopoverConfigCloseModal.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary" 
+                cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="confirmationPopoverConfigCloseModal.confirmClicked = false; confirmationPopoverConfigCloseModal.cancelClicked = false"
+                [appendToBody]="true">
+                <i class="fa fa-check-circle"></i> Accept <i class="spinner-border-custom" aria-hidden="true"
+                    [hidden]="isSpinnerAccept"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-danger mr-2" data-dismiss="modal"
+                    (click)="moHistoryModal.close()">
+                    <i class="fa fa-times-circle"></i> Decline
+                </button>
+            </div>
+        </div>
+        
+    </div>
+</ng-template>
+
+<!--Vitals History Modal------------------------------------------------>
+<ng-template #vitalsModal let-vitalsModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="vitalsModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:true, cardSection:false}"></app-vitals>
+    </div>
+</ng-template>
+
+<!--EMR History Modal-->
+<ng-template #emrModal let-emrModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 mt-2" aria-label="Close" (click)="emrModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-emr [visitInfo]="visitInfo"></app-emr>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-info" data-dismiss="modal" (click)="emrModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+
+<!------begin:: User Verification Popup---------------------------------->
+<ng-template #userVerificationModal let-userVerificationModal  let-c="close" let-d="dismiss">
+    <form class="pt-4" [formGroup]="userVerificationForm">
+      <div class="modal-body">
+          <!-- <div class="container"> -->
+            <div class="row login-header">
+              <div class="col-12 text-center pt-1">
+                <h4>Enter Your Credentials</h4>
+              </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="uname">Username</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fa fa-user text-primary"></span>
+                        </span>                    
+                    </div>
+                    <input type="text" placeholder="Enter username" formControlName="techUsername" 
+                    [ngClass]="{'invalid': userVerificationForm.get('techUsername').errors && userVerificationForm.get('techUsername').touched, 'invalid-highlighted': userVerificationForm.get('techUsername').errors}"
+                        class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="psw">Password</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-lock text-primary"></i>
+                        </span>                    
+                    </div>
+                    <!-- <input type="password" placeholder="Enter Password" formControlName="techPassword"
+                    [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                        class="form-control">
+                        <i class="fa fa-eye-slash fa-eye text-primary" style="position: absolute;right: 3px; top: 19px;"></i> -->
+
+                    <input
+                        [type]="(showPassword && !isInputFocused) ? 'text' : 'password'"
+                        placeholder="Enter Password"
+                        formControlName="techPassword"
+                        [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                        class="form-control"
+                        (focus)="isInputFocused = true"
+                        (blur)="isInputFocused = false"
+                        />
+                        <i
+                        class="fa fa-eye-slash fa-eye text-primary"
+                        style="position: absolute; right: 3px; top: 19px; cursor: pointer;z-index: 9999;"
+                        (mouseenter)="showPassword = true"
+                        (mouseleave)="showPassword = false"
+                        ></i>
+                </div>
+            </div>
+            <!-- <div class="d-flex flex-column pb-3" >
+              <label for="uname">Username</label>
+              <input type="text" placeholder="Enter username" formControlName="techUsername" 
+              [ngClass]="{'invalid': userVerificationForm.get('techUsername').errors && userVerificationForm.get('techUsername').touched, 'invalid-highlighted': userVerificationForm.get('techUsername').errors}"
+                class="form-control">
+            </div>
+            <div class="d-flex flex-column pb-3" >
+              <label for="psw">Password</label>
+              <input type="password" placeholder="Enter Password" formControlName="techPassword"
+              [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                class="form-control">
+            </div> -->
+          <!-- </div> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal" (click)="userVerificationModal.close()">
+              <i class="fa fa-times-circle"></i>Cancel</button>
+        <button type="submit" class="btn btn-sm btn-outline-primary" (click)="verifyUser()"  [disabled]="disabledButtonVerify">
+                <i class="fa fa-check-circle"></i>Verify <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinnerVerify"></i></button>
+      </div>
+    </form>
+</ng-template>
+<!------end:: User Verification Popup------------------------------------>
+
+<!------begin:: User Verification Popup---------------------------------->
+<ng-template #modalitiesModal let-modalitiesModal  let-c="close" let-d="dismiss">
+    <form class="pt-4" [formGroup]="userVerificationForm">
+      <div class="modal-body">
+          <!-- <div class="container"> -->
+            <div class="row login-header">
+              <div class="col-12 text-center pt-1">
+                <h4>Select Modality</h4>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="form-group">
+                        <label for="MachineID" class="control-label">Machine</label>
+                        <select name="ModalityID" class="form-control form-control-sm">
+                            <option value="">--Select Modality--</option>
+                            <option *ngFor="let item of modalities" [value]="item.ModalityID">
+                                {{item.ModalityName}}-[{{item.ModalityCode}}]
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+          <!-- </div> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal" (click)="modalitiesModal.close()">
+              <i class="fa fa-times-circle"></i>Cancel</button>
+        <button type="submit" class="btn btn-sm btn-outline-primary" (click)="verifyUser()"  [disabled]="disabledButtonVerify">
+                <i class="fa fa-check-circle"></i>OK <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinnerVerify"></i></button>
+      </div>
+    </form>
+</ng-template>
+<!------end:: User Verification Popup------------------------------------>
+
+<!--begin:: Technician Worklist Modal------------------------------------>
+<ng-template #technicianModal let-technicianModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 fsl-close" style="color: #ffffff !important;
+                background-color: #f42a3f !important;
+                border-color: #f41d34 !important;
+                height: 21px;
+                width: 20px;" aria-label="Close" (click)="closeModal('technicianModal')">
+                    <span aria-hidden="true" style="display: inline-block; color:#ffffff;">&times;</span>
+                </button> -->
+                <button type="button" class="close mb-2 fsl-close"
+                style="color: #ffffff !important;
+                background-color: #f42a3f !important;
+                border-color: #f41d34 !important;
+                height: 21px;
+                width: 20px;
+                margin-top: 12px;
+                margin-right: 5px" 
+                aria-label="Close" 
+                mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfigCloseModal.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfigCloseModal.popoverMessage"
+                [confirmText]="confirmationPopoverConfigCloseModal.confirmText"
+                [cancelText]="confirmationPopoverConfigCloseModal.cancelText"
+                [placement]="confirmationPopoverConfigCloseModal.placements[3]" 
+                (confirm)="closeModal1('technicianModal')"
+                (cancel)="confirmationPopoverConfigCloseModal.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="confirmationPopoverConfigCloseModal.confirmClicked = false; confirmationPopoverConfigCloseModal.cancelClicked = false"
+                [appendToBody]="true"
+                >
+                    <span aria-hidden="true" style="display: inline-block; color:#ffffff;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+               <!-- PatitenName = {{PatientName}}-
+               PatientId = {{PatientId}}-
+               VisitID = {{VisitID}}-
+               TPId = {{TPId}}-
+               TPCode = {{TPCode}} -->
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <!-- <ng-template *ngIf="isShowVitalsCard">
+
+                </ng-template> -->
+
+                <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals>
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:true}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:true}"></app-action-buttons-large>
+                    </div>
+                </ng-template>
+
+                
+                
+                <!-- <div class="bg-light">
+                    <app-action-buttons-large [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <!-- <app-mo-questionnaire (isStatusChanged)="isStatusChangedRec($event)"
+            [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId, TPCode:TPCode,TPName:TPName, PatientName:PatientName,RISWorkListID:RISWorkListID}">
+        </app-mo-questionnaire> -->
+        <app-checkin-checkout  (isStatusChanged)="isStatusChangedRec($event)"
+            [ParamsPayload]="{TPID:TPId,VisitID:VisitID,VisitIDWithDashes:VisitIDWithDashes,PatientID:PatientId, TPCode:TPCode,TPName:TPName, PatientName:PatientName,RISWorkListID:RISWorkListID,VerifiedUserID:VerifiedUserID,VerifiedUserName:VerifiedUserName,RISStatusID:RISStatusID,isShowVitalsCard:isShowVitalsCard,RegLocId:RegLocId,ProcessIDParent:ProcessIDParent,isTechHistoryRequred:isTechHistoryRequred,WorkflowStatus:WorkflowStatus,StatusId:StatusId, TestStatus:TestStatus}">
+        </app-checkin-checkout>
+    </div>
+
+    <div class="modal-footer py-1">
+        <!-- <button type="button" class="close btn btn-sm btn-danger mo-questionnaire-close-button" data-dismiss="modal"
+            (click)="technicianModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button> -->
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" style="margin-right: 10px !important;"
+            mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverConfigCloseModal.popoverTitle"
+            [popoverMessage]="confirmationPopoverConfigCloseModal.popoverMessage"
+            [confirmText]="confirmationPopoverConfigCloseModal.confirmText"
+            [cancelText]="confirmationPopoverConfigCloseModal.cancelText"
+            [placement]="confirmationPopoverConfigCloseModal.placements[0]" 
+            (confirm)="closeModal1('technicianModal')"
+            (cancel)="confirmationPopoverConfigCloseModal.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverConfigCloseModal.confirmClicked = false; confirmationPopoverConfigCloseModal.cancelClicked = false"
+            [appendToBody]="true"
+            >
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Technician Worklist Modal-------------------------------------->
+
+<!--begin:: Bulk assign detail modal-->
+<ng-template #visitTPDetailModal let-visitTPDetailModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="visitTPDetailModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>   -->
+                <span class="text-danger cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="visitTPDetailModal.close()" class="close-btn text-danger cursor-pointer mb-1">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals (isVistalSaved)="isVistalSaved($event)" [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals> 
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <div class="row">
+            <ng-template #popContentSrv>
+                <app-ris-tp-services [VisitId]="VisitId"></app-ris-tp-services>
+            </ng-template>
+
+            <div class="col-12" *ngIf="!isShowVitalsCard">
+                <div class="tests-box">
+                    <label for="TPFullName" class="pt-2 control-label" [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}">
+                        <strong>{{TPName}}<i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2"aria-hidden="true" ngbTooltip="Click to show services detail"
+                            [ngbPopover]="popContentSrv"
+                            [popoverTitle]="'Services Detail'"
+                            [popoverClass]="'custom-popover'"></i></strong></label>
+                        <strong class="pull-right text-danger">Initialized By: {{InitializedBy}} | {{InitializedOn | date:'dd-MMM-yyyy hh:mm a'}}</strong>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="isShowVitalsCard">
+                <i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2"aria-hidden="true" ngbTooltip="Click to show services detail"
+                            [ngbPopover]="popContentSrv"
+                            [popoverTitle]="'Services Detail'"
+                            [popoverClass]="'custom-popover'"></i>
+            </div>
+            <!-- <div class="col-md-6" *ngIf="!isShowVitalsCard">
+                <div class="tests-box text-center">
+                    <label for="TPFullName" class="pt-2 control-label" [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}"><strong>
+                        Initialized By: {{InitializedBy}}</strong></label>
+                </div>
+            </div> -->
+            <div class="col-12" *ngIf="radiologistRefByMappingInfo.length && screenIdentity=='bulk-queue-manager'">
+                <span><i style="font-size: 12px;" aria-hidden="true" class="flaticon2-arrow blink-red"></i><strong class="text-warning">RefBy: </strong><span class="text-primary"> {{refByDrName}}</span> <strong class="text-warning ml-2">Associated Radiologist(s): </strong><span class="text-primary">{{associatedRadiologists}}</span></span>
+                <br *ngIf="radiologistRefByMappingInfo.length">
+                <span *ngIf="RadiologistID">
+                    <small style="font-size: 12px;" >
+                        <strong class="text-danger">Tech Suggested Doctor: </strong>
+                        <span class="text-primary"> {{AssigneeNameSuggestedByTech}}</span> 
+                    </small>
+                </span>
+                
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"  [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                    [moduleName]="moduleScreenName"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer py-1">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
+            (click)="visitTPDetailModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Bulk assign detail modal-->
+
+<!--begin:: Bulk assign detail modal-->
+<ng-template #moInterventionAlertPopupForTech let-moInterventionAlertPopupForTech>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close-btn mb-2 cursor-pointer" aria-label="Close" (click)="moInterventionAlertPopupForTech.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> -->
+                <span class="text-danger cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="moInterventionAlertPopupForTech.close()" class="close-btn text-danger cursor-pointer mb-1">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals (isVistalSaved)="isVistalSaved($event)" [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals> 
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <div class="row">
+            <!-- <div class="col-12" *ngIf="!isShowVitalsCard">
+                <div class="tests-box text-center">
+                    <label for="TPFullName" class="pt-2 control-label" [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}"><strong>
+                        {{TPCode}} - {{TPName}}</strong></label>
+                </div>
+            </div> -->
+            <div class="col-12">
+                <!-- <strong>This study has no param (s)</strong> -->
+                <div class="alert alert-custom alert-light-danger" role="alert">
+                    <div class="alert-icon"><span class="svg-icon svg-icon-danger svg-icon-xl"><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Tools/Compass.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect x="0" y="0" width="24" height="24"></rect>
+                    <path d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z" fill="#000000" opacity="0.3"></path>
+                    <path d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z" fill="#000000" fill-rule="nonzero"></path>
+                </g>
+                </svg><!--end::Svg Icon--></span></div>
+                    <div class="alert-text">  
+                        <!-- For this test/study, prior MO history is mandatory but has not been recorded for this patient. Therefore, you are unable to proceed with this procedure.","MO Hisoty Required! -->
+                        <!-- For the MRI Brain examination, it is essential to have the M.O's history, which has not been documented for this patient. Consequently, you are unable to proceed with this procedure at this time. -->
+                        <!-- For the <strong>{{TPCode}} - {{TPName}}</strong>  examination, there is no recorded M.O. history for this patient. Prior MO history is mandatory, and since it has not been recorded, you are unable to proceed with this procedure at this time. -->
+                        <p class="font-weight-bolder">For the <strong class="text-primary">{{TPName}}</strong>, prior MO history is mandatory but has not been recorded for this patient. Therefore, you are unable to proceed with this procedure at this time.</p>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-docs-area mt-8">
+                    <app-visit-docs [propVisitNo]="VisitID" [editing]="{save:true,select: true, camera: true}"
+                        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="visit-remarks-area  mt-8">
+                    <app-visit-remarks [propVisitNo]="VisitID" [editing]="{save: true}"
+                    [moduleName]="moduleScreenName"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer py-1">
+        <button type="button" class="btn btn-sm btn-danger " data-dismiss="modal"
+            (click)="moInterventionAlertPopupForTech.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Bulk assign detail modal-->
+
+<!--begin:: Emergency Assigner Worklist Modal------------------------------------>
+<ng-template #emergencyAssignerModal let-emergencyAssignerModal>
+     <div class="modal-header">
+      <h3 class="modal-title">Emergency Assigners</h3>
+      <i class="fas fa-window-close text-danger cursor-pointer mr-1 float-right"
+        aria-label="Close" (click)="emergencyAssignerModal.close()"></i>
+      <!-- <button class="btn btn-danger" (click)="emergencyAssignerModal.close()"><i class="ti-close" aria-hidden="true"></i></button> -->
+    </div>
+    <div class="modal-body">
+        <app-emergency-assigner [paramsValues]="paramsValuesForWorkList"></app-emergency-assigner>
+    </div>
+    <div class="modal-footer py-1">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" style="margin-right: 10px !important;"
+           (click)="emergencyAssignerModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Emergency Assigner Worklist Modal-------------------------------------->
+
+<!--begin:: Reporting Modal---------------------------------------------->
+<ng-template #reportingModal let-reportingModal>
+    <div class="modal-header" style="display: block !important; padding: 0.3rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="reportingModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> -->
+                <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="reportingModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <app-contrast-service [payload]="{VisitID:VisitID}"></app-contrast-service>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <!-- <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals (isVistalSaved)="isVistalSaved($event)" [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals>  -->
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isVistalSaved)="isVistalSaved($event)" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{techHistory:true,vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-small>
+                <!-- </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false}"></app-action-buttons-large>
+                    </div>
+                </ng-template> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pb-1">
+        <app-reporting (isStatusChanged)="isStatusChangedRec($event)"
+            [ParamsPayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId, TPCode:TPCode,TPName:TPName, PatientName:PatientName,RISWorkListID:RISWorkListID,ProcessIDParent:ProcessIDParent,StatusId:StatusId,TestStatus:TestStatus,TranscribedBy:TranscribedBy,RISStatusID:RISStatusID}">
+        </app-reporting>
+    </div>
+    <div class="modal-footer py-1">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"
+            (click)="reportingModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Reporting Modal------------------------------------------------>
+
+<ngx-spinner *ngIf="screenIdentity==='reporting-worklist' || screenIdentity==='tech-worklist'" class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="square-loader" [fullScreen]="true">
+    <p style="color: white"> Please verify your thumb ... </p>
+</ngx-spinner>

@@ -1,0 +1,507 @@
+  ::ng-deep .mat-tab-label {
+    border-right: 1px solid #e5e5e5;
+    background-color: #f3f6f9;;
+    border-radius: 5px;
+    margin-left: 5px;
+    border-radius: 8px;
+
+}
+
+::ng-deep .mat-tab-label:hover {
+    background-color: #1BC5BD; 
+    color: #ffffff;
+    .custom-icons{
+        color: #ffffff !important;
+    }
+}
+::ng-deep .mat-tab-label-container {
+    margin-bottom: 5px !important;
+}
+
+::ng-deep .mat-tab-label-active {
+    background-color: #1BC5BD;
+    color: #ffffff;
+    .custom-icons{
+        color: #ffffff !important;
+    }
+}
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar,
+::ng-deep .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: transparent;
+}
+
+::ng-deep .mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+}
+
+
+ /* Accordion Container */
+.accordion {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+/* Accordion Item */
+.accordion-item {
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  background: #f8f9fa;
+}
+
+/* Accordion Header */
+.accordion-header {
+  background: linear-gradient(135deg, #1bc5bd, #17a599);
+  color: white;
+  padding: 15px 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s ease-in-out, transform 0.1s ease-in-out;
+}
+
+/* Icon for Expand/Collapse */
+.accordion-header .icon {
+  font-size: 18px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.accordion-header.active .icon {
+  transform: rotate(45deg);
+}
+
+/* Accordion Content */
+.accordion-content {
+  max-height: 0;
+  overflow-y: auto;
+  background: #ffffff;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-out;
+  opacity: 0;
+  padding: 0 18px;
+  border-radius: 8px;
+}
+
+.accordion-content.active {
+  max-height: 360px;
+  padding: 15px;
+  opacity: 1;
+}
+
+/* Scrollable List */
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 6px;
+  padding: 8px;
+  background: #f1f1f1;
+}
+
+/* List Items */
+.list-group-item {
+  padding: 12px;
+  transition: background 0.3s ease-in-out;
+  border-radius: 5px;
+}
+
+.list-group-item:hover {
+  background-color: #e3f7f6;
+}
+
+/* Selected Item */
+.list-group-item.selected {
+  background-color: #17a2b8;
+  color: white;
+}
+
+/* Smooth Transition for the Accordion Effect */
+.accordion-content,
+.accordion-header {
+  transition: all 0.3s ease-in-out;
+}
+
+
+
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(194, 194, 194, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.custom-modal-content {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.custom-modal-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #fff;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+:host ::ng-deep .leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.branch-location-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.branch-address {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+.mapicon {
+  color: #ef0017;
+  cursor: pointer;
+}
+
+/* Wrapper with gradient and shadow */
+.ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(90deg, #1bc5bd, #0aa2a0);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  padding: 8px 0;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+}
+
+/* Scroll container */
+.ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Each ticker item */
+.ticker-item {
+  display: inline-block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0 20px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect for items */
+.ticker-item:hover {
+  color: #ffd700;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Separator styling */
+.ticker-separator {
+  margin-left: 15px;
+  margin-right: 15px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Animation */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Pause on hover */
+.ticker-wrapper:hover .ticker-content {
+  animation-play-state: paused;
+}
+
+
+
+
+.pdf-popup-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.upload-section input[type="file"] {
+  padding: 5px;
+}
+
+.upload-section .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.upload-section button {
+  min-width: 120px;
+}
+
+.uploaded-docs table th,
+.uploaded-docs table td {
+  vertical-align: middle;
+}
+
+.uploaded-docs table td .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+.uploaded-docs table td i {
+  font-size: 14px;
+}
+
+.uploaded-docs table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.uploaded-docs table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.display-html {
+  white-space: pre-line;
+}
+
+
+.accordion-item1 {
+  border: 1px solid #dee2e6;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.accordion-header {
+  background: #f8f9fa;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-body-document {
+  padding: 15px;
+  background: #ffffff;
+}
+
+.doc-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.doc-card img {
+  height: 120px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.pdf-card {
+  height: 120px;
+  border: 1px dashed #dc3545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.doc-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.doc-actions button {
+  background: rgba(0,0,0,0.7);
+  border: none;
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.doc-title {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  text-align: center;
+  color: #6c757d;
+}
+
+
+/* Document Card Hover Effects */
+.document-card {
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.document-card.cursor-pointer {
+  cursor: pointer;
+}
+
+.document-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  border-color: #0d6efd !important;
+}
+
+.document-card:hover .document-title {
+  color: #0d6efd;
+}
+
+/* Image Container */
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 150px;
+  transition: transform 0.3s ease;
+}
+
+.document-card:hover .image-container img {
+  transform: scale(1.05);
+}
+
+/* Preview Modal Override */
+.modal-backdrop {
+  background-color: rgba(0,0,0,0.8) !important;
+}
+
+/* Custom Scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.modal-backdrop.show {
+  opacity: 0.8 !important;
+}
+
+/* Ensure modal is on top */
+.modal.fade.show {
+  z-index: 1060;
+}
+
+/* Fix for accordion button */
+.accordion-button:not(.collapsed) {
+  background-color: #f8f9fa !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .document-card {
+    margin-bottom: 15px;
+  }
+  
+  .search-container {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+}
+
+/* Modal styling */
+.modal-backdrop.show {
+  opacity: 0.8 !important;
+}
+
+.modal.fade.show {
+  z-index: 1060;
+}
+
+/* Document card hover */
+.document-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: #0d6efd !important;
+}
+
+/* Close button */
+.close-btn {
+  cursor: pointer;
+  fill: currentColor;
+}
+
+.close-btn:hover {
+  opacity: 0.8;
+}
+
+/* No print utility */
+.no-print {
+  @media print {
+    display: none !important;
+  }
+}

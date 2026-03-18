@@ -1,0 +1,88 @@
+<fieldset class="fieldset-primary fieldset-border-top">
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+        [name]="spinnerRefs.PACsStudiesList" size="medium" color="#fff" type="square-loader"
+        [fullScreen]="false">
+        <p style="color: white; margin-top: 100px;"> {{spinnerText}} </p>
+    </ngx-spinner>
+    <legend style="font-size: .9rem;">Old PACs </legend>
+    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+        <table  aria-hidden="true" class="table table-hover compact" *ngIf="PACSStudiesList.length">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Study</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of PACSStudiesList; let indx = index">
+                    <td>{{indx+1}}</td>
+                    <td>{{ replaceCarrotSymbols(item.pat_name) }}-{{item.study_desc}}</td>
+                    <td class="text-right">
+                        <!-- <button (click)="downloadPacsData(item,PIN,1);" > -->
+                            <!-- <span> -->
+                                <i class="far fa-images text-primary cursor-pointer"
+                                mwlConfirmationPopover
+                                [popoverTitle]="'Please confirm...!'"
+                                [popoverMessage]="'Are your <strong>sure</strong> want to download images in JPEG?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="downloadPacsData(item,PIN,1)"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                                ></i> JPEG |
+                            <!-- </span> -->
+                        <!-- </button> -->
+                        <!-- <button (click)="downloadPacsData(item,PIN,2);"> -->
+                            <!-- <span> -->
+                                <i class="fas fa-x-ray text-primary cursor-pointer"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="'Are your <strong>sure</strong> want to download DICOM images?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="downloadPacsData(item,PIN,2)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                ></i> DICOM
+                            <!-- </span> -->
+                        <!-- </button> -->
+                        <!-- <div class="btn-group">
+                            <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                aria-label="Button group with nested dropdown">
+                                <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                    <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                </button>
+                                <div class="dropdown-menu pb-2" ngbDropdownMenu style="z-index: 1000;">
+                                    <button (click)="downloadPacsData(item,PIN,1);" class="dropdown-item">
+                                        <span><i class="far fa-images text-primary cursor-pointer"></i> JPEG</span>
+                                    </button>
+                                    <button (click)="downloadPacsData(item,PIN,2);" class="dropdown-item">
+                                        <span><i class="fas fa-images text-primary cursor-pointer"></i> HQ</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div> -->
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot >
+                <tr>
+                    <td colspan="3" class="text-right text-warning">Total Studies: <strong>{{PACSStudiesList.length}}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <ng-container *ngIf="!PACSStudiesList.length">
+        <app-no-record-found></app-no-record-found>
+    </ng-container>
+</fieldset>

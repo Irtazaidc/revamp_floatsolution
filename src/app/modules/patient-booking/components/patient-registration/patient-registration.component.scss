@@ -1,0 +1,758 @@
+/* Progress Bar Row */
+.progress-bar-row {
+    margin-top: 20px;
+}
+// .sticker {
+//   display: inline-block;
+//   padding: 10px 18px;
+//   background: linear-gradient(145deg, #f5f5f5, #e0e0e0); /* soft grey gradient */
+//   color: #333;
+//   font-weight: bold;
+//   font-size: 1.1rem;
+//   border-radius: 8px;
+//   box-shadow: 3px 3px 6px rgba(0,0,0,0.15), 
+//               -3px -3px 6px rgba(255,255,255,0.9); /* subtle 3D effect */
+//   border: 1px solid #ccc;
+//   user-select: none;
+// }
+
+.sticker {
+  display: inline-block;
+  padding: 10px 18px;
+  background: linear-gradient(145deg, #4a90e2, #357abd); /* changed to blue gradient */
+  color: #fff; /* changed text color to white for contrast */
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  box-shadow: 3px 3px 6px rgba(0,0,0,0.15), 
+              -3px -3px 6px rgba(255,255,255,0.9); /* subtle 3D effect */
+  border: 1px solid #ccc;
+  user-select: none;
+  margin: 0 auto; /* centers the inline-block element horizontally */
+  display: block; /* override inline-block to allow margin: 0 auto to work */
+  text-align: center; /* retain text centering */
+}
+/* Custom Progress Bar */
+.custom-progress-bar {
+    height: 20px;
+    /* Adjust height */
+    width: 100%;
+    /* Full width of the table */
+    max-width: 100%;
+    /* Ensure it matches the table width */
+    background-color: #e0e0e0;
+    /* Light background for the progress bar track */
+    margin: 0 auto;
+    /* Center align */
+}
+
+/* Progress Bar Fill Color */
+/* Custom Progress Bar */
+.custom-progress-bar {
+    height: 20px;
+    /* Adjust height */
+    background-color: #e0e0e0;
+    /* Light background for the progress track */
+}
+
+/* Congrats Bar Row */
+.congrats-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Spacing between elements */
+    margin: 16px;
+    padding: 12px 16px; /* Padding for better spacing */
+    background-color: #f5f5f5; /* Lightish grey background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    opacity: 0; /* Start invisible for animation */
+    transform: translateY(20px); /* Start slightly below for slide-up effect */
+    animation: fadeInSlideUp 0.5s ease-in-out forwards; /* Animation */    
+}
+
+
+.custom-progress-bar.mat-progress-bar ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #1BC5BD !important;
+}
+
+:host ::ng-deep .custom-progress-bar .mat-progress-bar-fill::after {
+    background-color: #1BC5BD !important;
+    transition: width 0.5s ease-in-out;
+    /* Smooth animation */
+}
+
+
+
+
+.progress-bar-container {
+    position: relative;
+    width: 100%;
+}
+
+
+
+/* Progress Bar Container */
+.progress-bar-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  /* Custom Progress Bar */
+  .custom-progress-bar {
+    height: 24px;
+    border-radius: 12px;
+  }
+  
+  /* Progress Text (Percentage and Amount) */
+  .progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    z-index: 1;
+  }
+  /* Congrats Bar Row */
+// .congrats-bar-row {
+   
+//   }
+ 
+  
+  .radio-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  mat-radio-group {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .action-button {
+    margin-left: auto;
+  }
+  
+
+
+  ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #1bc5bd !important /* Change selected color */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #1bc5bd !important; /* Change outer circle color */
+  }
+
+  /* Keyframes for Fade-In and Slide-Up Animation */
+  @keyframes fadeInSlideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Animation: Fade In + Slide Down */
+  .animated-congrats {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+  
+ 
+  /* Congrats Message */
+  .congrats-message {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333; /* Dark grey text for better contrast */
+  }
+  
+  
+  .tick-icon {
+    color: #1BC5BD; /* Green tick icon */
+    font-size: 16px;
+  }
+  
+  .congrats-message {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1BC5BD; /* Dark green text */
+  }
+  /* Base Button Style */
+.action-button {
+    background-color: #1BC5BD; /* Green background */
+    color: white; /* White text */
+    font-weight: bold;
+    border: none; /* Remove default border */
+    border-radius: 25px; /* Rounded pill shape */
+    padding: 10px 20px; /* Padding for better spacing */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-size: 14px; /* Font size */
+    text-transform: uppercase; /* Uppercase text */
+  }
+  
+  /* Hover Effect for Buttons */
+  .action-button:hover {
+    background-color: #19857f; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  }
+  
+  /* Active State for Buttons */
+  .action-button:active {
+    transform: translateY(0); /* Reset lift effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Reset shadow */
+  }
+
+  /* Help Icon Button */
+.help-icon {
+    background-color: transparent; /* Transparent background */
+    color: #141919; /* Green icon color */
+    font-size: 18px; /* Icon size */
+    cursor: pointer;
+    border: none; /* Remove default border */
+    transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+    padding: 8px; /* Padding for better click area */
+    border-radius: 50%; /* Circular shape */
+  }
+  
+  /* Hover Effect for Help Icon */
+  .help-icon:hover {
+    background-color: rgba(76, 175, 80, 0.1); /* Light green background on hover */
+    color: #8d928d; /* Darker green on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+  }
+  
+  /* Active State for Help Icon */
+  .help-icon:active {
+    transform: scale(1); /* Reset zoom effect */
+  }
+
+
+/* Animation for progress bar */
+@keyframes progressBarAnimation {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+
+
+
+
+// .patient-registration-page label {
+//     // margin-bottom: 0;
+//     // color: #999;
+// }
+
+:host ::ng-deep aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator {
+    padding: 40px 0 10px 0;
+}
+
+:host ::ng-deep aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li .step-indicator {
+    border-radius: 5px;
+}
+
+:host ::ng-deep aw-wizard-navigation-bar.horizontal.small ul.steps-indicator {
+    padding: 8px 0 3px;
+}
+
+:host ::ng-deep aw-wizard.solid-lines aw-wizard-navigation-bar.horizontal ul.steps-indicator li.done:not(.editing):not(:last-child):after {
+    background-color: green !important;
+}
+
+:host ::ng-deep .tp-list ngb-typeahead-window.dropdown-menu.show {
+    max-height: 300px;
+    overflow: auto;
+}
+
+::ng-deep ngb-typeahead-window.dropdown-menu {
+    max-height: 300px;
+    min-width: 300px;
+    border-bottom: 1px solid #1dc7a9;
+    overflow-x: hidden;
+}
+
+hr.wizard-splitter {
+    margin-top: 0;
+}
+
+.section-splitter {
+    border-bottom: 1px solid #ddd;
+}
+
+img.patient-img {
+    // width: 140px;
+    // height: 150px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #999;
+    padding: 7px;
+}
+
+
+.patient-img-action-btns {
+    height: 20px;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-left: 1px;
+}
+
+.btn-upload-pat-img {
+    // width: 118px;
+    width: 58px;
+}
+
+.btn-camera-pat-img {
+    width: 58px;
+}
+
+.btn-remove-pat-img {
+    // border-width: 2px;
+    width: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-radius: 0 0 0 8px;
+    font-weight: bold;
+}
+
+
+.visit-attachments {
+
+    // .btn-select-visit-attachments {
+    //     // font-size: 1rem;
+    //     padding: 5px;
+    // }
+
+    .attachments-container {
+        display: contents;
+
+        .attachment-item {
+            position: relative;
+            margin: 10px;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #999;
+            border-radius: 5px;
+        }
+
+        .attachment-display-frame {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            // border: 1px solid #999;
+            padding: 7px;
+        }
+
+        .visit-attachment-name {
+            cursor: pointer;
+            font-size: 11px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            border-radius: 0px 0px 0px 5px;
+            // background-image: linear-gradient(to right, #00000036, #0000002b, #00000026, #00000000);
+            background-image: linear-gradient(to right, #000000d1, #00000073, #00000057, #00000000);
+            color: #fff;
+            width: 100%;
+            padding: 0px 4px;
+        }
+
+        .visit-attachment-name-field {
+            font-size: 11px;
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: 100%;
+            padding: 0px 4px;
+        }
+
+        .remove-attachment-btn {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            padding: 2px 5px;
+            // background: #f00;
+            // color: #fff;
+            font-weight: bold;
+            box-shadow: 0px 0px 9px -2px #000;
+            border-radius: 0px 0px 0px 16px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+    }
+}
+
+
+.bg-success-2 {
+    background-color: #d0e1b7;
+}
+
+.fixed-height-table {
+    max-height: 300px;
+}
+
+.selected-test-profile-table tr td .tp-name {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.selected-test-profile-table tr.package-row {
+    td {
+        padding-bottom: 1px !important;
+    }
+}
+
+.selected-test-profile-table tr.package-tp-row {
+    color: #aaa;
+    cursor: not-allowed;
+
+    td {
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+        border: 0;
+    }
+}
+
+.selected-test-profile-table tr.strike-through-row {
+    td {
+        text-decoration: line-through;
+        color: #f00;
+
+        select {
+            text-decoration: line-through;
+            color: red;
+        }
+    }
+}
+
+.selected-test-profile-table select.lab-process {
+    border: 1px solid transparent;
+}
+
+.selected-test-profile-table.for-mobile {
+
+    .test-price {
+        // position: sticky;
+        // right: 0;
+        // padding: 0 0 0 2px;
+        position: absolute;
+        right: 15px;
+        background-color: #fff;
+    }
+
+    .action-btns {
+        position: absolute;
+        right: 15px;
+    }
+
+    .total-test-price-label {
+        position: absolute;
+        left: 20px;
+    }
+
+    .total-test-price {
+        position: absolute;
+        right: 15px;
+    }
+}
+
+.patient-reg-area,
+.patient-visit-area,
+.patient-visit-payment-area {
+    position: relative;
+}
+
+.navi-btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    // justify-content: space-evenly;
+    // width: 20px;
+    height: 100%;
+    z-index: 1;
+    background-color: transparent;
+    width: 17px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+// .navi-btn:hover {
+//     // background-color: #eee;
+// }
+
+.navi-btn.left:hover {
+    background: linear-gradient(90deg, #ddd, transparent);
+}
+
+.navi-btn.right:hover {
+    background: linear-gradient(-90deg, #ddd, transparent);
+}
+
+.navi-btn.left {
+    left: -20px;
+    justify-content: flex-start;
+}
+
+.navi-btn.right {
+    right: -20px;
+    justify-content: flex-end;
+}
+
+
+.user-top-adv-actions {
+    position: absolute;
+    right: 0;
+    top: -5px;
+}
+
+.user-top-adv-actions i:hover {
+    color: #1BC5BD;
+    cursor: pointer;
+}
+.user-history-actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.user-history-actions i:hover {
+    color: #1BC5BD;
+    cursor: pointer;
+}
+
+::ng-deep .tooltip{
+    min-width: 150px !important;
+}
+::ng-deep .tooltip-inner {
+  min-width: 150px !important; /* or width: 200px if you want fixed */
+}
+
+.toggle-patient-additional-fields {
+    color: #1BC5BD;
+    font-size: 1rem;
+}
+
+.additional-info-row {
+    background-color: #85abff0d;
+
+    a {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+
+
+form.payments-form .form-control:disabled {
+    color: #000 !important;
+    font-weight: 600 !important;
+}
+
+.payments-form .form-control-mini {
+    height: 25px;
+}
+
+.bill-amount-area {
+    font-size: 1.2rem;
+}
+
+.bill-amount-area .amount {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.bill-amount-area .amount.total-bill {
+    color: #28a745d6;
+}
+
+.bill-amount-area .amount.min-rcv {
+    color: orange;
+}
+
+.bill-amount-area .bill-amount-splitter {
+    border-right: 1px solid #000;
+    margin: 0 10px;
+}
+
+
+
+.employee-self-info label,
+.flight-details-popup-form label {
+    margin-bottom: 2px;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.border {
+    border: 1px solid #000;
+    padding: 10px;
+
+}
+
+.camera-container-row {
+    position: fixed;
+    top: 84px;
+    width: 100%;
+    overflow: auto;
+}
+
+// .camera-container-row video {
+//     width: -webkit-fill-available;
+// }
+
+.InvalidHCTimeCls {
+    background-color: #fbb5bc !important;
+}
+
+
+.ngb-tp-input {
+    border: 2px solid !important;
+}
+
+@media screen and (max-width: 786px) {
+    .bill-amount-area {
+        font-size: 11px !important;
+    }
+
+    .bill-amount-area .amount {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .left-text {
+        text-align: left;
+    }
+}
+
+::ng-deep .popover-top {
+    left: -20px !important;
+}
+
+// ::ng-deep .bs-popover-top{
+//     overflow: scroll;
+//     max-height: 400px;
+//     max-width: 400px;
+// }
+::ng-deep .popover {
+    max-width: 466px !important;
+}
+
+::ng-deep ._popover-body {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+
+.history-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  color: #2c58a0;
+}
+
+.history-icon {
+  font-size: 1.1rem !important;
+  margin-right: 5px;
+  animation: blinkRedGreenSlow 1.8s infinite;
+}
+
+.history-text {
+  font-size: 1rem !important;
+//   font-weight: 500;
+//   text-decoration: underline;
+}
+
+
+
+
+
+// .history-button:hover {
+//   animation: shake 0.5s;
+// }
+
+// @keyframes shake {
+//   0% { transform: translateX(0); }
+//   25% { transform: translateX(-3px); }
+//   50% { transform: translateX(3px); }
+//   75% { transform: translateX(-3px); }
+//   100% { transform: translateX(0); }
+// }
+
+.selected-test-profile-table-duplicate tr.package-tp-row-duplicate {
+    color: #616161;
+    cursor: pointer;
+
+    td {
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+        border: 0;
+    }
+}
+
+.table-row-gap {
+  border-collapse: separate !important;
+  border-spacing: 0 8px; /* Adjust the second value for vertical spacing */
+}
+
+/* Use ::ng-deep so the styles penetrate SweetAlert's DOM */
+::ng-deep .swal-input-error {
+  border: 2px solid #e74c3c !important; /* reddish border */
+  box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.15) !important;
+  border-radius: 4px !important;
+}
+
+/* If you want a slightly stronger outline on focus too */
+::ng-deep .swal-input-error:focus {
+  box-shadow: 0 0 0 0.35rem rgba(231, 76, 60, 0.22) !important;
+}
+
+/* Target typical SweetAlert input/select classes in case your class wasn't applied */
+::ng-deep .swal2-container .swal2-content input.swal2-input.swal-input-error,
+::ng-deep .swal2-container .swal2-content select.swal2-select.swal-input-error {
+  border: 2px solid #e74c3c !important;
+  box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.15) !important;
+}
+
+
+
+.qr-container ::ng-deep .qrcode canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+
+
+.qr-container {
+  padding: 2px;              /* Quiet zone for better scanning */
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  display: inline-block;
+}
+
+

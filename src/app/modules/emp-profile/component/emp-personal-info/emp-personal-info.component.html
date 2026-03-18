@@ -1,0 +1,164 @@
+<ng-container *ngIf="user">
+  <div class="card card-custom card-stretch" [formGroup]="formGroup">
+
+    <!-- begin::Loading -->
+    <ng-container *ngIf="isLoading$ | async">
+      <div class="progress progress-modal">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+          style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </ng-container>
+    <!-- end::Loading -->
+    <!--begin::Header-->
+    <div class="card-header py-3">
+      <div class="card-title align-items-start flex-column">
+        <h3 class="card-label font-weight-bolder text-dark">Personal Information</h3>
+        <span class="text-muted font-weight-bold font-size-sm mt-1">Your personal informaiton</span>
+      </div>
+      <!-- <div class="card-toolbar">
+        <button type="submit" [disabled]="formGroup.invalid" class="btn btn-success mr-2" (click)="save()">Save Changes</button>
+        <button type="reset" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </div> -->
+    </div>
+    <!--end::Header-->
+    <!--begin::Form-->
+    <div class="form">
+      <!--begin::Body-->
+      <div class="card-body">
+        <!-- <div class="row">
+          <label class="col-xl-3"></label>
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mb-6">Employee Info</h5>
+          </div>
+        </div>  -->
+        <div class="form-group row">
+          <!-- <div class="col-lg-9 col-xl-6">
+            <div class="image-input image-input-outline"
+              id="kt_profile_avatar"
+              [class.image-input-empty]="!user.pic"
+              [style.backgroundImage]="'url(./assets/media/users/blank.png)'"
+            >
+              <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
+             <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                data-action="change"
+                data-toggle="tooltip"
+                title=""
+                data-original-title="Change avatar"
+              >
+                <i class="fa fa-pen icon-sm text-muted"></i> 
+                <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
+                <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+              </label> 
+              <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                <i class="ki ki-bold-close icon-xs text-muted"></i>
+              </span>
+              <span *ngIf="user.pic"
+                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                (click)="deletePic()"
+                data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                <i class="ki ki-bold-close icon-xs text-muted"></i>
+              </span>
+            </div>
+            <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+          </div> -->
+        </div>
+
+        <div class="row container">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12"> Full Name</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input class="form-control form-control-lg form-control-solid" type="text"
+                  [value]="(!FName || FName === undefined) ? 'NA' : FName" placeholder="Full Name"
+                  [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Date Of Birth</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input class="form-control form-control-lg form-control-solid" type="text"
+                  [value]="(!empBirthDate || empBirthDate == 'Invalid Date' ) ? 'NA' : empBirthDate"
+                  placeholder="Date Of Birth" [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Marital Status</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input class="form-control form-control-lg form-control-solid" type="text"
+                  [value]="empMaritalStatus=='M' ? 'Married' :empMaritalStatus=='S'? 'Single':'NA'" placeholder="Gender"
+                  [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Job Type</label>
+              <div class=" col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input class="form-control form-control-lg form-control-solid" type="text"
+                  [value]="empJobTitle==0 ? 'FullTime/Permanent' : empJobTitle==1 ?  'PartTime/Sharing':'NA'"
+                  placeholder="Job Type" [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">CNIC</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input class="form-control form-control-lg form-control-solid" type="text"
+                  [value]="empCNIC==undefined?'NA':empCNIC" placeholder="CNIC" [readonly]="isReadonly" />
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Father Name</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input class="form-control form-control-lg form-control-solid" type="text"
+                  [value]=" (!empFatherName || empFatherName == undefined)?'NA' : 'Mr. '+empFatherName"
+                  placeholder="Father Name" [readonly]="isReadonly" />
+              </div>
+            </div>
+
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Date Of Joining</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+
+                <input type="text"
+                  [value]="(!empDateOfJoining || empDateOfJoining == 'Invalid Date' ) ? 'NA' : empDateOfJoining"
+                  class="form-control form-control-lg form-control-solid" placeholder="Date Of Joining"
+                  [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Age In Years</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input type="text" [value]="(!empAge || empAge == 'NaN' ) ? 'NA' : empAge"
+                  class="form-control form-control-lg form-control-solid" placeholder="Age In Years"
+                  [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Blood Group</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input type="text" [value]=" (!empBloodGroup || empBloodGroup == undefined)?'NA' : empBloodGroup"
+                  class="form-control form-control-lg form-control-solid" placeholder="Shift" [readonly]="isReadonly" />
+              </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+              <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Postal Address</label>
+              <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <input type="disable"
+                  [value]=" (!empPostalAddress || empPostalAddress == undefined)?'NA' : empPostalAddress"
+                  class="form-control form-control-lg form-control-solid" placeholder="Postal Address"
+                  [readonly]="isReadonly" />
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+      <!--end::Body-->
+    </div>
+    <!--end::Form-->
+  </div>
+</ng-container>

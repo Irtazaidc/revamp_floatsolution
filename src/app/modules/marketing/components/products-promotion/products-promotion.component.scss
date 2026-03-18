@@ -1,0 +1,285 @@
+.cstm-height-card .card-img-top {
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .social-icon .fa {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    width: 30px;
+    height: 30px !important;
+    line-height: 1;
+    font-size: 14px;
+    -webkit-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+    color: #fff;
+    background: none
+  }
+  
+  .social-icon:hover .fa {
+    opacity: .8
+  }
+  
+  
+  /* switch slider */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 44px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+.switch input:empty ~ span {
+    margin: 32px 0;
+    height: 30px;
+    width: 57px;
+    border-radius: 15px;
+}
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 1px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 4px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 27px;
+    width: 13px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 44px;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+  }
+  
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  .icon-warning-confirmbox-sm{
+    color: orange;
+    font-size: 4.2em;
+    margin-left: 39%;
+  }
+  .warning-confirmbox-sm-message{
+    margin-left: 28%;
+  }
+  .badge{
+    padding: 4px 6px;
+    border-radius: 2px
+  }
+  
+  
+  
+  
+  // .ng-valid[required], .ng-valid.required  {
+  //   border-bottom: 1px solid #3d51e8; 
+  // }
+  
+  // .ng-invalid:not(form)  {
+  //   border-bottom: 1px solid #a94442; 
+  // }
+  
+  // input {
+  //   border: none;
+  //   outline: none
+  // }
+  
+  .input-custom{
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    border-bottom: 1px solid #3d51e8;
+  }
+  
+  .form-control-custom{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }
+  .login-header{
+      background-color: #007bff;
+      color: #fbf5f5;
+      padding: 8px;
+  }
+  .promo-title{
+    margin-top: 14px !important;
+    margin-bottom: 10px !important;
+  }
+
+
+  
+// ::ng-deep .mat-tab-label {
+//   border-right: 1px solid #e5e5e5;
+//   background-color: #f3f6f9;;
+//   border-radius: 5px;
+//   margin-left: 5px;
+//   border-radius: 8px;
+
+// }
+
+// ::ng-deep .mat-tab-label:hover {
+//   background-color: #1BC5BD; 
+//   color: #ffffff;
+//   .custom-icons{
+//       color: #ffffff !important;
+//   }
+// }
+// ::ng-deep .mat-tab-label-container {
+//   margin-bottom: 5px !important;
+// }
+
+// ::ng-deep .mat-tab-label-active {
+//   background-color: #1BC5BD;
+//   color: #ffffff;
+//   // box-shadow: 0px 0px 0px 3px #FF0000;
+//   .custom-icons{
+//       color: #ffffff !important;
+//   }
+// }
+
+// ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar,
+// ::ng-deep .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+//   background-color: transparent;
+// }
+
+// ::ng-deep .mat-card:not([class*=mat-elevation-z]) {
+//   box-shadow: none;
+// }
+
+.mat-card {
+  box-shadow: none; /* or box-shadow: 0 0 0 transparent; */
+}
+
+::ng-deep .mat-tab-label-active {
+  border-bottom: 2px solid #F64E60 // #1BC5BD; /* Change the color to your desired shade of green */
+}
+
+/* Optional: You can style the tab labels themselves, for example, changing their text color */
+::ng-deep  .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+    background-color: #F64E60 // #1BC5BD;
+}
+
+
+.b-left{
+  border-left: 2px solid red; 
+}
+.bg-highlight{
+  background-color: #ff000022;
+}
+
+.invalid-highlight ::ng-deep .ngb-tp-input {
+  background-color: #ff000022;
+} 
+
+.effective-date-time {
+  display: flex;
+  
+  .mini-input-field.date-picker {
+      width: 100px;
+  }
+  .mini-input-field {
+      width: 95px;
+      height: 30px;  
+      margin: auto;  
+  }
+  .mini-input-field.time-picker ::ng-deep fieldset {
+      padding: 0;
+      margin: 0;
+      .ngb-tp-input-container {
+          width: 40px;
+          height: 30px;
+          .ngb-tp-input {
+              height: 38px;
+              padding: 9px 0px;
+              width: 38px;
+          }
+      }
+  }
+}
+::ng-deep .ng-select-container{
+  border-left: 2px solid red;
+}
+.disabled-city{
+background-color: #ffd0d8
+}
+::ng-deep .tooltip .tooltip-inner {
+text-align: left;
+}
+
+::ng-deep .tooltip .tooltip-inner {
+max-width: 300px;
+}
+
+// .effective-date-time {
+//   display: flex;
+  
+//   .mini-input-field.date-picker {
+//       width: 100px;
+//   }
+//   .mini-input-field {
+//       width: 95px;
+//       height: 30px;  
+//       margin: auto;  
+//   }
+//   .mini-input-field.time-picker ::ng-deep fieldset {
+//       padding: 0;
+//       margin: 0;
+//       .ngb-tp-input-container {
+//           width: 40px;
+//           height: 30px;
+//           .ngb-tp-input {
+//               height: 38px;
+//               padding: 9px 0px;
+//               width: 38px;
+//           }
+//       }
+//   }
+// }

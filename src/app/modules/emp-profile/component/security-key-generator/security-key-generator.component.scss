@@ -1,0 +1,95 @@
+.position-relative {
+  position: relative;
+}
+
+.form-control {
+  padding-right: 80px;
+  /* Increased padding to accommodate both eye and validation icons */
+}
+
+.text-button {
+  position: absolute;
+  right: 40px;
+  /* Moved further left to avoid overlap with validation icon */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Ensure validation icons have proper spacing */
+.is-valid {
+  background-position: right calc(0.375em + 0.1875rem) center;
+  padding-right: calc(1.5em + 0.75rem);
+}
+
+.is-invalid {
+  background-position: right calc(0.375em + 0.1875rem) center;
+  padding-right: calc(1.5em + 0.75rem);
+}
+
+/* Adjust eye icon appearance */
+.text-button i {
+  color: #7e8299;
+  font-size: 1.2rem;
+}
+
+/* Ensure validation feedback messages are properly aligned */
+.invalid-feedback,
+.valid-feedback {
+  display: none;
+}
+
+.is-invalid~.invalid-feedback,
+.is-valid~.valid-feedback {
+  display: block;
+}
+
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #F64E60 !important;
+  }
+
+  .mat-checkbox-background,
+  .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #F64E60;
+  }
+
+  .mat-checkbox-frame,
+  .mat-checkbox-checkmark {
+    border-color: #F64E60;
+  }
+
+  .mat-checkbox-checkmark-path {
+    fill: #F64E60;
+  }
+}
+
+/* Unchecked state */
+::ng-deep .mat-checkbox.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #F64E60 !important;
+  }
+
+  .mat-checkbox-frame {
+    border-color: #F64E60;
+  }
+}
+
+///////////////
+.pin-input {
+  -webkit-text-security: disc;
+  /* Chrome, Safari */
+  text-security: disc;
+  /* fallback for other browsers */
+}
+
+/* In your global styles (e.g., styles.css or component styles with ::ng-deep) */
+/* Force the SweetAlert confirm button to always be red */
+.swal2-confirm.btn.btn-danger,
+.swal2-confirm.btn-danger {
+  background-color: #dc3545 !important; /* Bootstrap's .btn-danger red */
+  border-color: #dc3545 !important;
+  color: #fff !important;
+}

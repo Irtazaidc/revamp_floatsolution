@@ -1,0 +1,214 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="'Applicant List'" [cardClass]="'tim-card tim-card tim-card-info'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="p-2">
+                                <form [formGroup]="formSearchJob" (ngSubmit)="getApplicantListByInterviewerID()">
+                                    <div class="row"> 
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="OpenJobsList"
+                                                    bindLabel="FullName" 
+                                                    placeholder="-Select Job Request-"
+                                                    bindValue="JobRequestID"
+                                                    formControlName="JobRequestID"
+                                                    [closeOnSelect]="true"
+                                                    >
+            
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.FullName}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>                                                                        
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn  btn-outline-primary"><i class="ti-search"></i>Search</button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.applicantListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Job Code</th>
+                                        <th>Name</th>
+                                        <th>Cell</th>
+                                        <th>Email</th>
+                                        <th class="text-right">Process Interview</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" *ngIf="!ApplicantList.length"> 
+                                            <div class="alert alert-info text-center" role="alert">
+                                                Search Applicants against job
+                                                <!-- <i class="fa fa-info" aria-hidden="true"></i> -->
+                                          </div>
+                                        </td>
+                                    </tr>
+                                    <tr  *ngFor = "let item of ApplicantList let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{item.JobRequestCode}}</td>
+                                        <td>{{item.FirstName}} {{item.LastName}}</td>
+                                        <td>{{item.Cell}}</td>
+                                        <td>{{item.EMail}}</td>
+                                        <td class="text-right">
+                                            <a (click)="showApplicantDetail(item.JobApplicantID,item.JobRequestID)" class="cursor-pointer"  placement="top" ngbTooltip="Process Interview"> 
+                                                <i class="fa fa-chevron-right text-primary"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>
+
+<!------begin:: Job Request Detail Popup-->
+<ng-template #applicantDetail let-applicantDetail>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Applicant Detail</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeLoginModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.applicantDetailModal" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default invoice" id="invoice">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                    <h4 class="marginright text-info mb-3">{{JobRequestCode}}-{{JobTitle}}</h4>
+                                </div>
+                            </div>
+                            <div class="row" style="border: 1px solid #dee2e6;
+                            padding: 8px 0px;">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>Name: </p>
+                                            <p>Cell: </p>
+                                            <p>Email: </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>{{FirstName}}  {{LastName}}</strong></p>
+                                            <p><strong>{{Cell}}</strong></p>
+                                            <p><strong>{{EMail}}</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 ">
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>NIC: </p>
+                                            <p>Status:</p>
+                                            <p>Interview Levels:</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>{{CNIC}}</strong></p>
+                                            <p><strong>{{ApplicantStatus}}</strong></p>
+                                            <p><strong>{{InterviewLevel == 1 ? 'One': InterviewLevel==2? 'Two' :  'Three'}}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 section-border-right" >
+                                     <label>Address:</label>
+                                     <address>{{ApplicantAddress}}</address>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4" >
+                                    <label>Download CV:</label>
+                                    <a  *ngIf="CVFile" class="pl-2" (click)="getPdf()"  ><i class="fa fa-file-pdf text-primary" aria-hidden="true" style="font-size: 25px; cursor: pointer;"></i></a>
+                               </div>
+                            
+                            </div>
+                            <form [formGroup]="formProcessInterview" >
+                                <hr>
+                                <div class="row mt-3">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <label for="Weightage" class="control-label">Weightage: <span class="text-primary">(Out of 100)</span></label>
+                                            <input type="number" class="form-control" name="Weightage" formControlName="Weightage"
+                                            [ngClass]="{'invalid': formProcessInterview.get('Weightage').errors && formProcessInterview.get('Weightage').touched, 'invalid-highlighted': formProcessInterview.get('Weightage').errors}"
+                                             >
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <label for="ExpectedSalary" class="control-label">Expected Salary:</label>
+                                            <input type="number" class="form-control" name="ExpectedSalary" formControlName="ExpectedSalary">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <label for="RecommendedSalary" class="control-label">Recommended Salary:</label>
+                                            <input type="number" class="form-control" name="RecommendedSalary" formControlName="RecommendedSalary" >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                                        <div class="form-group">
+                                            <label for="Remarks">Remarks:<span class="text-primary">(Minimum 50 Characters) {{charCount.length||0}}</span></label>
+                                            <textarea name="Remarks" #Remarks (keyup)="remarksCharCount($event);" formControlName="Remarks" class="form-control" cols="30" rows="5" 
+                                            [ngClass]="{'invalid': formProcessInterview.get('Remarks').errors && formProcessInterview.get('Remarks').touched, 'invalid-highlighted': formProcessInterview.get('Remarks').errors}"
+                                            >
+                                            </textarea>
+                                            <small *ngIf="formProcessInterview.get('Remarks').errors && formProcessInterview.get('Remarks').touched" class="text-danger">Please Enter Remarks (atleast 50 characters)!</small>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button"  [disabled]="disabledButton" class="btn btn-sm btn-outline-primary" (click)="processInterview()" >
+            <i class="fa fa-check-circle"></i>  Save <i class="spinner-border-custom" aria-hidden="true"
+              [hidden]="isSpinner"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal" (click)="closeLoginModal()">
+                    <i class="fa fa-times-circle"></i> Close</button>
+    </div>
+
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"  size="medium" color="#fff" type="square-loader" [fullScreen]="false"> <!--[name]="spinnerRefs.searchEmployee"-->
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+</ng-template>
+

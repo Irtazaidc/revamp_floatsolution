@@ -1,0 +1,690 @@
+<div class="dashboard-page">
+    <!-- Page Header with Stats Cards -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-custom card-stretch">
+                <div class="card-header card-header-narrow border-0 d-flex justify-content-between align-items-center">
+                    <div class="card-title">
+                        <h3 class="card-label" style="margin-bottom: 12px;">
+                            <span class="card-icon">
+                                <i class="fas fa-truck-loading icon-lg text-primary"></i>
+                            </span>
+                            Sample Tracking Dashboard
+                        </h3>
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <!-- Expand/Collapse Button for Statistics Section -->
+                        <i class="fa cursor-pointer mr-3" 
+                           [ngClass]="statsIconClass" 
+                           ngbTooltip="{{statsTooltip}}"
+                           (click)="toggleStatsSection()">
+                        </i>
+                        <!-- Expand/Collapse Button for Graphs Section -->
+                        <i class="fa cursor-pointer mr-3" 
+                           [ngClass]="chartsIconClass" 
+                           ngbTooltip="{{chartsTooltip}}"
+                           (click)="toggleChartsSection()">
+                        </i>
+                        <!-- Expand/Collapse Button for Both Sections -->
+                        <i class="fa cursor-pointer" 
+                           [ngClass]="bothIconClass" 
+                           ngbTooltip="{{bothTooltip}}"
+                           (click)="toggleBothSections()">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section - Moved to the top (right after header) -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card card-custom">
+                <div class="card-header card-header-narrow">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-filter icon-lg text-info"></i>
+                        </span>
+                        <h3 class="card-label">Batch Explorer</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="filterForm" (ngSubmit)="searchBatches()">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Date From</label>
+                                <div class="input-group input-group-md">
+                                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                        placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                        formControlName="dateFrom" name="dateFrom" class="form-control form-control-sm"
+                                        type="text" (dateSelect)="validateDateRange()" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="dateFrom.toggle()">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Date To</label>
+                                <div class="input-group input-group-md">
+                                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker"
+                                        placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                        formControlName="dateTo" name="dateTo" class="form-control form-control-sm" type="text"
+                                        (dateSelect)="validateDateRange()" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="dateTo.toggle()">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold ml-3">Branch</label>
+                                <ng-select style="margin-top: -10px;"
+                                    class="from-control form-control-sm"
+                                    placeholder="-Select Branch-"
+                                    [closeOnSelect]="true"
+                                    [clearable]="true"
+                                    formControlName="branchId">
+                                    <ng-option [value]="branch.LocId" *ngFor="let branch of branches">
+                                        {{ branch.Title }}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Batch No</label>
+                                <input class="form-control form-control-sm" placeholder="Search by Batch No"
+                                    formControlName="batchNo" name="batchNo" (keyup.enter)="searchBatches()" />
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 text-right">
+                                <button [disabled]="disabledButtonSearch" class="btn btn-primary btn-sm" type="submit">
+                                    <i class="fas fa-search mr-1"></i> Search
+                                    <span *ngIf="!isSpinnerSearch" class="spinner-border spinner-border-sm ml-1"></span>
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="resetFilters()">
+                                    <i class="fas fa-undo mr-1"></i> Reset
+                                </button>
+                                <button type="button" class="btn btn-light-primary btn-sm ml-2" (click)="refreshDashboard()" title="Refresh">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards Row 1 - Overview Stats (Clickable) - WITH TOGGLE -->
+    <div class="row mt-3" *ngIf="isStatsSectionVisible" [@fadeInOutTranslate]>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch kpi-card clickable" (click)="filterByStatus('all')">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-light-warning">
+                            <i class="fas fa-clipboard-list fa-2x text-warning"></i>
+                        </div>
+                        <div class="kpi-content ml-3">
+                            <span class="text-muted font-weight-bold font-size-sm">Total Batches</span>
+                            <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ summary?.TotalBatches || 0 }}</div>
+                            <small class="text-muted">Click to view all</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch kpi-card clickable" (click)="filterByStatus('2')">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-light-success">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                        <div class="kpi-content ml-3">
+                            <span class="text-muted font-weight-bold font-size-sm">Dispatched</span>
+                            <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ summary?.DispatchedCount || 0 }}</div>
+                            <small class="text-muted">Click to filter</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch kpi-card clickable" (click)="filterByStatus('3')">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-light-info">
+                            <i class="fas fa-motorcycle fa-2x text-info"></i>
+                        </div>
+                        <div class="kpi-content ml-3">
+                            <span class="text-muted font-weight-bold font-size-sm">Rider Sent</span>
+                            <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ summary?.RiderSentForPickCount || 0 }}</div>
+                            <small class="text-muted">Click to filter</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch kpi-card clickable" (click)="filterByStatus('delayed')">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-light-danger">
+                            <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                        </div>
+                        <div class="kpi-content ml-3">
+                            <span class="text-muted font-weight-bold font-size-sm">Delayed</span>
+                            <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ summary?.DelayedCount || 0 }}</div>
+                            <small class="text-muted">Click to filter</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row with ng2-charts - FIXED with proper colors -->
+    <div class="row" *ngIf="isChartsSectionVisible" [@fadeInOutTranslate]>
+        <!-- Pie Chart with Legend - FIXED using datasets approach -->
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-header card-header-narrow">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-chart-pie icon-lg text-primary"></i>
+                        </span>
+                        <h3 class="card-label">Batch Status Distribution</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="chart-container">
+                                <canvas baseChart
+                                    [datasets]="pieChartDatasets"
+                                    [labels]="pieChartLabels"
+                                    [chartType]="pieChartType"
+                                    [options]="pieChartOptions"
+                                    [legend]="pieChartLegend">
+                                </canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="status-legend">
+                                <div class="legend-item d-flex align-items-center mb-3 clickable" *ngFor="let item of pieChartDataItems; let i = index" (click)="filterByStatus(getStatusKey(i))">
+                                    <span class="legend-color" [style.backgroundColor]="getColorForIndex(i)"></span>
+                                    <span class="flex-grow-1 ml-2">{{ pieChartLabels[i] }}</span>
+                                    <span class="font-weight-bold">{{ item }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-header card-header-narrow">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-chart-bar icon-lg text-success"></i>
+                        </span>
+                        <h3 class="card-label">Batch Status Comparison</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas baseChart
+                            [datasets]="barChartData"
+                            [labels]="barChartLabels"
+                            [chartType]="barChartType"
+                            [options]="barChartOptions"
+                            [legend]="barChartLegend">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attachment Stats Row - WITH TOGGLE (part of stats section) -->
+    <div class="row" *ngIf="isStatsSectionVisible" [@fadeInOutTranslate]>
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-header card-header-narrow">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-paperclip icon-lg text-info"></i>
+                        </span>
+                        <h3 class="card-label">Attachment Status</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="status-card bg-light p-3 rounded text-center">
+                                <div class="status-value font-size-h1 font-weight-bold text-success">{{ summary?.WithAttachmentCount || 0 }}</div>
+                                <div class="status-label text-muted">With Attachments</div>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-success" 
+                                         [style.width]="getPercentage(summary?.WithAttachmentCount || 0, summary?.TotalBatches || 0) + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="status-card bg-light p-3 rounded text-center">
+                                <div class="status-value font-size-h1 font-weight-bold text-warning">{{ summary?.WithoutAttachmentCount || 0 }}</div>
+                                <div class="status-label text-muted">Missing Attachments</div>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" 
+                                         [style.width]="getPercentage(summary?.WithoutAttachmentCount || 0, summary?.TotalBatches || 0) + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-header card-header-narrow">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-hourglass-half icon-lg text-warning"></i>
+                        </span>
+                        <h3 class="card-label">Financial Status</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="status-card bg-light p-3 rounded text-center">
+                                <div class="status-value font-size-h1 font-weight-bold text-primary">{{ summary?.ActualCostPendingCount || 0 }}</div>
+                                <div class="status-label text-muted">Batches Pending Actual Cost</div>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" 
+                                         [style.width]="getPercentage(summary?.ActualCostPendingCount || 0, summary?.TotalBatches || 0) + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batches List - Tabular View (with scroll target) -->
+    <div class="row mt-3" #tableSection>
+        <div class="col-12">
+            <div class="card card-custom">
+                <div class="card-header card-header-narrow d-flex justify-content-between align-items-center">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-list icon-lg text-primary"></i>
+                        </span>
+                        <h3 class="card-label">Batches List ({{ filteredBatches.length }})</h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <!-- <button class="btn btn-icon btn-light-info btn-sm" (click)="exportToExcel()" title="Export to Excel">
+                            <i class="fas fa-file-excel"></i>
+                        </button> -->
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Loading State -->
+                    <div *ngIf="loadingBatches" class="text-center py-5">
+                        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <p class="text-muted">Loading batches...</p>
+                    </div>
+
+                    <!-- No Records Found -->
+                    <div *ngIf="!loadingBatches && filteredBatches.length === 0" class="text-center py-5">
+                        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                        <p class="text-muted">No batches found</p>
+                    </div>
+
+                    <!-- Batches Table -->
+                    <div *ngIf="!loadingBatches && filteredBatches.length > 0" class="table-responsive">
+                        <table class="table table-hover table-sm batches-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Batch #</th>
+                                    <th>Status</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Transport</th>
+                                    <th>ETA</th>
+                                    <th>Delay</th>
+                                    <th>Rider</th>
+                                    <th>Samples</th>
+                                    <th>Tests</th>
+                                    <th>Attachments</th>
+                                    <th>Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let batch of filteredBatches; let i = index"
+                                    [ngClass]="{
+                                        'delayed-row': batch.IsDelayed,
+                                        'urgent-row': !batch.IsDelayed && batch.RemainingMinutes !== null && batch.RemainingMinutes <= 30 && batch.RemainingMinutes > 0
+                                    }">
+                                    <td>
+
+                                        <span class="copy-text-button font-weight-bolder"
+                                            ngbTooltip="Copy to clipboard"
+                                            >
+                                            <span
+                                                ngbPopover="copied"
+                                                triggers="click:mouseleave"
+                                                (click)="copyText(batch.BatchNo)">{{ batch.BatchNo }}</span
+                                            >
+                                        </span>
+                                        <small class="text-muted d-block">{{ batch.CreatedOn | date:'dd MMM' }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge" [ngClass]="getStatusBadgeClass(batch)">
+                                            {{ batch.BatchStatusName }}
+                                        </span>
+                                    </td>
+                                    <td>{{ batch.FromLocCode }}</td>
+                                    <td>{{ batch.ToLocCode }}</td>
+                                    <td>{{ batch.TransportMediumName }}</td>
+                                    <td>
+                                        <span [ngClass]="{'text-danger': batch.IsDelayed}">
+                                            {{ batch.ExpectedArrivalTime ? (batch.ExpectedArrivalTime | date:'dd MMM, HH:mm') : '—' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="batch.IsDelayed" class="badge badge-danger text-white badge-sm">
+                                            <i class="fas fa-exclamation-circle mr-1 text-white"></i>{{ batch.DelayMinutes }}min
+                                        </span>
+                                        <span *ngIf="!batch.IsDelayed && batch.RemainingMinutes !== null && batch.RemainingMinutes <= 30" 
+                                              class="badge badge-warning text-white badge-sm">
+                                            <i class="fas fa-clock mr-1 text-white"></i>{{ batch.RemainingMinutes }}min
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="batch.RiderDetail" class="small" title="{{ batch.RiderDetail }}">
+                                            <i class="fas fa-user-circle text-info mr-1"></i>
+                                            {{ batch.RiderDetail.length > 15 ? (batch.RiderDetail | slice:0:15) + '...' : batch.RiderDetail }}
+                                        </span>
+                                        <span *ngIf="!batch.RiderDetail" class="text-muted small">—</span>
+                                    </td>
+                                    <td class="text-center">{{ batch.TotalSampleCount }}</td>
+                                    <td class="text-center">{{ batch.TotalTPCount }}</td>
+                                    <td class="text-center">
+                                        <div class="file-icon-wrapper" 
+                                            *ngIf="batch.AttachmentsList && batch.AttachmentsList.length > 0; else noAttachments"
+                                            (click)="openAttachmentsModal(attachmentsModal, batch)"
+                                            [ngbTooltip]="'Click to view attachment'">
+                                            <i class="fas fa-paperclip text-primary fa-lg"></i>
+                                        </div>
+                                        <ng-template #noAttachments>
+                                            <i class="fas fa-times-circle text-muted" ngbTooltip="No Attachments"></i>
+                                        </ng-template>
+                                    </td>
+                                    <td class="text-right">
+                                        <span *ngIf="batch.IsActualCostPending" class="text-warning small">Pending</span>
+                                        <span *ngIf="!batch.IsActualCostPending && batch.ActualCost" class="text-success small">
+                                            Rs. {{ batch.ActualCost | number:'1.2-2' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer py-2" *ngIf="!loadingBatches && filteredBatches.length > 0">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <small class="text-muted">Showing {{ filteredBatches.length }} batches</small>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <small class="text-muted">Last updated: {{ lastRefreshed | date:'dd MMM yyyy, HH:mm' }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attachments Modal -->
+<ng-template #attachmentsModal let-modal>
+  <div class="modal-header py-2 px-3">
+    <h6 class="modal-title font-weight-bold mb-0">
+      <i class="fas fa-paperclip text-primary mr-2"></i>
+      Invoice Attachment
+    </h6>
+    <div class="d-flex align-items-center">
+      <span class="batch-number mr-3">
+        <span class="text-muted mr-1">Batch #:</span>
+        <strong class="text-primary">{{ selectedBatchForAttachments?.BatchNo }}</strong>
+      </span>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true" class="d-block">&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="modal-body p-3">
+    <div *ngIf="attachmentsList.length === 0" class="text-center text-muted py-4">
+      <i class="fa fa-paperclip fa-3x mb-3"></i>
+      <p>No attachments available for this batch</p>
+    </div>
+
+    <!-- Thumbnail Gallery View -->
+    <div class="row" *ngIf="attachmentsList.length > 0 && !selectedAttachment">
+      <div class="col-12 mb-3">
+        <div class="d-flex justify-content-end">
+          <span class="text-muted mr-2">View Options:</span>
+          <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-outline-secondary" [class.active]="attachmentViewType === 'grid'" (click)="setAttachmentViewType('grid')" title="Grid View">
+              <i class="fa fa-th-large"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" [class.active]="attachmentViewType === 'list'" (click)="setAttachmentViewType('list')" title="List View">
+              <i class="fa fa-list"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid View -->
+      <ng-container *ngIf="attachmentViewType === 'grid'">
+        <div class="col-md-4 col-sm-6" *ngFor="let item of attachmentsList; trackBy: trackByAttachment">
+          <div class="card attachment-card mb-3 border-0 shadow-sm h-100">
+            <div class="attachment-preview-container position-relative" (click)="openFullView(item)">
+              <!-- Preview -->
+              <div class="attachment-preview bg-light d-flex align-items-center justify-content-center p-3" style="height: 150px;">
+                <ng-container *ngIf="isImageFile(item.FileExtension) && !item.HasError; else noPreview">
+                  <img [src]="item.PreviewUrl" [alt]="'Attachment'" class="img-fluid" style="max-height: 130px; object-fit: contain;" (error)="onImageError(item)" />
+                </ng-container>
+                <ng-template #noPreview>
+                  <i class="fa fa-4x" [ngClass]="getFileIconClass(item.FileExtension)"></i>
+                </ng-template>
+              </div>
+              
+              <!-- Overlay on hover -->
+              <div class="preview-overlay">
+                <i class="fa fa-search-plus"></i>
+              </div>
+            </div>
+            
+            <div class="card-body p-2">
+              <div class="d-flex justify-content-between align-items-start mb-1">
+                <span class="badge badge-sm" [ngClass]="{
+                  'badge-success': isImageFile(item.FileExtension),
+                  'badge-info': isPdfFile(item.FileExtension),
+                  'badge-secondary': !isImageFile(item.FileExtension) && !isPdfFile(item.FileExtension)
+                }">
+                  {{ getFileExtensionDisplay(item.FileExtension) }}
+                </span>
+                <div class="btn-group btn-group-xs">
+                  <button type="button" class="btn btn-sm btn-outline-primary btn-icon" (click)="openFullView(item)" title="View">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-success btn-icon" (click)="downloadAttachment(item)" title="Download">
+                    <i class="fa fa-download"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="attachment-title small text-truncate" [title]="item.FileName">
+                {{ getDisplayFileName(item.FileName) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- List View -->
+      <ng-container *ngIf="attachmentViewType === 'list'">
+        <div class="col-12" *ngFor="let item of attachmentsList; trackBy: trackByAttachment">
+          <div class="card attachment-card mb-2 border-0 shadow-sm">
+            <div class="row no-gutters align-items-center">
+              <!-- Thumbnail Preview -->
+              <div class="col-2 col-md-1">
+                <div class="attachment-preview-thumb bg-light d-flex align-items-center justify-content-center p-2 rounded-left" style="height: 60px; cursor: pointer;" (click)="openFullView(item)">
+                  <ng-container *ngIf="isImageFile(item.FileExtension) && !item.HasError; else noThumbPreview">
+                    <img [src]="item.PreviewUrl" [alt]="'Attachment'" style="max-height: 50px; max-width: 50px; object-fit: contain;" (error)="onImageError(item)" />
+                  </ng-container>
+                  <ng-template #noThumbPreview>
+                    <i class="fa fa-2x" [ngClass]="getFileIconClass(item.FileExtension)"></i>
+                  </ng-template>
+                </div>
+              </div>
+              
+              <!-- Details -->
+              <div class="col-7 col-md-8">
+                <div class="card-body p-2">
+                  <div class="d-flex align-items-center">
+                    <span class="badge badge-sm mr-2" [ngClass]="{
+                      'badge-success': isImageFile(item.FileExtension),
+                      'badge-info': isPdfFile(item.FileExtension),
+                      'badge-secondary': !isImageFile(item.FileExtension) && !isPdfFile(item.FileExtension)
+                    }">
+                      {{ getFileExtensionDisplay(item.FileExtension) }}
+                    </span>
+                    <div class="attachment-title small font-weight-bold text-truncate" [title]="item.FileName">
+                      {{ getDisplayFileName(item.FileName) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Actions -->
+              <div class="col-3 col-md-3 text-right pr-3">
+                <div class="btn-group btn-group-sm">
+                  <button type="button" class="btn btn-outline-primary" (click)="openFullView(item)" title="View">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-outline-success" (click)="downloadAttachment(item)" title="Download">
+                    <i class="fa fa-download"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Full Screen Document Viewer -->
+    <div class="fullscreen-viewer" *ngIf="selectedAttachment" [@fadeInOutTranslate]>
+      <div class="viewer-header d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+          <button type="button" class="btn btn-sm btn-outline-primary mr-2" (click)="closeFullView()" title="Back to Gallery">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <!-- <h6 class="mb-0 font-weight-bold text-truncate" style="max-width: 300px;" [title]="selectedAttachment.FileName">
+            {{ getDisplayFileName(selectedAttachment.FileName) }}
+          </h6> -->
+          <span class="badge ml-2" [ngClass]="{
+            'badge-success': isImageFile(selectedAttachment.FileExtension),
+            'badge-info': isPdfFile(selectedAttachment.FileExtension),
+            'badge-secondary': !isImageFile(selectedAttachment.FileExtension) && !isPdfFile(selectedAttachment.FileExtension)
+          }">
+            {{ getFileExtensionDisplay(selectedAttachment.FileExtension) }}
+          </span>
+        </div>
+        <div class="btn-group btn-group-sm">
+          <ng-container *ngIf="isImageFile(selectedAttachment.FileExtension)">
+            <button type="button" class="btn btn-outline-secondary" (click)="rotateImage()" title="Rotate">
+              <i class="fa fa-rotate-right"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="zoomOut()" title="Zoom Out">
+              <i class="fa fa-search-minus"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="zoomIn()" title="Zoom In">
+              <i class="fa fa-search-plus"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="resetView()" title="Reset">
+              <i class="fa fa-undo"></i>
+            </button>
+          </ng-container>
+          <button type="button" class="btn btn-outline-success" (click)="downloadAttachment(selectedAttachment)" title="Download">
+            <i class="fa fa-download"></i>
+          </button>
+          <button type="button" class="btn btn-outline-primary" (click)="printDocument(selectedAttachment)" title="Print">
+            <i class="fa fa-print"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="viewer-content" (wheel)="onMouseWheel($event)">
+        <!-- Image Viewer -->
+        <ng-container *ngIf="isImageFile(selectedAttachment.FileExtension) && !selectedAttachment.HasError">
+          <div class="image-container" 
+               (mousedown)="startDrag($event)"
+               (document:mousemove)="onDrag($event)"
+               (document:mouseup)="stopDrag()">
+            <img [src]="selectedAttachment.PreviewUrl" 
+                 [alt]="selectedAttachment.FileName"
+                 [ngStyle]="getImageStyles()"
+                 class="viewer-image"
+                 (error)="onImageError(selectedAttachment)" />
+          </div>
+        </ng-container>
+
+        <!-- PDF Viewer -->
+        <ng-container *ngIf="isPdfFile(selectedAttachment.FileExtension)">
+          <iframe [src]="getSafePdfUrl(selectedAttachment)" 
+                  class="viewer-pdf"
+                  frameborder="0"></iframe>
+        </ng-container>
+
+        <!-- Other File Types -->
+        <ng-container *ngIf="!isImageFile(selectedAttachment.FileExtension) && !isPdfFile(selectedAttachment.FileExtension)">
+          <div class="text-center p-5">
+            <i class="fa fa-5x mb-3" [ngClass]="getFileIconClass(selectedAttachment.FileExtension)"></i>
+            <p class="text-muted">Preview not available for this file type</p>
+            <button class="btn btn-primary mt-3" (click)="downloadAttachment(selectedAttachment)">
+              <i class="fa fa-download mr-2"></i> Download File
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer py-2 px-3">
+    <button class="btn btn-light btn-sm px-4" (click)="modal.close()">
+      Close
+    </button>
+  </div>
+</ng-template>

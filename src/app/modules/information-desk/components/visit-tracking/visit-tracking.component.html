@@ -1,0 +1,727 @@
+<div class="visit-management-page">
+    <div class="row">
+        <div class="col-sm-12 patient-search-area">
+            <app-patient-search
+            (visitSelectedEvent)="patientVisitEvent($event)" (testSearchEvent)="getVisitInfo($event)"
+            [buttonControls]="['showResults','visits', 'invoice', 'booking', 'barcode', 'attachdocs', 'discountCardsViewBtn']"
+            ></app-patient-search>
+        </div>
+    </div>
+    <div class="row" style="margin-top: -45px;" #visitInfoArea>
+        <div class="col-sm-12">
+            <app-card [cardClass]="'tim-card tim-card-primary'">
+                <ng-container *ngIf="selectedVisit; then visitContainer else visitNotSelectedContainer"></ng-container>
+                <ng-template #visitContainer>
+                    <div class="patient-visit-area">
+                        <div class="col-12">
+                            <ng-container *ngIf="visitDetails && visitDetails.pateintInfo; then patientRecordsContainer else defaultTemplateContainer"></ng-container>
+                            <ng-template #defaultTemplateContainer>
+                                <div class="col-12 text-center"> <hr> <div class="text-primary">No Record(s) Found.</div> </div>
+                            </ng-template>
+                            <ng-template #patientRecordsContainer>
+                                <div class="row patient-info-container">
+                                    <div class="col-md-6" *ngIf="visitDetails && visitDetails.pateintInfo">
+                                        <fieldset class="fieldset-border-top">
+                                            <app-patient-basic-info class="bg-light" [PatientId]="visitDetails.pateintInfo.PatientId"></app-patient-basic-info>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="visitDetails && visitDetails.pateintInfo">
+                                        <div class="patient-visit-info-container"  style="background-color: #F3F6F9 !important;">
+                                                <div class="col-12 pl-2 pr-2 m-1" *ngIf="visitDetails.visitInfo" >
+                                                    <ul class="visit-info-list info-list">
+                                                        <li><span class="lbl">PIN </span> <span class="val">{{visitDetails.visitInfo.PIN}}</span></li>
+                                                        <li><span class="lbl">Visit Date:</span> <span class="val">{{visitDetails.visitInfo.CreatedOn ? (visitDetails.visitInfo.CreatedOn | date: 'dd-MMM-yyyy HH:mm') : ''}}</span></li>
+                                                        <li><span class="lbl">Registered By:</span> <span class="val">{{visitDetails.visitInfo.CreatedByName || ''}}</span></li>
+                                                        <li><span class="lbl">Patient Type:</span> <span class="val">{{visitDetails.visitInfo.PatientTypeName}} {{visitDetails.visitInfo.PanelCode ? (' - '+ visitDetails.visitInfo.PanelCode) : ''}}</span></li>
+                                                        <li><span class="lbl">Branch:</span> <span class="val">{{visitDetails.visitInfo.BranchCode}}</span></li>
+                                                    </ul>
+                                                </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="row">
+                                            <!--start::Test Info-->
+                                            <div class="col-md-12" >
+                                                <div class="patient-visit-Test-info-container">
+                                                    <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Test Info.</legend>
+                                                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                                                            <table class="table table-hover compact table-bordered" *ngIf="visitDetails && visitDetails.tpInfo">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Test</th>
+                                                                        <th>Reporting Time</th>
+                                                                        <th>Status</th>
+                                                                        <th class="text-right">Price</th>
+                                                                        <!-- <th>Remarks</th> -->
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr
+                                                                        *ngFor="let tp of visitDetails.tpInfo; let i=index;"
+                                                                        [ngStyle]="{'text-decoration': tp.TestStatusId < 0 ? 'line-through' : '', 'color': tp.ProcessId == 2 ? 'red' : 'black'}"
+                                                                        >
+                                                                        <td>
+                                                                            <ng-container>
+                                                                                {{tp.Code}} - {{tp.Test}}
+                                                                                <button *ngIf="tp.MOBy"
+                                                                                    (click)="openMOHistoryReport(tp)" 
+                                                                                    ngbTooltip="View MO History"
+                                                                                    class="btn btn-link p-0" 
+                                                                                    style="margin-left: 1rem;">
+                                                                                    <i class="fa fa-file text-primary cursor-pointer"></i>
+                                                                                </button>
+                                                                            </ng-container><br>
+                                                                            <small *ngIf="tp.InitBy"><strong class="text-danger">Initialized By:</strong> {{tp.InitBy}}</small> 
+                                                                            <small *ngIf="tp.FinalizedBy">, <strong class="text-danger">Reported By:</strong> {{tp.FinalizedBy}}</small>
+
+                                                                        </td>
+                                                                        <td>{{tp.DeliveryDate | date:'dd-MMM-yyyy HH:mm'}}</td>
+                                                                        <td>{{tp.TestStatus}}</td>
+                                                                        <td class="text-right">{{helperService.formatNumericValues((tp.DiscountedPrice || 0))||0}}</td>
+                                                                        
+                                                                        <!-- <td rowspan="visitDetails.tpInfo.length">{{tp.Remarks}}</td> -->
+                                                                    </tr>
+                                                                    <!-- <tr>
+                                                                        <td colspan="4">Remarks:{{visitDetails.tpInfo[0].Remarks}}</td>
+                                                                    </tr> -->
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </fieldset>
+            
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <!--start::Payment Info-->
+                                            <div class="col-md-12">
+                                                <div class="patient-visit-payment-installment-info-container">
+                                                    <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Payment Info.</legend>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover compact table-bordered" *ngIf="visitDetails && visitDetails.paymentInfo">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Mode</th>
+                                                                        <th>BranchCode</th>
+                                                                        <th class="text-right">Amount</th>
+                                                                        <th>Inst. Invoice No</th>
+                                                                        <th>Inst No</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let v of visitDetails.paymentInfo; let i=index;">
+                                                                        <td>{{v.Title||'--'}}</td>
+                                                                        <td>{{v.BranchCode||'--'}} <small class="text-primary">{{v.ReceivedBy}} | {{v.ReceivedOn|date:'dd-MMM-yyyy HH:mm:ss'}}</small><small *ngIf="v.Remarks && v.Remarks!=''" ngbTooltip="Click to view remarks"  class="cursor-pointer" ngbPopover="{{v.Remarks||''}}" popoverTitle="Remarks"><br/><strong>Rem:</strong><span [innerHTML]="truncate(v.Remarks || '',40)"></span></small></td>
+                                                                        <td class="text-right">{{helperService.formatNumericValues(v.Amount || 0)||0}}</td>
+                                                                        <td>{{v.InstInvoiceNo||'--'}}</td>
+                                                                        <td>{{v.InstNo||'--'}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </fieldset>
+                                                </div> 
+                                            </div>
+
+                                            <!--start::Billing Info-->
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="patient-visit-payment-info-container">
+                                                            <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Billing Info.</legend>
+                                                                <ul class="billing-info-list info-list" *ngFor="let v of visitDetails.billingInfo; let i=index;">
+                                                                    <li><span class="lbl">Receipt No.</span> <span class="val">{{v.ReceiptNo}}</span></li>
+                                                                    <li><span class="lbl">Gross Amount</span> <span class="val">{{helperService.formatNumericValues(v.GrossAmount || 0)}}</span></li>
+                                                                    <li *ngIf="v.PercentDiscount"><span class="lbl">Discount (<strong>{{v.PercentDiscount}} %</strong>)</span> <span class="val">{{helperService.formatNumericValues(v.AdjAmount || 0)}}</span></li>
+                                                                    <li><span class="lbl">Net Amount</span> <span class="val">{{helperService.formatNumericValues(v.NetAmount || 0)}}</span></li>
+                                                                    <li><span class="lbl">Paid Amount</span> <span class="val">{{helperService.formatNumericValues(v.ReceivedAmount || 0)}}</span></li>
+                                                                    <li *ngIf="v.RefundAmount"><span class="lbl">Refunded Amount</span> <span class="val">{{helperService.formatNumericValues(v.RefundAmount || 0)}}</span></li>
+                                                                    <li><span class="lbl">Balance</span> <span class="val">{{ helperService.formatNumericValues((v.NetAmount || 0) - (v.ReceivedAmount || 0) - (v.AdjAmount || 0) - (v.RefundAmount || 0)) || 0}}</span></li>
+                                                                    <li><span class="lbl">Ref. By</span> <span class="val">{{v.RefBy}}</span></li>
+                                                                    <!-- <li><span class="lbl">Internal Remarks</span> <span class="cursor-pointer" ngbPopover="{{v.InternalRemarks||''}}" popoverTitle="Internal Remarks">{{truncate(v.InternalRemarks || '',40)}}</span></li> -->
+                                                                    <li *ngIf="v.PatientComments"><span class="lbl">Patient Comments</span> <span class="cursor-pointer" ngbPopover="{{v.PatientComments||''}}" popoverTitle="Patient Comments" >{{truncate(v.PatientComments || '',40)}}</span></li>
+                                                                </ul>
+                                                            </fieldset>
+        
+                                                        </div>   
+                                                    </div>
+                                                </div>   
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="width: 100%; margin: 5px;">
+                                </div>
+                                <!--Ramarks and Documents-->
+                                <div class="row">
+                                    <hr style="width: 100%; margin: 10px 0px;">
+                                    <div class="col-md-6 visit-remarks-area">
+                                        <app-visit-remarks [propVisitNo]="visitDetails.visitInfo.VisitId" [editing]="{save: true}"
+                                        [showRemarksPriority]="true"></app-visit-remarks>
+                                    </div>
+                                    <div class="col-md-6 visit-docs-area">
+                                        <app-visit-docs [propVisitNo]="visitDetails.visitInfo.VisitId"  [editing]="{select: true, camera: true}" [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs>
+                                    </div>
+                                    <div class="col-md-12 text-right">
+                                        <button class="btn btn-outline-primary btn-sm" (click)="openInvoice(visitDetails.visitInfo)" ><i class="ti-receipt"></i>Invoice</button>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #visitNotSelectedContainer>
+                    <div class="col-12 text-center text-primary"> <hr> <div>Please search patient and select visit to show details</div> </div>
+                </ng-template>
+            </app-card>
+        </div>
+    </div>
+</div>
+      
+
+
+
+
+<ng-template #receiveInstallmentPopup let-receiveInstallmentPopup>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Installment Receiving Form</h4>
+      <button type="button" class="btn btn-outline-dark btn-sm" aria-label="Close" (click)="receiveInstallmentPopup.dismiss('Cross click')">x</button>
+    </div>
+    <div class="modal-body">
+        <div class="">
+
+            <form class="md-float-material" [formGroup]="visitInstallmentForm">
+                <div class="row" *ngIf="selectedVisit">
+                    <app-patient-basic-info *ngIf="selectedVisit.PatientID" class="mb-3 bg-light d-none d-md-block" [PatientId]="selectedVisit.PatientID"></app-patient-basic-info>
+                </div>
+                <div class="row">
+
+                    <!-- <pre>{{visitInstallmentForm.value | json}}</pre> -->
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered table-sm table-installment-receiving">
+                            <thead class="d-none">
+                                <tr>
+                                    <th width="50%"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Charges</td>
+                                    <td class="font-weight-bold text-right">
+                                        {{helperService.formatNumericValues(visitInstallmentForm.get('totalCharges').value || 0)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Already Received</td>
+                                    <td class="font-weight-bold text-right">
+                                        {{helperService.formatNumericValues(visitInstallmentForm.get('alreadyReceivedAmount').value || 0)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label>Balance</label></td>
+                                    <td class="font-weight-bold text-right">
+                                        {{helperService.formatNumericValues(visitInstallmentForm.get('balance').value || 0)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label>Receiving Amount</label></td>
+                                    <td class="font-weight-bold text-right float-right receiving-amount-area">
+                                        <input type="text" class="form-control form-control-sm compact-field receiving-field"
+                                        formControlName="receivingAmount"
+                                        [ngClass]="{'invalid': visitInstallmentForm.get('receivingAmount').errors, 'invalid-highlighted': (visitInstallmentForm.get('receivingAmount').errors) && visitInstallmentFormSubmitted}"
+                                        >
+                                        <div class="small text-danger d-inline-block" *ngIf="visitInstallmentForm.get('receivingAmount').errors && visitInstallmentForm.get('receivingAmount').dirty">
+                                            <span *ngIf="visitInstallmentForm.get('receivingAmount').errors?.required">field is required</span>
+                                            <span *ngIf="visitInstallmentForm.get('receivingAmount').errors?.pattern">only numeric value & greater than 1</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label>Balance After Receiving</label></td>
+                                    <td class="font-weight-bold text-right">
+                                        {{helperService.formatNumericValues((visitInstallmentForm.get('balance').value - visitInstallmentForm.get('receivingAmount').value))}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label>Payment Mode</label></td>
+                                    <td class="font-weight-bold text-right">
+                                        <select class="form-control form-control-sm compact-field" formControlName="paymentMode"
+                                            (change)="paymentModeChangedEvent($event, 'installment-form')"
+                                            [ngClass]="{'invalid': visitInstallmentForm.get('paymentMode').errors, 'invalid-highlighted': visitInstallmentForm.get('paymentMode').errors && visitInstallmentFormSubmitted}"
+                                            >
+                                            <option [value]="'0'">--select--</option>
+                                            <option *ngFor="let item of paymentModes" [value]="item.ModeId">{{item.Title}}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="d-flex" *ngIf="visitInstallmentForm.get('paymentMode').value == 2">
+                                            <div class="col-md-4 pr-4 pr-md-0">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Credit Card #" class="form-control form-control-sm" formControlName="CCNo"
+                                                    [ngClass]="{'invalid': visitInstallmentForm.get('CCNo').errors, 'invalid-highlighted': visitInstallmentForm.get('CCNo').errors && visitInstallmentFormSubmitted}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 px-4 px-md-0">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Name" class="form-control form-control-sm" formControlName="InstOwner"
+                                                    [ngClass]="{'invalid': visitInstallmentForm.get('InstOwner').errors, 'invalid-highlighted': visitInstallmentForm.get('InstOwner').errors && visitInstallmentFormSubmitted}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 px-4 pl-md-0">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Invoice #" class="form-control form-control-sm" formControlName="CCTNo"
+                                                    [ngClass]="{'invalid': visitInstallmentForm.get('CCTNo').errors, 'invalid-highlighted': visitInstallmentForm.get('CCTNo').errors && visitInstallmentFormSubmitted}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--
+                    <div class="col-12">
+                        <label>Total Charges</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                            formControlName="totalCharges"
+                            [attr.disabled]="true"
+                            [ngClass]="{'invalid': visitInstallmentForm.get('totalCharges').errors, 'invalid-highlighted': (visitInstallmentForm.get('totalCharges').errors) && visitInstallmentFormSubmitted}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label>Already Received</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                            formControlName="alreadyReceivedAmount"
+                            [attr.disabled]="true"
+                            [ngClass]="{'invalid': visitInstallmentForm.get('alreadyReceivedAmount').errors, 'invalid-highlighted': (visitInstallmentForm.get('alreadyReceivedAmount').errors) && visitInstallmentFormSubmitted}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label>Balance</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                            formControlName="balance"
+                            [attr.disabled]="true"
+                            [ngClass]="{'invalid': visitInstallmentForm.get('balance').errors, 'invalid-highlighted': (visitInstallmentForm.get('balance').errors) && visitInstallmentFormSubmitted}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label>Receiving Amount</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                            formControlName="receivingAmount"
+                            [ngClass]="{'invalid': visitInstallmentForm.get('receivingAmount').errors, 'invalid-highlighted': (visitInstallmentForm.get('receivingAmount').errors) && visitInstallmentFormSubmitted}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label>Balance After Receiving</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                            formControlName="balanceAfterReceiving"
+                            [attr.disabled]="true"
+                            [ngClass]="{'invalid': visitInstallmentForm.get('balanceAfterReceiving').errors, 'invalid-highlighted': (visitInstallmentForm.get('balanceAfterReceiving').errors) && visitInstallmentFormSubmitted}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label>Payment Mode</label>
+                        <div class="input-group">
+                            <select class="form-control" formControlName="paymentMode"
+                                [ngClass]="{'invalid': visitInstallmentForm.get('paymentMode').errors, 'invalid-highlighted': visitInstallmentForm.get('paymentMode').errors && visitInstallmentFormSubmitted}"
+                                >
+                                <option [value]="''">--select--</option>
+                                <option *ngFor="let item of paymentModes" [value]="item.ModeId">{{item.Title}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    -->
+
+                </div>
+
+                <div class="row"><hr></div>
+
+                <div class="row">
+                    <div class="col-12">
+                        
+                        <ng-container *ngIf="installmentAllowed().allowed; then submitButton else messageTemplate"></ng-container>
+                        <ng-template #messageTemplate>
+                            <span class="text-center text-danger float-right"><span>No Balance to receive</span></span>
+                        </ng-template>
+                        <ng-template #submitButton>
+                            <button
+                                type="submit"
+                                class="btn btn-primary btn-sm float-right"
+                                title="Cancel"
+                                mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="'Are you sure?'"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="saveReceiveInstallmentPopup()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary"
+                                cancelButtonType="outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                            > <i class="ti-check"></i>Receive Installment</button>
+                        </ng-template>
+                       
+                        <!--
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-sm float-right"
+                            title="Cancel"
+                            mwlConfirmationPopover
+                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="'Are you sure?'"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]"
+                            (confirm)="saveReceiveInstallmentPopup()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="primary"
+                            cancelButtonType="outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true"
+                        > <i class="ti-check"></i>Receive Installment</button>
+                        -->
+                        <button type="button" class="btn btn-sm btn-outline-dark mr-2 float-right" (click)="receiveInstallmentPopup.dismiss('close button clicked')">Close</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!-- <div class="modal-footer">
+        
+    </div> -->
+</ng-template>
+
+
+
+
+
+<ng-template #tpCancellationPopup let-tpCancellationPopup>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Cancellation & Refund Form</h4>
+        <button type="button" class="btn btn-outline-dark btn-sm" aria-label="Close" (click)="tpCancellationPopup.dismiss('Cross click')">x</button>
+      </div>
+    <div class="modal-body">
+        <div class="">
+
+            <!-- <h4 class="modal-title" id="modal-basic-title">Cancellation & Refund Form</h4> -->
+
+            <form class="md-float-material" [formGroup]="tpCancellationForm">
+                <div class="" *ngIf="selectedVisit">
+                    <app-patient-basic-info *ngIf="selectedVisit.PatientID" class="mb-3 bg-light d-none d-md-block" [PatientId]="selectedVisit.PatientID"></app-patient-basic-info>
+                </div>
+
+                <!-- <pre> {{visitDetails.tpInfo | json}} </pre> -->
+
+                <div class="row">
+
+                    <!-- <pre>{{tpCancellationForm.value | json}}</pre> -->
+
+                    <div class="col-12">
+                        <!-- {{selectedTabIndex}} -->
+                        <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
+                            <mat-tab label="Normal Cancellation">
+
+                                <div *ngIf="tpListForCancellation && tpListForCancellation.length">
+                                    <div class="col-12 row table-responsive pt-5">
+                                        <table class="table table-hover compact" *ngIf="visitDetails && visitDetails.tpInfo">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" ngbTooltip="select all" placement="right" #normal_calncel_check_all (click)="cancellationTPChecked_All(normal_calncel_check_all.checked)">
+                                                    </th>
+                                                    <th>Test</th>
+                                                    <th>Reporting Time</th>
+                                                    <th class="text-right">Price</th>
+                                                    <th>Status</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let tp of tpListForCancellation; let i=index;"
+                                                    >
+                                                    <td>
+                                                        <input type="checkbox" [(ngModel)]="tp.checked" [ngModelOptions]="{standalone: true}" (click)="cancellationTPChecked()">
+                                                        <!-- <i class="fa fa-info-circle" *ngIf="tp.TPId == 2153" ngbTooltip="not allowed for cancellation"></i> -->
+                                                    </td>
+                                                    <td>{{tp.Code}} - {{tp.Test}}</td>
+                                                    <td>{{tp.DeliveryDate | date:'dd-MMM-yyyy HH:mm'}}</td>
+                                                    <td class="text-right">{{helperService.formatNumericValues((tp.DiscountedPrice || 0))}}</td>
+                                                    <td>{{tp.TestStatus}}</td>
+                                                    <td>{{tp.Remarks}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <hr>
+                                    </div>
+    
+                                    <div class="col-12 row">
+                                        <div class="form-group col-md-4">
+                                            <label>Received Amount</label>
+                                            <input type="text" class="form-control form-control-sm received-amount-field" [value]="visitDetails.billingInfo[0]?.ReceivedAmount" [attr.disabled]="true">
+                                        </div>
+                                        <!-- <div class="form-group col-md-3">
+                                            <label>Balance</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                formControlName="balance">
+                                        </div> -->
+                                        <div class="form-group col-md-4">
+                                            <label>Refund Amount
+                                                <small><span *ngIf="visitDetails.billingInfo.length && visitDetails.billingInfo[0].RewardPointsAmount">(reward points: {{visitDetails.billingInfo[0].RewardPointsAmount}})</span></small>
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm refund-amount-field" formControlName="refundAmount"
+                                                mask="0*"
+                                                (change)="cancellationTPChecked()" (blur)="cancellationTPChecked()"
+                                                [ngClass]="{'invalid': tpCancellationForm.get('refundAmount').errors, 'invalid-highlighted': tpCancellationForm.get('refundAmount').errors && tpCancellationFormSubmitted}">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Payment Mode</label>
+                                            <select class="form-control form-control-sm" formControlName="paymentMode"
+                                                (change)="paymentModeChangedEvent($event, 'cancellation-form')"
+                                                [ngClass]="{'invalid': tpCancellationForm.get('paymentMode').errors, 'invalid-highlighted': tpCancellationForm.get('paymentMode').errors && tpCancellationFormSubmitted}">
+                                                <option [value]="'0'">--select--</option>
+                                                <option *ngFor="let item of paymentModes" [value]="item.ModeId">{{item.Title}}</option>
+                                            </select>
+                                        </div>
+                    
+                                        <div class="col-12">
+                                            <div class="row px-5" *ngIf="tpCancellationForm.get('paymentMode').value == 2">
+                                                <div class="col-md-4 pr-4 pr-md-0">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Credit Card #" class="form-control form-control-sm" formControlName="CCNo"
+                                                        [ngClass]="{'invalid': tpCancellationForm.get('CCNo').errors, 'invalid-highlighted': tpCancellationForm.get('CCNo').errors && tpCancellationFormSubmitted}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 px-4 px-md-0">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Name" class="form-control form-control-sm" formControlName="InstOwner"
+                                                        [ngClass]="{'invalid': tpCancellationForm.get('InstOwner').errors, 'invalid-highlighted': tpCancellationForm.get('InstOwner').errors && tpCancellationFormSubmitted}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 px-4 pl-md-0">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Invoice #" class="form-control form-control-sm" formControlName="CCTNo"
+                                                        [ngClass]="{'invalid': tpCancellationForm.get('CCTNo').errors, 'invalid-highlighted': tpCancellationForm.get('CCTNo').errors && tpCancellationFormSubmitted}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="col-md-12">
+                                            <label class="form-label">Cancellation Remarks:</label>
+                                            <textarea
+                                                rows="2"
+                                                class="form-control"
+                                                formControlName="remarks"
+                                                [ngClass]="{'invalid': tpCancellationForm.get('remarks').errors, 'invalid-highlighted': tpCancellationForm.get('remarks').errors && tpCancellationFormSubmitted}"
+                                                ></textarea>
+                                                <span *ngIf="tpCancellationForm.get('remarks').errors && tpCancellationForm.get('remarks').errors.minlength" class="text-danger">minimum 10 characters</span>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-12 row">
+                                        <div class="col-12 mt-2">
+                                            <button
+                                                type="submit"
+                                                class="btn btn-primary btn-sm float-right"
+                                                title="Cancel"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="'Are you sure?'"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="normalCancellation()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary"
+                                                cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true"
+                                            > <i class="ti-check"></i>Save Cancellation</button>
+                                            <button type="button" class="btn btn-sm btn-outline-dark mr-2 float-right" (click)="tpCancellationPopup.dismiss('close button clicked')">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="!tpListForCancellation.length" class="text-center p-3 text-primary">
+                                    <h4>No Test(s) for Cancellation</h4>
+                                </div>    
+                            </mat-tab>
+                            <mat-tab label="Request for Cancellation">
+                                <div *ngIf="tpListForRequestForCancellation && tpListForRequestForCancellation.length">
+                                    <div class="col-12 row table-responsive pt-5">
+                                        <table class="table table-hover compact" *ngIf="visitDetails && visitDetails.tpInfo">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" ngbTooltip="select all" placement="right" #request_calncel_check_all (click)="cancellationTPChecked_All(request_calncel_check_all.checked)">
+                                                    </th>
+                                                    <th>Test</th>
+                                                    <th>Reporting Time</th>
+                                                    <th class="text-right">Price</th>
+                                                    <th>Status</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let tp of tpListForRequestForCancellation; let i=index;"
+                                                    >
+                                                    <td><input type="checkbox" [(ngModel)]="tp.checked" [ngModelOptions]="{standalone: true}" (click)="cancellationTPChecked()"></td>
+                                                    <td>{{tp.Code}} - {{tp.Test}}</td>
+                                                    <td>{{tp.DeliveryDate | date:'dd-MMM-yyyy HH:mm'}}</td>
+                                                    <td class="text-right">{{helperService.formatNumericValues((tp.DiscountedPrice || 0))}}</td>
+                                                    <td>{{tp.TestStatus}}</td>
+                                                    <td>{{tp.Remarks}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <hr>
+                                    </div>
+
+                                    <div class="col-12 row">
+                                        <div class="form-group col-md-4">
+                                            <label>Received Amount</label>
+                                            <input type="text" class="form-control form-control-sm received-amount-field" [value]="visitDetails.billingInfo[0]?.ReceivedAmount" [attr.disabled]="true">
+                                        </div>
+                                        <!-- <div class="form-group col-md-3">
+                                            <label>Balance</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                formControlName="balance">
+                                        </div> -->
+                                        <div class="form-group col-md-4">
+                                            <label>Refund Amount
+                                                <small><span *ngIf="visitDetails.billingInfo.length && visitDetails.billingInfo[0].RewardPointsAmount">(reward points: {{visitDetails.billingInfo[0].RewardPointsAmount}})</span></small>
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm refund-amount-field" formControlName="refundAmount"
+                                                mask="0*"
+                                                (change)="refundAmountValueChangeEvent()" (blur)="refundAmountValueChangeEvent()"
+                                                [ngClass]="{'invalid': tpCancellationForm.get('refundAmount').errors, 'invalid-highlighted': tpCancellationForm.get('refundAmount').errors && tpCancellationFormSubmitted}">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Payment Mode</label>
+                                            <select class="form-control form-control-sm" formControlName="paymentMode"
+                                                (change)="paymentModeChangedEvent($event, 'cancellation-form')"
+                                                [ngClass]="{'invalid': tpCancellationForm.get('paymentMode').errors, 'invalid-highlighted': tpCancellationForm.get('paymentMode').errors && tpCancellationFormSubmitted}">
+                                                <option [value]="'0'">--select--</option>
+                                                <option *ngFor="let item of paymentModes" [value]="item.ModeId">{{item.Title}}</option>
+                                            </select>
+                                        </div>
+                    
+                                        <div class="col-12">
+                                            <div class="row px-5" *ngIf="tpCancellationForm.get('paymentMode').value == 2">
+                                                <div class="col-md-4 pr-4 pr-md-0">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Credit Card #" class="form-control form-control-sm" formControlName="CCNo"
+                                                        [ngClass]="{'invalid': tpCancellationForm.get('CCNo').errors, 'invalid-highlighted': tpCancellationForm.get('CCNo').errors && tpCancellationFormSubmitted}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 px-4 px-md-0">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Name" class="form-control form-control-sm" formControlName="InstOwner"
+                                                        [ngClass]="{'invalid': tpCancellationForm.get('InstOwner').errors, 'invalid-highlighted': tpCancellationForm.get('InstOwner').errors && tpCancellationFormSubmitted}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 px-4 pl-md-0">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Invoice #" class="form-control form-control-sm" formControlName="CCTNo"
+                                                        [ngClass]="{'invalid': tpCancellationForm.get('CCTNo').errors, 'invalid-highlighted': tpCancellationForm.get('CCTNo').errors && tpCancellationFormSubmitted}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="col-md-12">
+                                            <label class="form-label">Cancellation Remarks: </label>
+                                            <textarea
+                                                rows="2"
+                                                class="form-control"
+                                                formControlName="remarks"
+                                                [ngClass]="{'invalid': tpCancellationForm.get('remarks').errors, 'invalid-highlighted': tpCancellationForm.get('remarks').errors && tpCancellationFormSubmitted}"
+                                                ></textarea>
+                                                <span *ngIf="tpCancellationForm.get('remarks').errors && tpCancellationForm.get('remarks').errors.minlength" class="text-danger">minimum 10 characters</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-12 row">
+                                        <div class="col-12 mt-2">
+                                            <button
+                                                type="submit"
+                                                class="btn btn-primary btn-sm float-right"
+                                                title="Cancel"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="'Are you sure?'"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="reqForCancellation()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary"
+                                                cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true"
+                                            > <i class="ti-check"></i>Request Cancellation</button>
+                                            <button type="button" class="btn btn-sm btn-outline-dark mr-2 float-right" (click)="tpCancellationPopup.dismiss('close button clicked')">Close</button>
+                                        </div>
+                                    </div>       
+                                </div>
+
+                                <div *ngIf="!tpListForRequestForCancellation.length" class="text-center p-3 text-primary">
+                                    <h4>No Test(s) for Cancellation Request</h4>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    <!-- <div class="modal-footer">
+    </div> -->
+</ng-template>
+
+
+
+
+
+<ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>
+

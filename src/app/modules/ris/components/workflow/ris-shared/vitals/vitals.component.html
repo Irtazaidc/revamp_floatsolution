@@ -1,0 +1,244 @@
+<form [formGroup]="vitalsForm" *ngIf="vitalSectionShow.formSection">
+    <!-- <div class="container" style="margin-top:50px;"> -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 27px;" class="card-heading">
+                        Blood Pressure
+                        <!-- <small>
+                            <select class="">
+                                <option>
+                                    mmHg
+                                </option>
+                            </select>
+                        </small> -->
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjjkVBhWVyXLEzYCYeOQgYY41txGASxgLw7Q&usqp=CAU">
+                        <input  formControlName="bpUpperValue" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 27%;">
+                        <span class="mt-2">/</span>
+                        <input formControlName="bpLowerValue" type="number" class="form-control form-control-sm"
+                            style="width: 27%;"><span class="mt-4"><small>mmHg</small></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 27px;" class="card-heading">
+                        Heart Rate
+                        <!-- <small>
+                            <select class="">
+                                <option>
+                                    bpm
+                                </option>
+                            </select>
+                        </small> -->
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://cdn-icons-png.flaticon.com/512/2732/2732006.png">
+                        <input formControlName="heartRate" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 54%;"><span class="mt-4"><small>bpm</small></span>
+                    </div>
+                </div>
+                <!-- <a href="#" class="card-button"> Purchase</a> -->
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 27px;" class="card-heading">
+                        Temperature 
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://thumbs.dreamstime.com/b/temperature-glyph-colour-vector-icon-temperature-icon-thin-line-icons-website-design-development-app-development-premium-156261792.jpg">
+                        <input formControlName="temprature" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 54%;">
+                        <span class="mt-4">
+                            <small>Cent.</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 27px;" class="card-heading">
+                        Weight
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4RIm0h02vCiApP1RCgR4O-yJ1fdYZ9O8vRR9ci2zPGfByuaUEklbrHc4OSAtu4ATAjHM&usqp=CAU">
+                        <input (change)="calBMI()" formControlName="weight" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 54%;">
+                        <span class="mt-4">
+                            <small>kg</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 35px;" class="card-heading">
+                        Height
+                       
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNJ_aOGkZGszfqy_tpqvF2WIJwqxEpY9GmeA&usqp=CAU">
+                        <input (change)="calBMI()" formControlName="height" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 54%;">
+                        <!-- <span class="mt-4">
+                            <small>cm</small>
+                        </span> -->
+                        <small>
+                            <select (change)="heightUnitChange()"   formControlName="heightUnit" class="mt-4 ml-1">
+                                <option  value="ft">
+                                    ft. 
+                                </option>
+                                <option value="cm">
+                                    cm
+                                </option>
+                            </select>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 27px;" class="card-heading">
+                        BMI
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://play-lh.googleusercontent.com/QmW9i0M9ag1P1kSIIFwUabv_-n_WRFTw0FI-VcS0zrh3rVLEm2LesfgyvnyP43Dmoshj">
+                        <input formControlName="bmi" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 54%;">
+                        <span class="mt-4">
+                            <small>kg/m<sup>2</sup></small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 25px;" class="card-heading">
+                        Breathing
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://cdn-icons-png.flaticon.com/512/2159/2159419.png">
+                        <input formControlName="breathing" type="number" class="form-control form-control-sm ml-2"
+                            style="width: 54%;">
+                        <span class="mt-4">
+                            <small>bpm</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-sl" style="padding: 12px 11px 15px 24px;">
+                <div class="card-text">
+                    <div style="margin-left: 27px;" class="card-heading">
+                        Pain Severity
+                    </div>
+                    <div class="row">
+                        <img style="height: 47px;margin-top: -15px;"
+                            src="https://w7.pngwing.com/pngs/721/410/png-transparent-head-headache-migraine-pain-severe-shock-coronavirus-flat-icon-thumbnail.png">
+                        <select style="width: fit-content;" class="form-control" formControlName="painSeverity">
+                            <option  [value]="">--select--</option>
+                            <option *ngFor="let ps of painSeverityList" [value]="ps.PainSeverityID">{{ps.PainSeverity}}</option>
+                            <!-- <option [value]=""></option>
+                            <option [value]="">Moderate</option>
+                            <option [value]="">Severe</option>
+                            <option [value]="">Worst Pain</option> -->
+                        </select>
+                        <span class="mt-4">
+                            <!-- <small>kg/m</small> -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 52px;margin-left: 99px;"><button class="btn btn-success mr-2"  mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                [confirmText]="confirmationPopoverConfig.confirmText"
+                [cancelText]="confirmationPopoverConfig.cancelText"
+                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="insertUpdVisitVitals()"
+                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="success"
+                cancelButtonType="outline-secondary"
+                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                [appendToBody]="true"> <i [ngClass]="actionButtonIconclass" class="m-0"></i>
+                <span>{{actionButtonLable}}</span>
+            </button>
+            <button type="reset" *ngIf="!showClrBtn" class="btn btn-outline-danger m-l-10" (click)="resetForm()">Clear</button>
+        </div>
+    </div>
+    <!-- </div> -->
+</form>
+ <div class="row bg-light" *ngIf="vitalSectionShow.cardSection" style="padding-top: 15px;">
+    <div class="col-12 text-center">
+        <!-- <h3 class="tp-name">{{TPCodeName}}</h3>   -->
+        <h3 class="tp-name"><strong>{{TPCode}}</strong>-{{TPName}}</h3>  
+    </div>
+    <div class="col-md-12">
+            <!-- <div class="vitals-box"> -->
+                <!-- <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Vitals.</legend> -->
+        <table style="width: 100%;">
+            <tr>
+                <td>BP: <strong class="ml-2"><ng-container *ngIf="bpLowerValue">{{bpUpperValue}}/{{bpLowerValue}}mmHg </ng-container><ng-container *ngIf="!bpLowerValue">NA</ng-container></strong></td>
+                <td>Breathing <strong class="ml-2"> <ng-container *ngIf="breathing">{{breathing}} bpm</ng-container>  <ng-container *ngIf="!breathing">NA</ng-container></strong></td>
+                <td>Heart Rate: <strong class="ml-2"><ng-container *ngIf="heartRate">{{heartRate}} bpm</ng-container><ng-container *ngIf="!heartRate">NA</ng-container></strong></td>
+                <td>Temperature: <strong class="ml-2"><ng-container *ngIf="temprature">{{temprature | number : '1.2'}} Cent.</ng-container>  <ng-container *ngIf="!temprature">NA</ng-container></strong></td>
+            </tr>
+            <tr>
+                <td>Pain Severity: <strong class="ml-2">{{painSeverityName||'NA'}}</strong></td>
+                <td>Height: <strong class="ml-2">{{height| number : '1.2'}}cm <ng-container *ngIf="!height">NA</ng-container></strong></td>
+                <td>Weight: <strong [innerHTML]="patWeight" class="ml-2">{{patWeight}}kg <ng-container *ngIf="!patWeight">NA</ng-container></strong></td>
+                <td>BMI: <strong class="ml-2">{{BMI||'NA'}} kg/m<sup>2</sup></strong> <i aria-hidden="true" class="pull-right mr-1 refresh-button text-primary font-weight-boldest cursor-pointer ti-reload" ngbTooltip="Refresh values" (click)="getVitals()"></i></td>
+            </tr>
+        </table> 
+        
+        <!-- <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <p class="p-mb">BP:<strong class="ml-1">{{bpLowerValue}}/{{bpUpperValue}}mmHg </strong></p>
+                <p class="p-mb">Heart Rate:<strong class="ml-1">{{heartRate}}bpm </strong></p>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <p class="p-mb">Temperature:<strong class="ml-1">{{temprature}} Cent.</strong></p>
+                <p class="p-mb">Height<strong class="ml-1">{{height| number : '1.2'}}cm</strong></p>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <p class="p-mb">Breathing:<strong class="ml-1">{{breathing}}bpm</strong></p>
+                <p class="p-mb">Weight<strong class="ml-1">{{patWeight}}kg</strong></p>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <p class="p-mb">Pain Severity:<strong class="ml-1">{{painSeverityName||'NA'}}</strong></p>
+                <p class="p-mb">BMI:<strong class="ml-1">{{BMI||'NA'}} kg/m<sup>2</sup></strong></p>
+            </div>
+        </div> -->
+                <!-- </fieldset> -->
+            <!-- </div> -->
+    </div>

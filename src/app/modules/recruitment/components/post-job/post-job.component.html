@@ -1,0 +1,446 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-info'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                            <div class="p-2" style="border: 1px solid #eee; ">
+                                <form [formGroup]="formSearchJob" (ngSubmit)="searchJobRequest()">
+                                    <div class="row">                        
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <!-- <label for="LocationTitle" class="control-label">Location:</label> -->
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="branchesList"
+                                                    bindLabel="Title" 
+                                                    placeholder="All"
+                                                    bindValue="LocId"
+                                                    formControlName="branchIds"
+                                                    [closeOnSelect]="true"
+                                                    >
+            
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <!-- <label for="DepartmentTitle" class="control-label">Department:</label> -->
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="departmentsList"
+                                                    bindLabel="DepartmentName" 
+                                                    placeholder="All"
+                                                    bindValue="DepartmentId"
+                                                    formControlName="departmentIds"
+                                                    [multiple]="false"
+                                                    [closeOnSelect]="true"
+                                                    placeholder="-Select Department-"
+                                                    >
+            
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <!-- <label for="JobStatus" class="control-label">Job Status:</label> -->
+                                                <select name="JobStatus" class="form-control" formControlName="JobStatus">
+                                                    <!-- <option value="">All</option> -->
+                                                    <option value="">-Select Job Status-</option>
+                                                    <option *ngFor = "let jobSt of jobStatusList" value="{{jobSt.JobStatusID}}">{{jobSt.JobStatus}}</option>                                        
+                                                </select>
+                                            </div>
+                                        </div>                                                                         
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <!-- <div class="form-group">
+                                                <button type="button" (click)="clearForms()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Post New Job"><i class="ti-plus"></i>New</button>
+                                                <button type="submit" class="btn btn-outline-info btn-sm pull-right"><i class="ti-search"></i>Search</button>
+                                                
+                                            </div> -->
+                                            <div class="btn-group text-right pull-right" role="group" aria-label="Basic example">
+                                                <button type="submit" class="btn btn-outline-info btn-sm"><i class="ti-search"></i>Search</button>
+                                                <button type="button" (click)="clearForms()" class="btn btn-outline-danger btn-sm"><i class="ti-plus"></i>New</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="table-responsive fixed-height-table">
+                                    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.jobSearchSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <table class="table table-hover compact">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Post Code</th>
+                                                <th>Status</th>
+                                                <!-- <th>Title</th> -->
+                                                <th class="text-right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" *ngIf="!JobList.length"> 
+                                                    <div class="alert alert-info text-center" role="alert">
+                                                        No record available  <i class="fa fa-exclamation-triangle text-light"  aria-hidden="true"></i>
+                                                  </div>
+                                                </td>
+                                            </tr>
+                                            <tr *ngFor = "let sJob of JobList let i = index">
+                                                <td>{{i+1}}</td>
+                                                <td>{{sJob.JobRequestCode}}</td>
+                                                <!-- <td><label class="badge badge-inverse-primary">{{sJob.JobStatus}}</label></td> -->
+                                                <td>
+                                                    <!-- <label [ngClass]="(sJob.JobStatus|lowercase) == 'requested' ? 'badge badge-inverse-primary': ((sJob.JobStatus|lowercase)=='pending'? 'badge badge-inverse-warning' : ((sJob.JobStatus|lowercase)=='canceled'? 'badge badge-inverse-danger':((item.Name|lowercase)=='recommended'? 'badge badge-inverse-primary':'badge badge-inverse-info')))"></label>{{sJob.JobStatus}} -->
+                                                    <label [ngClass]="sJob.JobStatusID == 1 ? 'badge badge-inverse-primary': sJob.JobStatusID==2? 'badge badge-inverse-info' : sJob.JobStatusID==3? 'badge badge-inverse-warning':sJob.JobStatusID==4? 'badge badge-inverse-danger':sJob.JobStatusID==5? 'badge badge-inverse-success':'badge badge-inverse-primary'">{{sJob.JobStatus}}</label>
+                                                </td>
+                                                <!-- <td>{{sJob.JobTitle}}</td> -->
+                                                <td class="text-right">
+                                                    <a (click)="getJobRequestByID(sJob.JobRequestID,sJob.JobStatusID)" class="cursor-pointer" style="font-size: 17px;"  ngbTooltip="View Detail"> 
+                                                        <i class="fa fa-eye text-info"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
+                            <div class="p-2" style="border: 1px solid #eee; ">
+                                <form  class="container" #container class="JobRequestForm" [formGroup]="JobRequestForm" (ngSubmit)="addUpdateJobRequest()"> <!--[formGroup]="notificationConfigForm" (ngSubmit)="addUpdateNotification()"-->
+                                    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.jobRequestFormSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="JobTitle" class="control-label">Short Code:</label>
+                                                <input type="text" class="form-control" name="ShortCode" formControlName="ShortCode" readOnly >
+                                                <small  class="text-danger">System generated code</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="JobTitle" class="control-label">Job Title:</label>
+                                                <input type="text" class="form-control" name="JobTitle" formControlName="JobTitle"
+                                                [ngClass]="{'invalid': JobRequestForm.get('JobTitle').errors && JobRequestForm.get('JobTitle').touched, 'invalid-highlighted': JobRequestForm.get('JobTitle').errors}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="JobCategory" class="control-label">Job Category:</label>
+                                                <select name="JobCategory" formControlName="JobCategory" class="form-control" 
+                                                [ngClass]="{'invalid': JobRequestForm.get('JobCategory').errors && JobRequestForm.get('JobCategory').touched, 'invalid-highlighted': JobRequestForm.get('JobCategory').errors}"
+                                                >
+                                                    <option value="">-Select Job Category-</option>
+                                                    <option *ngFor="let jobCat of jobCategoryList" value="{{jobCat.JobCategoryID}}">{{jobCat.JobCategory}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="JobType" class="control-label">Job Shift:</label>
+                                                <select name="JobType" formControlName="JobType" class="form-control"
+                                                [ngClass]="{'invalid': JobRequestForm.get('JobType').errors && JobRequestForm.get('JobType').touched, 'invalid-highlighted': JobRequestForm.get('JobType').errors}"
+                                                >
+                                                    <option value="">-Select Job Shift-</option>
+                                                    <option *ngFor="let jobShift of jobShiftList" value="{{jobShift.JobShiftID}}">{{jobShift.JobShift}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="DegreeLevel" class="control-label">Degree Level:</label>
+                                                <select name="DegreeLevel" formControlName="DegreeLevel" class="form-control"
+                                                [ngClass]="{'invalid': JobRequestForm.get('DegreeLevel').errors && JobRequestForm.get('DegreeLevel').touched, 'invalid-highlighted': JobRequestForm.get('DegreeLevel').errors}"
+                                                >
+                                                    <option value="">-Select Degree Level-</option>
+                                                    <option *ngFor="let degree of degreeLevelList" value="{{degree.DegreeLevelID}}">{{degree.DegreeLevel}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="Location" class="control-label">Location:</label>
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="branchesList"
+                                                    bindLabel="Title" 
+                                                    placeholder="-Select Branch-"
+                                                    bindValue="LocId"
+                                                    formControlName="branchIds"
+                                                    [closeOnSelect]="true"
+                                                    [ngClass]="{'invalid': JobRequestForm.get('branchIds').errors && JobRequestForm.get('branchIds').touched, 'invalid-highlighted': JobRequestForm.get('branchIds').errors}"
+                                                    >
+            
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="Department" class="control-label">Department:</label>
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="departmentsList"
+                                                    bindLabel="DepartmentName" 
+                                                    placeholder="-Select Department-"
+                                                    bindValue="DepartmentId"
+                                                    formControlName="departmentIds"
+                                                    [multiple]="false"
+                                                    [closeOnSelect]="true"
+                                                    [ngClass]="{'invalid': JobRequestForm.get('departmentIds').errors && JobRequestForm.get('departmentIds').touched, 'invalid-highlighted': JobRequestForm.get('departmentIds').errors}"
+                                                    required="true"
+                                                    >
+            
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="Designation" class="control-label">Designation:</label>
+                                                <ng-select style="width: 100%;"
+                                                class=" mt-1 mr-1"
+                                                [items]="designaitonsList"
+                                                bindLabel="Designation" 
+                                                placeholder="-Select Department-"
+                                                bindValue="DesignationId"
+                                                formControlName="Designation"
+                                                [multiple]="false"
+                                                [closeOnSelect]="true"
+                                                [ngClass]="{'invalid': JobRequestForm.get('Designation').errors && JobRequestForm.get('Designation').touched, 'invalid-highlighted': JobRequestForm.get('Designation').errors}"
+                                                required="true"
+                                                >
+            
+                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                        <span class="ng-value-label"> {{item.Designation}}</span>
+                                                    </div>
+                                                </ng-template>
+                                            </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="ExperienceInYear" class="control-label">Experience (Yrs):</label>
+                                                <input type="number" class="form-control" name="ExperienceInYear" formControlName="ExperienceInYear" min="1"
+                                                [ngClass]="{'invalid': JobRequestForm.get('ExperienceInYear').errors && JobRequestForm.get('ExperienceInYear').touched, 'invalid-highlighted': JobRequestForm.get('ExperienceInYear').errors}"
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="AgeLimit" class="control-label">Age Limit:</label>
+                                                <input type="number" class="form-control" name="AgeLimit" formControlName="AgeLimit" 
+                                                [ngClass]="{'invalid': JobRequestForm.get('AgeLimit').errors && JobRequestForm.get('AgeLimit').touched, 'invalid-highlighted': JobRequestForm.get('AgeLimit').errors}">
+                                            </div>
+                                        </div> -->
+
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="MinAgeInYear" class="control-label">Min Age:</label>
+                                                <input type="number" class="form-control" name="MinAgeInYear" formControlName="MinAgeInYear"  #MinAgeInYear (blur)="validateMinMaxAge($event.target.value, MaxAgeInYear.value)"
+                                                [ngClass]="{'invalid': JobRequestForm.get('MinAgeInYear').errors && JobRequestForm.get('MinAgeInYear').touched, 'invalid-highlighted': JobRequestForm.get('MinAgeInYear').errors}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="MaxAgeInYear" class="control-label">Max Age:</label>
+                                                <input type="number" class="form-control" name="MaxAgeInYear" formControlName="MaxAgeInYear" #MaxAgeInYear (blur)="validateMinMaxAge(MinAgeInYear.value, $event.target.value)"
+                                                [ngClass]="{'invalid': JobRequestForm.get('MaxAgeInYear').errors && JobRequestForm.get('MaxAgeInYear').touched, 'invalid-highlighted': JobRequestForm.get('MaxAgeInYear').errors}">
+                                                <small  class="text-danger" *ngIf="AgeLimitError">Max age should be greater then Min age</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="VaccanciesRequired" class="control-label">Vaccancies:</label>
+                                                <input type="number" class="form-control" name="VaccanciesRequired" formControlName="VaccanciesRequired" 
+                                                [ngClass]="{'invalid': JobRequestForm.get('VaccanciesRequired').errors && JobRequestForm.get('VaccanciesRequired').touched, 'invalid-highlighted': JobRequestForm.get('VaccanciesRequired').errors}"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="Gender" class="control-label">Gender:</label>
+                                                <select name="Gender" name="Gender" formControlName="Gender" class="form-control"
+                                                [ngClass]="{'invalid': JobRequestForm.get('Gender').errors && JobRequestForm.get('Gender').touched, 'invalid-highlighted': JobRequestForm.get('Gender').errors}"
+                                                >
+                                                    <option value="">-Select Gender-</option>
+                                                    <option value="M">Male</option>
+                                                    <option value="F">Female</option>
+                                                    <option value="B">Both</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="StartDate" class="control-label">Start Date:</label>
+                                                <input 
+                                                readOnly 
+                                                #dStart
+                                                type="text"
+                                                class="form-control mt-1 mr-1"
+                                                (click)="dFrom_date.toggle()"
+                                                placeholder="dd-mm-yyyy"
+                                                autocomplete="off"
+                                                name="dStart"
+                                                ngbDatepicker
+                                                #dFrom_date="ngbDatepicker"
+                                                formControlName="StartDate"
+                                                [ngClass]="{'invalid': !dStart.value, 'invalid-highlighted': !dStart.value}"
+                                                (dateSelect)="validateApplyDate(dStart.value,dExpiry.value)"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <label for="Expiry Date" class="control-label">Expiry Date:</label>
+                                                <input
+                                                readOnly
+                                                #dExpiry
+                                                type="text"
+                                                class="form-control mt-1 mr-1"
+                                                (click)="dExpiry_date.toggle()"
+                                                placeholder="dd-mm-yyyy"
+                                                autocomplete="off"
+                                                name="ExpiryDate"
+                                                ngbDatepicker
+                                                #dExpiry_date="ngbDatepicker"
+                                                formControlName="ExpiryDate"
+                                                [ngClass]="{'invalid': !dExpiry.value, 'invalid-highlighted': !dExpiry.value}"
+                                                (dateSelect)="validateApplyDate(dStart.value,dExpiry.value)"
+                                                >
+                                                <small  class="text-danger" *ngIf="DateError">Expiry date should be greater then start date</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                                            <label for="JobDescription">Job Description:</label>
+                                            <ckeditor formControlName="JobDescription" name="JobDescription" 
+                                                [(ngModel)]="JobDescription">
+                                            </ckeditor>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2 mb-2">
+                                            <label for="Skills">Skill Required: <span  class="text-info">(Please provide comma seperated values e.g Apple,Mango,Banana)</span></label>
+                                            <ckeditor formControlName="Skills" name="Skills" 
+                                                [(ngModel)]="Skills">
+                                            </ckeditor>
+                                            
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2" *ngIf="!JobRequestID">
+                                            <label for="Remarks">Remarks:</label>
+                                            <textarea formControlName="Remarks"  name="Remarks" class="form-control" cols="30" rows="5" 
+                                            [ngClass]="{'invalid': JobRequestForm.get('Remarks').errors && JobRequestForm.get('Remarks').touched, 'invalid-highlighted': JobRequestForm.get('Remarks').errors}"
+                                            ></textarea>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2" *ngIf="JobRequestID && ExistingRowRemarks[0].JobStatusID==1">
+                                            <label for="Remarks">Remarks:</label>
+                                            <textarea formControlName="Remarks"  name="Remarks" class="form-control" cols="30" rows="5" 
+                                            [ngClass]="{'invalid': JobRequestForm.get('Remarks').errors && JobRequestForm.get('Remarks').touched, 'invalid-highlighted': JobRequestForm.get('Remarks').errors}"
+                                            ></textarea>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2" *ngIf="JobRequestID">
+                                            <div class="container pt-2" style="border: 1px solid #eee;" >
+                                                <div *ngFor = "let rem of ExistingRowRemarks let i = index">
+                                                    <label for="Remarks"><strong>{{rem.JobStatus}} Remarks:</strong></label>
+                                                    <p 
+                                                    [ngClass]="rem.JobStatusID == 1 ? ' text-info': rem.JobStatusID=='2'? 'text-primary' : rem.JobStatusID==3? 'text-warning':rem.JobStatusID==4? 'text-danger':'text-info'"                                                   
+                                                    
+                                                    >{{rem.JobRequestRemarks}}</p>
+                                                    <hr style="border-top: 1px dashed #d6d3d3;">
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <small class="text-danger"
+                                                *ngIf="JobStatusID ==2 || JobStatusID ==5">You can't edit this job because it has been processed further...!</small>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="JobStatusID !=2 && JobStatusID !=5">
+                                        <div class="col-12 mt-3">
+                                            <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                            <button *ngIf="JobStatusID !=3  && JobStatusID !=4" type="submit" class="btn btn-sm btn-primary pull-right ml-2"><i class="fa fa-save"></i> {{ActionLabel}}<i aria-hidden="true"></i></button>
+                                            <button *ngIf="JobRequestID && JobStatusID !=3  && JobStatusID !=4" type="button" class="btn btn-sm btn-warning pull-right ml-2"  (click)="openStatusModal(3)"><i class="fa fa-history"></i> Pend<i aria-hidden="true"></i></button>
+                                            <button *ngIf="JobRequestID && JobStatusID !=4" type="button" class="btn btn-sm btn-danger pull-right ml-2"  (click)="openStatusModal(4)"><i class="fa fa-times"></i> Cancel<i aria-hidden="true"></i></button>
+                                            <button *ngIf="JobRequestID && (JobStatusID ==3 || JobStatusID ==4)" type="button" class="btn btn-sm btn-primary pull-right ml-2"  (click)="openStatusModal(1)"><i class="fa fa-check"></i> Request<i aria-hidden="true"></i></button>                                          
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>
+
+ <!------begin:: Status Modal Pop-up-->
+ <ng-template #statusModal let-statusModal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">{{PopUpTitle}} </h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeLoginModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 lg-12 col-xl-12">
+                    <form [formGroup]="formStatusPopUp" (ngSubmit)="changeJobRequestStatus()">
+                        <div class="form-group">
+                            <label  class="form-control-label">Remarks<span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="StatusRemarks" formControlName="StatusRemarks" placeholder="{{PopUpPlaceHolder}}"
+                            [ngClass]="{'invalid': formStatusPopUp.get('StatusRemarks').errors && formStatusPopUp.get('StatusRemarks').touched, 'invalid-highlighted': formStatusPopUp.get('StatusRemarks').errors}"
+                            ></textarea>
+                            <small *ngIf="formStatusPopUp.get('StatusRemarks').errors && formStatusPopUp.get('StatusRemarks').touched" class="text-danger">{{RemarksErrorMessage}}</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group btn-group" role="group" aria-label="...">
+            <button type="submit" (click)="changeJobRequestStatus()" class="{{PopUpActionButtonColorClasses}}"><i class="{{PopUpActionIconClasses}}"></i>{{PopUpActionButtonText}} <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerModal" ></i></button>
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" (click)="closeLoginModal()"><i class="fa fa-times"></i> Close</button>
+        </div>
+    </div>
+</ng-template>
+ <!------end:: Status Modal Pop-up-->

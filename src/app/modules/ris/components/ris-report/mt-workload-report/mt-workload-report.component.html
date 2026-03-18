@@ -1,0 +1,119 @@
+<div class="card card-custom">
+    <div class="card-body pb-0">
+        <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form">
+            <div class="row container justify-content-center">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Date From:</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                        value="1980-08-26" formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                        type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateFrom').errors , 'invalid-highlighted': filterForm.get('dateFrom').errors && isSubmitted }"
+                        [maxDate]="maxDate" />
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Date To:</label>
+                    <input (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker" ngbDatepicker
+                        formControlName="dateTo" class="form-control mb-4" name="dateTo" type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateTo').errors , 'invalid-highlighted': filterForm.get('dateTo').errors && isSubmitted }"
+                        [maxDate]="maxDate" />
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Branch:</label>
+                    <div class="form-group">
+                         <ng-select id="pat_branch" style="width: 100%" formControlName="locId" [items]="branchList" bindLabel="Title" 
+                            [closeOnSelect]="true" bindValue="LocId" placeholder="--Select Branch--" (change)="getEmployeesForTestRegistration()">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Section:</label>
+                    <div class="form-group">
+                          <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList"
+                            bindLabel="SubSectionTitle" placeholder="-Select Section-" bindValue="SubSectionId"
+                            formControlName="SectionId" [multiple]="true"  [closeOnSelect]="false">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                    <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                </div>
+                                <div class="ng-value" *ngIf="items.length > 2">
+                                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-header-tmp>
+                                <button (click)="onSelectAllSections()" class="btn btn-mini btn-outline-primary"
+                                    type="button"><i class="ti-check"></i>Select all</button>
+                                <button (click)="onUnselectAllSections()"
+                                    class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                        class="ti-close"></i>Unselect all</button>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Medical Transcriptioner:</label>
+                    <div class="form-group">
+                         <ng-select id="pat_employee" style="width: 100%" formControlName="EmployeeUserId" [items]="employeesList" bindLabel="EmpName" 
+                            [closeOnSelect]="true" bindValue="UserId" placeholder="--Select Medical Transcriptioner--">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="mt-8 col-xl-2 col-lg-3 col-md-4 col-sm-12">
+                    <button type="button" (click)="getRISMTWorkloadReport()" class="btn btn-primary"
+                        type="button">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card Card-custom mt-2">
+    <div class="card-body ">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.Tablearea" bdColor="rgba(0,0,0,0.8)"
+            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-12">
+                <div class="input-group">
+                    <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                        [(ngModel)]="searchText" name="searchText" />
+                    <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getRISMTWorkloadReport()"><i
+                            class="ti-reload"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive table-container fixed-height-table">
+            <table class="table table-hover compact table-bordered" style="width: 100%; overflow: hidden;" cellpadding=0
+                cellspacing=0>
+                <thead >
+                    <th>Sr. #</th>
+                    <th>PIN</th>
+                    <th>Patient Name</th>
+                    <th>Test Name</th>
+                    <th>Location</th>
+                    <th>Transcribed By</th>
+                    <th>Date/Time</th>
+                    <!-- <th>Delivery Date</th> -->
+                </thead>
+                <tbody>
+                    <tr class="text-center" *ngIf="!(MTWorkloadList?.length)">
+                        <td colspan="7">
+                            <app-no-record-found></app-no-record-found>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let data of MTWorkloadList | filterByKey: searchText:['VisitID','PatientName','TPName', 'LocationName','TranscribedBy']; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{data.VisitID || '-'}}</td>
+                        <td>{{data.PatientName || '-'}}</td>
+                        <td>{{data.TPName || '-'}}</td>
+                        <td>{{data.LocationName || '-'}}</td>
+                        <td>{{data.TranscribedBy || '--'}}</td>
+                        <td>{{(data.TranscribedOn | date:"dd MMM, yyyy, h:mm a") || '--'}}</td>
+                        <!-- <td>{{data.DeliveryDate | date:"dd MMM, yyyy, h:mm a"}}</td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

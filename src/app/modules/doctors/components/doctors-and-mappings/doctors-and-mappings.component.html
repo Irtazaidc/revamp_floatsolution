@@ -1,0 +1,102 @@
+<!-- <div class="doctors-and-mappings-page">
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-success'">
+                <div class="row">
+                    <div class="col-12">
+                        <mat-tab-group mat-stretch-tabs="true" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
+                
+                            <mat-tab label="Ref. by Doc.">
+                                <div *ngIf="selectedTabIndex == 0">
+                                    <div class="col-12 mt-5">
+                                        <app-ref-by-doctors></app-ref-by-doctors>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="B2B Doc.">
+                                <div *ngIf="selectedTabIndex == 1">
+                                    <div class="col-12 mt-5">
+                                        <app-b2b-doctors></app-b2b-doctors>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            
+                            <mat-tab label="Doctors Mapping">
+                                <div *ngIf="selectedTabIndex == 2">
+                                    <div class="col-12 mt-5">
+                                        <app-ref-by-b2b-doctors-mapping></app-ref-by-b2b-doctors-mapping>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div> -->
+
+<mat-card>
+    <mat-card-content>
+        <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);"
+            class="demo-tab-group" style="background-color: #fff;">
+
+            
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-search icon-lg text-danger mr-2 custom-icons"></i>
+                    B to B Config.
+                </ng-template>
+                <div *matTabContent>
+                    <div *ngIf="selectedTabIndex == 0">
+                        <div class="col-12 mt-5">
+                            <app-b2b-doctors></app-b2b-doctors>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <!-- <mat-tab label="Doctors Mapping">
+                <div *ngIf="selectedTabIndex == 2">
+                    <div class="col-12 mt-5">
+                        <app-ref-by-b2b-doctors-mapping></app-ref-by-b2b-doctors-mapping>
+                    </div>
+                </div>
+            </mat-tab> -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-analytics-2 icon-lg text-danger mr-2 custom-icons"></i>
+                    B to B Share
+                </ng-template>
+                <div *matTabContent>
+                    <div *ngIf="selectedTabIndex == 1">
+                        <div class="col-12 mt-5">
+                            <app-b2b-share-report></app-b2b-share-report>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa fa-user-md icon-lg text-danger mr-2 custom-icons"></i>
+                    Ref. by Doc.
+                </ng-template>
+                <div *matTabContent>
+                    <div *ngIf="selectedTabIndex == 2">
+                        <div class="col-12 mt-5">
+                            <app-ref-by-doctors></app-ref-by-doctors>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <!-- <mat-tab label="B to B Panel Mapping">
+                <div *ngIf="selectedTabIndex == 4">
+                    <div class="col-12 mt-5">
+                        <app-b2b-panel-mapping></app-b2b-panel-mapping>
+                    </div>
+                </div>
+            </mat-tab> -->
+
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

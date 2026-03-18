@@ -1,0 +1,25 @@
+<div class="roles-page">
+    <!-- <div class="row" style=" max-height: 400px;overflow-y: auto; ">
+        <div class="col-12">
+        <app-roles></app-roles>
+        </div>
+    </div> -->
+    <div class="row">
+        <div class="col-md-7">
+            <app-roles (roleSelectedEvent)="roleSelectedFn($event)" ></app-roles>
+            <!-- [ParentName]="parentName" -->
+        </div>
+
+        <div class="col-md-5"> <!-- [ngClass]="{'col-md-6': selectedRole && selectedRole.userRoleID}" -->
+            <div class="row">
+                <div class="col-md-12">
+                    <app-permissions [Role]="selectedRole" [ParentName]="parentName"></app-permissions> <!-- *ngIf="selectedRole && selectedRole.userRoleID" -->
+                    </div>
+                    <div class="col-md-12">
+                        <app-roles-assigned-users [UserRole]="selectedRole" ></app-roles-assigned-users>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+      

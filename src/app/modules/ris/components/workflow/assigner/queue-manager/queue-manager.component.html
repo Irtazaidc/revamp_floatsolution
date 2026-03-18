@@ -1,0 +1,10 @@
+<app-ris-worklist-params (risParamsValues)="risParamsReceived($event)"
+    [buttonControls]="['branch', 'subsectionids', 'visitid', 'datefrom', 'dateto', 'visitid']"
+    [(paramsValuesForWorkListHeader)]="paramsValuesForWorkListHeader"
+    ></app-ris-worklist-params>
+
+
+    <app-queue-manager-worklist  *ngIf="paramsValuesForWorkList" (paramFormHeaderInfo)="getParamFormHeaderInfo($event)" [paramsValuesForWorkList]="paramsValuesForWorkList" [actionsPermission] = "['ques']"
+    [colNamesForMOScreen]="colNamesForMOScreen"></app-queue-manager-worklist>
+
+    <!-- <app-queue-management></app-queue-management> -->

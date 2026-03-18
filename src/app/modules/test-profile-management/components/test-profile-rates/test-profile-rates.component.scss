@@ -1,0 +1,43 @@
+.selected-test-rate-table td.strike-through-row {
+    
+   text-decoration: line-through;
+    
+}
+tr.no-border td {
+  border: 0;
+}
+::ng-deep .popover {
+  max-width: 466px !important;
+}
+::ng-deep ._popover-body {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+
+.selected-test-rate-table tr.package-tp-row {
+  color: #aaa;
+  cursor: not-allowed;
+  td {
+      padding-top: 1px !important;
+      padding-bottom: 1px !important;
+      border: 0;
+  }
+}
+
+.selected-test-rate-table tr.package-row {
+  td {
+      padding-bottom: 1px !important;
+  }
+}
+
+.selected-test-rate-table tr.strike-through-row {
+  td {
+      text-decoration: line-through;
+      color: #f00;
+      select {
+          text-decoration: line-through;
+          color: red;
+      }
+  }
+}

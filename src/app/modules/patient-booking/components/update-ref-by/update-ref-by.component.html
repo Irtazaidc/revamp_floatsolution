@@ -1,0 +1,112 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Search RefBy Doc.
+                <small>Update RefBy Doc.</small>
+            </h3>
+        </div>
+    </div>    
+    <div class="card-body pb-0">
+        <!-- <div class="row d-flex justify-content-center align-items-center"> -->
+            <!-- <div class="col-md-12" style="max-height: 400px;overflow-y: auto; "> -->
+               <!-- <app-patient-search (visitSelectedEvent)="getVisitNo($event)"></app-patient-search> -->
+            <!-- </div>  -->
+        <!-- <form [formGroup]="VisitInfoForm" class="form-horizontal" name="form" role="form">
+            <div class="row form-group justify-content-center">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Visit ID:</label>
+                    <input placeholder="Enter Visit ID." formControlName="VisitID" name="VisitID" mask='0000-00-000000'
+                    [showMaskTyped]="true"
+                        class="form-control mb-4" type="text"  (keypress)="validateNo($event)"
+                        [ngClass]="{'invalid': VisitInfoForm.get('VisitID').errors , 'invalid-highlighted': VisitInfoForm.get('VisitID').errors && isSubmitted }" />
+                </div>
+                <div class="mt-8 col-md-4 col-lg-3 col-sm-12">
+                    <button (click)="getRefByviaVisitID()" class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form> -->
+        <form [formGroup]="VisitInfoForm" class="form-horizontal" name="form" role="form" (ngSubmit)="getRefByviaVisitID()">
+            <div class="row form-group justify-content-center">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Visit ID:</label>
+                    <input 
+                        placeholder="Enter Visit ID."
+                        formControlName="VisitID"
+                        name="VisitID"
+                        mask="0000-00-000000"
+                        [showMaskTyped]="true"
+                        class="form-control mb-4"
+                        type="text"
+                        (keypress)="validateNo($event)"
+                        (keydown.enter)="getRefByviaVisitID()"
+                        [ngClass]="{
+                            'invalid': VisitInfoForm.get('VisitID').errors,
+                            'invalid-highlighted': VisitInfoForm.get('VisitID').errors && isSubmitted
+                        }" />
+                </div>
+                <div class="mt-8 col-md-4 col-lg-3 col-sm-12">
+                    <button (click)="getRefByviaVisitID()" class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+<div class="card card-custom mt-1" *ngIf="isVisitIdAvailable">
+    <div class="card-body pb-0">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.loadForm" bdColor="rgba(0,0,0,0.8)" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div class="row justify-content-center" *ngIf="visitId">
+            <div class="col-md-12">
+                <div class="mt-1 mb-1" style="max-height: 150px; overflow-y: auto;">
+                    <app-patient-basic-info [VisitId]="visitId" (emitCardvalues)="getCardValue($event)"></app-patient-basic-info>
+                </div>
+            </div>
+        </div>
+        <form [formGroup]="updateForm" class="form-horizontal" name="form" role="form">
+            <div class="row form-group justify-content-center">
+                <div class="col-md-4 col-sm-12 mt-5">
+                    <label for="vis_doc">Ref By. Doc:</label>
+                    <div class="input-group" style="position: relative;">
+                        <input id="vis_doc" type="text" class="form-control" name="ngbSearchRefBy"
+                            formControlName="RefDoc" [ngbTypeahead]="ngbSearchRefBy" placeholder="type to search"
+                            [editable]='false' [resultFormatter]="ngbFormatterRefBy_output"
+                            [inputFormatter]="ngbFormatterRefBy_input"
+                            [ngClass]="{'invalid': updateForm.get('RefDoc').errors, 'invalid-highlighted': updateForm.get('RefDoc').errors && patientBasicInforFormSubmitted}"
+                            required  />
+                            <!-- (selectItem)="refByDocSelected($event)" -->
+                        <span class="md-line"></span>
+                        <button type="button" class="btn btn-sm btn-light-primary" (click)="getRefByDoctors()" title="Reload Doctors">
+                            <i class="flaticon2-reload"></i>
+                        </button>
+
+                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.refByDocField" size="small" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                    </div>
+                </div>
+                <div class="mt-8 col-md-3 col-sm-12">
+                    <button class="btn btn-danger mt-5" title="Update Info" mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                        [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]" (confirm)="updateRefByViaVisitId()"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="danger"
+                        cancelButtonType="outline-secondary" [appendToBody]="true">
+                        <i class="fa fa-save m-0"></i> Update
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

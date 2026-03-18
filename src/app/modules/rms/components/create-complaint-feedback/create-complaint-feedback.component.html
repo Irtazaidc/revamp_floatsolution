@@ -1,0 +1,403 @@
+<div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar">
+    <div class="card-toolbar ">
+    <div class="container-fluid mt-3 mb-2">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.hcComplaintRequestContainer"
+        bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+        [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div class="row">
+        <div class="col-xl-12">
+        <fieldset class="fieldset-border-all-primary">
+            <legend class="font-weight-bold text-primary" style="font-size: 1.7rem;">
+                Complaint's Registration Form</legend>
+         
+            <div class="row my-3 d-flex justify-content-center align-items-center">
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="card card-custom bg-success gutter-b" style="height: 100px;
+                        width: 190px;">
+                            <div class="card-body card-padding-top">
+                                <span class="svg-icon svg-icon-2x svg-icon-white ml-n2">
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                                        height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"></rect>
+                                            <rect fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"></rect>
+                                            <path
+                                                d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z"
+                                                fill="#000000" opacity="0.3"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <div class="text-inverse-success font-weight-bolder font-size-h3 ">
+                                    {{countList.TotalRequests}} <a href="javascript:void(0)"
+                                        class="text-inverse-success font-weight-bold font-size-lg mt-1">Total</a>
+                                </div>
+                
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="card card-custom bg-warning gutter-b" style="height: 100px;
+                        width: 190px;">
+                            <div class="card-body card-padding-top">
+                                <span class="svg-icon svg-icon-2x svg-icon-white ml-n2">
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                                        height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24" />
+                                            <path
+                                                d="M12,22 C7.02943725,22 3,17.9705627 3,13 C3,8.02943725 7.02943725,4 12,4 C16.9705627,4 21,8.02943725 21,13 C21,17.9705627 16.9705627,22 12,22 Z"
+                                                fill="#000000" opacity="0.3" />
+                                            <path
+                                                d="M11.9630156,7.5 L12.0475062,7.5 C12.3043819,7.5 12.5194647,7.69464724 12.5450248,7.95024814 L13,12.5 L16.2480695,14.3560397 C16.403857,14.4450611 16.5,14.6107328 16.5,14.7901613 L16.5,15 C16.5,15.2109164 16.3290185,15.3818979 16.1181021,15.3818979 C16.0841582,15.3818979 16.0503659,15.3773725 16.0176181,15.3684413 L11.3986612,14.1087258 C11.1672824,14.0456225 11.0132986,13.8271186 11.0316926,13.5879956 L11.4644883,7.96165175 C11.4845267,7.70115317 11.7017474,7.5 11.9630156,7.5 Z"
+                                                fill="#000000" />
+                                        </g>
+                                    </svg>
+                                    <!--end::Svg Ico-->
+                                </span>
+                                <div class="text-inverse-primary font-weight-bolder font-size-h3 ">
+                                    {{countList.InprogressRequests}} <a href="javascript:void(0)"
+                                        class="text-inverse-primary font-weight-bold font-size-lg mt-1">In-Progress</a>
+                                </div>
+                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="card card-custom bg-green gutter-b" style="height: 100px;
+                        width: 190px;">
+                            <div class="card-body card-padding-top">
+                                <span class="svg-icon svg-icon-2x svg-icon-white ml-n2">
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                                        height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24" />
+                                            <path
+                                                d="M9,10 L9,19 L10.1525987,19.3841996 C11.3761964,19.7920655 12.6575468,20 13.9473319,20 L17.5405883,20 C18.9706314,20 20.2018758,18.990621 20.4823303,17.5883484 L21.231529,13.8423552 C21.5564648,12.217676 20.5028146,10.6372006 18.8781353,10.3122648 C18.6189212,10.260422 18.353992,10.2430672 18.0902299,10.2606513 L14.5,10.5 L14.8641964,6.49383981 C14.9326895,5.74041495 14.3774427,5.07411874 13.6240179,5.00562558 C13.5827848,5.00187712 13.5414031,5 13.5,5 L13.5,5 C12.5694044,5 11.7070439,5.48826024 11.2282564,6.28623939 L9,10 Z"
+                                                fill="#000000" />
+                                            <rect fill="#000000" opacity="0.3" x="2" y="9" width="5" height="11" rx="1" />
+                                        </g>
+                                    </svg>
+                                    
+                                </span>
+                                <div class="text-inverse-primary font-weight-bolder font-size-h3 ">
+                                    {{countList.ResolvedRequests}} <a href="javascript:void(0)"
+                                        class="text-inverse-primary font-weight-bold font-size-lg mt-1">Completed</a>
+                                </div>
+                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-4 col-sm-6">
+                        <div class="card card-custom bg-danger gutter-b" style="height: 100px;
+                        width: 190px;">
+                            <div class="card-body card-padding-top">
+                                <span class="svg-icon svg-icon-2x svg-icon-white ml-n2">
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10"></circle><path d="M12.0355339,10.6213203 L14.863961,7.79289322 C15.2544853,7.40236893 15.8876503,7.40236893 16.2781746,7.79289322 C16.6686989,8.18341751 16.6686989,8.81658249 16.2781746,9.20710678 L13.4497475,12.0355339 L16.2781746,14.863961 C16.6686989,15.2544853 16.6686989,15.8876503 16.2781746,16.2781746 C15.8876503,16.6686989 15.2544853,16.6686989 14.863961,16.2781746 L12.0355339,13.4497475 L9.20710678,16.2781746 C8.81658249,16.6686989 8.18341751,16.6686989 7.79289322,16.2781746 C7.40236893,15.8876503 7.40236893,15.2544853 7.79289322,14.863961 L10.6213203,12.0355339 L7.79289322,9.20710678 C7.40236893,8.81658249 7.40236893,8.18341751 7.79289322,7.79289322 C8.18341751,7.40236893 8.81658249,7.40236893 9.20710678,7.79289322 L12.0355339,10.6213203 Z" fill="#000000"></path></g></svg>
+                                    
+                                </span>
+                                <div class="text-inverse-primary font-weight-bolder font-size-h3 ">
+                                    {{countList.CancelledRequests}} <a href="javascript:void(0)"
+                                        class="text-inverse-primary font-weight-bold font-size-lg mt-1">Cancelled</a>
+                                </div>
+                
+                            </div>
+                        </div>
+                        <!--end::Tiles Widget 11-->
+                    </div>
+                
+            </div> 
+
+            <div class="row container-fluid">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf="patientId || getVisitID">
+                    <div class="card card-custom gutter-t"
+                        style="max-height: 150px; min-height: 150px; overflow-y: auto;">
+                        <div class="card-body px-4 py-4 bg-light">
+                            <app-patient-basic-info [PatientId]="patientId" [VisitId]="getVisitID" (emitCardvalues)="getCardValues($event)">
+                            </app-patient-basic-info>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf="PPuserID">
+                    <div class="card card-custom gutter-t"
+                        style="max-height: 150px; min-height: 150px; overflow-y: auto;">
+                        <div class="card-body px-4 py-4 bg-light">
+                            <app-patient-portal-user-card [PPUserId]="PPuserID">
+                            </app-patient-portal-user-card>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-2">
+                    <div class="btn-mt mr-2">
+                        <button class="btn btn-primary mr-2 ml-2" style="float: right;"
+                            (click)="openPatientPortalUserDetails()">
+                            <i class="ti-search m-0"></i>MyIDC User Details
+                        </button>
+                        <div class="show-patient-search">
+                            <ng-template #showPatientPortalUserDetails let-showPatientPortalUserDetails>
+                                    <div class="modal-body">
+                                       <app-search-user-detail (UserDetails)="getUserDetails($event)">
+                                       </app-search-user-detail>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-outline-info"
+                                            data-dismiss="modal"
+                                            (click)="showPatientPortalUserDetails.close()">
+                                            <i class="fa fa-times-circle"></i>Close
+                                        </button>
+                                    </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="btn-mt">
+                        <button class="btn btn-primary " style="float: right;"
+                            (click)="openPatientSearchPopUp()">
+                            <i class="ti-search m-0"></i>Search Patient
+                        </button>
+                        <div class="show-patient-search">
+                            <ng-template #showPatientSearch let-showPatientSearch>
+                                <div class="modal-body">
+                                    <app-patient-search [SectionToShow]="{NoRecordLabel:true,hidePIN:true}"
+                                        [buttonControls]="['visitsBtn','patientSelectBtn','bookingBtn']"
+                                        (patientSelectedEvent)="getSearchPatientData($event)"
+                                        (visitSelectedEvent)="getVisitData($event)">
+                                    </app-patient-search>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-outline-info"
+                                        data-dismiss="modal" (click)="showPatientSearch.close()">
+                                        <i class="fa fa-times-circle"></i>Close
+                                    </button>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-12">
+                    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.hcComplaintRequesTable"
+                        bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                        [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <form [formGroup]="ComplaintDetailsForm">
+                        <div class="row container-fluid">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label class="control-label">Request Type:<span
+                                            class="mandatory-asterisk">*</span></label>
+                                    <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                        [items]="cmsRequestTypeList" bindLabel="CMSType"
+                                        placeholder="-Select Request Type-" bindValue="CMSTypeID"
+                                        formControlName="requestTypeID"
+                                        [ngClass]="{'invalid': ComplaintDetailsForm.get('requestTypeID').errors , 'invalid-highlighted': ComplaintDetailsForm.get('requestTypeID').errors && isSubmitted}">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items ">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.CityName}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Priority Type:<span
+                                            class="mandatory-asterisk">*</span></label>
+                                    <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                        [items]="priorityList" bindLabel="Title"
+                                        placeholder="-Select Priority-" bindValue="PriorityID"
+                                        formControlName="requestPriorityID"
+                                        [ngClass]="{'invalid': ComplaintDetailsForm.get('requestPriorityID').errors , 'invalid-highlighted': ComplaintDetailsForm.get('requestPriorityID').errors && isSubmitted}">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items ">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.CityName}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Patient Registered Contact:</label>
+                                    <div class="position-relative">
+                                        <input formControlName="patientContact" type="text" mask='0000-0000000'
+                                        [showMaskTyped]="true" class="form-control"
+                                         />
+                                        <span class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                            <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                (click)="copyText(ComplaintDetailsForm.get('patientContact').value)"></i>
+                                        </span>
+                                        <span class="md-line"></span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Calling CLI/Cell No:<span class="mandatory-asterisk">*</span></label>
+                                        <div class="position-relative">
+                                            <input formControlName="CellNumber" type="text" class="form-control"
+                                            placeholder="Enter Calling CLI/Cell No" pattern="[0-9]*"
+                                            inputmode="numeric"
+                                            [ngClass]="{'invalid': ComplaintDetailsForm.get('CellNumber').errors , 'invalid-highlighted': ComplaintDetailsForm.get('CellNumber').errors && isSubmitted }"
+                                             (keypress)="validateNo($event)"  />
+                                            <span class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                    (click)="copyText(ComplaintDetailsForm.get('CellNumber').value)"></i>
+                                            </span>
+                                            <span class="md-line"></span>
+                                        </div>    
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 ">
+                                <div class="form-group">
+                                    <label>Patient Name:<span class="mandatory-asterisk">*</span></label>
+                                    <input formControlName="fullName" type="text" class="form-control" placeholder="Enter Patient Name" [ngClass]="{'invalid': ComplaintDetailsForm.get('fullName').errors, 'invalid-highlighted': ComplaintDetailsForm.get('fullName').errors && isSubmitted  }" />
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 ">
+                                <div class="form-group">
+                                    <label>Complainant Name:</label>
+                                    <input formControlName="complainantName" placeholder="Enter Complainant Name" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label>PIN:</label>
+                                    <input formControlName="visitID" type="text" class="form-control"
+                                    mask='0000-00-000000' [showMaskTyped]="true"
+                                        [ngClass]="{'invalid': ComplaintDetailsForm.get('visitID').touched && ComplaintDetailsForm.get('visitID').errors, 'invalid-highlighted': ComplaintDetailsForm.get('visitID').errors   }" />
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                <label>Visited Branch:<span class="mandatory-asterisk">*</span></label>
+                                <div class="form-group">
+                                    <ng-select id="pat_branch" style="width: 100%;" 
+                                        formControlName="BranchID" [items]="branchList" bindLabel="Title"
+                                        bindValue="LocId" placeholder="--Select Visited Branch --"
+                                        [ngClass]="{'invalid': ComplaintDetailsForm.get('BranchID').errors , 'invalid-highlighted': ComplaintDetailsForm.get('BranchID').errors && isSubmitted }">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                <label>Complaint Source:<span class="mandatory-asterisk">*</span></label>
+                                <div class="form-group">
+                                    <ng-select  style="width: 100%;" placeholder="--select--"
+                                        formControlName="cmsSourceId" [items]="cmsRequestSourceList" bindLabel="Code"
+                                        bindValue="CMSRequestSourceID" placeholder="--Select Complaint Source--"
+                                        (change)="feedbackEmail()"
+                                        [ngClass]="{'invalid': ComplaintDetailsForm.get('cmsSourceId').errors , 'invalid-highlighted': ComplaintDetailsForm.get('cmsSourceId').errors && isSubmitted }">
+                                    </ng-select>
+                                </div>
+                            </div>   
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" *ngIf="getfeedbackEmail==3">
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input formControlName="email" type="text" class="form-control"
+                                        placeholder="example@domain.com" maxlength="50" 
+                                        [ngClass]="{'invalid': ComplaintDetailsForm.get('email').touched && ComplaintDetailsForm.get('email').errors, 'invalid-highlighted': ComplaintDetailsForm.get('email').errors }" />
+                                </div>
+                            </div>            
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Portal UserName:</label>
+                                    <input formControlName="PortalUserID"  type="hidden" class="form-control" />
+                                    <input formControlName="PortalUserName" placeholder="Enter Patient Portal UserName" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label>Complaint Description:<span
+                                                    class="mandatory-asterisk">*</span></label>
+                                            <textarea  
+                                                id="message" rows="4" formControlName="cmsMessage" type="text"
+                                                class="form-control" placeholder="Enter Complaint Description"
+                                                [ngClass]="{'invalid': ComplaintDetailsForm.get('cmsMessage').errors, 'invalid-highlighted': ComplaintDetailsForm.get('cmsMessage').errors && isSubmitted }"></textarea>
+                                            <!-- <div class="text-right text-muted">Remaining: {{ remainingCharacters
+                                                }}/2000</div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label>Initial Findings:</label>
+                                            <textarea  
+                                                 rows="4" formControlName="initialFindings" type="text"
+                                                class="form-control" placeholder="Enter Initial Findings"></textarea>
+                                            
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group row">
+                                            <!-- <div class="col-3 col-form-label"> -->
+                                                <!-- <span class="form-text">Callback is Required or Not?</span> -->
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox checkbox-primary">
+                                                        <input type="checkbox" formControlName="callBackCheck"   name="callBack" />
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            <!-- </div> -->
+                                            <label class="form-label">Is Callback Required?</label>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                        <div class="form-group row">
+                                            
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox checkbox-primary">
+                                                        <input type="checkbox" formControlName="smsCheck" name="smsCheck" />
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            
+                                            <label class="form-label">Is SMS Required?</label>
+                                        </div>
+                                    </div> -->
+                                </div> 
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <div class="docs-area mt-2">
+                                <app-visit-docs [forFilterComp]="26" [isLoadByDefault]="docDefault"   [allowRemove]="true" [sectionHead]="'Attach'"
+                                    [editing]="{insert:false,select: true, camera: true}" 
+                                    (outputDocs)="getLoadedDocs($event)"></app-visit-docs>   
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary pull-right"
+                                        (click)="saveComplaintRrequest()">
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i> Submit
+                                    </button>
+                                    <!-- [disabled]="!ComplaintDetailsForm.valid" -->
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </fieldset>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>

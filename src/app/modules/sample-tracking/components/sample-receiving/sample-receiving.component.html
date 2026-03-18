@@ -1,0 +1,682 @@
+<div class="dashboard-page">
+    <!-- Page Header with Stats Cards -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-custom card-stretch">
+                <div class="card-header card-header-narrow border-0">
+                    <div class="card-title">
+                        <h3 class="card-label" style="margin-bottom: 12px;">
+                            <span class="card-icon">
+                                <i class="fas fa-truck-loading icon-lg text-primary"></i>
+                            </span>
+                            Sample Receiving Dashboard
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards Row - OPTIMIZED -->
+    <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-body py-4">
+                    <span class="svg-icon svg-icon-primary svg-icon-3x">
+                        <i class="fas fa-hourglass-half fa-2x text-warning"></i>
+                    </span>
+                    <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ stats.pendingReceiving }}</div>
+                    <div class="font-weight-bold font-size-sm">Pending Receiving</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-body py-4">
+                    <span class="svg-icon svg-icon-primary svg-icon-3x">
+                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                    </span>
+                    <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ stats.delayedBatches }}</div>
+                    <div class="font-weight-bold font-size-sm">Delayed Batches</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-body py-4">
+                    <span class="svg-icon svg-icon-primary svg-icon-3x">
+                        <i class="fas fa-check-circle fa-2x text-primary"></i>
+                    </span>
+                    <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ stats.receivedToday }}</div>
+                    <div class="font-weight-bold font-size-sm">Received Today</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-custom gutter-b card-stretch">
+                <div class="card-body py-4">
+                    <span class="svg-icon svg-icon-primary svg-icon-3x">
+                        <i class="fas fa-clock fa-2x text-success"></i>
+                    </span>
+                    <div class="text-dark font-weight-bolder font-size-h2 mt-2">{{ stats.avgDeliveryTime }}</div>
+                    <div class="font-weight-bold font-size-sm">Avg. Delivery Time</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row - Left Panel (Batches List) and Right Panel (Batch Details) -->
+    <div class="row">
+        <!-- Left Panel - Batches List (60% width) -->
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="card card-custom card-stretch gutter-b">
+                <div class="card-header card-header-narrow">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-clipboard-list icon-lg text-primary"></i>
+                        </span>
+                        <h3 class="card-label">Incoming Batches</h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <button class="btn btn-icon btn-light-primary btn-sm" (click)="refreshDashboard()"
+                            title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Filter Section -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <form [formGroup]="filterForm" class="form-horizontal" (ngSubmit)="loadBatches()">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="font-weight-bold">Date From</label>
+                                        <div class="input-group input-group-sm">
+                                            <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                                placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                                formControlName="dateFrom" name="dateFrom" class="form-control"
+                                                type="text" (dateSelect)="validateDateRange()" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="dateFrom.toggle()">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="font-weight-bold">Date To</label>
+                                        <div class="input-group input-group-sm">
+                                            <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker"
+                                                placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                                formControlName="dateTo" name="dateTo" class="form-control" type="text"
+                                                (dateSelect)="validateDateRange()" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="dateTo.toggle()">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="font-weight-bold">Batch No</label>
+                                        <input class="form-control form-control-sm" placeholder="Search by Batch No"
+                                            formControlName="batchNo" name="batchNo" (keyup.enter)="loadBatches()" />
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12 text-right">
+                                        <button [disabled]="disabledButtonSearch" class="btn btn-primary btn-sm"
+                                            type="submit">
+                                            <i class="fas fa-search mr-1"></i> Search
+                                            <span *ngIf="!isSpinnerSearch"
+                                                class="spinner-border spinner-border-sm ml-1"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm ml-2"
+                                            (click)="resetFilters()">
+                                            <i class="fas fa-undo mr-1"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Batches List - Scrollable Container -->
+                    <div class="batches-list-container">
+                        <!-- Loading State -->
+                        <div *ngIf="loadingBatches" class="text-center py-5">
+                            <div class="spinner-border text-primary mb-3" role="status"
+                                style="width: 3rem; height: 3rem;">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p class="text-muted">Loading incoming batches...</p>
+                        </div>
+
+                        <!-- No Records Found -->
+                        <div *ngIf="!loadingBatches && batches.length === 0" class="text-center py-5">
+                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">No incoming batches found</p>
+                            <button class="btn btn-light-primary btn-sm mt-2" (click)="resetFilters()">
+                                <i class="fas fa-undo mr-1"></i> Reset Filters
+                            </button>
+                        </div>
+
+                        <!-- Batches List - Compact Card View -->
+                        <div *ngIf="!loadingBatches && batches.length > 0" class="batches-list">
+                            <div *ngFor="let batch of batches; let i = index"
+                                class="batch-card mb-2 p-2 border rounded cursor-pointer" 
+                                [ngClass]="{
+                                    'selected-batch': selectedBatch?.BatchId === batch.BatchId,
+                                    'delayed-batch': batch.IsDelayed,
+                                    'urgent-batch': batch.RemainingMinutes !== null && batch.RemainingMinutes <= 30 && batch.RemainingMinutes > 0
+                                }" 
+                                (click)="selectBatch(batch)">
+
+                                <!-- Row 1: Batch Number, Status, Date, Action Button -->
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div class="d-flex align-items-center">
+                                        <!-- Batch number with font-weight 600 - no badge -->
+                                        <span class="batch-number font-weight-600 mr-2">#{{ batch.BatchNo }}</span>
+                                        
+                                        <!-- Pipe separator -->
+                                        <span class="text-muted mr-2">|</span>
+                                        
+                                        <!-- Status with colored text AND bold -->
+                                        <span class="status-text font-weight-600 mr-2" [ngClass]="{
+                                            'text-success': batch.BatchStatusId === 2,
+                                            'text-warning': batch.BatchStatusId === 3,
+                                            'text-danger': batch.IsDelayed,
+                                            'text-secondary': batch.BatchStatusId === 1
+                                        }">
+                                            {{ batch.BatchStatusName }}
+                                        </span>
+                                        
+                                        <!-- Date with icon -->
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar-alt mr-1"></i>{{ batch.DispatchedOn | date:'dd MMM, HH:mm' }}
+                                        </small>
+                                    </div>
+                                    <button *ngIf="showRiderAssignmentButton(batch)"
+                                        class="btn btn-xs btn-light-primary py-0 px-1"
+                                        (click)="openRiderAssignmentModal($event, batch)"
+                                        title="Assign Rider for Pickup">
+                                        <i class="fas fa-motorcycle"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Row 2: From, Transport, ETA in one line -->
+                                <div class="d-flex align-items-center small mb-1" style="gap: 15px;">
+                                    <span><i class="fas fa-map-marker-alt text-primary mr-1"></i> {{ batch.FromLocCode }}</span>
+                                    <span><i class="fas fa-truck text-warning mr-1"></i> {{ batch.TransportMediumName }}</span>
+                                    <span>
+                                        <i class="fas fa-clock text-info mr-1"></i>
+                                        <span [ngClass]="{
+                                            'text-danger': batch.IsDelayed, 
+                                            'text-warning': !batch.IsDelayed && batch.RemainingMinutes !== null && batch.RemainingMinutes <= 30
+                                        }">
+                                            {{ batch.ExpectedArrivalTime ? (batch.ExpectedArrivalTime | date:'dd MMM, HH:mm') : '—' }}
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <!-- Row 3: Rider Info (if available) + Delay Badge on same line -->
+                                <div class="d-flex justify-content-between align-items-center small">
+                                    <span *ngIf="batch.RiderDetail">
+                                        <i class="fas fa-user-circle text-info mr-1"></i> {{ batch.RiderDetail }}
+                                    </span>
+                                    <span *ngIf="!batch.RiderDetail" class="text-muted">No rider assigned</span>
+                                    
+                                    <div>
+                                        <span *ngIf="batch.IsDelayed" 
+                                            class="badge badge-danger px-2 py-1 d-inline-flex align-items-center"
+                                            style="font-size: 0.7rem; border-radius: 20px; font-weight: 500;">
+                                            <i class="fas fa-exclamation-circle mr-1 text-white"></i> Delayed
+                                        </span>
+                                        <span *ngIf="!batch.IsDelayed && batch.RemainingMinutes !== null && batch.RemainingMinutes <= 30" 
+                                            class="badge badge-warning px-2 py-1 d-inline-flex align-items-center"
+                                            style="font-size: 0.7rem; border-radius: 20px; font-weight: 500;">
+                                            <i class="fas fa-clock mr-1 text-white"></i> {{ batch.RemainingMinutes }}min
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Row 4: Stats in a single line with icons -->
+                                <div class="d-flex justify-content-between mt-1 pt-1 border-top small text-muted">
+                                    <span ngbTooltip="Visits"><i class="fas fa-user-injured mr-1"></i>{{ batch.TotalVisitCount }}</span>
+                                    <span ngbTooltip="Samples"><i class="fas fa-flask mr-1"></i>{{ batch.TotalSampleCount }}</span>
+                                    <span ngbTooltip="Tests"><i class="fas fa-dna mr-1"></i>{{ batch.TotalTPCount || 0 }}</span>
+                                    <span ngbTooltip="Attachments"><i class="fas fa-paperclip mr-1"></i>{{ batch.AttachmentCount || 0 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Batch Details (40% width) -->
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="card card-custom card-stretch gutter-b">
+                <!-- Card Header - Always visible with fixed height -->
+                <div class="card-header card-header-narrow" style="min-height: 60px;">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-info-circle icon-lg text-primary"></i>
+                        </span>
+                        <h3 class="card-label">Batch Details</h3>
+                    </div>
+                    <div class="card-toolbar" *ngIf="selectedBatch">
+                        <span class="badge badge-primary">
+                            <i class="fas fa-hashtag mr-1 text-white"></i> {{ selectedBatch.BatchNo }}
+                        </span>
+                        <button class="btn btn-icon btn-light btn-sm ml-2" (click)="clearSelection()"
+                            title="Clear Selection">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Body - Fixed height container -->
+                <div class="card-body p-3" style="min-height: 600px; overflow-y: auto;">
+                    <!-- No Selection State -->
+                    <div *ngIf="!selectedBatch"
+                        class="d-flex flex-column align-items-center justify-content-center h-100"
+                        style="min-height: 550px;">
+                        <i class="fas fa-hand-pointer fa-4x text-muted mb-3"></i>
+                        <p class="text-muted text-center">Select a batch from the left panel to view details</p>
+                    </div>
+
+                    <!-- Batch Details -->
+                    <div *ngIf="selectedBatch" class="batch-details">
+                        <!-- Loading State -->
+                        <div *ngIf="loadingDetails" class="d-flex flex-column align-items-center justify-content-center"
+                            style="min-height: 550px;">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p class="text-muted mt-2">Loading batch details...</p>
+                        </div>
+
+                        <!-- Content - Only shown when not loading -->
+                        <div *ngIf="!loadingDetails">
+                            <!-- MERGED LOCATION & TRANSPORT INFORMATION - RESPONSIVE -->
+                            <div class="info-card p-3 bg-light rounded mb-3">
+                                <!-- First row: From location and transport mode - Stack on mobile -->
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-2">
+                                    <div class="d-flex align-items-center mb-2 mb-sm-0">
+                                        <i class="fas fa-map-marker-alt text-primary mr-2"></i>
+                                        <span class="font-weight-bold mr-1">From:</span>
+                                        <span>{{ selectedBatch.FromLocCode || '—' }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-truck text-warning mr-2"></i>
+                                        <span class="font-weight-bold mr-1">Transport:</span>
+                                        <span class="badge badge-primary py-1 px-2">{{ selectedBatch.TransportMediumName }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Second row: Expected arrival time and delay indicator - Stack on mobile -->
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center">
+                                    <div class="d-flex align-items-center mb-2 mb-sm-0">
+                                        <i class="fas fa-clock text-info mr-2"></i>
+                                        <span class="font-weight-bold mr-1">ETA:</span>
+                                        <span [ngClass]="{'text-danger': selectedBatch.IsDelayed}">
+                                            {{ selectedBatch.ExpectedArrivalTime ? (selectedBatch.ExpectedArrivalTime | date:'dd MMM yyyy, hh:mm a') : 'Not specified' }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div *ngIf="selectedBatch.IsDelayed" class="badge badge-danger py-1 px-2">
+                                            <i class="fas fa-exclamation-circle mr-1 text-white"></i> Delayed
+                                        </div>
+                                        <div *ngIf="!selectedBatch.IsDelayed && selectedBatch.RemainingMinutes !== null && selectedBatch.RemainingMinutes <= 30" 
+                                                class="badge badge-warning py-1 px-2 text-white">
+                                            <i class="fas fa-clock mr-1 text-white"></i> {{ selectedBatch.RemainingMinutes }} min
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional transport details - Already responsive with flex-wrap -->
+                                <div class="mt-2 pt-2 border-top small" *ngIf="selectedBatch.RiderDetail || selectedBatch.TransportReferenceNo || selectedBatch.TransportDetail || selectedBatch.CourierCompanyName || selectedBatch.PublicTransportName || selectedBatch.ArrivalLocationDetail">
+                                    <div class="d-flex flex-wrap" style="gap: 8px;">
+                                        <span *ngIf="selectedBatch.RiderDetail" class="badge badge-light py-1 px-2">
+                                            <i class="fas fa-user-circle text-info mr-1"></i> {{ selectedBatch.RiderDetail }}
+                                        </span>
+                                        <span *ngIf="selectedBatch.TransportReferenceNo" class="badge badge-light py-1 px-2">
+                                            <i class="fas fa-hashtag text-success mr-1"></i> {{ selectedBatch.TransportReferenceNo }}
+                                        </span>
+                                        <span *ngIf="selectedBatch.TransportDetail" class="badge badge-light py-1 px-2">
+                                            <i class="fas fa-info-circle text-warning mr-1"></i> {{ selectedBatch.TransportDetail }}
+                                        </span>
+                                        <span *ngIf="selectedBatch.CourierCompanyName" class="badge badge-light py-1 px-2">
+                                            <i class="fas fa-building text-primary mr-1"></i> {{ selectedBatch.CourierCompanyName }}
+                                        </span>
+                                        <span *ngIf="selectedBatch.PublicTransportName" class="badge badge-light py-1 px-2">
+                                            <i class="fas fa-bus text-success mr-1"></i> {{ selectedBatch.PublicTransportName }}
+                                        </span>
+                                        <span *ngIf="selectedBatch.ArrivalLocationDetail" class="badge badge-light py-1 px-2">
+                                            <i class="fas fa-location-arrow text-danger mr-1"></i> {{ selectedBatch.ArrivalLocationDetail }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BATCH RECEIVING DETAILS SECTION - RESPONSIVE -->
+                            <div class="receiving-details-card card mb-3">
+                                <div class="card-header bg-light p-2 d-flex justify-content-between align-items-center cursor-pointer" 
+                                    (click)="toggleReceivingSection()">
+                                    <h6 class="mb-0 font-weight-bold">
+                                        <i class="fas fa-clipboard-check text-primary mr-2"></i>
+                                        Batch Receiving Details
+                                    </h6>
+                                    <i class="fas" [ngClass]="{'fa-chevron-up': showReceivingSection, 'fa-chevron-down': !showReceivingSection}"></i>
+                                </div>
+                                
+                                <div class="card-body p-3" *ngIf="showReceivingSection">
+                                    <!-- Checkboxes - Responsive grid with proper breakpoints -->
+                                    <div class="row mb-2 g-2">
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-2">
+                                            <mat-checkbox class="receiving-checkbox w-100" [(ngModel)]="batchReceiving.hasSpillage">
+                                                <span>Has Spillage</span>
+                                            </mat-checkbox>
+                                        </div>
+                                        
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-2">
+                                            <mat-checkbox class="receiving-checkbox w-100" [(ngModel)]="batchReceiving.hasDamage">
+                                                <span>Has Damage</span>
+                                            </mat-checkbox>
+                                        </div>
+                                        
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-2">
+                                            <mat-checkbox class="receiving-checkbox w-100" [(ngModel)]="batchReceiving.hasTempIssue">
+                                                <span>Has Temperature Issue</span>
+                                            </mat-checkbox>
+                                        </div>
+                                        
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-2">
+                                            <mat-checkbox class="receiving-checkbox w-100" [(ngModel)]="batchReceiving.sealIntact">
+                                                <span>Seal Intact</span>
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Temperature Detail text field -->
+                                    <div class="form-group mb-0">
+                                        <label class="small text-muted mb-1">Temperature Details</label>
+                                        <input type="text" class="form-control form-control-sm" 
+                                            placeholder="Enter temperature details (e.g., 2-8°C maintained, cold chain broken, etc.)"
+                                            [(ngModel)]="batchReceiving.temperatureDetail">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Samples List with Enhanced Item Details -->
+                            <div *ngIf="batchDetails" class="samples-list">
+                                <h6 class="font-weight-bold mb-3">
+                                    <i class="fas fa-flask text-success mr-2"></i>Samples ({{ batchDetails.TotalSampleCount || 0 }})
+                                </h6>
+
+                                <div class="samples-hierarchy">
+                                    <!-- Level 1: Visits -->
+                                    <div *ngFor="let visit of batchDetails.visits; let visitIndex = index" class="visit-item mb-3">
+                                        <div class="visit-header p-2 bg-light-primary rounded d-flex align-items-center">
+                                            <div class="mr-3">
+                                                <i class="fas fa-user-circle fa-lg text-primary"></i>
+                                            </div>
+                                            <div class="visit-info flex-grow-1">
+                                                <div class="d-flex flex-wrap align-items-center">
+                                                    <span class="mr-3"><strong>PIN:</strong> {{ visit.VisitId }}</span>
+                                                    <span class="mr-3"><strong>Patient:</strong> {{ visit.PatientName }}</span>
+                                                    <span class="mr-3"><strong>Age/Gender:</strong> {{ visit.PatientAge }}/{{ visit.Gender }}</span>
+                                                    <span><strong>Cell:</strong> {{ visit.Cell || 'N/A' }}</span>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-info">{{ visit.samples?.length || 0 }} samples</span>
+                                        </div>
+
+                                        <!-- Level 2: Barcodes with Issue Fields -->
+                                        <div class="visit-samples ml-4 mt-2">
+                                            <div *ngFor="let sample of visit.samples; let sampleIndex = index" class="sample-item mb-3">
+                                                <!-- Sample Header (always visible) -->
+                                                <div class="sample-header p-2 bg-light rounded">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-barcode mr-2 text-secondary"></i>
+                                                            <strong>{{ sample.LabId }}</strong>
+                                                            <span class="text-muted ml-2">({{ sample.SampleType || 'Blood' }})</span>
+                                                        </div>
+                                                        <span class="badge" [ngClass]="{
+                                                            'badge-success': sample.status === 'Completed',
+                                                            'badge-warning': sample.status === 'Pending',
+                                                            'badge-secondary': sample.status !== 'Completed' && sample.status !== 'Pending'
+                                                        }">{{ sample.status || 'Pending' }}</span>
+                                                    </div>
+                                                    
+                                                    <!-- TP Codes -->
+                                                    <div class="tp-codes-container mt-1">
+                                                        <span class="tp-label mr-1">Tests:</span>
+                                                        <span class="tp-codes">{{ sample.tpCodes }}</span>
+                                                    </div>
+
+                                                    <!-- NEW: Issue Fields for Receiving - Always Visible -->
+                                                    <div class="sample-issues-fields mt-2 pt-2 border-top">
+                                                        <div class="row">
+                                                            <!-- Issue Type Dropdown -->
+                                                            <div class="col-md-4 col-sm-12 mb-2">
+                                                                <label class="small text-muted d-block mb-1">
+                                                                    <i class="fas fa-exclamation-triangle text-warning mr-1 font-14"></i>Issue Type
+                                                                </label>
+                                                                <select class="form-control form-control-sm" 
+                                                                        [(ngModel)]="sample.issueTypeId">
+                                                                    <!-- First option comes from database (Id: 1, Descp: "None") -->
+                                                                    <option *ngFor="let issue of issueTypes" [value]="issue.Id">
+                                                                        {{ issue.Descp }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            <!-- Issue Detail Text Field - Required when issue type is not None -->
+                                                            <div class="col-md-4 col-sm-12 mb-2">
+                                                                <label class="small text-muted d-block mb-1">
+                                                                    <i class="fas fa-file-alt text-info mr-1 font-14"></i>Issue Details
+                                                                    <span class="text-danger" *ngIf="sample.issueTypeId && sample.issueTypeId !== 1">*</span>
+                                                                </label>
+                                                                <input type="text" 
+                                                                    class="form-control form-control-sm" 
+                                                                    [ngClass]="{
+                                                                        'invalid': sample.issueDetailInvalid,
+                                                                        'invalid-highlighted': sample.issueDetailInvalid
+                                                                    }"
+                                                                    placeholder="Describe the issue (e.g., missing, damaged, etc.)"
+                                                                    [(ngModel)]="sample.issueDetail">
+                                                                <small class="text-danger" *ngIf="sample.issueDetailInvalid">
+                                                                    Issue details are required for problematic samples
+                                                                </small>
+                                                            </div>
+
+                                                            <!-- Action Taken Text Field - Optional, no validation -->
+                                                            <div class="col-md-4 col-sm-12 mb-2">
+                                                                <label class="small text-muted d-block mb-1">
+                                                                    <i class="fas fa-check-circle text-success mr-1 font-14"></i>Action Taken
+                                                                </label>
+                                                                <input type="text" 
+                                                                    class="form-control form-control-sm" 
+                                                                    placeholder="What action was taken? (optional)"
+                                                                    [(ngModel)]="sample.actionTaken">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Quick Action Icons - Updated with all issue types -->
+                                                        <div class="d-flex justify-content-end mt-1 flex-wrap" style="gap: 4px;">
+                                                            <small class="text-muted mr-2">Quick actions:</small>
+                                                            <span class="badge badge-light mr-1 cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 2, 'Spillage occurred during transport', 'Cleaned and inspected')"
+                                                                title="Mark as Spillage">
+                                                                <i class="fas fa-tint text-danger mr-1"></i>Spillage
+                                                            </span>
+                                                            <span class="badge badge-light mr-1 cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 3, 'Container damaged', 'Replaced container')"
+                                                                title="Mark as Damage">
+                                                                <i class="ti-unlink text-warning mr-1"></i>Damage
+                                                            </span>
+                                                            <span class="badge badge-light mr-1 cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 4, 'Temperature outside acceptable range', 'Moved to proper storage')"
+                                                                title="Mark as Temperature Issue">
+                                                                <i class="fas fa-thermometer-half text-info mr-1"></i>TempIssue
+                                                            </span>
+                                                            <span class="badge badge-light mr-1 cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 5, 'Container leaking', 'Transferred to new container')"
+                                                                title="Mark as Leakage">
+                                                                <i class="fas fa-water text-primary mr-1"></i>Leakage
+                                                            </span>
+                                                            <span class="badge badge-light mr-1 cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 6, 'Label does not match requisition', 'Corrected label')"
+                                                                title="Mark as Label Mismatch">
+                                                                <i class="fas fa-tag text-secondary mr-1"></i>LabelMismatch
+                                                            </span>
+                                                            <span class="badge badge-light mr-1 cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 7, 'Insufficient quantity for tests', 'Requested recollection')"
+                                                                title="Mark as Quantity Low">
+                                                                <i class="fas fa-tachometer-alt text-warning mr-1"></i>QuantityLow
+                                                            </span>
+                                                            <span class="badge badge-light cursor-pointer" 
+                                                                (click)="setSampleIssue(sample, 8, 'Sample missing from batch', 'Notified lab for investigation')"
+                                                                title="Mark as Missing">
+                                                                <i class="fas fa-times-circle text-danger mr-1"></i>Missing
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Empty samples state -->
+                            <div *ngIf="!batchDetails" class="text-center py-4">
+                                <i class="fas fa-flask fa-3x text-muted mb-2"></i>
+                                <p class="text-muted">No sample details available</p>
+                            </div>
+
+                            <!-- Remarks Section - Split into Dispatch and Receiving -->
+                            <div class="remarks-section card mt-3">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <!-- Dispatch Remarks (Read-only textarea) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="font-weight-bold d-block small text-muted mb-1">
+                                                <i class="fas fa-paper-plane text-info mr-1"></i> Dispatch Remarks
+                                            </label>
+                                            <div *ngIf="selectedBatch.Remarks; else noDispatchRemarks">
+                                                <textarea class="form-control form-control-sm bg-light" 
+                                                        rows="2" 
+                                                        readonly
+                                                        style="height: 60px;">{{ selectedBatch.Remarks }}</textarea>
+                                            </div>
+                                            <ng-template #noDispatchRemarks>
+                                                <textarea class="form-control form-control-sm bg-light" 
+                                                        rows="2" 
+                                                        readonly
+                                                        style="height: 60px;">No dispatch remarks</textarea>
+                                            </ng-template>
+                                        </div>
+
+                                        <!-- Receiving Remarks (Editable textarea) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="font-weight-bold d-block small text-muted mb-1">
+                                                <i class="fas fa-clipboard-list text-success mr-1"></i> Receiving Remarks
+                                            </label>
+                                            <textarea class="form-control form-control-sm" 
+                                                    rows="2"
+                                                    style="height: 60px;"
+                                                    placeholder="Enter any remarks about the receiving process..."
+                                                    [(ngModel)]="receivingRemarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Action Buttons -->
+                            <div class="action-buttons mt-4 text-right">
+                                <button class="btn btn-primary btn-sm mr-2"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="receiveBatch()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                    ><i class="fas fa-check-circle mr-1"></i> Receive Batch
+                                </button>
+                                <button class="btn btn-success btn-sm" (click)="printBarcode(selectedBatch.BatchNo)">
+                                    <i class="fas fa-print mr-1"></i> Print Barcode
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rider Assignment Modal -->
+    <ng-template #riderAssignmentModal let-modal>
+        <div class="modal-header">
+            <h5 class="modal-title">
+                <i class="fas fa-motorcycle text-primary mr-2"></i>
+                Assign Rider for Pickup
+            </h5>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span class="d-block text-dark" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                    <label for="riderId">Select Rider</label>
+                    <ng-select 
+                        placeholder="-Select Rider-" 
+                        [closeOnSelect]="true" 
+                        [clearable]="true"
+                        [(ngModel)]="selectedRiderId"
+                        [ngClass]="{'is-invalid': !selectedRiderId && showRiderError}">
+                        <ng-option style="width: 100%" [value]="rider.RiderID" *ngFor="let rider of riders">
+                            <i [ngStyle]="{
+                                color: rider.RiderStatusID == 1 ? '#1fc645' : rider.RiderStatusID == 2 ? 'grey' : null
+                            }" class="fas fa-circle" placement="left" ngbTooltip="Select Rider"></i>
+                            {{ rider.RiderFullName }}
+                        </ng-option>
+                    </ng-select>
+                    <small *ngIf="!selectedRiderId && showRiderError" class="text-danger">Please select a rider</small>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary"
+                mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfigRider.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfigRider.popoverMessage"
+                [confirmText]="confirmationPopoverConfigRider.confirmText"
+                [cancelText]="confirmationPopoverConfigRider.cancelText"
+                [placement]="confirmationPopoverConfigRider.placements[0]"
+                (confirm)="assignDriverForPickup(modal)"
+                (cancel)="confirmationPopoverConfigRider.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary"
+                cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="confirmationPopoverConfigRider.confirmClicked = false; confirmationPopoverConfigRider.cancelClicked = false"
+                [appendToBody]="true"
+                [disabled]="!selectedRiderId">
+                <i class="fas fa-motorcycle mr-1"></i> Assign Rider
+            </button>
+            <button type="button" class="btn btn-light" (click)="modal.close()">
+                <i class="fas fa-times mr-1"></i> Close
+            </button>
+        </div>
+    </ng-template>
+</div>

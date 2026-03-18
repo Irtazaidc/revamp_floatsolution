@@ -1,0 +1,106 @@
+<div class="roles-page">
+  <div class="row">
+    <!--Start:- Hospital Detail Section -->
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-7">
+      <app-card
+                [title]="' Outsource Hospital Details '"
+                [cardClass]="'tim-card tim-card tim-card-primary'"
+                
+              >
+                <div class="card-body">
+                  <ngx-spinner
+                    class="spinner-warning"
+                    [name]="spinnerRefs.listSection"
+                    bdColor="rgba(0,0,0,0.8)"
+                    size="medium"
+                    color="#fff"
+                    type="square-loader"
+                    [fullScreen]="false"
+                  >
+                    <p style="color: white">Loading...</p>
+                  </ngx-spinner>
+                  <table class="table table-hover compact">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Hospital Name</th>
+                        <th>Contact Person</th>
+                        <th>Contact Number</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let item of filteredHospitalDetail;
+                          of: pagination.paginatedSearchResults;
+                          let i = index
+                        "
+                        [ngClass]="{
+                          'active-rec-border-left': rowIndex == i
+                        }"
+                        (click)="getRow(item,i)"
+                        class="cursor-pointer"
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.OutSourceHospitalName }}</td>
+                        <td>{{ item.ContactPerson || "-" }}</td>
+                        <td>{{ item.ContactNo || "-" }}</td>
+                        <td>{{ item.HospitalAddress || "-" }}</td>
+                        <td>{{ item.ContactEmail || "-" }}</td>
+                        <td>{{ item.HospitalRemarks || "-" }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div
+                    class="row"
+                    *ngIf="pagination.paginatedSearchResults.length"
+                  >
+                    <div class="col-12">
+                      <div class="d-flex justify-content-between p-2">
+                        <ngb-pagination
+                          [collectionSize]="pagination.collectionSize"
+                          [(page)]="pagination.page"
+                          [pageSize]="pagination.pageSize"
+                          [boundaryLinks]="true"
+                          [maxSize]="5"
+                          [rotate]="true"
+                          (pageChange)="refreshPagination()"
+                        >
+                        </ngb-pagination>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-container
+                    *ngIf="!pagination.paginatedSearchResults.length"
+                  >
+                  </ng-container>
+                </div>
+              </app-card>
+    </div>
+    <!--End:- Hospital Detail Section -->
+
+    <!--Start:- Add New Hospital Section -->
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-5">
+      <app-card
+        [title]="HospitalNameToShowOnCard"
+        [cardClass]="'tim-card tim-card tim-card-primary'"
+      >
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              
+              <app-outsource-hospital-details  [outSourceHospitalVal]="Object"
+                (updatedFormSubmitted)="refreshPag($event)"
+              ></app-outsource-hospital-details>
+            </div>
+          </div>  
+        </div>
+      </app-card>
+    </div>
+    <!--End:- Add New Hospital Section -->
+  </div>
+</div>

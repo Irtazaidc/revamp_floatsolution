@@ -1,0 +1,22 @@
+.symbol-label img {
+  width: 90px;
+  height: 90px;
+  border-radius:50%;
+  background-color:white !important;
+}
+.fa {
+  font-size: 1.0em;
+  color: #7d8c9d !important;
+}
+.margin{
+  margin: 0rem 1.1rem;
+  font-size: 14px;
+}
+.text-hover-primary:hover {
+  color: #007bff; 
+}
+@media screen and (max-width: 500px) {
+    .card-d-none {
+      display: none;
+    }
+  }

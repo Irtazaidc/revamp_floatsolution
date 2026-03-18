@@ -1,0 +1,117 @@
+
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-7">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getSingleRow(null)"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Add new extension"><i class="ti-plus"></i>New</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Classification Name</th>
+                                    <th>Classification Code</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="!objList.length then noRec else recResult">
+
+                                </ng-container>
+                                <ng-template #noRec>
+                                    <tr>
+                                        <td colspan="3" *ngIf="!objList.length" style="text-align: center;"> 
+                                            <div class="text-primary">
+                                                <strong> No record found</strong>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template #recResult>
+                                    <tr class="pointer" *ngFor="let item of objList | filterByKey:searchText:['Title','QuestionClassificationName','QuestionClassificationCode']; let i = index" (click)="getSingleRow(item.QuestionClassificationID)"
+                                [ngClass]="{'active': item.QuestionClassificationID==QuestionClassificationID}"
+                                >
+                                    <td>{{i+1}}</td>
+                                    <td>{{item.QuestionClassificationName}}</td>
+                                    <td><strong>{{item.QuestionClassificationCode}}</strong></td>
+                                    <td>
+                                        <button class="btn btn-mini btn-outline-danger" ngbTooltip="Add Questions to this Classification/Group" (click)="getClassificationQuestionsByClassificationID(item.QuestionClassificationID)"> <i aria-hidden="true" class="fa fa-plus"></i> Questions</button>
+                                    </td>
+                                </tr>
+                                </ng-template>
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-5">
+            <app-card [title]="cardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner>
+                    <form class="" [formGroup]="objForm">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="form-group">
+                                    <label for="QuestionClassificationName" class="control-label">Classification Name</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="QuestionClassificationName"
+                                    [ngClass]="{'invalid': objForm.get('QuestionClassificationName').errors && objForm.get('QuestionClassificationName').touched, 'invalid-highlighted': objForm.get('QuestionClassificationName').errors}">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <div class="form-group">
+                                    <label for="QuestionClassificationCode" class="control-label">Code</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="QuestionClassificationCode"
+                                    [ngClass]="{'invalid': objForm.get('QuestionClassificationCode').errors && objForm.get('QuestionClassificationCode').touched, 'invalid-highlighted': objForm.get('QuestionClassificationCode').errors}" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button
+                                    [disabled]="disabledButton"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    title=""
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertUpdateQuestionClassification()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(QuestionClassificationID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>{{actionLabel}}<i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+
+        </div>
+    </div>
+</div>

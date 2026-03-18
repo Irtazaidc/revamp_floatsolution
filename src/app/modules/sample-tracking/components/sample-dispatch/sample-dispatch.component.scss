@@ -1,0 +1,589 @@
+// Professional color palette - Updated selected color to dark gray
+$primary-color: #3699FF;
+$primary-light: rgba(54, 153, 255, 0.08);
+$primary-lighter: rgba(54, 153, 255, 0.04);
+$secondary-color: #7e8299;
+$selected-gray: #6c757d;  // Dark gray for selected items
+$border-selected-gray: #a0aec0;  // Medium gray for selected borders
+$success-color: #28a745;
+$warning-color: #ffc107;
+$border-color: #e0e7f0;
+$border-hover: #cbd5e1;
+$border-selected: $primary-color;
+$text-primary: #1e293b;
+$text-secondary: #475569;
+$text-muted: #64748b;
+$bg-hover: #f8fafc;
+$bg-selected: rgba(108, 117, 125, 0.05);  // Gray-based selected background
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$transition: all 0.2s ease;
+
+.sample-hierarchy {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  
+  // Visit Group Styles
+  .visit-group {
+    position: relative;
+    border-radius: 8px;
+    background: white;
+    transition: $transition;
+    margin-bottom: 8px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #e0e7f0;
+      border-radius: 8px 0 0 8px;
+      transition: $transition;
+      z-index: 2;
+    }
+    
+    &.visit-group-selected::before {
+      background: $selected-gray;  // Changed from blue to dark gray
+    }
+    
+    .visit-header {
+      position: relative;
+      padding: 6px 12px;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: $transition;
+      min-height: 42px;
+      background: #f8fafd;
+      
+      &:hover {
+        background: darken(#f8fafd, 2%);
+        border-color: $border-hover;
+        box-shadow: $shadow-sm;
+        transform: none !important;
+      }
+      
+      &.visit-header-default {
+        background: #f8fafd;
+      }
+      
+      &.visit-header-partial {
+        background: linear-gradient(90deg, $primary-light 0%, #f8fafd 30%);
+        border-color: lighten($selected-gray, 40%);  // Changed from blue to gray
+      }
+      
+      &.visit-header-checked {
+        background: linear-gradient(90deg, $bg-selected 0%, #f8fafd 20%);
+        border-color: $border-selected-gray;  // Changed from blue to medium gray
+      }
+    }
+    
+    .visit-body {
+      padding: 8px 12px 4px 32px;
+      background: #ffffff;
+      border: 1px solid $border-color;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      margin-top: -1px;
+      animation: slideDown 0.15s ease;
+    }
+  }
+  
+  // Patient Compact Layout
+  .patient-info-compact {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .patient-row {
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    
+    .info-item {
+      margin-right: 24px;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    
+    &:last-child {
+      margin-top: 2px;
+    }
+  }
+  
+  // Barcode Group Styles
+  .barcode-group {
+    position: relative;
+    margin-bottom: 4px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: $border-color;
+      border-radius: 2px;
+      transition: background 0.2s ease;
+    }
+    
+    &.barcode-group-selected::before {
+      background: $selected-gray;  // Changed from blue to dark gray
+      width: 3px;
+    }
+    
+    .barcode-header {
+      padding: 4px 8px;
+      background: white;
+      border: 1px solid $border-color;
+      border-radius: 6px;
+      transition: $transition;
+      position: relative;
+      z-index: 1;
+      min-height: 32px;
+      
+      &:hover {
+        background: $bg-hover;
+        border-color: $border-hover;
+        transform: none !important;
+      }
+      
+      &.barcode-header-checked {
+        background: linear-gradient(90deg, $bg-selected 0%, white 30%);
+        border-color: $border-selected-gray;  // Changed from blue to medium gray
+      }
+      
+      .barcode-info {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px 16px;
+      }
+    }
+    
+    .barcode-body {
+      padding-left: 28px;
+      margin-top: 4px;
+      border-left: 2px dashed $border-color;
+      animation: slideDown 0.15s ease;
+    }
+  }
+  
+  // Test Item Styles
+  .test-item {
+    padding: 2px 4px;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: $transition;
+    background: white;
+    min-height: 24px;
+    
+    &:hover {
+      background: $bg-hover;
+      border-color: $border-hover;
+      transform: none !important;
+      box-shadow: none;
+    }
+    
+    &.test-item-selected {
+      background: linear-gradient(90deg, $bg-selected 0%, white 30%);
+      border-color: $border-selected-gray;  // Changed from blue to medium gray
+      
+      &:hover {
+        background: linear-gradient(90deg, lighten($bg-selected, 2%) 0%, white 30%);
+      }
+    }
+    
+    .test-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+  
+  // Common Elements
+  .info-item {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    
+    .info-label {
+      font-weight: 700;
+      color: $text-secondary;
+      margin-right: 4px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    
+    .info-value {
+      font-weight: 500;
+      color: $text-primary;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  
+  // Test specific styles
+  .test-code {
+    font-weight: 600;
+    color: $text-primary;
+    font-size: 11px;
+    width: 65px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .test-name {
+    color: $text-secondary;
+    font-size: 11px;
+    width: 180px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  // Badge Styles
+  .badge-sample-count {
+    background: linear-gradient(135deg, #3ec7c0, #0cafa7);
+    color: white;
+    padding: 2px 4px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba($primary-color, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    width: 55px;
+    flex-shrink: 0;
+    
+    i {
+      font-size: 9px;
+      margin-right: 2px;
+    }
+  }
+  
+  .badge-test-count {
+    background: $secondary-color;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    width: 50px;
+    flex-shrink: 0;
+    opacity: 0.9;
+    
+    i {
+      font-size: 9px;
+      margin-right: 2px;
+    }
+  }
+  
+  .test-status {
+    padding: 1px 3px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    width: 70px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    
+    i {
+      font-size: 8px;
+      margin-right: 1px;
+    }
+    
+    &.badge-success {
+      background: #d1fae5;
+      color: #065f46;
+      
+      i {
+        color: #065f46;
+      }
+    }
+    
+    &.badge-warning {
+      background: #fef3c7;
+      color: #92400e;
+      
+      i {
+        color: #92400e;
+      }
+    }
+    
+    &.badge-secondary {
+      background: #f1f5f9;
+      color: $text-secondary;
+      
+      i {
+        color: $text-secondary;
+      }
+    }
+  }
+  
+  // Button Styles
+  .btn-expand {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: $text-secondary;
+    transition: $transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    &:hover {
+      background: rgba($primary-color, 0.1);
+      color: $primary-color;
+      transform: none !important;
+    }
+    
+    i {
+      font-size: 12px;
+    }
+  }
+  
+  // Checkbox Customization
+  ::ng-deep .custom-checkbox {
+    .mat-checkbox-inner-container {
+      width: 16px !important;
+      height: 16px !important;
+      margin: 0 !important;
+    }
+    
+    .mat-checkbox-frame {
+      border-color: $border-hover;
+      border-width: 2px;
+      border-radius: 4px;
+      transition: $transition;
+    }
+    
+    .mat-checkbox-background {
+      border-radius: 4px;
+    }
+    
+    &:hover .mat-checkbox-frame {
+      border-color: $primary-color;
+    }
+    
+    &.mat-checkbox-checked .mat-checkbox-frame {
+      border-color: $primary-color;
+    }
+  }
+  
+  // Scrollbar Styling
+  .fixed-height-table {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 4px;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 10px;
+      
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+  }
+}
+
+// Utility classes
+.flex-grow-1 {
+  flex: 1;
+  min-width: 0;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Selected summary styles
+.alert-grey {
+  background-color: #f3f6f9;
+  border: 1px solid #bebebe;
+  color: #3f3f3f;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+// Dispatch form styles
+.dispatch-form {
+  .form-group {
+    margin-bottom: 1.25rem;
+    
+    label {
+      font-weight: 500;
+      color: #334155;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    
+    .form-control, .form-control-file {
+      border: 1px solid #d1d9e6;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+      
+      &:focus {
+        border-color: #3699FF;
+        box-shadow: 0 0 0 3px rgba(54, 153, 255, 0.1);
+        outline: none;
+      }
+    }
+    
+    .form-control-file {
+      padding: 4px 0;
+      
+      &::-webkit-file-upload-button {
+        background-color: #f1f5f9;
+        border: 1px solid #d1d9e6;
+        border-radius: 4px;
+        padding: 6px 12px;
+        margin-right: 10px;
+        color: #334155;
+        font-weight: 500;
+        cursor: pointer;
+        
+        &:hover {
+          background-color: #e9edf2;
+        }
+      }
+    }
+    
+    .text-muted {
+      color: #64748b !important;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  }
+  
+  .btn-secondary {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    border: none;
+    background-color: #e9ecef;
+    color: #495057;
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    &:hover {
+      background-color: #dee2e6;
+    }
+  }
+}
+
+// Center container
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+// Patient row specific styles
+.patient-row .info-item {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.patient-row .info-item:first-child {
+  margin-right: 0 !important;
+}
+
+.patient-row .info-item .info-value {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ============================================
+// FINAL FIXES - Add this at the VERY END
+// ============================================
+
+/* Move badge to next line for all screens below 1500px */
+@media (max-width: 1500px) {
+  .visit-header {
+    flex-wrap: wrap !important;
+  }
+  
+  .visit-header > .d-flex.align-items-center.flex-grow-1 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .visit-header > .d-flex.align-items-center:last-child {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    justify-content: flex-end !important;
+    padding-left: 32px !important;
+    margin-top: 0 !important;
+  }
+  
+  /* Hide search icon on search button */
+  .btn-outline-primary {
+    .fa-search {
+      display: none !important;
+    }
+    
+    span {
+      margin-left: 0 !important;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+::ng-deep .mat-tab-body-content {
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+::ng-deep .mat-tab-label {
+    border-right: 1px solid #8b8484 !important;
+    width: 50% !important;
+    background-color: #e5e5e5 !important;
+    // color: #ffffff !important;
+}
+
+::ng-deep .mat-tab-label-active {
+    // background-color: #1bc5bd !important;
+    background-color: #1ba7a0 !important;
+    color: #ffffff !important;
+
+}
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    // background-color: #4964db !important;
+    background-color: #1ba7a0 !important;
+}
+
+::ng-deep .mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+}
+
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+
+.feedbackratingImg {
+    vertical-align: middle;
+    border-style: none;
+    width: 30px;
+    margin-right: 6px;
+}

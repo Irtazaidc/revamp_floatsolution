@@ -1,0 +1,276 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card card-custom mt-2">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <form
+              [formGroup]="radiologistAvlForm"
+              class="form-horizontal"
+              name="form"
+              role="form"
+            >
+              <div class="row container">
+                <!-- Branch Field -->
+
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                  <label>Location:</label>
+                  <div class="form-group">
+                    <ng-select
+                      id="pat_branch"
+                      style="width: 100%"
+                      formControlName="LocIDs"
+                      [items]="BranchesList"
+                      bindLabel="Title"
+                      [multiple]="true"
+                      [closeOnSelect]="true"
+                      bindValue="LocId"
+                      placeholder="--Select Branch--"
+                      (change)="onBranchChange($event)"
+                      [ngClass]="{
+                        invalid: radiologistAvlForm.get('LocIDs').errors,
+                        'invalid-highlighted':
+                        radiologistAvlForm.get('LocIDs').errors && isSubmitted
+                      }"
+                    >
+                      <ng-template
+                        ng-multi-label-tmp
+                        let-items="items"
+                        let-clear="clear"
+                      >
+                        <div
+                          class="ng-value"
+                          *ngFor="let item of items | slice : 0 : 2"
+                        >
+                          <span
+                            class="ng-value-icon right"
+                            (click)="clear(item)"
+                            aria-hidden="true"
+                            >×</span
+                          >
+                          <span class="ng-value-label"> {{ item.Title }}</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                          <span class="ng-value-label"
+                            >{{ items.length - 2 }} more...</span
+                          >
+                        </div>
+                      </ng-template>
+                      <ng-template ng-header-tmp>
+                        <button
+                          (click)="onSelectAllBranches()"
+                          class="btn btn-mini btn-outline-primary"
+                          type="button"
+                        >
+                          <i class="ti-check"></i>Select all
+                        </button>
+                        <button
+                          (click)="onUnselectAllBranches()"
+                          class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                          type="button"
+                        >
+                          <i class="ti-close"></i>Unselect all
+                        </button>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+                
+                <!-- Gender Field -->
+
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                  <label>Gender:</label>
+                  <ng-select
+                    [items]="gendersList"
+                    formControlName="Gender"
+                    bindLabel="GenderTitle"
+                    bindValue="GenderID"
+                    placeholder="-Select Gender-"
+                    name="panel"
+                  >
+                  </ng-select>
+                </div>
+                <!-- Section Field -->
+
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                  <label>Section:</label>
+                  <ng-select
+                    style="width: 100%"
+                    [items]="subSectionList"
+                    bindLabel="SubSectionTitle"
+                    placeholder="-Select Section-"
+                    multiple="true"
+                    bindValue="SubSectionId"
+                    formControlName="SubSectionIDs"
+                    name="SubSectionId"
+                  ></ng-select>
+                </div>
+                <!-- Availability Field -->
+
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                  <label>Availability:</label>
+                  <ng-select
+                     style="width: 100%"
+                    [items]="radoiologistTime"
+                    bindLabel="GeneralShiftName"
+                    placeholder="-Select Time-"
+                    bindValue="GeneralShiftId"
+                    formControlName="GeneralShiftID"
+                  >
+                  </ng-select>
+                </div>
+
+                <!-- Work Week Field -->
+
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                  <label>Work Week:</label>
+                  <ng-select
+                    style="width: 100%"
+                    [items]="radoiologistWorkWeek"
+                    bindLabel="WorkWeekDesc"
+                    formControlName="WorkWeekID"
+                    placeholder="-Select Work Week-"
+                    bindValue="WorkWeekID"
+                  >
+                  </ng-select>
+                  <!-- (change)="onWorkWeekChange($event)" -->
+                </div>
+
+                <!-- Doctor's Name Field -->
+
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-xl-2">
+                  <label>Doctor's Name:</label>
+                  <ng-select
+                    style="width: 100%"
+                    [items]="radoiologistList"
+                    bindLabel="FullName"
+                    formControlName="EmpID"
+                    placeholder="-Select Doctor's Name-"
+                    bindValue="EmpId"
+                    (change)="filterDoctorsBySelectedDoctor($event)"
+                    (clear)="onClearDoctorDropdown()"
+                  >
+                  </ng-select>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-xl-2 mt-8">
+                  <button
+                    (click)="getRadiologistInfoDetail()"
+                    class="btn btn-primary"
+                    type="button"
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Spinner and Table Section -->
+            <div class="row">
+              <div class="col-12">
+                <ngx-spinner
+                  class="spinner-info"
+                  bdColor="rgba(0,0,0,0.8)"
+                  [name]="spinnerRefs.tableFormSection"
+                  size="medium"
+                  color="#fff"
+                  type="square-loader"
+                  [fullScreen]="false"
+                >
+                  <p style="color: white">Please wait...</p>
+                </ngx-spinner>
+
+                <div class="row justify-content-center mt-2">
+                  <div class="col-12">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        placeholder="type to filter"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="searchText"
+                        name="searchText"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Table Container: Make the table scrollable on small screens -->
+                <div
+                  class="table-responsive table-container fixed-height-table mt-3"
+                  style="overflow: auto"
+                >
+                  <table
+                    class="table table-hover compact table-bordered"
+                    cellpadding="0"
+                    cellspacing="0"
+                  >
+                    <thead class="header">
+                      <tr>
+                        <th>#</th>
+                        <th>Doctor Name</th>
+                        <th>Location</th>
+                        <th>Available Time</th>
+                        <th>Work Week</th>
+                        <th>Availability</th>
+                        <th>Designation</th>
+                        <th>Qualification</th>
+                        <th>Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody *ngIf="filteredTableData.length > 0; else noRecord">
+                      <tr
+                        *ngFor="
+                          let item of filteredTableData
+                            | filterByKey
+                              : searchText
+                              : [
+                                  'FullName',
+                                  'LocationFromIorgLoc',
+                                  'Designation'
+                                ];
+                          let i = index
+                        "
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          {{ item.FullName }} - {{ item.EmpNoWithPrefix }}
+                        </td>
+                        <td>{{ item.LocationFromIorgLoc }}</td>
+                        <td>{{ item.ShiftTime || "-" }}</td>
+                        <td>{{ item.WorkWeek || "-" }}</td>
+                        <td [ngClass]="{
+                          'text-primary': item.isAvailable === true,
+                          'text-danger': item.isAvailable === false
+                        }">
+                      {{
+                        item.isAvailable
+                          ? "Available"
+                          : item.isAvailable === false
+                          ? "Unavailable"
+                          : "-"
+                      }}
+                    </td>
+                        <td>{{ item.Designation || "-" }}</td>
+                        <td>{{ item.EducationDetails || "-" }}</td>
+                        <td>{{ item.Remarks || "-" }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noRecord>
+  <div
+    class="no-record-message"
+    style="text-align: center; padding: 1rem; position: absolute; width: 100%"
+  >
+    <strong>No Record Found</strong>
+  </div>
+</ng-template>

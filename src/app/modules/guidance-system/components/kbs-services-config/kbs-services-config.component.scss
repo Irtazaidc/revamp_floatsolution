@@ -1,0 +1,131 @@
+
+.table-row {
+  cursor: move;
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .table th {
+      background-color: #f1f3f5;
+    }
+    .table td,
+    .table th {
+      vertical-align: middle;
+    }
+    .form-control {
+      border-radius: 8px;
+    }
+    .btn-custom {
+      background-color: #1bc5bd;
+      color: white;
+      border-radius: 8px;
+    }
+    .btn-custom:hover {
+      background-color: #17a69e;
+    }
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+
+    /* When row is allowed = 1 */
+.row-active {
+  background: #f0f9ff !important; 
+  transition: background 0.3s ease-in-out;
+  border-left: 4px solid #0d6efd;
+}
+
+/* Disabled fields */
+textarea:disabled {
+  background: #f1f1f1 !important;
+  color: #777 !important;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Smooth enable animation */
+.smooth-field {
+  transition: all 0.3s ease;
+}
+
+/* Validation border */
+.border-danger {
+  border: 2px solid #ff6b6b !important;
+  background: #fff5f5 !important;
+}
+
+/* Tooltip fixes if needed */
+.mat-tooltip {
+  font-size: 12px !important;
+}
+
+.editor-wrapper {
+  max-width: 250px; /* adjust width per your table */
+  overflow-x: auto;
+}
+
+.simple-editor {
+  min-height: 121px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  outline: none;
+  background: white;
+  
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  &.disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+  }
+  
+  &[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #6c757d;
+    font-style: italic;
+  }
+}
+
+
+.blink-bright {
+  animation: brightColor 1s infinite;
+  display: inline-block;
+}
+
+@keyframes brightColor {
+  0%,100% {
+    color: #dc3545;           /* normal red (bootstrap danger) */
+    text-shadow: none;
+    transform: none;
+  }
+  50% {
+    color: #ff6b6b;           /* brighter red */
+    text-shadow: 0 0 8px rgba(255,107,107,0.8);
+    transform: scale(1.02);
+  }
+}
+
+::ng-deep .simple-editor i {
+  color: #000000 !important;       /* Purple (example) */
+  font-size: 13px !important;      /* Change font size */
+  font-style: italic !important;   /* Ensure it's italic */
+}

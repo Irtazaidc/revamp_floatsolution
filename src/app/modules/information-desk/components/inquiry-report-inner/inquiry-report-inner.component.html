@@ -1,0 +1,141 @@
+<div class="visit-management-page">
+    <div class="row">
+        <div class="col-sm-12 patient-search-area">
+            <app-patient-search
+            (visitSelectedEvent)="patientVisitEvent($event)"
+            [buttonControls]="['visits']"
+            [isInquiry]="true"
+            ></app-patient-search>
+        </div>
+    </div>
+    <div class="row" style="margin-top: -45px;" #visitInfoArea>
+        <div class="col-sm-12">
+            <app-card [cardClass]="'tim-card tim-card-primary'">
+                <ng-container *ngIf="selectedVisit; then visitContainer else visitNotSelectedContainer"></ng-container>
+                <ng-template #visitContainer>
+                    <div class="patient-visit-area">
+                        <div class="col-12">
+                            <ng-container *ngIf="visitDetails && visitDetails.pateintInfo; then patientRecordsContainer else defaultTemplateContainer"></ng-container>
+                            <ng-template #defaultTemplateContainer>
+                                <div class="col-12 text-center"> <hr> <div class="text-primary">No Record(s) Found.</div> </div>
+                            </ng-template>
+                            <ng-template #patientRecordsContainer>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="row patient-info-container">
+                                                    <div class="col-md-12" *ngIf="visitDetails && visitDetails.pateintInfo">
+                                                        <fieldset class="fieldset-border-top">
+                                                            <app-patient-basic-info class="bg-light" [PatientId]="visitDetails.pateintInfo.PatientId" [VisitId]="VisitID"></app-patient-basic-info>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--start::Test Info-->
+                                            <div class="col-md-12" >
+                                                <div class="patient-visit-Test-info-container">
+                                                    <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Test Info.</legend>
+                                                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                                                            <table class="table table-hover compact table-bordered" *ngIf="visitDetails && visitDetails.tpInfo">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Test</th>
+                                                                        <th>Status</th>
+                                                                        <th class="text-right">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="cursor-pointer"
+                                                                        *ngFor="let tp of visitDetails.tpInfo; let i=index;"
+                                                                        [ngStyle]="{'text-decoration': tp.TestStatusId < 0 ? 'line-through' : '', 'color': tp.ProcessId == 2 ? 'red' : 'black'}"
+                                                                        [ngClass]="{'active-rec-border-left': rowIndex==i}"
+                                                                        (click)="getVisitTestInquiry(tp.TPId,i)"
+                                                                        >
+                                                                        <td>{{tp.Code}} - {{tp.Test}}</td>
+                                                                        <td>{{tp.TestStatus}}</td>
+                                                                        <td class="text-right"><i class="fas fa-file-signature text-primary cursor-pointer" ngbTooltip="View Inquiry"></i></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </fieldset>
+            
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <fieldset class="fieldset-primary fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Inquiry Report</legend>
+                                            <ng-container *ngIf="inquiryList.length; else noInquiryData">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.inquiryListSection"
+                                                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                            <p style="color: white"> Loading... </p>
+                                                        </ngx-spinner>
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th >#</th>
+                                                                        <th  scope="col" >Status</th>
+                                                                        <th  scope="col" >Change By</th>
+                                                                        <!-- <th  scope="col" >UserName</th> -->
+                                                                        <th  scope="col" >Change On</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let item of inquiryList; let i = index">
+                                                                        <td  >{{i+1}}</td>
+                                                                        <td>{{ item.TestStatus }}</td>
+                                                                        <td >{{ item.EmpName }} , {{item.LocCode||'NA'}}</td>
+                                                                        <!-- <td >{{ item.UserName }}</td> -->
+                                                                        <td>{{item.ChangedOn | date:'dd-MMM-yyyy  hh:mm a'}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <hr>
+                                                        <button (click)="openInquiryReport()" type="button" class="btn btn-sm btn-primary pull-right mr-2">
+                                                            <i class="fa fa-print"></i>Print
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <ng-template #noInquiryData>
+                                                <div class="container">
+                                                    <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="'No inquiry found'"></app-no-record-found>
+                                                </div>
+                                            </ng-template>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <!--Ramarks and Documents-->
+                                <div class="row">
+                                    <hr style="width: 100%; margin: 10px 0px;">
+                                    <div class="col-md-6 visit-docs-area">
+                                        <app-visit-docs [propVisitNo]="visitDetails.visitInfo.VisitId"  [editing]="{select: true, camera: true}" [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+                                    </div>
+                                    <div class="col-md-6 visit-remarks-area">
+                                        <app-visit-remarks [propVisitNo]="visitDetails.visitInfo.VisitId" [editing]="{save: true}"
+                                        [showRemarksPriority]="true"></app-visit-remarks>
+                                    </div>
+                                    
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #visitNotSelectedContainer>
+                    <div class="col-12 text-center text-primary"> <hr> <div>Please search patient and select visit to show details</div> </div>
+                </ng-template>
+            </app-card>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,60 @@
+<div class="assigned-Users-page">
+
+    <div class="row" *ngIf="selectedRole && selectedRole.UserRoleID">
+        <div class="col-sm-12">
+            <app-card [title]="'Users List'" [cardClass]="'tim-card tim-card tim-card-danger'">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.usersList" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="row" *ngIf="selectedRole && selectedRole.UserRoleID">
+                    <div class="col-12 mt-3 mb-4">
+                        <div>
+                            <h3> <strong>Role: {{selectedRole.UserRoleTitle}}</strong></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive fixed-height-table">
+                    <table class="table table-hover cursor-pointer table-bordered compact">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>UserName</th>
+                                <th>Employee Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!roleAssignedToUsersList.length">
+                                <td colspan="3" style="text-align: center;"><strong class="text-primary">
+                                    No Record Found...</strong></td>
+                              </tr>
+                            <tr *ngFor="let item of roleAssignedToUsersList | filterByKey: searchText:['Username', 'EmpName']; let i = index">
+
+                                <td>{{(i+1)}}</td>
+                                <td>{{item.Username}}</td>
+                                <td>{{item.EmpName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="row">
+                    <div class="col-12">
+                        <ng-container *ngIf="!(selectedRole && selectedRole.UserRoleID); then noPermissionsMessage"></ng-container>
+                        <ng-template #noPermissionsMessage>
+                            <h4>Select Role to view it's UsersList</h4>
+                        </ng-template>    
+                    </div>
+                </div> -->
+                <!-- <pre>{{permissionsList | json}}</pre> -->
+            </app-card>
+        </div>
+    </div>
+
+    
+</div>

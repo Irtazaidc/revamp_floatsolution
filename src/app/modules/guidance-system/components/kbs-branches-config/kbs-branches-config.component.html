@@ -1,0 +1,449 @@
+<div class="container-fluid py-4">
+  <div class="card p-4">
+    <div class="card-header">
+      <div class="card-title">
+        <h2 class="card-label">Branch Configuration</h2>
+      </div>
+    </div>
+
+    <div class="card-body mt-4">
+      <!-- Top Section -->
+      <div class="row g-4">
+        <!-- Branches Table -->
+        <div class="col-md-7">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="section-title">KBS Branches:</span>
+            <input
+              type="text"
+              class="form-control form-control-sm w-50"
+              [(ngModel)]="searchBranchText"
+              placeholder="Type to filter"
+            />
+          </div>
+
+          <div class="table-responsive table-container fixed-height-table">
+            <table class="table table-bordered align-middle cursor-pointer">
+              <thead>
+                <tr>
+                  <!-- <th>Code</th> -->
+                  <th>Location</th>
+                  <th>Manager/Supv Name</th>
+                  <th>Manager/Supv Ext</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngIf="
+                    Branch
+                      | filterByKey
+                        : searchBranchText
+                        : [
+                            'LocId',
+                            'LocCode',
+                            'Title',
+                            'Address',
+                            'TimingHead',
+                            'CityCode',
+                            'CityName',
+                            'ReceiptionistName',
+                            'ReceiptionistExt',
+                            'ManagerAndReceptionistName',
+                            'ManagerAndReceptionistExt',
+                            'ManagerName',
+                            'ManagerExt'
+                          ] as filteredBranches
+                  "
+                >
+                  <!-- No record found -->
+                  <tr *ngIf="filteredBranches.length === 0">
+                    <td colspan="4">
+                      <div class="container-fluid">
+                        <app-no-record-found></app-no-record-found>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Table rows -->
+                  <tr
+                    *ngFor="let data of filteredBranches; let i = index"
+                    (click)="onSelectBranch(data)"
+                    [class.selected-row]="selectedBranch?.LocId === data.LocId"
+                  >
+                    <!-- <td>{{ data.LocId }}</td> -->
+                    <td
+                      [ngbTooltip]="data.Address"
+                      [container]="'body'"
+                      style="cursor: pointer"
+                    >
+                      {{ data.LocCode }}
+                    </td>
+                    <td>{{ data.ManagerAndReceptionistName || "--" }}</td>
+                    <td>{{ data.ManagerAndReceptionistExt || "--" }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Edit Section -->
+        <div class="col-md-5">
+          <span class="section-title">Edit:</span>
+          <form [formGroup]="editForm" class="mt-4">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Location</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="location"
+                  placeholder="Enter Location"
+                  [ngClass]="{
+                    'is-invalid':
+                      editForm.get('location')?.touched &&
+                      editForm.get('location')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Manager Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="managerName"
+                  placeholder="Enter Manager Name"
+                  [ngClass]="{
+                    'is-invalid':
+                      editForm.get('managerName')?.touched &&
+                      editForm.get('managerName')?.invalid
+                  }"
+                />
+              </div>
+
+              <div class="col-md-6 mt-2">
+                <label class="form-label">City Code</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="cityCode"
+                  placeholder="Enter City Code"
+                  style="resize: none"
+                />
+              </div>
+
+              <div class="col-md-6 mt-2">
+                <label class="form-label">Manager Extension</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="managerExt"
+                  placeholder="Enter Manager Ext"
+                />
+              </div>
+
+              <div class="col-md-6 mt-2">
+                <label class="form-label">Address</label>
+                <textarea
+                  class="form-control"
+                  formControlName="address"
+                  rows="3"
+                  style="resize: none"
+                  placeholder="Enter Full Address"
+                ></textarea>
+              </div>
+
+              <div class="col-md-6 mt-2">
+                <label class="form-label">Supervisor Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="ReceiptionistName"
+                  placeholder="Enter Supervisor Name"
+                />
+              </div>
+              <div class="col-md-6 mt-2">
+                <label class="form-label">Supervisor Extension</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="ReceiptionistExt"
+                  placeholder="Enter Supervisor Extension"
+                />
+              </div>
+
+              <!-- Buttons Section -->
+              <div class="col-12 d-flex justify-content-end mt-4">
+                <small
+                  class="text-danger-muted me-3 blink-bright"
+                  *ngIf="!isEditing"
+                >
+                  Click on any branch from the left table to view details.
+                </small>
+
+                <!-- When a row is selected -->
+                <div *ngIf="isEditing" class="d-flex gap-2">
+                  <button
+                    class="btn btn-primary px-4"
+                    type="button"
+                    [disabled]="disabledButton"
+                    mwlConfirmationPopover
+                    [popoverTitle]="'Please Confirm...!'"
+                    [popoverMessage]="'Are you sure you want to save?'"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]"
+                    (confirm)="updateBranch()"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary"
+                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="
+                      confirmationPopoverConfig.confirmClicked = false;
+                      confirmationPopoverConfig.cancelClicked = false
+                    "
+                    [appendToBody]="true"
+                  >
+                    Edit/Save
+                  </button>
+                  <!-- <button
+                    class="btn btn-danger px-4"
+                    type="button"
+                    [disabled]="disabledButton"
+                    mwlConfirmationPopover
+                    [popoverTitle]="'Please Confirm...!'"
+                    [popoverMessage]="'Are you sure you want to delete branch?'"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]"
+                    (confirm)="deleteBranch()"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary"
+                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="
+                      confirmationPopoverConfig.confirmClicked = false;
+                      confirmationPopoverConfig.cancelClicked = false
+                    "
+                    [appendToBody]="true"
+                  >
+                    Delete
+                  </button> -->
+                  <button
+                    class="btn btn-secondary px-4"
+                    type="button"
+                    (click)="clearSelection()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="section-title">KBS Services:</span>
+          <input
+            type="text"
+            class="form-control form-control-sm w-50"
+            [(ngModel)]="searchServiceText"
+            placeholder="Type to filter"
+          />
+        </div>
+        <small class="pull-right text-danger-muted me-3 blink-bright">
+          <strong
+            >Use Ctrl B/U/I for Bold/Underline/Italic for selected text in
+            service detail and remarks</strong
+          >
+        </small>
+        <div class="table-responsive table-container fixed-height-table">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th style="width: 5%">Allow</th>
+                <th style="width: 18%">Service’s Name</th>
+                <th style="width: 7%">Ext</th>
+                <th style="width: 18%">Operational Timing</th>
+                <th style="width: 7%">Status</th>
+                <th style="width: 25%">Service Detail</th>
+                <th style="width: 20%">Special Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+                *ngIf="
+                  BranchServicesList
+                    | filterByKey
+                      : searchServiceText
+                      : [
+                          'ServiceName',
+                          'IsActive',
+                          'Extension',
+                          'OptTiming',
+                          'ServiceDetail',
+                          'SpecialRemarks'
+                        ] as filteredServices
+                "
+              >
+                <!-- No record found -->
+                <tr *ngIf="filteredServices.length === 0">
+                  <td colspan="7" class="p-4">
+                    <div
+                      class="text-center p-3 rounded-2 border border-secondary-subtle bg-light text-muted"
+                    >
+                      <strong
+                        >Select any branch to display the services.</strong
+                      >
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Table rows -->
+                <tr
+                  *ngFor="let data of filteredServices; let i = index"
+                  [ngClass]="{ 'row-active': data.Allowed === 1 }"
+                >
+                  <!-- Allow checkbox -->
+                  <td class="text-center">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="data.Allowed"
+                      [checked]="data.Allowed === 1"
+                      (change)="data.Allowed = $event.target.checked ? 1 : 0"
+                    />
+                  </td>
+
+                  <!-- Editable fields -->
+                  <td>{{ data.ServiceName }}</td>
+
+                  <td>
+                    <textarea
+                      placeholder="Ext"
+                      [(ngModel)]="data.Extension"
+                      class="form-control"
+                      [disabled]="data.Allowed !== 1"
+                      [ngClass]="{
+                        'border-danger': data.Allowed === 1 && !data.Extension
+                      }"
+                      [ngbTooltip]="
+                        data.Allowed === 1 && !data.Extension
+                          ? 'Required field'
+                          : ''
+                      "
+                    ></textarea>
+                  </td>
+
+                  <td>
+                    <textarea
+                      placeholder="Enter Operational Timing"
+                      [(ngModel)]="data.OptTiming"
+                      class="form-control"
+                      maxlength="500"
+                      [disabled]="data.Allowed !== 1"
+                      [ngClass]="{
+                        'border-danger': data.Allowed === 1 && !data.OptTiming
+                      }"
+                      [ngbTooltip]="'Max 500 characters'"
+                    ></textarea>
+                  </td>
+
+                  <td class="text-center">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="data.IsActive"
+                      [checked]="data.IsActive === 1"
+                      [disabled]="data.Allowed !== 1"
+                      (change)="data.IsActive = $event.target.checked ? 1 : 0"
+                    />
+                  </td>
+                  <td>
+                    <div
+                      class="editor-wrapper"
+                      [ngClass]="{
+                        'border-danger':
+                          data.Allowed === 1 && !data.ServiceDetail
+                      }"
+                    >
+                      <div
+                        class="simple-editor"
+                        [contentEditable]="data.Allowed === 1"
+                        (blur)="onContentChange(data, 'ServiceDetail', $event)"
+                        [innerHTML]="data.ServiceDetail"
+                        [class.disabled]="data.Allowed !== 1"
+                        maxlength="4000"
+                        [attr.placeholder]="
+                          data.Allowed === 1 ? 'Enter remarks...' : ''
+                        "
+                      ></div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div
+                      class="editor-wrapper"
+                      [ngClass]="{
+                        'border-danger':
+                          data.Allowed === 1 && !data.SpecialRemarks
+                      }"
+                    >
+                      <div
+                        class="simple-editor"
+                        [contentEditable]="data.Allowed === 1"
+                        (blur)="onContentChange(data, 'SpecialRemarks', $event)"
+                        [innerHTML]="data.SpecialRemarks"
+                        maxlength="4000"
+                        [class.disabled]="data.Allowed !== 1"
+                        [attr.placeholder]="
+                          data.Allowed === 1 ? 'Enter remarks...' : ''
+                        "
+                      ></div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <ngx-spinner
+          class="spinner-warning"
+          [name]="spinnerRefs.dataTable"
+          bdColor="rgba(0,0,0,0.8)"
+          size="medium"
+          color="#fff"
+          type="square-loader"
+          [fullScreen]="false"
+        >
+          <p style="color: white">Loading...</p>
+        </ngx-spinner>
+        <div class="col-12 d-flex justify-content-end mt-4">
+          <button
+            type="button"
+            [disabled]="disabledButton"
+            class="btn btn-primary"
+            mwlConfirmationPopover
+            [popoverTitle]="'Please Confirm...!'"
+            [popoverMessage]="'Are you sure you want to save?'"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="insertUpdateKBSBranchServices()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary"
+            cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="
+              confirmationPopoverConfig.confirmClicked = false;
+              confirmationPopoverConfig.cancelClicked = false
+            "
+            [appendToBody]="true"
+          >
+            <i class="fa fa-save me-1"></i> Save Branch Configuration
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

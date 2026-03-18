@@ -1,0 +1,283 @@
+.location-summary {
+  border-left: 4px solid #007bff;
+  padding-left: 10px;
+}
+
+.selected-location-row {
+  font-size: 14px;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Make table responsive */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Style for the filter input */
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+::ng-deep .display-html i,
+.display-html em {
+  color: #000000 !important;
+  font-size: 13px !important;
+  font-style: italic !important;
+}
+
+
+.pdf-popup-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.upload-section input[type="file"] {
+  padding: 5px;
+}
+
+.upload-section .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.upload-section button {
+  min-width: 120px;
+}
+
+.uploaded-docs table th,
+.uploaded-docs table td {
+  vertical-align: middle;
+}
+
+.uploaded-docs table td .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+.uploaded-docs table td i {
+  font-size: 14px;
+}
+
+.uploaded-docs table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.uploaded-docs table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.display-html {
+  white-space: pre-line;
+}
+
+
+.accordion-item {
+  border: 1px solid #dee2e6;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.accordion-header {
+  background: #f8f9fa;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-body {
+  padding: 15px;
+  background: #ffffff;
+}
+
+.doc-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.doc-card img {
+  height: 120px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.pdf-card {
+  height: 120px;
+  border: 1px dashed #dc3545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.doc-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.doc-actions button {
+  background: rgba(0,0,0,0.7);
+  border: none;
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.doc-title {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  text-align: center;
+  color: #6c757d;
+}
+
+
+/* Document Card Hover Effects */
+.document-card {
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.document-card.cursor-pointer {
+  cursor: pointer;
+}
+
+.document-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  border-color: #0d6efd !important;
+}
+
+.document-card:hover .document-title {
+  color: #0d6efd;
+}
+
+/* Image Container */
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 150px;
+  transition: transform 0.3s ease;
+}
+
+.document-card:hover .image-container img {
+  transform: scale(1.05);
+}
+
+/* Preview Modal Override */
+.modal-backdrop {
+  background-color: rgba(0,0,0,0.8) !important;
+}
+
+/* Custom Scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.modal-backdrop.show {
+  opacity: 0.8 !important;
+}
+
+/* Ensure modal is on top */
+.modal.fade.show {
+  z-index: 1060;
+}
+
+/* Fix for accordion button */
+.accordion-button:not(.collapsed) {
+  background-color: #f8f9fa !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .document-card {
+    margin-bottom: 15px;
+  }
+  
+  .search-container {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+}
+
+/* Modal styling */
+.modal-backdrop.show {
+  opacity: 0.8 !important;
+}
+
+.modal.fade.show {
+  z-index: 1060;
+}
+
+/* Document card hover */
+.document-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: #0d6efd !important;
+}
+
+/* Close button */
+.close-btn {
+  cursor: pointer;
+  fill: currentColor;
+}
+
+.close-btn:hover {
+  opacity: 0.8;
+}
+
+/* No print utility */
+.no-print {
+  @media print {
+    display: none !important;
+  }
+}

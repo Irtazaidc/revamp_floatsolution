@@ -1,0 +1,141 @@
+<div class="b2b-doctor-panel-mapping-page">
+
+    <h1>B to B Doctor Panel Mapping</h1>
+    <!-- <div class="row" style="min-height: 450px;">
+        <div class="col-md-6">
+            <app-card [title]="'B to B Doctor Panel Mapping'" [cardClass]="'tim-card tim-card tim-card-success'">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                            <button class="btn btn-outline-success btn-mini" (click)="getB2BDoctorShareReport()"><i class="ti-reload"></i></button>
+                            <button class="btn btn-outline-success btn-mini" (click)="optionalColumnsVisibility = !optionalColumnsVisibility"><span *ngIf="!optionalColumnsVisibility">show all columns</span> <span *ngIf="optionalColumnsVisibility">show less columns</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive fixed-height-table">
+
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Gender</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr 
+                                *ngFor="let item of b2bDoctorsList | filterByKey: searchText:['FirstName', 'LastName', 'Phone', 'Email']; let i = index"
+                                [ngClass]="{'active': doctorForm.get('B2BDoctorID').value == item.B2BDoctorID}"
+                            >
+                                <td>{{item.Title}}</td>
+                                <td>{{item.FirstName}}</td>
+                                <td>{{item.LastName}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.Gender}}</td>
+                                <td class="text-right">
+                                    <button
+                                        class="btn btn-outline-danger btn-mini"
+                                        title="Delete"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="delete(item)"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="danger"
+                                        cancelButtonType="outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    >
+                                        <i class="ti-trash m-0"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-outline-success btn-mini ml-2"
+                                        title="Edit"
+                                        (click)="edit(item)"
+                                    >
+                                        <i class="ti-pencil m-0"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </app-card>
+        </div>
+
+
+
+        <div class="col-md-6">
+            <app-card [title]="'Filters'" [cardClass]="'tim-card tim-card tim-card-success'">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="" [formGroup]="form">
+                            <div class="form-inline">
+                
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="b2bDoctorsList"
+                                    bindLabel="FirstName" 
+                                    placeholder="Select B to B"
+                                    bindValue="B2BDoctorID"
+                                    formControlName="B2BDoctorID"
+                                    >
+                                </ng-select>
+                
+                                <input
+                                    #dFrom
+                                    type="text"
+                                    style="max-width: 100%;"
+                                    class="form-control mt-1 mr-1"
+                                    (click)="dFrom_date.toggle()"
+                                    placeholder="dd-mm-yyyy"
+                                    autocomplete="off"
+                                    name="dFrom"
+                                    ngbDatepicker
+                                    #dFrom_date="ngbDatepicker"
+                                    formControlName="DateFrom"
+                                    [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                    required
+                                    readonly
+                                >
+                
+                                <input
+                                    #dTo
+                                    type="text"
+                                    style="max-width: 100%;"
+                                    class="form-control mt-1 mr-1"
+                                    (click)="dTo_date.toggle()"
+                                    placeholder="dd-mm-yyyy"
+                                    autocomplete="off"
+                                    name="dTo"
+                                    ngbDatepicker
+                                    #dTo_date="ngbDatepicker"
+                                    formControlName="DateTo"
+                                    [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                    required
+                                    readonly
+                                >
+                                
+                                <button class="btn btn-sm btn-outline-primary mt-1" type="button" title="Fetch Record(s)" (click)="getB2BDoctorShareReport()"><i class="ti-search"></i></button>
+                            </div>
+                
+                        </form>                
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div> -->
+
+    
+    <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+
+</div>

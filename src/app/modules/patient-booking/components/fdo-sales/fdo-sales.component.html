@@ -1,0 +1,326 @@
+<div class="fdo-sales-page">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-card [title]="'Cash Closing'" [cardClass]="'tim-card tim-card tim-card-primary'">
+        <div class="row">
+          <div class="col-12">
+            <div class="input-group">
+              <input type="text" placeholder="type to filter by Visit No OR Receipt No"
+                class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText" />
+
+              <ng-select class="ml-1 mr-1" value=""  [items]="paymentModesList" bindLabel="Title" (change)="PaymentModeSelected()"
+                 placeholder="Select Payment Method" bindValue="ModeId" [(ngModel)]="selectedPaymentMode" name="ModeId">
+              </ng-select>
+
+              <select class="form-control form-control-sm" [(ngModel)]="selectedDate" (change)="dateSelected()">
+                <option ngValue="">--Select Date--</option>
+                <option *ngFor="let d of fdoSalesDates; let i = index">
+                  {{ d }}
+                </option>
+              </select>
+              <button class="btn btn-mini btn-outline-primary" (click)="getSaleByFDO()">
+                <i class="ti-reload"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-12">
+             <div class="col-lg-8 col-md-7 col-sm-12 non-printable">
+                <div class="row" *ngIf="fdoSummaryReport.length && fdoSalesData.length"> 
+                  <div class="col-md-12">
+                          <!-- <div
+                              class="card m-2"
+                              style="width: auto; border-left: 5px solid #1BC5BD; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+                            >
+                          
+                              
+                              <div class="text-center" style="padding: 0.25rem;padding-top: 12px;">
+                                <h5>Payment Mode: {{ header.PaymentMode }}, Total Amount :{{ header.TotalAmount }}</h5>
+                                <h5>Patient Type: {{ header.PatientType }}, Total Counts : {{ header.Total }}</h5>
+                              
+                              </div>
+                            </div> -->
+
+                            <div class="table-responsive table-container fixed-height-table"> 
+                              <h4 calss="pull-left">FDO Summary</h4>
+                          <table class="table table-bordered compact">
+                            <thead>
+                              <tr>
+                                <th>Sr#</th>
+                                <th>Patient/Payment Type</th>
+                                <th>Payment Mode</th>
+                                <th>Total Counts</th>
+                                <th>Total Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="
+                                let item of fdoSummaryReport let i = index">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ item.PatientType }}</td>
+                                <td>{{ item.PaymentMode }}</td>
+                                <td>{{ item.Total }}</td>
+                                <td>{{ item.TotalAmount }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                        <!-- <div class="w-100 text-center mt-3 text-muted" style="font-size: 0.9rem; color: red !important;">
+                            Badge counts are provisional and may change if PIN-based tests are cancelled. Tests in request cancellation approval may also affect counts based on registration dates.
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+          </div>
+
+
+          <!-- <div class="col-12 col-md-6 mb-2 d-flex flex-wrap align-items-end" >
+            <label class="mr-2 font-weight-bold">Payment Methods:</label>
+            <span *ngFor="let mode of paymentModesList"
+                  class="badge cursor-pointer text-white ml-1 mb-1"
+                  [ngClass]="{
+                    'bg-primary': selectedPaymentMode === mode.ModeId,
+                    'bg-success': selectedPaymentMode !== mode.ModeId
+                  }"
+                  (click)="PaymentModeSelected(mode.ModeId)">
+              {{ mode.Title }}
+            </span>
+            <span class="badge cursor-pointer text-white ml-1 mb-1"
+                [ngClass]="{
+                  'bg-info': selectedPaymentMode === null,
+                  'bg-success': selectedPaymentMode !== null
+                }"
+                (click)="PaymentModeSelected(null)">
+              All
+            </span>
+          </div> -->
+
+        </div>
+        <div class="alert alert-warning d-flex align-items-center justify-content-center" role="alert"
+          *ngIf="PendingIsCancellationApprovel">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <strong class="text-center">Attention:</strong>
+          <span class="ms-2 text-center">Further action cannot be taken until cancellation approval has been
+            received.</span>
+        </div>
+        <small class="pull-right text-danger">
+          <strong>Total Records: {{ fdoSalesData.length }}</strong>
+        </small>
+        <div class="table-responsive fixed-height-table fdo-sales-table-container">
+          <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.SalesDataBar" size="medium"
+            color="#fff" type="ball-atom" [fullScreen]="false">
+            <!-- <p style="color: white"> Loading... </p> -->
+          </ngx-spinner>
+          <table class="table table-hover fdo-sales-table printable-area compact">
+            <thead>
+              <tr>
+                <!-- <th>MRN</th> -->
+                <th>PIN</th>
+                <th>Name</th>
+                <th>Receipt No</th>
+                <th>Patient Type</th>
+                <th>Due Balance</th>
+                <th class="cost-column">Paid Amount</th>
+                <th>Payment Mode</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-center" *ngIf="!fdoSalesData || fdoSalesData.length == 0">
+                <td colspan="8">No Record(s) Available</td>
+              </tr>
+              <tr *ngFor="
+                  let item of fdoSalesData
+                    | filterByKey : searchText : ['VisitNo', 'ReceiptNo'];
+                  let i = index
+                " [ngbTooltip]="
+                  item.IsCancellationApprovelPending == 0
+                    ? 'Cancellation Approval Pending'
+                    : ''
+                " [ngStyle]="{
+                  'background-color':
+                    item.IsCancellationApprovelPending == 0
+                      ? '#ffe4e2'
+                      : 'transparent'
+                }">
+                <!-- <td>{{item.PVNo || item.MRNo || ''}}</td> -->
+                <td>{{ item.VisitNo }}</td>
+                <td>{{ item.PatientName }}</td>
+                <td>{{ item.ReceiptNo }}</td>
+                <td>{{ item.PanelCode || item.PatientTypeName || "-" }}</td>
+                <td>{{ item.DueBalance || "-" }}</td>
+                <!-- <td>{{item.PatientTypeName || ''}}</td> -->
+                <td class="cost-column">
+                  {{ formatAmountWithCommas(item.PaidAmount) }}
+                </td>
+                <td>{{ item.PaymentMode }}</td>
+                <td>{{ item.CreatedOn | date:"dd MMM, yyyy, h:mm a" }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- <div class="d-flex justify-content-between p-2">
+                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size="sm" [pageSize]="pageSize" (pageChange)="refreshPagination()">
+                    </ngb-pagination>
+                
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshPagination()">
+                    <option [ngValue]="5">5 items per page</option>
+                    <option [ngValue]="10">10 items per page</option>
+                    <option [ngValue]="9999999999">All</option>
+                    </select>
+                </div> -->
+        </div>
+        <div class="row printable-area-totals printable-area">
+          <div class="col-12">
+            <hr />
+          </div>
+          <div class="col-12">
+            <div class="row">
+             
+              <div class="offset-lg-8 col-lg-4 offset-md-7 col-md-5 col-sm-12">
+                <table class="table table-bordered compact">
+                  <thead>
+                    <tr>
+                      <td width="200px"></td>
+                      <td class="text-center">Totals</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Total Cash Amount</td>
+                      <td class="cost-column text-center">
+                        <strong>{{
+                          formatAmountWithCommas(closingData.cash)
+                          }}</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total Credit Card Amount</td>
+                      <td class="cost-column text-warning text-center">
+                        <strong>{{
+                          formatAmountWithCommas(closingData.creditCard)
+                          }}</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total Amount</td>
+                      <td class="cost-column text-green text-center">
+                        <strong>{{
+                          formatAmountWithCommas(closingData.totalAmount)
+                          }}</strong>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- <label>Total Amount: <strong>{{closingData.totalAmount}}</strong></label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>Total Cash Amount: <strong>{{closingData.cash}}</strong></label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>Total CreditCard Amount: <strong>{{closingData.creditCard}}</strong></label> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+          <div class="col-12">
+            <button *ngIf="!PendingIsCancellationApprovel" class="btn btn-sm btn-outline-primary pull-right ml-2"
+              (click)="printReport()">
+              <i class="fa fa-print"></i>Print
+            </button>
+            <!-- <button
+              (click)="fdoSummaryProcess()" 
+              type="button" 
+              class="btn btn-sm btn-outline-primary pull-right ml-2"
+            >
+              <i class="fa fa-book" ngbTooltip="View Summary"></i>FDO Summary
+            </button> -->
+
+            <button *ngIf="!PendingIsCancellationApprovel" class="btn btn-sm btn-primary float-right" title="Save"
+              mwlConfirmationPopover [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+              [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+              [confirmText]="confirmationPopoverConfig.confirmText" [cancelText]="confirmationPopoverConfig.cancelText"
+              [placement]="confirmationPopoverConfig.placements[0]" (confirm)="fdoClosingSave()"
+              (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="primary"
+              cancelButtonType="outline-secondary" (click)="
+                confirmationPopoverConfig.confirmClicked = false;
+                confirmationPopoverConfig.cancelClicked = false
+              " [appendToBody]="true">
+              <i class="fa fa-save m-0"></i>
+              Save
+            </button>
+
+            <!-- <button class="btn btn-sm btn-primary float-right" (click)="fdoClosingSave()">Save</button> -->
+          </div>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>
+
+<!------begin:: FDO Summary Popup---------------------------------->
+
+
+
+<!-- <ng-template #fdoSummaryModal let-fdoSummaryModal let-c="close" let-d="dismiss">
+    <form class="pt-4">
+      <div class="modal-header bg-light text-center">
+        <h4 class="modal-title w-100 font-weight-bold">FDO Summary</h4>
+      </div>
+      <div class="modal-body d-flex flex-wrap justify-content-center">
+        <ng-container *ngFor="let header of fdoSummaryReport">
+          <div
+            class="card m-2"
+            style="width: 12rem; border-left: 5px solid #1BC5BD; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+          >
+
+            <div class="card-body text-center" >
+              <h5 class="card-title">{{ header.PatientType }}</h5>
+              <p class="card-text">Total: {{ header.Total }}</p>
+            </div>
+          </div>
+        </ng-container>
+        <div class="w-100 text-center mt-3 text-muted" style="font-size: 0.9rem; color: red !important;">
+          Badge counts are provisional and may change if PIN-based tests are cancelled. Tests in request cancellation approval may also affect counts based on registration dates.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-auto"
+          (click)="fdoSummaryModal.close()"
+        >
+          <i class="fa fa-times-circle"></i> Cancel
+        </button>
+      </div>
+    </form>
+  </ng-template> -->
+
+<!------end:: FDO Summary Popup------------------------------------>
+
+
+<!-- 
+<ng-template #popupModel let-popupModel>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Vaccination - Check In</h4>
+      <button type="button" class="close" aria-label="Close" (click)="popupModel.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <div class="form-group">
+            <label>Remarks</label>
+            <div class="input-group">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-primary">Check In</button>
+    </div>
+</ng-template> -->

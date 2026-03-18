@@ -1,0 +1,420 @@
+<div class="roles-page">
+    <div class="row">
+        <!-- Left Panel - Batches List -->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6">
+            <div class="row">
+                <div class="col-12 mb-1">
+                    <div class="card card-custom">
+                        <div class="card-header card-header-narrow d-flex justify-content-between align-items-center"
+                            style="min-height: 45px;">
+                            <div class="card-title" style="margin-bottom: 1px;">
+                                <span class="card-icon">
+                                    <i class="fa fa-file-invoice icon-lg"></i>
+                                </span>
+                                <h3 class="card-label mt-1">
+                                    Pending Invoice / Actual Cost
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Filter Section -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <form [formGroup]="paramsForm" class="form-horizontal" name="form" role="form"
+                                        (ngSubmit)="getPendingBatches()">
+                                        <div class="row" style="margin-top: -17px;">
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                                <label>Date From</label>
+                                                <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                                    placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                                    formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                                                    type="text" (dateSelect)="validateDateDifference(0)"
+                                                    [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                                <label>Date To</label>
+                                                <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker"
+                                                    placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                                    formControlName="dateTo" name="dateTo" class="form-control mb-4"
+                                                    type="text" (dateSelect)="validateDateDifference(1)"
+                                                    [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                                <label>Batch No</label>
+                                                <input class="form-control" placeholder="Search By Batch No"
+                                                    formControlName="batchNo" name="batchNo"
+                                                    (keyup.enter)="getPendingBatches()" (blur)="setSearchFilter()"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2 text-right">
+                                                <button [disabled]="disabledButtonSearch"
+                                                    class="btn btn-outline-primary" type="submit">
+                                                    Search <span><i class="fa fa-search" [hidden]="!isSpinnerSearch"></i>
+                                                    <i class="spinner-border-custom" aria-hidden="true"
+                                                        [hidden]="isSpinnerSearch"></i></span>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary ml-2" 
+                                                    (click)="resetFilters()">
+                                                    <i class="fa fa-undo"></i> Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+
+                            <!-- Batches List -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <!-- Loading State -->
+                                    <div class="text-center py-5" *ngIf="isLoading">
+                                        <p class="lead mb-0">{{ noDataMessage }}</p>
+                                    </div>
+
+                                    <div class="table-responsive table-container fixed-height-table">
+                                        <!-- Batches List -->
+                                        <div *ngIf="pendingBatches.length > 0 && !isLoading" class="batches-list">
+                                            <div *ngFor="let batch of pendingBatches; let batchIndex = index"
+                                                class="batch-group"
+                                                [ngClass]="{'selected-batch': selectedBatch?.BatchId === batch.BatchId}"
+                                                (click)="selectBatch(batch)">
+                                                
+                                                <!-- Batch Header -->
+                                                <div class="batch-header">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <div class="d-flex align-items-center flex-wrap">
+                                                            <span class="batch-number">{{ batch.BatchNo }}</span>
+                                                            <span class="badge ms-2" [ngClass]="getStatusClass(batch)">
+                                                                {{ getStatusText(batch) }}
+                                                            </span>
+                                                        </div>
+                                                        <span class="batch-date">{{ batch.CreatedOn | date:'dd MMM yyyy' }}</span>
+                                                    </div>
+                                                    
+                                                    <div class="batch-location-grid">
+                                                        <div class="location-item">
+                                                            <i class="fa fa-map-marker-alt text-primary me-1"></i>
+                                                            <span class="location-label">From:</span>
+                                                            <span class="location-value" title="{{ batch.FromLocName }}">{{ batch.FromLocName }}</span>
+                                                        </div>
+                                                        <div class="location-item">
+                                                            <i class="fa fa-map-marker text-success me-1"></i>
+                                                            <span class="location-label">To:</span>
+                                                            <span class="location-value" title="{{ batch.ToLocName }}">{{ batch.ToLocName }}</span>
+                                                        </div>
+                                                        <div class="location-item">
+                                                            <i class="fa fa-truck text-warning me-1"></i>
+                                                            <span class="location-label">Transport:</span>
+                                                            <span class="location-value">{{ batch.TransportMediumName }}</span>
+                                                        </div>
+                                                        <div class="location-item">
+                                                            <i class="fa fa-money-bill text-info me-1"></i>
+                                                            <span class="location-label">Est:</span>
+                                                            <span class="location-value">{{ batch.EstimatedCost | number:'1.2-2' }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Items under this batch -->
+                                                <div class="batch-items">
+                                                    <div *ngFor="let item of batch.items; let last = last" 
+                                                        class="item-row" [ngClass]="{'last-item': last}">
+                                                        <div class="item-details">
+                                                            <div class="item-code">
+                                                                <span class="lab-id">{{ item.LabId }}</span>
+                                                                <span class="visit-id">Visit: {{ item.VisitId }}</span>
+                                                            </div>
+                                                            <div class="test-list" title="{{ item.TPsForLabId }}">
+                                                                {{ item.TPsForLabId }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="item-status">
+                                                            <span class="status-badge" [ngClass]="{
+                                                                'status-success': batch.ActualCost,
+                                                                'status-pending': !batch.ActualCost
+                                                            }">
+                                                                <i class="fa" [ngClass]="{
+                                                                    'fa-check-circle': batch.ActualCost,
+                                                                    'fa-hourglass-half': !batch.ActualCost
+                                                                }"></i>
+                                                                {{ batch.ActualCost ? ('Rs. ' + (batch.ActualCost | number:'1.2-2')) : 'Cost Pending' }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Batch Total Summary -->
+                                                    <div class="batch-total">
+                                                        <span class="total-label">Batch Total:</span>
+                                                        <span class="total-value" [ngClass]="{
+                                                            'text-success': batch.ActualCost,
+                                                            'text-warning': !batch.ActualCost
+                                                        }">
+                                                            <i class="fa" [ngClass]="{
+                                                                'fa-check-circle': batch.ActualCost,
+                                                                'fa-clock-o': !batch.ActualCost
+                                                            }"></i>
+                                                            {{ batch.ActualCost ? ('Rs. ' + (batch.ActualCost | number:'1.2-2')) : 'Pending' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- No Records Found -->
+                                        <div *ngIf="pendingBatches.length === 0 && !isLoading" class="text-center py-5">
+                                            <app-no-record-found [pyClassParam]="'py-5 bg-light'"
+                                                [infoMessageParam]="noDataMessage"></app-no-record-found>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Update Invoice / Actual Cost -->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6">
+            <div class="card card-custom">
+                <div class="card-header card-header-narrow d-flex justify-content-between align-items-center"
+                    style="min-height: 45px;">
+                    <div class="card-title" style="margin-bottom: 1px;">
+                        <span class="card-icon">
+                            <i class="fa fa-edit icon-lg"></i>
+                        </span>
+                        <h3 class="card-label mt-1">
+                            Update Invoice / Actual Cost
+                        </h3>
+                    </div>
+                    <div class="card-toolbar" *ngIf="selectedBatch">
+                        <span class="badge badge-primary mr-2">
+                            Batch: {{ selectedBatch.BatchNo }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body" style="min-height:222px">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Batch Summary -->
+                            <div *ngIf="selectedBatch" class="batch-summary mb-3 p-3 bg-light rounded">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>From:</strong> {{ selectedBatch.FromLocName }}<br>
+                                        <strong>To:</strong> {{ selectedBatch.ToLocName }}<br>
+                                        <strong>Transport:</strong> {{ selectedBatch.TransportMediumName }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Dispatched:</strong> {{ selectedBatch.DispatchedOn | date:'dd-MM-yyyy HH:mm' }}<br>
+                                        <strong>Estimated Cost:</strong> Rs. {{ selectedBatch.EstimatedCost | number:'1.2-2' }}<br>
+                                        <strong>Created By:</strong> {{ selectedBatch.CreatedByName }}
+                                    </div>
+                                </div>
+                                
+                                <!-- Status Message Section -->
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="alert" [ngClass]="getAlertClass()" style="padding: 8px 12px; margin-bottom: 0;">
+                                            <i class="fa fa-info-circle text-white"></i>
+                                            <strong>Status:</strong> 
+                                            <span *ngIf="selectedBatch.AttachmentMissing && !selectedBatch.ActualCost">
+                                                Both invoice and actual cost are missing. You can upload invoice, add actual cost, or update both.
+                                            </span>
+                                            <span *ngIf="selectedBatch.AttachmentMissing && selectedBatch.ActualCost">
+                                                Invoice is missing. Please upload invoice file.
+                                            </span>
+                                            <span *ngIf="!selectedBatch.AttachmentMissing && !selectedBatch.ActualCost">
+                                                Actual cost is missing. Please add actual cost.
+                                            </span>
+                                            <span *ngIf="!selectedBatch.AttachmentMissing && selectedBatch.ActualCost">
+                                                All required information is complete.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Update Form -->
+                            <form [formGroup]="updateForm" *ngIf="selectedBatch" class="update-form">
+                                <!-- Actual Cost Field -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="actualCost">
+                                            Actual Cost (Rs.) 
+                                            <span class="text-danger" *ngIf="isActualCostEditable()">*</span>
+                                            <small class="text-muted ml-2">
+                                                <span *ngIf="selectedBatch.ActualCost">Already updated: Rs. {{ selectedBatch.ActualCost | number:'1.2-2' }} (cannot be changed)</span>
+                                                <span *ngIf="!selectedBatch.ActualCost && selectedBatch.AttachmentMissing">Optional - you can add cost</span>
+                                                <span *ngIf="!selectedBatch.ActualCost && !selectedBatch.AttachmentMissing">Required - please add actual cost</span>
+                                            </small>
+                                        </label>
+                                        <input type="text" 
+                                            class="form-control form-control-sm" 
+                                            id="actualCost"
+                                            formControlName="actualCost" 
+                                            placeholder="0.00"
+                                            (keypress)="validateDecimalNo($event)"
+                                            [readonly]="!isActualCostEditable()"
+                                            [ngClass]="{
+                                                'invalid': updateForm.get('actualCost')?.errors && updateForm.get('actualCost')?.touched,
+                                                'invalid-highlighted': updateForm.get('actualCost')?.errors
+                                            }">
+                                        <div *ngIf="updateForm.get('actualCost')?.errors?.pattern" class="text-danger small mt-1">
+                                            Please enter a valid decimal number
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Receipt Information -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                        <label for="receiptTitle">
+                                            Receipt Title
+                                            <span class="text-danger" *ngIf="isReceiptEditable()">*</span>
+                                            <small class="text-muted ml-2">
+                                                <span *ngIf="!selectedBatch.AttachmentMissing">Already uploaded (cannot be changed)</span>
+                                                <span *ngIf="selectedBatch.AttachmentMissing && selectedBatch.ActualCost">Required - please upload invoice</span>
+                                                <span *ngIf="selectedBatch.AttachmentMissing && !selectedBatch.ActualCost">Optional - you can upload invoice</span>
+                                            </small>
+                                        </label>
+                                        <input type="text" 
+                                            class="form-control form-control-sm" 
+                                            id="receiptTitle"
+                                            formControlName="receiptTitle"
+                                            placeholder="e.g., Fare Receipt, Booking Voucher"
+                                            [readonly]="!isReceiptEditable()"
+                                            [ngClass]="{
+                                                'invalid': updateForm.get('receiptTitle')?.errors && updateForm.get('receiptTitle')?.touched,
+                                                'invalid-highlighted': updateForm.get('receiptTitle')?.errors
+                                            }">
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                        <label for="receiptFile">
+                                            Receipt File
+                                            <span class="text-danger" *ngIf="isReceiptEditable()">*</span>
+                                        </label>
+                                        <div>
+                                            <input type="file" 
+                                                class="form-control-file" 
+                                                id="receiptFile"
+                                                (change)="onFileSelected($event)" 
+                                                accept=".jpg,.jpeg,.png,.pdf"
+                                                [disabled]="!isReceiptEditable()">
+                                            <small class="text-muted">
+                                                <span *ngIf="isReceiptEditable()">Upload receipt (JPG, PNG, PDF) Max 5MB</span>
+                                                <span *ngIf="!isReceiptEditable() && !selectedBatch.AttachmentMissing">Invoice already uploaded - cannot be changed</span>
+                                                <span *ngIf="!isReceiptEditable() && selectedBatch.AttachmentMissing && !selectedBatch.ActualCost">Invoice upload available when cost is entered</span>
+                                            </small>
+                                        </div>
+                                        <!-- Show selected file name -->
+                                        <div *ngIf="selectedFile" class="mt-1 small">
+                                            <span class="badge badge-info">
+                                                <i class="fa fa-file text-white"></i> {{ selectedFile.name }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Remarks -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea class="form-control form-control-sm" 
+                                            id="remarks"
+                                            formControlName="remarks" 
+                                            rows="2"
+                                            placeholder="Any additional notes..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-4 text-right">
+                                        <!-- Update Button -->
+                                        <button type="button" 
+                                            class="btn btn-primary mr-2" 
+                                            [disabled]="!canUpdate() || isUpdating"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="updateBatch()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-primary"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                            >
+                                            <i class="fa fa-save" *ngIf="!isUpdating"></i>
+                                            <i class="spinner-border-custom" *ngIf="isUpdating"></i>
+                                            {{ isUpdating ? 'Updating...' : 'Update Batch' }}
+                                        </button>
+                                        
+                                        <!-- Clear Selection Button -->
+                                        <button type="button" class="btn btn-outline-secondary" (click)="clearSelection()">
+                                            <i class="fa fa-times"></i> Clear
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Validation Rules Display -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="alert alert-secondary" style="padding: 8px 12px;">
+                                            <strong>Rules:</strong>
+                                            <ul class="mt-1 mb-0" style="padding-left: 20px;">
+                                                <ng-container *ngIf="selectedBatch.AttachmentMissing && !selectedBatch.ActualCost">
+                                                    <li>⚠️ <strong>Both missing:</strong> You can upload invoice, add actual cost, or update both at the same time</li>
+                                                    <li>📁 Invoice file and title required when uploading</li>
+                                                    <li>💰 Actual cost must be a valid decimal number</li>
+                                                    <li>✅ Both fields are editable</li>
+                                                </ng-container>
+                                                <ng-container *ngIf="selectedBatch.AttachmentMissing && selectedBatch.ActualCost">
+                                                    <li>✅ <strong>Cost already updated:</strong> You can only upload invoice</li>
+                                                    <li>📁 Invoice file and title required when uploading</li>
+                                                    <li>💰 Cost field is disabled (already updated - cannot be changed)</li>
+                                                    <li>🔒 Cost: Rs. {{ selectedBatch.ActualCost | number:'1.2-2' }} (locked)</li>
+                                                </ng-container>
+                                                <ng-container *ngIf="!selectedBatch.AttachmentMissing && !selectedBatch.ActualCost">
+                                                    <li>✅ <strong>Invoice already uploaded:</strong> You can only add actual cost</li>
+                                                    <li>💰 Actual cost required and must be a valid decimal number</li>
+                                                    <li>📁 Invoice upload disabled (already uploaded - cannot be changed)</li>
+                                                    <li>🔒 Invoice already uploaded (locked)</li>
+                                                </ng-container>
+                                                <ng-container *ngIf="!selectedBatch.AttachmentMissing && selectedBatch.ActualCost">
+                                                    <li>✅ <strong>Complete:</strong> All required information has been provided</li>
+                                                    <li>📁 Invoice already uploaded (locked)</li>
+                                                    <li>💰 Actual cost already recorded: Rs. {{ selectedBatch.ActualCost | number:'1.2-2' }} (locked)</li>
+                                                    <li>🔒 Both fields are locked - no updates allowed</li>
+                                                </ng-container>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- No Batch Selected -->
+                            <div *ngIf="!selectedBatch" class="row align-items-center bg-light rounded p-3 mt-2">
+                                <div class="col-auto">
+                                    <img src="./assets/images/brand/info-icon3.png" alt="Info Icon"
+                                        style="height: 40px;">
+                                </div>
+                                <div class="col">
+                                    <span class="text-secondary">
+                                        Select a batch from the left panel to update invoice or actual cost.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

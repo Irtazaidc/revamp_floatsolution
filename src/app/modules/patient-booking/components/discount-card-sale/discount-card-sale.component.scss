@@ -1,0 +1,371 @@
+.discount-card-sale-page label {
+    // margin-bottom: 0;
+    // color: #999;
+}
+
+:host ::ng-deep .discount-card-sale-page aw-wizard-navigation-bar {
+    display: none;
+}
+
+:host ::ng-deep aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator {
+    padding: 40px 0 10px 0;
+}
+
+:host ::ng-deep aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li .step-indicator {
+    border-radius: 5px;
+}
+
+:host ::ng-deep aw-wizard-navigation-bar.horizontal.small ul.steps-indicator {
+    padding: 8px 0 3px;
+}
+
+:host ::ng-deep aw-wizard.solid-lines aw-wizard-navigation-bar.horizontal ul.steps-indicator li.done:not(.editing):not(:last-child):after {
+    background-color: green !important;
+}
+
+:host ::ng-deep .tp-list ngb-typeahead-window.dropdown-menu.show {
+    max-height: 500px;
+    overflow: auto;
+}
+
+
+hr.wizard-splitter {
+    margin-top: 0;
+}
+
+.section-splitter {
+    border-bottom: 1px solid #ddd;
+}
+
+img.patient-img {
+    // width: 140px;
+    // height: 150px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #999;
+    padding: 7px;
+}
+
+
+.patient-img-action-btns {
+    height: 20px;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-left: 1px;
+}
+
+.btn-upload-pat-img {
+    // width: 118px;
+    width: 58px;
+}
+
+.btn-camera-pat-img {
+    width: 58px;
+}
+
+.btn-remove-pat-img {
+    // border-width: 2px;
+    width: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-radius: 0 0 0 8px;
+    font-weight: bold;
+}
+
+
+.visit-attachments {
+
+    // .btn-select-visit-attachments {
+    //     // font-size: 1rem;
+    //     padding: 5px;
+    // }
+
+    .attachments-container {
+        display: contents;
+
+        .attachment-item {
+            position: relative;
+            margin: 10px;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #999;
+            border-radius: 5px;
+        }
+
+        .attachment-display-frame {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            // border: 1px solid #999;
+            padding: 7px;
+        }
+
+        .visit-attachment-name {
+            cursor: pointer;
+            font-size: 11px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            border-radius: 0px 0px 0px 5px;
+            // background-image: linear-gradient(to right, #00000036, #0000002b, #00000026, #00000000);
+            background-image: linear-gradient(to right, #000000d1, #00000073, #00000057, #00000000);
+            color: #fff;
+            width: 100%;
+            padding: 0px 4px;
+        }
+
+        .visit-attachment-name-field {
+            font-size: 11px;
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: 100%;
+            padding: 0px 4px;
+        }
+
+        .remove-attachment-btn {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            padding: 2px 5px;
+            // background: #f00;
+            // color: #fff;
+            font-weight: bold;
+            box-shadow: 0px 0px 9px -2px #000;
+            border-radius: 0px 0px 0px 16px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+    }
+}
+
+
+.bg-success-2 {
+    background-color: #d0e1b7;
+}
+
+.cus-invalid {
+    // background-color: lightcoral;
+    border-left: red 2px solid;
+}
+
+.fixed-height-table {
+    max-height: 300px;
+}
+
+.selected-test-profile-table tr td .tp-name {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.selected-test-profile-table tr.package-row {
+    td {
+        padding-bottom: 1px !important;
+    }
+}
+
+.selected-test-profile-table tr.package-tp-row {
+    color: #aaa;
+    cursor: not-allowed;
+
+    td {
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+        border: 0;
+    }
+}
+
+.selected-test-profile-table tr.strike-through-row {
+    td {
+        text-decoration: line-through;
+        color: #f00;
+
+        select {
+            text-decoration: line-through;
+            color: red;
+        }
+    }
+}
+
+.selected-test-profile-table select.lab-process {
+    border: 1px solid transparent;
+}
+
+.selected-test-profile-table.for-mobile {
+
+    .test-price {
+        // position: sticky;
+        // right: 0;
+        // padding: 0 0 0 2px;
+        position: absolute;
+        right: 15px;
+        background-color: #fff;
+    }
+
+    .action-btns {
+        position: absolute;
+        right: 15px;
+    }
+
+    .total-test-price-label {
+        position: absolute;
+        left: 20px;
+    }
+
+    .total-test-price {
+        position: absolute;
+        right: 15px;
+    }
+}
+
+.patient-reg-area,
+.patient-visit-area,
+.patient-visit-payment-area {
+    position: relative;
+}
+
+.navi-btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    // justify-content: space-evenly;
+    // width: 20px;
+    height: 100%;
+    z-index: 1;
+    background-color: transparent;
+    width: 17px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.navi-btn:hover {
+    // background-color: #eee;
+}
+
+.navi-btn.left:hover {
+    background: linear-gradient(90deg, #ddd, transparent);
+}
+
+.navi-btn.right:hover {
+    background: linear-gradient(-90deg, #ddd, transparent);
+}
+
+.navi-btn.left {
+    left: -20px;
+    justify-content: flex-start;
+}
+
+.navi-btn.right {
+    right: -20px;
+    justify-content: flex-end;
+}
+
+
+.user-top-adv-actions {
+    position: absolute;
+    right: 0;
+    top: -5px;
+}
+
+.user-top-adv-actions i:hover {
+    color: #1BC5BD;
+    cursor: pointer;
+}
+
+.toggle-patient-additional-fields {
+    color: #1BC5BD;
+    font-size: 1rem;
+}
+
+.additional-info-row {
+    background-color: #85abff0d;
+
+    a {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+
+
+form.payments-form .form-control:disabled {
+    color: #000 !important;
+    font-weight: 600 !important;
+}
+
+.payments-form .form-control-mini {
+    height: 25px;
+}
+
+.bill-amount-area {
+    font-size: 1.2rem;
+}
+
+.bill-amount-area .amount {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.bill-amount-area .amount.total-bill {
+    color: #28a745d6;
+}
+
+.bill-amount-area .amount.min-rcv {
+    color: orange;
+}
+
+.bill-amount-area .bill-amount-splitter {
+    border-right: 1px solid #000;
+    margin: 0 10px;
+}
+
+
+
+.employee-self-info label,
+.flight-details-popup-form label {
+    margin-bottom: 2px;
+}
+
+
+
+
+.camera-container-row {
+    position: fixed;
+    top: 84px;
+    width: 100%;
+    overflow: auto;
+}
+
+// .camera-container-row video {
+//     width: -webkit-fill-available;
+// }
+
+.InvalidHCTimeCls {
+    background-color: #fbb5bc !important;
+}
+
+
+.ngb-tp-input {
+    border: 2px solid !important;
+}
+
+@media screen and (max-width: 786px) {
+    .bill-amount-area {
+        font-size: 11px !important;
+    }
+
+    .bill-amount-area .amount {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+}
+
+.iconTick{
+    position: absolute;
+    top: 20px;
+    right: 5px;
+    z-index: 99;
+  }

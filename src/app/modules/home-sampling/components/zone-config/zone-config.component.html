@@ -1,0 +1,171 @@
+<div class="zone-config-page" style="position: relative;">
+    <div class="row">
+        <div class="col-md-6">
+            <app-card [title]="'Zone Configuration'" [cardClass]="'tim-card tim-card tim-card-primary'"
+                [cardHeaderClass]="'card-header-narrow'">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" (click)="clearForms()" style="height: 35px;"
+                            class="btn btn-danger btn-sm pull-right col-2" ngbTooltip="Add New Zone"><i
+                                class="ti-plus"></i>New
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <ng-container *ngIf="ZonesList.length then zonesDetail else zonesDetailFound">
+
+                    </ng-container>
+                    <ng-template #zonesDetail>
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.hcZoneDetailSection" size="medium" color="#fff"
+                                type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            
+                            <div class="col-lg-6 col-md-6 col-sm-12 m-2" style="float: right;">
+                                <input type="text" placeholder="Search Here" 
+                                    class="form-control form-control-sm " [(ngModel)]="searchInHCZone"
+                                    name="searchInHCZone" />
+                            </div>
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr>                                        
+                                        <th>Zone Title</th>
+                                        <th>HC City</th>
+                                        <th>Branches</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" *ngIf="!ZonesList.length">
+                                            <div class="alert alert-primary text-center" role="alert">
+                                                No record available <i class="fa fa-exclamation-triangle text-light"
+                                                    aria-hidden="true"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr (click)="getSelZoneDetail(item)" *ngFor="let item of ZonesList | filterByKey: searchInHCZone:['ZoneName', 'HCCityName', 'LocationNames'] ">                                        
+                                        <td>{{item.ZoneName}}</td>
+                                        <td>{{item.HCCityName}}</td>
+                                        <td>{{item.LocationNames}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </ng-template>
+
+                    <ng-template #zonesDetailFound>
+                        <ngb-alert style="text-align:center" [dismissible]="false" [type]="'info'">
+                            <strong>No Zone Found </strong>
+                        </ngb-alert>
+                    </ng-template>
+
+                </div>
+
+
+            </app-card>
+        </div>
+        <div class="col-md-6">
+            <app-card [title]="cardTitle" [cardClass]="'tim-card tim-card tim-card-primary'"
+                [cardHeaderClass]="'card-header-narrow'">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.hcZoneDetailFormSection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Please wait... </p>
+                </ngx-spinner>
+                <form class="container" #container class="" [formGroup]="hcZoneConfigForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="zoneCode" class="control-label">Zone Code</label>
+                                <div class="input-group" style="position: relative;">
+                                    <input #zoneCode type="text" class="form-control" name="zoneCode"
+                                        formControlName="zoneCode"
+                                        [ngClass]="{'invalid': hcZoneConfigForm.get('zoneCode').errors && hcZoneConfigForm.get('zoneCode').touched, 'invalid-highlighted': hcZoneConfigForm.get('zoneCode').errors}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="zoneTitle" class="control-label">Zone Title</label>
+                                <div class="input-group" style="position: relative;">
+                                    <input #zoneTitle type="text" class="form-control" name="zoneTitle"
+                                        [ngClass]="{'invalid': hcZoneConfigForm.get('zoneTitle').errors && hcZoneConfigForm.get('zoneTitle').touched, 'invalid-highlighted': hcZoneConfigForm.get('zoneTitle').errors}"
+                                        formControlName="zoneTitle" placeholder="Enter City Title">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="zoneDescription" class="control-label">Zone Description</label>
+                                <input
+                                    [ngClass]="{'invalid': hcZoneConfigForm.get('zoneDescription').errors && hcZoneConfigForm.get('zoneDescription').touched, 'invalid-highlighted': hcZoneConfigForm.get('zoneDescription').errors}"
+                                    #zoneDescription type="text" class="form-control" name="zoneDescription"
+                                    formControlName="zoneDescription" placeholder="Enter City Description">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="LocId" class="control-label">Branches</label>
+                                <div class="input-group" style="position: relative;">                                 
+                                    <ng-select [closeOnSelect]="false" [multiple]= "true"  style="width: 100%;" formControlName="LocId" [items]="branchList"
+                                    tabindex="2" bindLabel="Code" bindValue="LocId"
+                                    [ngClass]="{'invalid': hcZoneConfigForm.get('LocId').errors, 'invalid-highlighted': hcZoneConfigForm.get('LocId').errors }"
+                                    required>
+                                </ng-select>
+
+                                <!-- <ng-select   [multiple]="true" style="width: 100%;" formControlName="hcCityID" [items]="gcCitiesList"
+                                tabindex="2" bindLabel="Code" bindValue="HCCityID"
+                                [ngClass]="{'invalid': hcCityAuthForm.get('hcCityID').errors, 'invalid-highlighted': hcCityAuthForm.get('hcCityID').errors }"
+                                required>
+                            </ng-select> -->
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">                       
+                        <div class="col-md-6">
+                            <label>Home Collection City: <span class="mandatory-asterisk">*</span></label>
+                            <div class="input-group">   
+                                <ng-select   style="width: 100%;" formControlName="hcCityID" [items]="HCCities"
+                                    tabindex="2" bindLabel="Code" bindValue="HCCityID"
+                                    [ngClass]="{'invalid': hcZoneConfigForm.get('hcCityID').errors, 'invalid-highlighted': hcZoneConfigForm.get('hcCityID').errors }"
+                                    required>
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12 mt-10">
+
+                            <button type="reset" class="btn btn-sm btn-danger  pull-right"><i
+                                    class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button> &nbsp;
+
+                            <button class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                ngbTooltip="Create HC Zone" mwlConfirmationPopover [popoverTitle]="'Create HC Zone'"
+                                [popoverMessage]="'Are you sure?'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="InsertUpdateHCZone('')"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"> <i class="fa fa-save"></i><i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                {{actionLabel}}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+    </div>
+</div>

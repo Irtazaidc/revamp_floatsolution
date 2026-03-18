@@ -1,0 +1,52 @@
+.editor-wrapper {
+  max-width: 250px; /* adjust width per your table */
+  overflow-x: auto;
+}
+
+.simple-editor {
+  min-height: 70px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  outline: none;
+  background: white;
+  white-space: pre-wrap;
+  
+  &[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #6c757d;
+    font-style: italic;
+  }
+}
+
+::ng-deep .simple-editor i {
+  color: #000000 !important; /* Purple (example) */
+  font-size: 13px !important; /* Change font size */
+  font-style: italic !important; /* Ensure it's italic */
+}
+
+.highlight-row {
+  background-color: #e6ffe6 !important;
+}
+
+:host ::ng-deep .ng-dropdown-panel {
+  z-index: 999999 !important;
+}
+
+.non-expiry-col {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  text-align: center !important;
+  position: relative;
+}
+
+.highlight-row {
+  background-color: #e8f7ff !important;
+  transition: 0.2s ease-in-out;
+}
+
+.disabled-editor {
+  background: #f8f9fa;
+  color: #aaa;
+}

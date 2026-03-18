@@ -1,0 +1,28 @@
+<mat-card>
+    <mat-card-content >
+        <mat-tab-group class="demo-tab-group" (selectedTabChange)="onTabChanged($event)" animationDuration="0ms" style="background-color: #fff;"> 
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i>
+                   Sample Transportation TAT
+                  </ng-template>
+                  <app-sample-trnsprt *ngIf="selectedTabIndex === 0"></app-sample-trnsprt>
+            </mat-tab>
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-search icon-lg text-danger mr-2 custom-icons"></i>
+                   Sample Transportation TAT DateWise
+                  </ng-template>
+                  <app-sample-trnsprt-date *ngIf="selectedTabIndex === 1"></app-sample-trnsprt-date>
+            </mat-tab>  
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-layers icon-lg text-danger mr-2 custom-icons"></i>
+                   Sample Transportation TAT LocationWise
+                  </ng-template>
+                  <app-sample-trnsprt-loc *ngIf="selectedTabIndex === 2"></app-sample-trnsprt-loc>
+            </mat-tab> 
+           
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

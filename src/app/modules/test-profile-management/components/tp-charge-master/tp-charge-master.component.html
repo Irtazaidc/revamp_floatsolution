@@ -1,0 +1,465 @@
+
+<div class="charge-master-page">
+
+    <div class="row">
+
+        <div class="col-12">
+
+            <app-card [title]="'Charge Master'" [cardClass]="'tim-card tim-card tim-card-success'">
+                <!-- <mat-card-content> -->
+                <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);" class="demo-tab-group" style="background-color: #fff;"> 
+
+                    <mat-tab label="List">
+                        <div *ngIf="selectedTabIndex == 0">
+                            <br>
+
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="filters.searchTextChargeMaster" [ngModelOptions]="{standalone: true}" name="searchTextChargeMaster"/>
+                                    <button class="btn btn-outline-success btn-mini" (click)="loadTab0Date()"><i class="ti-reload"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Grid -->
+                            <div class="col-12">
+                                <div class="table-responsive fixed-height-table">
+                                    <table class="table table-hover compact tp-table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Code</th>
+                                                <th>Name</th>
+                                                <th>Remarks</th>
+                                                <!-- <th>Default</th> -->
+                                                <th>Branches55</th>
+                                                <th width="100px" class="text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let cm of chargeMastersList | filterByKey:filters.searchTextChargeMaster:['ChargeMasterCode', 'ChargeMasterTitle']">
+                                                <td>
+                                                    <input type="checkbox" (change)="setChargeMasterAsDefault(cm)" ngbTooltip="Default" [(ngModel)]="cm.isDefault">
+                                                </td>
+                                                <td>
+                                                    {{cm.ChargeMasterCode || ''}}
+                                                </td>
+                                                <td>
+                                                    {{cm.ChargeMasterTitle}}
+                                                </td>
+                                                <td [ngbTooltip]="cm.Remarks"  container="body">
+                                                    <span>{{(cm.Remarks || '') | slice:0:30}}</span>
+                                                    <span *ngIf="cm.Remarks && cm.Remarks.length > 30"> ...</span>
+                                                </td>
+                                                <!-- <td>
+                                                    {{cm.isDefault ? 'Yes' : 'No'}}
+                                                </td> -->
+                                                <td>
+                                                    <div class="branch-names-container">
+                                                        <span
+                                                            *ngFor="let b of cm.BranchesNames"
+                                                            [ngbTooltip]="b.Title"
+                                                            class="cursor-pointer branch-name"
+                                                        >
+                                                            {{b.Code}}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right">
+                                                    <button class="btn btn-outline-success btn-mini mr-2" title="Edit" (click)="editChargeMaster(cm)"><i class="ti-pencil m-0"></i></button>
+                                                    <!-- <button class="btn btn-outline-success btn-mini mr-2" title="Associate Branches" (click)="associateBranchesChargeMaster(cm)"><i class="fa fa-link m-0"></i></button> -->
+                                                    <button class="btn btn-outline-danger btn-mini"
+                                                        title="Delete" mwlConfirmationPopover
+                                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                                        (confirm)="deleteChargeMaster(cm)"
+                                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                        confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                        [appendToBody]="true">
+                                                        <i class="ti-trash m-0"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="!chargeMastersList.length">
+                                                <td colspan="50" class="text-center">No record(s) found</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab label="Add/Edit">
+                        <div *ngIf="selectedTabIndex == 1" style="min-height: 500px;">
+                            <br>
+
+                            <form [formGroup]="form">
+
+
+                            <!-- Form -->
+                            <div class="col-12">
+                                <br>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label>Name</label>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                formControlName="ChargeMasterTitle"
+                                                class="form-control"
+                                                [ngClass]="{'invalid': form.get('ChargeMasterTitle').errors, 'invalid-highlighted': form.get('ChargeMasterTitle').errors && formSubmitted}"
+                                            />
+                                            <!-- [attr.disabled]="form.get('ChargeMasterID').value" -->
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label>Code</label>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                formControlName="ChargeMasterCode"
+                                                class="form-control"
+                                                [ngClass]="{'invalid': form.get('ChargeMasterCode').errors, 'invalid-highlighted': form.get('ChargeMasterCode').errors && formSubmitted}"
+                                                [attr.disabled]="form.get('ChargeMasterID').value"
+                                            />
+                                            <span class="ml-3 mt-4">
+                                                <input type="checkbox" formControlName="IsDefault">
+                                                <span>&nbsp;Default</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label>Branches</label>
+                                        <div class="input-group panel-dropdown">
+                                            <span style="flex-grow: 1;">
+                                                <ng-select style="width: 100%;"
+                                                    class="branches-multiselect"
+                                                    [items]="branchesListFiltered"
+                                                    bindLabel="Title" 
+                                                    placeholder="-select branch-"
+                                                    bindValue="LocId"
+                                                    [multiple]="true"
+                                                    [closeOnSelect]="false"
+                                                    [groupBy]="groupBranchesByRegionFn"
+                                                    [groupValue]="groupBranchesByRegionValueFn"
+                                                    [selectableGroup]="true"
+                                                    [selectableGroupAsModel]="false"
+                                                    [searchFn]="searchBranchesCustomFn"
+                                                    formControlName="BranchIDs"
+                                                    [ngClass]="{'invalid': form.get('BranchIDs').errors, 'invalid-highlighted': form.get('BranchIDs').errors && formSubmitted}"
+                                                >
+
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:10">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.Code}}</span>
+                                                        </div>
+                                                        <div class="ng-value" *ngIf="items.length > 10">
+                                                            <span class="ng-value-label">{{items.length - 10}} more...</span>
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template ng-optgroup-tmp let-item="item">
+                                                        <span>{{item.RegCode}} - {{item.RegName}}</span>
+                                                    </ng-template>
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div class="ng-value-label">{{item.Title}}</div>
+                                                        <div class="ng-value-label text-secondary small">{{item.RegCode}}: {{item.RegName}} - {{item.CityName}}</div>
+                                                    </ng-template>
+                                                    <ng-template ng-header-tmp>
+                                                        <button (click)="onSelectAllBranches()" class="btn btn-mini btn-dark" type="button"><i class="ti-check"></i> Select All</button>
+                                                        <button class="btn btn-mini btn-outline-dark" *ngFor="let reg of branchRegions" (click)="onSelectRegionBranches(reg)" [ngbTooltip]="reg.RegName" >{{reg.RegCode}}</button>
+                                                        <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-dark m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect All</button>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </span>
+                                            <span style="flex-grow: 0;" class="ml-3" *ngIf="form.get('ChargeMasterID').value">
+                                                <button class="btn btn-primary"
+                                                    title="Delete" mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="updateChargeMasterLocationMapping()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"
+                                                    title="save mapping"
+                                                >
+                                                    <i class="fa fa-save m-0"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-none">
+                                <hr>
+                            </div>
+
+                            <!-- search grid -->
+                            <div class="col-12 d-none">
+                                <div class="input-group">
+                                    <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="filters.searchText" [ngModelOptions]="{standalone: true}" name="searchText"/>
+                                    <select class="form-control form-control-sm" [(ngModel)]="filters.testType" [ngModelOptions]="{standalone: true}" (change)="testTypeChangedEvent($event)" disabled>
+                                        <option *ngFor="let tt of testTypes" [value]="tt.typeId">{{tt.title}}</option>
+                                    </select>
+                                    <!-- <button class="btn btn-outline-success btn-mini" (click)="getTestProfileList()"><i class="ti-reload"></i></button> -->
+                                    <!-- <button class="btn btn-outline-success btn-mini" (click)="optionalColumnsVisibility = !optionalColumnsVisibility"><span *ngIf="!optionalColumnsVisibility">show all columns</span> <span *ngIf="optionalColumnsVisibility">show less columns</span></button> -->
+                                </div>
+                            </div>
+
+                            <!-- Grid -->
+                            <div class="col-12">
+                                <div class="table-responsive fixed-height-table">
+                                    <table class="table table-striped table-hover compact tp-table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" [(ngModel)]="filters.selectAllTests_checkbox" [ngModelOptions]="{standalone: true}" (change)="selectAllTests()">
+                                                </th>
+                                                <th>Test/Profile
+                                                    <input style="width: 100% !important" type="text" placeholder="type to filter" class="form-control mini-input-field" [(ngModel)]="filters.searchText" [ngModelOptions]="{standalone: true}" name="searchText"/>
+                                                </th>
+                                                <!-- <th class="text-right">Price</th> -->
+                                                <th class="text-right">Reg. Price</th>
+                                                <th class="text-center">Disc. (Rs)</th>
+                                                <th class="text-center">Disc. (%)
+                                                    <div *ngIf="filteredTestsList.length">
+                                                        <input type="text"
+                                                            class="form-control mini-input-field text-right"
+                                                            [(ngModel)]="filters.discountPct" [ngModelOptions]="{standalone: true}" (keyup)="discountPctChangeEvent_all($event)"
+                                                            >
+                                                            <!-- mask="separator.2" separatorLimit="99" -->
+                                                    </div>
+                                                </th>
+                                                <th class="text-center">New Price</th>
+                                                <th class="text-center">
+                                                    Effective Date
+                                                    <div>
+                                                        <input
+                                                            #effectiveDateAll
+                                                            type="text"
+                                                            style="max-width: 100%;"
+                                                            class="form-control mini-input-field date-picker"
+                                                            (click)="effectiveDateAll_date.toggle()"
+                                                            placeholder="yyyy-mm-dd"
+                                                            autocomplete="off"
+                                                            name="effectiveDateAll"
+                                                            ngbDatepicker
+                                                            #effectiveDateAll_date="ngbDatepicker"
+                                                            [(ngModel)]="filters.effectiveDateAll"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            (dateSelect)="effectiveDateAllChangeEvent($event)"
+                                                            [placement]="'left'"
+                                                            [container]="'body'"
+                                                            readonly
+                                                        >
+                                                    </div>
+                                                </th>
+                                                <!-- <th class="text-right">Discountable</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let test of filteredTestsList | filterByKey: filters.searchText:['TestProfileCode', 'TestProfileName']; let i = index"
+                                                [ngClass]="{'selected': !!test.selected, 'not-selected': !test.selected}"
+                                            >
+                                                <td>
+                                                    <input type="checkbox" [(ngModel)]="test.selected" [ngModelOptions]="{standalone: true}">
+                                                </td>
+                                                <td>
+                                                    {{test.TestProfileCode}} - {{test.TestProfileName}}
+                                                    <span
+                                                        *ngIf="!test.IsDiscountable"
+                                                        class="fa fa-info-circle"
+                                                        title="Non-discountable"
+                                                        ngbTooltip="Non-discountable">
+                                                    </span>
+                                                </td>
+                                                <!-- <td class="text-right">{{formatNumericValues(test.TestProfilePrice)}}</td> -->
+                                                <td class="text-right">{{formatNumericValues(test.RegTestProfilePrice)}}</td>
+                                                <td class="text-center">
+                                                    <input type="text" class="form-control mini-input-field text-right"
+                                                        [(ngModel)]="test.discountRs" [ngModelOptions]="{standalone: true}" (keyup)="discountRsChangeEvent(test)"
+                                                    >
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="text" class="form-control mini-input-field text-right"
+                                                        [(ngModel)]="test.discountPct" [ngModelOptions]="{standalone: true}" (keyup)="discountPctChangeEvent(test)"
+                                                    >
+                                                    <!-- mask="separator.2" separatorLimit="99" -->
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="text" class="form-control mini-input-field text-right"
+                                                    [(ngModel)]="test.NewPrice" [ngModelOptions]="{standalone: true}" (keyup)="newPriceChangeEvent(test)"
+                                                >
+                                                </td>
+                                                <td class="text-center">
+                                                    <input
+                                                        #effectiveDate
+                                                        type="text"
+                                                        style="max-width: 100%;"
+                                                        class="form-control mini-input-field date-picker"
+                                                        (click)="effectiveDate_date.toggle()"
+                                                        placeholder="yyyy-mm-dd"
+                                                        autocomplete="off"
+                                                        name="effectiveDate"
+                                                        ngbDatepicker
+                                                        #effectiveDate_date="ngbDatepicker"
+                                                        [(ngModel)]="test.effectiveDate"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        [ngClass]="{'invalid': !effectiveDate.value && test.selected, 'invalid-highlighted': !effectiveDate.value && test.selected}"
+                                                        [placement]="'left'"
+                                                        [container]="'body'"
+                                                        required
+                                                        readonly
+                                                    >
+                                                </td>
+                                                <!-- <td>{{test.IsDiscountable ? 'Yes' : 'No'}}</td> -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Remarks -->
+                            <div class="col-12">
+                                <br>
+                                <label>Remarks</label>
+                                <div class="input-group">
+                                    <textarea type="text"
+                                        rows="2"
+                                        formControlName="Remarks"
+                                        class="form-control"
+                                        [ngClass]="{'invalid': form.get('Remarks').errors, 'invalid-highlighted': form.get('Remarks').errors && formSubmitted}"
+                                    ></textarea>
+                                </div>
+                            </div>
+
+
+                            <!-- Actions -->
+                            <div class="col-12">
+                                <hr>
+                                <button class="btn btn-sm btn-primary waves-effect text-center mr-2 pull-right"
+                                    title="Cancel" mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="saveChargeMaster()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="flaticon2-cancel-music icon-sm"></i>
+                                    Save
+                                </button>
+                                <!-- <button class="btn btn-sm btn-primary mr-2 pull-right" (click)="saveChargeMaster()">Save</button> -->
+                                <button class="btn btn-sm btn-outline-dark mr-2 pull-right" (click)="selectedTabIndex = 0">Cancel</button>
+                            </div>
+
+                            </form>
+
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab label="Branch Mapping" [disabled]='true' *ngIf="0">
+                        <div *ngIf="selectedTabIndex == 2" style="min-height: 500px;">
+                            <div class="col-12 mt-5">
+                                <div class="col-12">
+                                    <label>Branches</label>
+                                    <div class="input-group panel-dropdown">
+                                        <span style="flex-grow: 1;">
+                                            <ng-select style="width: 100%;"
+                                                class=""
+                                                [items]="branchesListFiltered"
+                                                bindLabel="Title" 
+                                                placeholder="-select branch-"
+                                                bindValue="LocId"
+                                                [multiple]="true"
+                                                [closeOnSelect]="false"
+                                                [groupBy]="groupBranchesByRegionFn"
+                                                [groupValue]="groupBranchesByRegionValueFn"
+                                                [selectableGroup]="true"
+                                                [selectableGroupAsModel]="false"
+                                                [searchFn]="searchBranchesCustomFn"
+                                            >
+
+                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                        <span class="ng-value-label"> {{item.Title}}</span>
+                                                    </div>
+                                                    <div class="ng-value" *ngIf="items.length > 2">
+                                                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template ng-optgroup-tmp let-item="item">
+                                                    <span>{{item.RegCode}} - {{item.RegName}}</span>
+                                                </ng-template>
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <div class="ng-value-label">{{item.Title}}</div>
+                                                    <div class="ng-value-label text-secondary small">{{item.RegCode}}: {{item.RegName}} - {{item.CityName}}</div>
+                                                </ng-template>
+                                                <ng-template ng-header-tmp>
+                                                    <button (click)="onSelectAllBranches()" class="btn btn-mini btn-dark" type="button"><i class="ti-check"></i> Select All</button>
+                                                    <button class="btn btn-mini btn-outline-dark" *ngFor="let reg of branchRegions" (click)="onSelectRegionBranches(reg)" [ngbTooltip]="reg.RegName" >{{reg.RegCode}}</button>
+                                                    <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-dark m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect All</button>
+                                                </ng-template>
+                                            </ng-select>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <!--
+                    <mat-tab label="RIS">
+                        <div *ngIf="selectedTabIndex == 1">
+                            <div class="col-12 mt-5">
+                                <h1>RIS</h1>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    
+                    <mat-tab label="Test wise">
+                        <div *ngIf="selectedTabIndex == 2">
+                            <div class="col-12 mt-5">
+                                <h1>Test Wise</h1>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    
+                    <mat-tab label="Branch wise">
+                        <div *ngIf="selectedTabIndex == 3">
+                            <div class="col-12 mt-5">
+                                <h1>Branch Wise</h1>
+                            </div>
+                        </div>
+                    </mat-tab> 
+                    -->
+
+                </mat-tab-group>
+                <!-- </mat-card-content> -->
+
+                <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" size="medium"
+                    color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+            </app-card>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+      

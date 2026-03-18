@@ -1,0 +1,71 @@
+<div class=" row">
+    <div class="col-md-12">
+        <div class="card card-custom gutter-t">
+            <fieldset class="fieldset-border-all-primary">
+                <legend class="font-weight-bold text-primary" style="font-size: 1.0rem">
+                    Sample Information
+                </legend>
+                <div style=" overflow-y: auto">
+                    <div class="card-body">
+                        <form [formGroup]="formForSampleInformaion" class="form-horizontal" name="form" role="form">
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <div class="form-row">
+                                        <label for="sampleType" class="control-label">Sample</label>
+                                        <ng-select style="width: 100%" class="mt-1" [items]=""
+                                            bindLabel="CMSContactBackStatusTitle" placeholder="-Sample Type-"
+                                            bindValue="sampleType" formControlName="sampleType">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity</label>
+                                        <input formControlName="quantity" type="text" class="form-control"
+                                            [readonly]="true" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-row">
+                                        <label for="testTubeColor" class="control-label">Test Tube Color</label>
+                                        <ng-select style="width: 100%" class="mt-1" [items]=""
+                                            bindLabel="CMSContactBackStatusTitle" placeholder="-Test tube Color-"
+                                            bindValue="sampleType" formControlName="testTubeColor">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-row">
+                                        <label for="testPlace" class="control-label">Test Place</label>
+                                        <ng-select style="width: 100%" class="mt-1" [items]=""
+                                            bindLabel="CMSContactBackStatusTitle" placeholder="-Test Place-"
+                                            bindValue="sampleType" formControlName="testPlace">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-row">
+                                        <label for="accesionForm" class="control-label">Accesion Form</label>
+                                        <ng-select style="width: 100%" class="mt-1" [items]=""
+                                            bindLabel="CMSContactBackStatusTitle" placeholder="-Accesion Form-"
+                                            bindValue="accesionForm" formControlName="accesionForm">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-row mt-2">
+                                        <label for="section" class="control-label">Section</label>
+                                        <ng-select style="width: 100%" class="mt-2" [items]=""
+                                            bindLabel="CMSContactBackStatusTitle" placeholder="-Section-"
+                                            bindValue="sampleType" formControlName="section">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

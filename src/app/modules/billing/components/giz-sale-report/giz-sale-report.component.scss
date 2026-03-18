@@ -1,0 +1,77 @@
+.table-container {
+  max-height: 500px;
+  overflow-y: scroll;
+//   overflow-x: hidden;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        th {
+          position: sticky;
+          top: 0;
+          background-color: lightgrey; // Or use your theme color
+          border-bottom: 1px solid #777;
+          z-index: 2;
+        }
+      }
+    }
+  }
+}
+
+
+/* Add to your component's CSS file */
+table {
+  font-size: 0.9rem;
+}
+
+th {
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 10;
+}
+
+td {
+  padding: 8px 12px !important;
+  vertical-align: middle !important;
+}
+
+.amount-column {
+  text-align: right !important;
+  min-width: 100px;
+}
+
+.amount-cell {
+  // font-family: 'Courier New', monospace;
+  text-align: right !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.fixed-height-table {
+  max-height: 80vh;
+  overflow-y: auto;
+  display: block;
+}
+
+// .sticky-footer{
+//     position: sticky !important;
+//     bottom: 0 !important;
+//     z-index: 2 !important;
+//     background-color: #186f9a !important; /* Match your footer color */
+//     color: white !important;
+// }

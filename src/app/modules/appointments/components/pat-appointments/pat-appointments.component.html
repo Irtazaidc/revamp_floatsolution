@@ -1,0 +1,24 @@
+
+<div class="container mt-4">
+      <div class="card">
+        <div class="card-header">Chat Room (via Redis)</div>
+
+        <div class="card-body" style="height: 300px; overflow-y: auto;">
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let msg of messages" class="list-group-item">
+              <strong>Server:</strong> {{ msg.text || msg }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="newMessage" (keyup.enter)="sendData()"
+              placeholder="Type a message...">
+            <div class="input-group-append">
+              <button class="btn btn-primary" (click)="sendData()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

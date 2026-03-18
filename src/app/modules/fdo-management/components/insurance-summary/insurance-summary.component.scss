@@ -1,0 +1,54 @@
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle {
+    border-color: #0BB7AF !important;
+    background-color: #0BB7AF !important;
+    /* Change background color when checked */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0BB7AF !important;
+    /* Change outer circle border color when checked */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-ripple .mat-ripple-element {
+    background-color: #0BB7AF !important;
+  }
+  
+  /* Unchecked state */
+  ::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-outer-circle {
+    border-color: #0BB7AF !important;
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-ripple .mat-ripple-element {
+    background-color: #0BB7AF !important;
+  }
+  
+  ::ng-deep .mat-radio-group.mat-accent .mat-radio-button .mat-radio-label-content {
+    color: #0BB7AF !important;
+    /* Change label text color */
+  }
+
+
+  // .table-container {
+  //   max-height: 500px !important; /* Adjust height as needed */
+  //   overflow-x: hidden !important;
+  //   border: 1px solid #ddd !important;
+  // }
+
+  .table thead tr {
+    position: sticky !important;
+    top: 0 !important;
+    background: #dedfe0 !important;
+    z-index: 9 !important;
+  }
+  
+  // .table thead tr {
+  //   background: #dedfe0 !important; /* Light gray background */
+  //   // box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1) !important;
+  //   padding: 10px !important;
+  // }
+
+  .lable-active{
+    border-left: 3px solid black;
+    box-shadow: -4px 7px 9px -2px #000;
+    // box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  }

@@ -1,0 +1,547 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-5">
+            <div class="row">
+                <div class="col-12 mb-1">
+                    <div class="card card-custom">
+                        <div class="card-header card-header-narrow d-flex justify-content-between align-items-center"
+                            style="min-height: 45px;">
+                            <div class="card-title" style="margin-bottom: 1px;">
+                                <span class="card-icon">
+                                    <i class="fa fa-flask icon-lg"></i>
+                                </span>
+                                <h3 class="card-label mt-1">
+                                    Sample's List
+                                </h3>
+                            </div>
+                            <div class="card-toolbar" *ngIf="groupedSamples.length > 0">
+                                <!-- Single toggle button with fixed width and secondary styling -->
+                                <button class="btn btn-sm btn-secondary mr-2" 
+                                        (click)="toggleSelectAll()">
+                                    <i class="fa" [ngClass]="allItemsSelected ? 'fa-minus-square' : 'fa-check-square'"></i> 
+                                    {{ allItemsSelected ? 'Deselect All' : 'Select All' }}
+                                </button>
+                                
+                                <!-- Expand/Collapse button with fixed width -->
+                                <button class="btn btn-sm btn-secondary" 
+                                        (click)="toggleExpandCollapseAll()">
+                                    <i class="fa" [ngClass]="allExpanded ? 'fa-compress' : 'fa-expand'"></i> 
+                                    {{ allExpanded ? 'Collapse All' : 'Expand All' }}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <form [formGroup]="paramsForm" class="form-horizontal" name="form" role="form"
+                                        (ngSubmit)="getDataForBatch()">
+                                        <div class="row" style="margin-top: -17px;">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                <label>Date From</label>
+                                                <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                                    placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                                    formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                                                    type="text" (dateSelect)="validateDateDifference(0)"
+                                                    [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                <label>Date To</label>
+                                                <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker"
+                                                    placeholder="dd-mm-yyyy" autocomplete="off" ngbDatepicker
+                                                    formControlName="dateTo" name="dateTo" class="form-control mb-4"
+                                                    type="text" (dateSelect)="validateDateDifference(1)"
+                                                    [ngClass]="{'invalid': !isValidDateRange, 'invalid-highlighted': !isValidDateRange}" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                <label>PIN</label>
+                                                <input class="form-control" placeholder="PIN"
+                                                    formControlName="visitID" name="visitID"
+                                                    (keyup.enter)="getDataForBatch()" (blur)="setSearchFilter()" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-8">
+                                                <button [disabled]="disabledButtonSearch"
+                                                    class="btn btn-outline-primary" type="submit">Serach <span><i
+                                                            class="fa fa-search" [hidden]="!isSpinnerSearch"></i><i
+                                                            class="spinner-border-custom" aria-hidden="true"
+                                                            [hidden]="isSpinnerSearch"></i></span></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+
+                            <!--Tests section -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive table-container" style="max-height: 555px;">
+                                        <div *ngIf="isLoading" class="text-center py-5">
+                                            <div class="spinner-border text-primary mb-3" role="status"
+                                                style="width: 3rem; height: 3rem;">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <p class="text-muted">Loading incoming samples...</p>
+                                        </div>
+
+                                        <div *ngIf="groupedSamples.length > 0" class="sample-hierarchy">
+                                            <!-- Level 1: Visits (PIN) with shaded background -->
+                                            <div *ngFor="let visit of groupedSamples; let visitIndex = index"
+                                                class="visit-group mb-2"
+                                                [ngClass]="{'visit-group-selected': visit.checked || visit.partialChecked}">
+                                                
+                                                <div class="visit-header p-2 d-flex align-items-center"
+                                                    [ngClass]="{
+                                                        'visit-header-checked': visit.checked,
+                                                        'visit-header-partial': visit.partialChecked,
+                                                        'visit-header-default': !visit.checked && !visit.partialChecked
+                                                    }">
+                                                    
+                                                    <div class="d-flex align-items-center flex-grow-1">
+                                                        <div class="mr-3">
+                                                            <mat-checkbox [checked]="visit.checked"
+                                                                [indeterminate]="visit.partialChecked"
+                                                                (change)="onVisitCheckChange(visit, $event.checked)"
+                                                                class="custom-checkbox">
+                                                            </mat-checkbox>
+                                                        </div>
+                                                        
+                                                        <!-- Two-line compact patient layout with fixed column widths -->
+                                                        <div class="patient-info-compact">
+                                                            <div class="patient-row" style="display: flex; align-items: center; line-height: 1.2; white-space: nowrap;">
+                                                                <span class="info-item" style="width: 180px; margin-right: 0;">
+                                                                    <span class="info-label">PIN:</span>
+                                                                    <span class="info-value">{{ visit.visitId }}</span>
+                                                                </span>
+                                                                <span class="info-item" style="width: 250px;">
+                                                                    <span class="info-label">Patient:</span>
+                                                                    <span class="info-value">{{ visit.patientName }}</span>
+                                                                </span>
+                                                            </div>
+                                                            <div class="patient-row" style="display: flex; align-items: center; line-height: 1.2; white-space: nowrap; margin-top: 2px;">
+                                                                <span class="info-item" style="width: 180px; margin-right: 0;">
+                                                                    <span class="info-label">Age/Gender:</span>
+                                                                    <span class="info-value">{{ visit.patientAge }}/{{ visit.gender }}</span>
+                                                                </span>
+                                                                <span class="info-item" style="width: 250px;">
+                                                                    <span class="info-label">Cell:</span>
+                                                                    <span class="info-value">{{ visit.cell || 'N/A' }}</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="badge badge-sample-count mr-3">
+                                                            <i class="fa fa-flask mr-1  text-white"></i>
+                                                            {{ getSelectedSamplesCount(visit) }}/{{ getTotalSamplesCount(visit) }}
+                                                        </span>
+                                                        <button class="btn btn-sm btn-icon btn-expand p-0 mr-2" 
+                                                                (click)="toggleVisitExpand(visit)"
+                                                                [attr.aria-label]="visit.expanded ? 'Collapse' : 'Expand'">
+                                                            <i class="fa" [ngClass]="visit.expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="visit-body" *ngIf="visit.expanded">
+                                                    <!-- Level 2: Barcodes -->
+                                                    <div *ngFor="let barcode of visit.barcodes; let barcodeIndex = index"
+                                                        class="barcode-group"
+                                                        [ngClass]="{'barcode-group-selected': barcode.checked}">
+                                                        
+                                                        <div class="barcode-header d-flex align-items-center p-1"
+                                                            [ngClass]="{'barcode-header-checked': barcode.checked}">
+                                                            
+                                                            <div class="d-flex align-items-center flex-grow-1">
+                                                                <div class="mr-3">
+                                                                    <mat-checkbox [checked]="barcode.checked"
+                                                                        (change)="onBarcodeCheckChange(visit, barcode, $event.checked)"
+                                                                        class="custom-checkbox">
+                                                                    </mat-checkbox>
+                                                                </div>
+                                                                
+                                                                <div class="barcode-info d-flex flex-wrap  text-white" style="gap: 8px 16px;">
+                                                                    <span class="info-item">
+                                                                        <span class="info-label">Barcode:</span>
+                                                                        <span class="info-value">{{ barcode.barcode }}</span>
+                                                                    </span>
+                                                                    <span class="info-item">
+                                                                        <span class="info-label">Type:</span>
+                                                                        <span class="info-value">{{ barcode.sampleType || 'Blood' }}</span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="badge badge-test-count mr-3">
+                                                                    <i class="fa fa-vial text-white mr-1"></i>
+                                                                    {{ getSelectedTestsCount(barcode) }}/{{ barcode.tests.length }}
+                                                                </span>
+                                                                <button class="btn btn-sm btn-icon btn-expand p-0" 
+                                                                        (click)="toggleBarcodeExpand(barcode)"
+                                                                        [attr.aria-label]="barcode.expanded ? 'Collapse' : 'Expand'">
+                                                                    <i class="fa" [ngClass]="barcode.expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="barcode-body" *ngIf="barcode.expanded">
+                                                            <!-- Level 3: Tests - REDUCED SPACING -->
+                                                            <div *ngFor="let test of barcode.tests; let testIndex = index"
+                                                                class="test-item d-flex align-items-center"
+                                                                [ngClass]="{'test-item-selected': test.checked}">
+                                                                
+                                                                <div class="mr-2">
+                                                                    <mat-checkbox [checked]="test.checked"
+                                                                        (change)="onTestCheckChange(visit, barcode, test, $event.checked)"
+                                                                        class="custom-checkbox">
+                                                                    </mat-checkbox>
+                                                                </div>
+                                                                
+                                                                <div class="test-info d-flex flex-wrap flex-grow-1 align-items-center" style="gap: 8px;">
+                                                                    <span class="test-code">{{ test.tpCode }}</span>
+                                                                    <span class="test-name">{{ test.tpName || test.tpCode }}</span>
+                                                                    
+                                                                    <span class="ml-auto">
+                                                                        <span class="badge test-status" 
+                                                                            [ngClass]="{
+                                                                                'badge-success': test.status === 'Completed',
+                                                                                'badge-warning': test.status === 'Pending',
+                                                                                'badge-secondary': test.status === 'Not Started'
+                                                                            }">
+                                                                            <i class="fa" [ngClass]="{
+                                                                                'fa-check-circle': test.status === 'Completed',
+                                                                                'fa-clock-o': test.status === 'Pending',
+                                                                                'fa-circle-o': test.status === 'Not Started'
+                                                                            }"></i>
+                                                                            {{ test.status || 'Pending' }}
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div *ngIf="groupedSamples.length === 0 && !isLoading" class="text-center py-5"
+                                        style="margin: 0px 15px;">
+                                        <app-no-record-found [pyClassParam]="'py-5 bg-light'"
+                                            [infoMessageParam]="noDataMessage"></app-no-record-found>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-7">
+            <div class="card card-custom">
+                <div class="card-header card-header-narrow d-flex justify-content-between align-items-center"
+                    style="min-height: 45px;">
+                    <div class="card-title" style="margin-bottom: 1px;">
+                        <span class="card-icon">
+                            <i class="ti-truck icon-lg"></i>
+                        </span>
+                        <h3 class="card-label mt-1">
+                            Dispatch Samples
+                        </h3>
+                    </div>
+                    <div class="card-toolbar" *ngIf="getSelectedItemsCount() > 0">
+                        <span class="badge badge-success mr-2">
+                            Selected: {{ getSelectedVisitsCount() }}V / {{ getSelectedBarcodesCount() }}B / {{
+                            getSelectedTestsCount() }}T
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body" style="min-height:222px">
+                    <div class="row">
+                        <div class="col-12">
+                            <div *ngIf="getSelectedItemsCount() > 0" class="selected-summary mb-3">
+                                <div class="alert alert-grey">
+                                    <strong>{{ getSelectedVisitsCount() }}</strong> Visits,
+                                    <strong>{{ getSelectedBarcodesCount() }}</strong> Barcodes,
+                                    <strong>{{ getSelectedTestsCount() }}</strong> Tests selected
+                                </div>
+                            </div>
+
+                            <form [formGroup]="dispatchForm" *ngIf="getSelectedItemsCount() > 0" class="dispatch-form">
+                                <!-- Row 1: From Location and To Location -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-2">
+                                        <label for="fromLocId">From Location</label>
+                                        <input type="text" class="form-control form-control-sm" id="fromLocId"
+                                            [value]="loggedInUser?.currentLocation" readonly disabled>
+                                        <input type="hidden" formControlName="fromLocId"
+                                            [value]="loggedInUser?.currentLocation">
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-2">
+                                        <label for="toLocId">To Location (Destination Branch)</label>
+                                        <ng-select tabindex="1" placeholder="-Select Branch-" formControlName="toLocId"
+                                        [ngClass]="{
+                                                'invalid': dispatchForm.get('toLocId').errors && dispatchForm.get('toLocId').touched, 
+                                                'invalid-highlighted': dispatchForm.get('toLocId').errors
+                                            }"
+                                            [closeOnSelect]="true" id="toLocId">
+                                            <ng-option style="width: 100%" [value]="b.LocId" *ngFor="let b of branches">
+                                                {{ b.Title }}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <!-- Row 2: Transport Medium (3 options) -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="transportMediumName">Transport Medium <span class="text-danger">*</span></label>
+                                        <ng-select style="width: 100%;" class="mr-1" [items]="transportMediums"
+                                            bindLabel="Descp" placeholder="-Select Transport Medium-" bindValue="Id"
+                                            formControlName="transportMediumName" (change)="onTransportMediumChange()"
+                                            [ngClass]="{
+                                                'invalid': dispatchForm.get('transportMediumName').errors && dispatchForm.get('transportMediumName').touched, 
+                                                'invalid-highlighted': dispatchForm.get('transportMediumName').errors
+                                            }">
+
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.Descp}}</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <!-- Conditional Fields based on Transport Medium -->
+
+                                <!-- Own Rider Section -->
+                                <ng-container *ngIf="dispatchForm.get('transportMediumName').value === 1">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                            <label for="riderId">Select Rider</label>
+                                            <ng-select 
+                                                placeholder="-Select Rider-" 
+                                                formControlName="riderId"
+                                                [closeOnSelect]="true" 
+                                                [clearable]="true"
+                                                [ngClass]="{
+                                                    'invalid': dispatchForm.get('riderId')?.errors && dispatchForm.get('riderId')?.touched,
+                                                    'invalid-highlighted': dispatchForm.get('riderId')?.errors
+                                                }">
+                                                <ng-option style="width: 100%" [value]="rider.RiderID" *ngFor="let rider of riders">
+                                                    <i [ngStyle]="{
+                                                        color: rider.RiderStatusID == 1 ? '#1fc645' : rider.RiderStatusID == 2 ? 'grey' : null
+                                                    }" class="fas fa-circle" placement="left" ngbTooltip="Select Rider"></i>
+                                                    {{ rider.RiderFullName }}
+                                                </ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Public Transport Section -->
+                                <ng-container *ngIf="dispatchForm.get('transportMediumName').value === 2">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                            <label for="publicTransportName">Public Transport Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="publicTransportName" formControlName="publicTransportName"
+                                                placeholder="e.g., Diwo, Daewoo, Vivo"
+                                                [ngClass]="{
+                                                'invalid': dispatchForm.get('publicTransportName').errors && dispatchForm.get('publicTransportName').touched, 
+                                                'invalid-highlighted': dispatchForm.get('publicTransportName').errors
+                                            }"
+                                                >
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                            <label for="transportReferenceNo">Reference/Booking No.<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="transportReferenceNo" formControlName="transportReferenceNo"
+                                                placeholder="Booking/Receipt number"
+                                                [ngClass]="{
+                                                'invalid': dispatchForm.get('transportReferenceNo').errors && dispatchForm.get('transportReferenceNo').touched, 
+                                                'invalid-highlighted': dispatchForm.get('transportReferenceNo').errors
+                                            }">
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Courier Company Section -->
+                                <ng-container *ngIf="dispatchForm.get('transportMediumName').value === 3">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                            <label for="courierCompanyName">Courier Company Name<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="courierCompanyName" formControlName="courierCompanyName"
+                                                placeholder="e.g., Leopards, TCS, M&P"
+                                                [ngClass]="{
+                                                'invalid': dispatchForm.get('courierCompanyName').errors && dispatchForm.get('courierCompanyName').touched, 
+                                                'invalid-highlighted': dispatchForm.get('courierCompanyName').errors
+                                            }">
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                            <label for="transportReferenceNo">Tracking/Reference No.<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="transportReferenceNo" formControlName="transportReferenceNo"
+                                                placeholder="Tracking number"
+                                                [ngClass]="{
+                                                'invalid': dispatchForm.get('transportReferenceNo').errors && dispatchForm.get('transportReferenceNo').touched, 
+                                                'invalid-highlighted': dispatchForm.get('transportReferenceNo').errors
+                                            }">
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Common Fields for All Transport Types -->
+
+                                <!-- Transport Detail (applies to all except OwnRider which already has rider details) -->
+                                <div class="row"
+                                    *ngIf="dispatchForm.get('transportMediumName').value && dispatchForm.get('transportMediumName').value !== 1">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="transportDetail">Transport Details <span class="text-danger" *ngIf="dispatchForm.get('transportDetail').errors">*</span></label>
+                                        <input type="text" class="form-control form-control-sm" id="transportDetail"
+                                            formControlName="transportDetail"
+                                            placeholder="Vehicle number, driver name, etc."
+                                            [ngClass]="{
+                                                'invalid': dispatchForm.get('transportDetail').errors && dispatchForm.get('transportDetail').touched, 
+                                                'invalid-highlighted': dispatchForm.get('transportDetail').errors
+                                            }">
+                                    </div>
+                                </div>
+
+                                <!-- Arrival Location Detail -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="arrivalLocationDetail">Arrival Location Details</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                            id="arrivalLocationDetail" formControlName="arrivalLocationDetail"
+                                            placeholder="Specific location at destination branch">
+                                    </div>
+                                </div>
+
+                                <!-- Expected Arrival Time -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="expectedArrivalTime">Expected Arrival Time</label>
+                                        <input type="datetime-local" 
+                                            class="form-control form-control-sm"
+                                            id="expectedArrivalTime" 
+                                            formControlName="expectedArrivalTime"
+                                            [min]="getTodayDateTime()"
+                                            (change)="validateExpectedArrivalTime($event)">
+                                    </div>
+                                </div>
+
+                                <!-- Estimated and Actual Cost -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                        <label for="estimatedCost">Estimated Cost (Rs.)</label>
+                                        <input type="text" (keypress)="validateDecimalNo($event)"
+                                            class="form-control form-control-sm" id="estimatedCost"
+                                            formControlName="estimatedCost" placeholder="0.00">
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                        <label for="actualCost">Actual Cost (Rs.)</label>
+                                        <input type="text" (keypress)="validateDecimalNo($event)"
+                                            class="form-control form-control-sm" id="actualCost"
+                                            formControlName="actualCost" placeholder="0.00">
+                                    </div>
+                                </div>
+
+                                <!-- Receipt Information -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                        <label for="receiptTitle">Receipt Title</label>
+                                        <input type="text" class="form-control form-control-sm" id="receiptTitle"
+                                            formControlName="receiptTitle" placeholder="e.g., Fare Receipt, Booking Voucher">
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-3">
+                                        <label for="receiptFile">Receipt File</label>
+                                        <div>
+                                            <input type="file" class="form-control-file" id="receiptFile"
+                                                (change)="onFileSelected($event)" accept=".jpg,.jpeg,.png,.pdf">
+                                            <small class="text-muted">Upload receipt (JPG, PNG, PDF) Max 5MB</small>
+                                        </div>
+                                        <!-- Show selected file name -->
+                                        <div *ngIf="selectedFile" class="mt-1 small">
+                                            <span class="badge badge-info">
+                                                <i class="fa fa-file text-white"></i> {{ selectedFile.name }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Remarks -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <label for="remarks">Remarks</label>
+                                        <textarea class="form-control form-control-sm" id="remarks"
+                                            formControlName="remarks" rows="3"
+                                            placeholder="Any additional notes..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-4 text-right">
+                                        <!-- Dispatch Button (Primary) -->
+                                        <button type="button" class="btn btn-primary mr-2"
+                                            [disabled]="!dispatchForm.valid || isCreatingBatch"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="'Please confirm...!'"
+                                            [popoverMessage]="'Are you <strong>sure</strong> want to submit?'"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="dispatchBatch()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-primary"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                            >
+                                            <i class="fa fa-truck"></i>Dispatch Batch <i
+                                                            class="spinner-border-custom" aria-hidden="true"
+                                                            [hidden]="isSpinnerSearchDispatch"></i>
+                                        </button>
+
+                                        <!-- Cancel Button -->
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            (click)="resetSelection()">
+                                            <i class="fa fa-times"></i> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div *ngIf="getSelectedItemsCount() === 0"
+                                class="row align-items-center bg-light rounded p-3 mt-2">
+                                <div class="col-auto">
+                                    <img src="./assets/images/brand/info-icon3.png" alt="Info Icon"
+                                        style="height: 40px;">
+                                </div>
+
+                                <div class="col">
+                                    <span class="text-secondary">
+                                        Select samples from the left panel to create a dispatch batch.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

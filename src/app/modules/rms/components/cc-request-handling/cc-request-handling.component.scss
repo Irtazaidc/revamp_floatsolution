@@ -1,0 +1,12 @@
+.highlight {
+    background-color: red !important;
+  }
+  ::ng-deep .ng-dropdown-panel{
+    height: 192px;
+  }
+  ::ng-deep .ng-dropdown-panel-items{
+    height: 161px !important;
+  }
+  .card-padding-top{
+    padding: 1rem 2.25rem !important;
+  }

@@ -1,0 +1,33 @@
+<div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar">
+    <div class="card-toolbar">
+        <div class=" container-fluid" style=" min-height: 745px; overflow-y: auto;">
+          <!--   <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                    <form [formGroup]="screenTypeSelection">
+                        <div class="form-group">
+                            <label>Select Screen Type:<span class="mandatory-asterisk">*</span></label>
+                            <select class="form-control" formControlName="screenType"
+                                (change)="onScreenTypeChange($event.target.value)">
+                                <option value="" selected hidden>--Select--</option>
+                                <option routerLink="cc-request-handling" routerLinkActive="active" [value]="3">HC
+                                    Booking Request</option>
+                                <option [value]="2">Alerts</option>
+                                <option routerLink="cc-complaint-handling" routerLinkActive="active" [value]="1">
+                                    Complaint(s)</option>
+                            </select>
+                        </div>
+                    </form>
+                </div> 
+            </div> -->
+            <!-- <ng-container *ngIf="showHomeSamplingForm">
+                <app-cc-hc-request></app-cc-hc-request>
+            </ng-container>
+            <ng-container *ngIf="showFeedbackComponent">
+                <app-cc-feedback-handling></app-cc-feedback-handling>
+            </ng-container> -->
+            <ng-container >
+                <app-cc-complaint-handling></app-cc-complaint-handling>
+            </ng-container>
+        </div>
+    </div>
+</div>

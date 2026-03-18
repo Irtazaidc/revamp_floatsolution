@@ -1,0 +1,16 @@
+<mat-card>
+    <mat-card-content>
+        <mat-tab-group [selectedIndex]="selectedIndex" class="demo-tab-group" style="background-color: #fff;"> 
+            <mat-tab label="Questions">
+                <app-question></app-question>
+            </mat-tab>
+            <mat-tab label="Classification">
+                <app-question-classification (tabIndexData) = "receiveTabIndexData($event)" *matTabContent></app-question-classification>
+            </mat-tab>  
+            <mat-tab label="Questions Group">
+                <app-questions-group [questionClassificationID] = "questionClassificationID" *matTabContent></app-questions-group>
+            </mat-tab> 
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+

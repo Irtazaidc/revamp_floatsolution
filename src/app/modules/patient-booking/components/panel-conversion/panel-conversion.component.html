@@ -1,0 +1,374 @@
+<div class="visit-samples-page">
+    <div class="row">
+        <div class="col-md-4 col-sm-12">
+            <app-card [title]="'Search Visits'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="search-filters-area p-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <form class="" [formGroup]="searchVisitsForm">
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="branchesList"
+                                            bindLabel="Title" placeholder="-Select Branch-" bindValue="LocId"
+                                            formControlName="branchIds" name="branchIds" [closeOnSelect]="true"
+                                            [disabled]="true">
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of branchesList | slice:0:2">
+                                                    <span class="ng-value-icon right form-control form-control-sm"
+                                                        (click)="clear(item)" aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.Title}}</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="row mb-2 mt-2">
+                                    <div class="col-6">
+                                        <input #dFrom type="text" class="form-control form-control-sm mt-1 "
+                                            (click)="dFrom_date.toggle();showInfoMessage()" placeholder="dd-mm-yyyy"
+                                            autocomplete="off" name="fromDate" ngbDatepicker [minDate]="minDate"
+                                            #dFrom_date="ngbDatepicker" formControlName="fromDate"
+                                            [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                            required>
+                                    </div>
+                                    <div class="col-6">
+                                        <input #dTo type="text" class="form-control form-control-sm mt-1 "
+                                            (click)="dTo_date.toggle()" placeholder="dd-mm-yyyy" autocomplete="off"
+                                            name="toDate" ngbDatepicker #dTo_date="ngbDatepicker"
+                                            formControlName="toDate"
+                                            [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button [disabled]="disabledButtonVisits"
+                                            class="btn btn-outline-primary btn-block mt-1 mb-2" type="button"
+                                            ngbTooltip="Fetch Record(s)" (click)="getVisitsForSecurityRefund()">Fetch
+                                            Record(s)<i class="ti-angle-double-down"></i><i
+                                                class="spinner-border-custom" aria-hidden="true"
+                                                [hidden]="isSpinnerVisits"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <input type="text" class="form-control form-control-sm"
+                                            placeholder="type to filter" [ngModelOptions]="{standalone: true}"
+                                            [(ngModel)]="pinFilterString" (keyup)="onKeyUpPinFilter($event)" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div style="border-top: 1px solid #eee; max-height: 350px; overflow-y: auto;"
+                                class="mt-2 pl-2">
+                                <!-- <label><small>Total Records: <strong>{{visitsList.length}}</strong></small></label> -->
+                                <label class="text-danger">Total Records: <strong>{{visitsList.length}}</strong></label>
+                                <!-- <ul class="visits-list">
+                                    <li class="cursor-pointer"
+                                        [ngClass]="{'bg-light': selectedVisit.VisitId == visit.VisitId}"
+                                        *ngFor="let visit of visitsList | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                        style="border-bottom: 1px solid #eee;" (click)="visitSelectedEvent(visit)">
+                                        <a class="font-anchor" href="javascript:void(0)"
+                                            [ngClass]="{'active-border': selectedVisit.VisitId == visit.VisitId,  'text-danger font-weight-bold': visit.ProcessId == 2}">{{visit.PIN}}</a>
+                                    </li>
+                                </ul> -->
+                                <ul class="visits-list list-unstyled px-2">
+                                <li
+                                    class="visit-item mb-2 p-3 rounded shadow-sm"
+                                    [ngClass]="{
+                                    'bg-light border border-primary': selectedVisit?.VisitId === visit.VisitId,
+                                    'bg-white': selectedVisit?.VisitId !== visit.VisitId
+                                    }"
+                                    *ngFor="let visit of visitsList | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                    (click)="visitSelectedEvent(visit)"
+                                >
+                                    <a
+                                    class="d-block text-decoration-none text-dark"
+                                    href="javascript:void(0)"
+                                    [ngClass]="{
+                                        'font-weight-bolder text-primary': selectedVisit?.VisitId === visit.VisitId,
+                                        'text-danger font-weight-bold': visit.ProcessId === 2
+                                    }"
+                                    >
+                                    <i class="fas fa-id-card mr-2 text-muted"></i> {{ visit.PIN }}
+                                    </a>
+                                </li>
+                                </ul>
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                    [name]="spinnerRefs.pinsList" size="medium" color="#fff" type="square-loader"
+                                    [fullScreen]="false">
+                                    <p style="color: white"> Loading data... </p>
+                                </ngx-spinner>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-md-8 col-sm-12">
+            <app-card [title]="'Visit Details (' + (selectedVisit.PIN || '') + ')'"
+                [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div>
+                    <ng-container *ngIf="true; then visitSamplesContainer else noVisitSamplesContainer"></ng-container>
+                    <ng-template #visitSamplesContainer>
+                        <div class="row">
+                            <!-- <div *ngIf="VisitRegLoc!=''" class="col-12"><span class="ml-37"><strong><span class="text-primary">Location:</span> {{VisitRegLoc}} |<span class="text-primary"> Reg. Date: </span>{{VisitRegDate}}</strong></span></div> -->
+                            <div class="col">
+                                <div>
+                                    <div class="header" *ngIf="selectedVisit.VisitId">
+                                        <div class="patient0-info-bar-container" style="position: relative;">
+                                            <app-patient-basic-info class="mb-3" [PatientId]="selectedVisit.PatientId"
+                                                [VisitId]="selectedVisit.VisitId"></app-patient-basic-info>
+                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                                [name]="spinnerRefs.patientInfoBar" size="medium" color="#fff"
+                                                type="square-loader" [fullScreen]="false">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                        </div>
+                                    </div>
+                                    <div class="header" *ngIf="!selectedVisit.VisitId">
+                                        <div class="patient0-info-bar-container" style="position: relative;">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-12 justify-content-center">
+                                                    <h3 class="text-primary card-tag text-center mt-5">Please select
+                                                        visit to show details</h3>
+                                                    <app-no-record-found></app-no-record-found>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="body" style="position: relative;">
+                                        <fieldset class="fieldset-primary fieldset-border-top"
+                                            *ngIf="visitSamplesList && visitSamplesList.length">
+                                            <!-- <legend>Refund <span *ngIf="selectedVisit.PIN">for (PIN <strong class="text-primary">{{selectedVisit.PIN}}</strong>)</span></legend> -->
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="text-danger"
+                                                        style="font-weight: bold; font-size: 1.2rem;">
+                                                        <div *ngIf="MACAndPOSAlert.POSID" class="text-primary">(POSID:
+                                                            {{MACAndPOSAlert.POSID || ''}}) <i
+                                                                class="flaticon2-reload cursor-pointer"
+                                                                (click)="getMACAddress(loggedInUser)"></i></div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="VisitRegLoc!=''" class="col-6 text-right">
+                                                    <span class=""><strong><span class="text-primary">Location:</span>
+                                                            {{VisitRegLoc}} |<span class="text-primary"> Reg. Date:
+                                                            </span>{{VisitRegDate}}</strong></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div style="font-weight: bold; font-size: 1.2rem;"
+                                                    *ngIf="MACAndPOSAlert.MAC" class="col-12 text-danger">
+                                                    {{MACAndPOSAlert.MAC || ''}} <i
+                                                        class="flaticon2-reload cursor-pointer"
+                                                        (click)="getMACAddress(loggedInUser)"></i>
+                                                </div>
+                                                <div style="font-weight: bold; font-size: 1.2rem;"
+                                                    *ngIf="MACAndPOSAlert.POS" class="text-danger col-12">
+                                                    {{MACAndPOSAlert.POS || ''}} <i
+                                                        class="flaticon2-reload cursor-pointer"
+                                                        (click)="getPOSID()"></i>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="fieldset-primary fieldset-border-top"
+                                            *ngIf="visitSamplesList && visitSamplesList.length">
+                                            <legend>Refund <span *ngIf="selectedVisit.PIN">for (PIN <strong
+                                                        class="text-primary">{{selectedVisit.PIN}}</strong>)</span>
+                                            </legend>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <table class="table test-results-table narrow-rows">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="5%">#</th>
+                                                                <th width="22%">Recievable</th>
+                                                                <th width="22%">Received</th>
+                                                                <th width="5%"></th>
+                                                                <th width="30%">Payment Mode</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let payment of testPaymentList; let i= index;">
+                                                                <td>
+                                                                    {{i+1}}
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" readonly
+                                                                        (keypress)="validateNo($event)"
+                                                                        value="{{payment.Amount}}"
+                                                                        class="form-control form-control-sm text-success font-weight-bolder"
+                                                                        name="Recievable">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" readonly
+                                                                        (keypress)="validateNo($event)"
+                                                                        value="{{payment.Amount}}"
+                                                                        class="form-control form-control-sm text-primary font-weight-bolder"
+                                                                        name="Received">
+                                                                </td>
+                                                                <td></td>
+                                                                <td><span
+                                                                        class="badge badge-inverse-success">{{payment.PaymentMode}}</span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr *ngIf="totalRefund !=0">
+                                                                <td colspan="3"></td>
+                                                                <td width="30%" class="text-warning"><strong>Total
+                                                                        Refund:</strong></td>
+                                                                <td><strong
+                                                                        class="text-warning">{{totalRefund}}</strong>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="creditPanel"><strong>Convert To Panel:</strong></label>
+                                                    <span *ngIf="IsAllowedCheck">( <span
+                                                            style="text-decoration: line-through; color: #f00;">Example
+                                                            test(s)</span>) means test(s) not allowed for <span
+                                                            class="text-primary font-weight-bolder">{{PanelCode||''}}</span></span>
+                                                    <ng-select style="width: 100%;" class=" mt-1 mr-1" #PanelID
+                                                        [items]="panelList" bindLabel="CodeName"
+                                                        placeholder="-Select Panel-" bindValue="PanelId" Name="PanelID"
+                                                        [ngModel]="PanelIDChk"
+                                                        (change)="getVisitDetailForPanelConversion($event)"
+                                                        [closeOnSelect]="true">
+                                                        <ng-template ng-multi-label-tmp let-items="items"
+                                                            let-clear="clear">
+                                                            <div class="ng-value"
+                                                                *ngFor="let item of items | slice:0:2">
+                                                                <span
+                                                                    class="ng-value-icon right form-control form-control-sm"
+                                                                    (click)="clear(item)" aria-hidden="true">×</span>
+                                                                <span class="ng-value-label"> {{item.PanelName}}</span>
+                                                            </div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="fieldset-primary fieldset-border-top"
+                                            *ngIf="visitSamplesList && visitSamplesList.length">
+                                            <legend>Tests <span *ngIf="selectedVisit.PIN">of (PIN <strong
+                                                        class="text-primary">{{selectedVisit.PIN}}</strong>)</span>
+                                            </legend>
+                                            <div class="table-responsive">
+                                                <table
+                                                    class="table test-results-table narrow-rows selected-test-profile-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Code</th>
+                                                            <th>Name</th>
+                                                            <th>Reg. Price</th>
+                                                            <th>Panel Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let sample of visitSamplesList; let i = index"
+                                                            [ngClass]="{'strike-through-row': sample.IsAllowed == false}">
+                                                            <td>{{i+1}}</td>
+                                                            <td>{{sample.TPCode}}</td>
+                                                            <td>{{sample.TestProfileName}}</td>
+                                                            <td>{{sample.Price}}</td>
+                                                            <td>{{sample.PanelPrice || 0}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- <button (click)="postFBRData()">Post FBR</button> -->
+                                        </fieldset>
+
+                                        <div *ngIf="visitSamplesList && visitSamplesList.length">
+
+                                            <div class="visit-remarks-area mb-2">
+                                                <app-visit-remarks [propVisitNo]="selectedVisit.VisitId"
+                                                    [editing]="{save: true}"
+                                                    [showRemarksPriority]="false"></app-visit-remarks>
+                                            </div>
+                                            <div class="visit-docs-area">
+                                                <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'grid2'"
+                                                    [layoutButtons]="['compact', 'list', 'grid', 'grid2']"
+                                                    [editing]="{save: true}"></app-visit-docs>
+                                            </div>
+                                            <div class="visit-remarks-area mb-2">
+                                                <textarea placeholder="Enter remarks" class="form-control" rows="2"
+                                                    [(ngModel)]="remarksToSave">
+                                                </textarea>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <hr class="mb-3 mt-0">
+                                                    <ng-container
+                                                        [ngTemplateOutlet]="(VisitID && PanelIDChk && !IsAllowedCheck) ? refundButton : (VisitID && PanelIDChk && IsAllowedCheck) ? refundLabelNotAllowedTest : refundLabel"></ng-container>
+                                                    <ng-template #refundButton>
+                                                        <button [disabled]="disabledButton"
+                                                            class="btn btn-primary btn-sm waves-effect pull-right"
+                                                            ngbTooltip="Refund Security" mwlConfirmationPopover
+                                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[1]"
+                                                            (confirm)="insertVisitPanelShifting()"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="btn btn-sm btn-primary"
+                                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true">
+                                                            <i class="fa fa-reply-all"></i>Refund <i
+                                                                class="spinner-border-custom" aria-hidden="true"
+                                                                [hidden]="isSpinner"></i>
+                                                        </button>
+                                                    </ng-template>
+
+                                                    <ng-template #refundLabelNotAllowedTest>
+                                                        <strong class="text-danger mr-2 mt-3">There is a test(s) which
+                                                            is not available on <span
+                                                                class="text-primary font-weight-boldest">{{PanelCode}}</span>
+                                                            panel</strong>
+                                                    </ng-template>
+
+                                                    <ng-template #refundLabel>
+                                                        <strong class="text-danger mr-2 mt-3">To refund you have to
+                                                            select a panel first!</strong>
+                                                    </ng-template>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                            [name]="spinnerRefs.visitSamples" size="medium" color="#fff"
+                                            type="square-loader" [fullScreen]="false">
+                                            <p style="color: white"> Please wait... </p>
+                                        </ngx-spinner>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template #noVisitSamplesContainer>
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-center">
+                                    <h4>select PIN to proceed</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </app-card>
+        </div>
+    </div>
+
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+        [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+</div>

@@ -1,0 +1,28 @@
+tr td {
+    // padding-top: 1em;
+    // padding-top: 2px;
+    // padding-bottom: 0px;
+    // vertical-align: middle;;
+}
+::ng-deep .popover{
+    position: absolute;
+    top: 0px;
+    left: -35px !important;
+    will-change: transform;
+    transform: translate(1556px, 296px)
+}
+::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+
+    .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #0BB7AF;
+     }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+}

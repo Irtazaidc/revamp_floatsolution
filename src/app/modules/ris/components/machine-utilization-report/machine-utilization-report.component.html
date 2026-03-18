@@ -1,0 +1,295 @@
+<!--Start::Form-->
+<div class="card card-custom">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <h3 class="card-label">Machine Utilization Report</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Bind the form to FormGroup in the component -->
+    <form
+      [formGroup]="machineUtilizationForm"
+      class="form-horizontal"
+      (ngSubmit)="getUtilizationReport()"
+    >
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">Date:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            formControlName="date"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            [ngClass]="{
+              invalid: machineUtilizationForm.get('date').errors,
+              'invalid-highlighted':
+                machineUtilizationForm.get('date').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label for="Location" class="control-label">Location</label>
+          <ng-select
+            style="width: 100%"
+            [items]="BranchesList"
+            bindLabel="Title"
+            placeholder="-Select Location-"
+            bindValue="LocId"
+            formControlName="machineBranch"
+            [closeOnSelect]="true"
+            (change)="onLocationChange()"
+            [ngClass]="{
+              invalid: machineUtilizationForm.get('machineBranch').errors,
+              'invalid-highlighted':
+                machineUtilizationForm.get('machineBranch').errors &&
+                isSubmitted
+            }"
+          ></ng-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">Machines:</label>
+          <ng-select
+            style="width: 100%"
+            [items]="MachineList"
+            bindLabel="MachineName"
+            formControlName="machineId"
+            bindValue="RISMachineID"
+            placeholder="--Select Machine--"
+            [ngClass]="{
+              invalid: machineUtilizationForm.get('machineId').errors,
+              'invalid-highlighted':
+                machineUtilizationForm.get('machineId').errors && isSubmitted
+            }"
+          ></ng-select>
+        </div>
+
+        <!-- Search button calls getPACsCommLog method -->
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="disabledButton"
+          >
+            <i class="fa fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!--End::Form-->
+
+<!--Start::Table Data-->
+<div class="card card-custom mt-4">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row justify-content-center">
+          <div class="col-md-6 col-sm-12">
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="type to filter"
+                class="form-control form-control-sm"
+                [(ngModel)]="searchText"
+                (keyup)="filterResults()"
+                name="searchText"
+              />
+              <button
+                class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                (click)="getUtilizationReport()"
+              >
+                <i class="ti-reload"></i>
+              </button>
+              <button
+                class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+                ngbTooltip="Export To Excel"
+                (click)="exportAsExcel()"
+              >
+                <i class="fa fa-file-excel"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right text-danger"
+          ><strong>Total Records: {{ utilizationList.length }} </strong></small
+        >
+        <div
+          class="table-responsive"
+          style="max-height: 600px; overflow-y: auto; overflow-x: hidden"
+        >
+          <div class="table-responsive utilization-table-wrapper">
+            <table
+              class="table table-hover table-bordered utilization-table"
+              cellpadding="0"
+              cellspacing="0"
+            >
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>PIN</th>
+                  <th>Patient Name</th>
+                  <th>Age/Gender</th>
+                  <th>Test Name</th>
+                  <th>Modality</th>
+                  <th>Check-In Date</th>
+                  <th>Check-Out Date</th>
+                  <th>Check-In Loc</th>
+                  <th>Check-Out Loc</th>
+                  <th>Registered By</th>
+                  <th>Registered At</th>
+                  <th>Initialized By</th>
+                  <th>Initialized At</th>
+                  <th class="text-center">Time Taken</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr
+                  class="text-center"
+                  *ngIf="!utilizationList || utilizationList.length === 0"
+                >
+                  <td colspan="20">
+                    <div class="container-fluid">
+                      <app-no-record-found></app-no-record-found>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  *ngFor="let item of pagination.paginatedSearchResults; let i = index"
+                  [ngClass]="{ 'failed-row': item.Status === 'Failed' }"
+                >
+                  <td class="text-center">{{ i + 1 }}</td>
+                  <td>{{ item.Status === "Failed" ? "--" : item.PIN }}</td>
+                  <td>
+                    {{
+                      item.Status === "Failed" ? "--" : item.PatientName || "-"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      item.Status === "Failed" ? "--" : item.AgeGender || "-"
+                    }}
+                  </td>
+                  <td>
+                    {{ item.Status === "Failed" ? "--" : item.TestName || "-" }}
+                  </td>
+                  <td>
+                    {{
+                      item.Status === "Failed" ? "--" : item.ModalityName || "-"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      item.Status === "Failed"
+                        ? "--"
+                        : (item.CheckInTime | date : "dd MMM yyyy, h:mm a")
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      item.Status === "Failed"
+                        ? "--"
+                        : (item.CheckOutTime | date : "dd MMM yyyy, h:mm a")
+                    }}
+                  </td>
+                  <td>
+                    {{ item.Status === "Failed" ? "--" : item.CheckInLoc }}
+                  </td>
+                  <td>
+                    {{ item.Status === "Failed" ? "--" : item.CheckOutLoc }}
+                  </td>
+                  <td>
+                    {{ item.Status === "Failed" ? "--" : item.RegisteredBy }}
+                  </td>
+                  <td>
+                    {{
+                      item.Status === "Failed"
+                        ? "--"
+                        : (item.RegisteredAt | date : "dd MMM yyyy, h:mm a")
+                    }}
+                  </td>
+                  <td>
+                    {{ item.Status === "Failed" ? "--" : item.InitializedBy }}
+                  </td>
+                  <td>
+                    {{
+                      item.Status === "Failed"
+                        ? "--"
+                        : (item.InitializedAt | date : "dd MMM yyyy, h:mm a")
+                    }}
+                  </td>
+
+                  <!-- Time Taken -->
+                  <td class="text-center time-taken">
+                    {{ item.TimeTakenDHMS }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+      <div class="col-md-6 col-sm-12">
+        <ngb-pagination
+          [collectionSize]="pagination.collectionSize"
+          [(page)]="pagination.page"
+          [pageSize]="pagination.pageSize"
+          [boundaryLinks]="true"
+          [maxSize]="5"
+          [rotate]="true"
+          (pageChange)="refreshPagination()"
+        >
+        </ngb-pagination>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <select
+          class="custom-select pull-right"
+          style="width: auto"
+          [(ngModel)]="pagination.pageSize"
+          (ngModelChange)="refreshPagination()"
+        >
+          <option [ngValue]="5">5 items per page</option>
+          <option [ngValue]="10">10 items per page</option>
+          <option [ngValue]="20">20 items per page</option>
+          <option [ngValue]="50">50 items per page</option>
+          <option [ngValue]="100">100 items per page</option>
+        </select>
+      </div>
+    </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noRecord>
+      <div
+        class="no-record-message"
+        style="
+          text-align: center;
+          padding: 1rem;
+          position: absolute;
+          width: 100%;
+          top: 50%;
+          transform: translateY(-50%);
+        "
+      >
+        <strong>No Record Found</strong>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<!--End::Table Data-->

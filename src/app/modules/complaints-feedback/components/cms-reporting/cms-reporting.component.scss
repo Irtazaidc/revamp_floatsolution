@@ -1,0 +1,14 @@
+.sticky-header-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    position: relative;
+  }
+  .sticky-header-table thead {
+    position: sticky;
+    top: 0; 
+    z-index: 1; 
+    background-color:#ebedf3; 
+  }
+
+  

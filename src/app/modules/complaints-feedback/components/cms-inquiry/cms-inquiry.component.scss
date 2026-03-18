@@ -1,0 +1,57 @@
+::ng-deep .accordion .card-header {
+    background-color: white !important;
+    position: relative;
+  }
+  
+  ::ng-deep .accordion .card-header.collapsed::after {
+    transform: translateY(-50%) rotate(-45deg);
+  }
+  
+  // ::ng-deep .accordion .card {
+  //   margin-top: 5px;
+  //   background-color: #F3F6F9 !important;
+  // }
+  
+  ::ng-deep .btn-link {
+    color: #3F4254 !important;
+    width: 100%;
+    background-color: white !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+  }
+  .dropdown-menu{
+    transform: translate(-115px, 28px) !important;
+}
+ .aligned p{
+  font-weight: lighter;
+ }
+
+  ::ng-deep .card-header {
+    background-color: #ffffff !important;
+    position: relative;
+
+  }
+  
+  ::ng-deep .card {
+    margin-bottom: 4px;
+    // background-color: #F3F6F9 !important;
+  }
+  
+
+  
+  ::ng-deep .modal-fss {
+    width: 100vw;
+    max-width: 80%;
+    height: 100%;
+  }
+  
+
+  .borderless-accordion  {
+    border: none;
+    border-radius: 0;
+    margin:0;
+  }
+  .line-height{
+    line-height: initial;
+  }
+  

@@ -1,0 +1,53 @@
+.important-findings{
+    background-color: #e42424;
+    border-radius: 5px;
+    color: white;
+    vertical-align: middle;
+}
+// ::ng-deep .mat-checkbox-checked.mat-accent {
+//     .mat-checkbox-ripple .mat-ripple-element {
+//         background-color: #F64E60 !important;
+//     }
+
+//     .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+//         background-color: #F64E60;
+//      }
+// }
+
+// ::ng-deep .mat-checkbox.mat-accent {
+//     .mat-checkbox-ripple .mat-ripple-element {
+//         background-color: #F64E60 !important;
+//     }
+// }
+
+/* Checked state */
+::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #F64E60 !important;
+    }
+
+    .mat-checkbox-background,
+    .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #F64E60;
+    }
+
+    .mat-checkbox-frame,
+    .mat-checkbox-checkmark {
+        border-color: #F64E60;
+    }
+
+    .mat-checkbox-checkmark-path {
+        fill: #F64E60;
+    }
+}
+
+/* Unchecked state */
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #F64E60 !important;
+    }
+
+    .mat-checkbox-frame {
+        border-color: #F64E60;
+    }
+}

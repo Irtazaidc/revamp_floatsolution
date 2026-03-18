@@ -1,0 +1,324 @@
+<div class="row">
+    <div class="col-12">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div class="row">
+            <div class="col-12 metal-section">
+                <span *ngIf="isMetal">
+                    <i aria-hidden="true" class="fa fa-exclamation-triangle blink-red"></i>
+                    <strong class="text-danger ml-2" style="font-size: 14px;">Caution: Metal components detected in
+                        patient's body! </strong>
+                </span>
+                <strong *ngIf="InitializedBy" class="mx-2 text-danger pull-right">Initialized By: {{InitializedBy}} |
+                    {{InitializedOn | date:'dd-MMM-yyyy hh:mm a'}}</strong>
+                <!--{{InitializedOn | date:'dd-MMM-yyyy hh:mm a'}}  19-Dec-2023 11:32 AM-->
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div class="form-group pt-1">
+                    <label for="QualityAssurance" class="control-label">Quality Assurance:</label>
+                    <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="qualityAssurance" bindLabel="QATitle"
+                        placeholder="-Select Quality Assurance" bindValue="AuditQAID" [multiple]="true"
+                        [closeOnSelect]="false" (change)="clearSearchedvalue()" name="AuditQAID"
+                        [(ngModel)]="AuditQAIDs">
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                <span class="ng-value-label"> {{item.QATitle}}</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <ng-template #popContentSrv>
+                    <app-ris-tp-services [VisitId]="VisitId"></app-ris-tp-services>
+                </ng-template>
+                <div class="tests-box">
+                    <label for="TPFullName" class="pt-2 control-label"
+                        [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}">
+                        <strong>{{ TPName }}<i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2"
+                                aria-hidden="true" ngbTooltip="Click to show services detail"
+                                [ngbPopover]="popContentSrv" [popoverTitle]="'Services Detail'"
+                                [popoverClass]="'custom-popover'"></i></strong>
+                    </label>
+                    <!-- <strong *ngIf="RISStatusID > 2" class="text-danger float-right mt-2">{{ WorkflowStatus }}</strong> -->
+                    <strong class="float-right mt-2 mr-2 text-danger"><span>Current Status | </span> <span
+                            class="current-status"> {{ StatusId >= 7 ? TestStatus : WorkflowStatus }}</span></strong>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 col-xl-8">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="AdditionalRemarks" class="control-label">Additional Remarks:</label>
+                                <textarea [disabled]="isFieldDisabled || TechnologistVisitTPAuditID"
+                                    class="form-control form-control-sm" name="AdditionalRemarks" rows="3"
+                                    [(ngModel)]="Remarks"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Recommendations" class="control-label">Recommendations:</label>
+                                <textarea [disabled]="isFieldDisabled || TechnologistVisitTPAuditID"
+                                    class="form-control form-control-sm" name="Recommendations" rows="3"
+                                    [(ngModel)]="Recommendations"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <fieldset class="fieldset-primary fieldset-border-all-primary">
+                                    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Doctor's
+                                        Feedback
+                                    </legend>
+                                    <ng-container
+                                        *ngIf="FeedbackObj && !isObjectEmpty(FeedbackObj); else noFeedbackData">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <ng-container *ngIf="FeedbackObj.FeedBackBy && FeedbackObj.FeedBackOn">
+                                                    <div>
+                                                        <span class="text-primary"> <span *ngIf="isShowDoctorName">{{ FeedbackObj.FeedBackBy }} | {{
+                                                            FeedbackObj.FBHLocCode }} | </span> {{ FeedbackObj.FeedBackOn |
+                                                            date:'dd-MM-y' }}</span><br>
+
+                                                        <ng-container
+                                                            *ngIf="FeedbackObj && FeedbackObj.FeedBackDetailRemarks">
+                                                            <strong>Feedback:</strong>
+                                                            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                                                                <li style="padding: 0; margin: 0;"
+                                                                    *ngFor="let detailRemark of FeedbackObj.FeedBackDetailRemarks">
+                                                                    <i class="fas fa-check-square text-danger mr-1"
+                                                                        style="font-size: 12px;"></i> {{ detailRemark }}
+                                                                </li>
+                                                            </ul>
+                                                        </ng-container>
+                                                        <p *ngIf="FeedbackObj.FeedBackRemarks !== null && FeedbackObj.FeedBackRemarks !== ''"
+                                                            style="border-top: 1px dashed #cccdd3;">
+                                                            <strong>Remarks:</strong>{{ FeedbackObj.FeedBackRemarks ||
+                                                            'NA' }}
+                                                        </p>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #noFeedbackData>
+                                        <div class="container">
+                                            <app-no-record-found [pyClassParam]="'py-5'"
+                                                [infoMessageParam]="'No feedback given by the doctor'"></app-no-record-found>
+                                        </div>
+                                    </ng-template>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-12">
+                                <fieldset class="fieldset-primary fieldset-border-all-primary">
+                                    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Branch Manager/Supervisor's
+                                        Feedback 
+                                        <!-- <i ngbTooltip="Manager Feedback"
+                                            class="far fa-comment-dots text-primary cursor-pointer"></i> -->
+                                    </legend>
+                                    <ng-container
+                                        *ngIf="ManagerRemarks; else noManagerFeedbackData">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                Approved Fine:<span class="text-danger pull-right"><strong>Rs: {{ApprovedFine}}</strong></span><br>
+                                                <span>Feedback By: {{feedbackBy}}</span>
+                                                <span class="pull-right">Feedback On: {{feedbackDate | date:'dd-MM-y'}}</span><br>
+                                                Remarks: <span class="pull-right">{{ManagerRemarks}}</span>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #noManagerFeedbackData>
+                                        <div class="container">
+                                            <app-no-record-found [pyClassParam]="'py-5'"
+                                                [infoMessageParam]="'No feedback given by the manager/supervisor'"></app-no-record-found>
+                                        </div>
+                                    </ng-template>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                        <label for="Rating" class="control-label">Rating:</label>
+                        <ng-container *ngFor="let element of starRatingElements">
+                            <tr data-th="Star Rating">
+                                <td>
+                                    <star-rating [(value)]="element.value" [(totalstars)]="element.totalstars"
+                                        checkedcolor="{{'#1BC5BD'}}" uncheckedcolor="{{element.uncheckedcolor}}"
+                                        size="{{element.size}}"
+                                        [readonly]="isFieldDisabled || TechnologistVisitTPAuditID"
+                                        (rate)="onRate($event)" #starrating>
+                                    </star-rating>
+                                </td>
+                                <td>
+                                    <select [disabled]="isFieldDisabled || TechnologistVisitTPAuditID" name="Rating"
+                                        class="form-control form-control-sm" [(ngModel)]="element.value"
+                                        [(value)]="starrating.value" (change)="getStarRatingValue($event)">
+                                        <option value="0">--</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="1">1</option>
+                                        <option value="1.5">1.5</option>
+                                        <option value="2">2</option>
+                                        <option value="2.5">2.5</option>
+                                        <option value="3">3</option>
+                                        <option value="3.5">3.5</option>
+                                        <option value="4">4</option>
+                                        <option value="4.5">4.5</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-2">
+                        <div class="form-group pt-1">
+                            <label for="RecommendedFine" class="control-label">Recommended Fine:</label>
+                            <input [disabled]="isFieldDisabled || TechnologistVisitTPAuditID" type="number"
+                                class="form-control form-control-sm" [(ngModel)]="RecommendedFine">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-10">
+                        <button
+                            *ngIf="TechnologistVisitTPAuditID && !isReAudit && showResetButton && screenIdentity=='tech-audit'"
+                            (click)="enableReaudit()" class="btn btn-sm btn-danger pull-right ml-2">
+                            <i class="fa fa-retweet"></i>Re-Audit
+                        </button>
+                        <strong *ngIf="screenIdentity!=='my-tech-audit-summary-report' && TechnologistVisitTPAuditID"
+                            class="text-danger pull-right"><i aria-hidden="true"
+                                class="fa fa-check text-danger mr-1"></i>Audit has already been saved</strong>
+                        <!-- <div  class="form-check pull-right mt-2 mr-2" style="display: inline;">
+                            <input class="form-check-input pointer" type="checkbox" [checked]="true" value="1" [(ngModel)]="saveWithShare" >
+                            <label class="form-check-label pointer" for="saveWithShare">
+                                <strong>Share with Technologist & his/her Mgr</strong> 
+                            </label>
+                        </div> -->
+
+
+                        <button *ngIf="!TechnologistVisitTPAuditID" [disabled]="disabledButton"
+                            class="btn btn-sm btn-primary pull-right" mwlConfirmationPopover
+                            [popoverTitle]="'Please confirm...!'"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]"
+                            (confirm)="insertUpdateTechnologistVisitTPAudit()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true">
+                            <i class="far fa-check-square"></i>Submit <i class="spinner-border-custom"
+                                aria-hidden="true" [hidden]="isSpinner"></i>
+                        </button>
+                        <mat-checkbox *ngIf="!TechnologistVisitTPAuditID" class="example-margin ml-2 pull-right mr-2"
+                            name="saveWithShare" [(ngModel)]="saveWithShare"> <span>Share with Technologist</span>
+                        </mat-checkbox>
+                    </div>
+                </div>
+                <div class="row"
+                    *ngIf="(screenIdentity=='tech-audit-summary-report' || screenIdentity=='tech-audit') && TechRemarksDisabled">
+                    <div class="col-12">
+                        <div class="form-group" style="border: 1px solid #f9949f;
+                        border-radius: 6px;
+                        padding: 7px 10px;">
+                            <label for="TechRemarks" class="control-label text-danger"><u>Tech Comments: </u> <i
+                                    class="far fa-comment-dots text-danger" aria-hidden="true"></i></label>
+                            <p class="text-danger">{{TechRemarks}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="screenIdentity=='my-tech-audit-summary-report'">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="TechRemarks" class="control-label">Tech Comments: <i
+                                    class="far fa-comment-dots text-danger" aria-hidden="true"></i></label>
+                            <textarea [disabled]="TechRemarksDisabled || TechRemarksSaved"
+                                class="form-control form-control-sm" name="TechRemarks" rows="3"
+                                [(ngModel)]="TechRemarks"></textarea>
+                        </div>
+                    </div>
+                    <!-- <div class="col-12" *ngIf="ManagerRemarks">
+                        <fieldset class="fieldset-danger fieldset-border-top">
+                            <legend class="font-weight-bold text-danger" style="font-size: 1.1rem;">Manager Feedback <i
+                                    ngbTooltip="Manager Feedback"
+                                    class="far fa-comment-dots text-danger cursor-pointer"></i>
+                            </legend>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-2">
+                                <div class="form-group pt-1">
+                                    <label for="ApprovedFine" class="control-label">Approved Fine:</label>
+                                    <input [disabled]="true" type="number" class="form-control form-control-sm"
+                                        [(ngModel)]="ApprovedFine">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="ManagerRemarks" class="control-label">Manager Remarks:</label>
+                                    <textarea [disabled]="true" class="form-control form-control-sm"
+                                        name="ManagerRemarks" rows="3" [(ngModel)]="ManagerRemarks"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div> -->
+
+                    <div class="col-12">
+                        <button *ngIf="!TechRemarksDisabled || TechRemarksSaved" [disabled]="disabledButtonTechRemarks"
+                            class="btn btn-sm btn-primary pull-right" mwlConfirmationPopover
+                            [popoverTitle]="'Please confirm...!'"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]" (confirm)="sendTechRemarks()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true">
+                            <i class="fa fa-paper-plane "></i>Send Remarks <i class="spinner-border-custom"
+                                aria-hidden="true" [hidden]="isSpinnerechRemarks"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- <div class="col-md-12">
+                <hr>
+                <button [disabled]="disabledButton"
+                    class="btn btn-sm btn-primary pull-right"
+                    mwlConfirmationPopover
+                    [popoverTitle]="'Please confirm...!'"
+                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]"
+                    (confirm)="insertUpdateRadiologistVisitTPAudit()"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary"
+                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                    [appendToBody]="true">
+                    <i 
+                    class="far fa-check-square"
+                    ></i>Submit <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                </button>
+            </div> -->
+        </div>
+    </div>
+</div>

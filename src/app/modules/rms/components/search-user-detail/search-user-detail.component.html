@@ -1,0 +1,95 @@
+<div class="card card-custom">
+    <div class="card-header" >
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Search User Details
+                <small>Search Patient Portal User Records</small>
+            </h3>
+        </div>
+        
+    </div>
+    <div class="card-body">
+        <div class="container row">
+            <form [formGroup]="GetPatientPortalUserDetailByFilters"
+                name="form" role="form"
+                (ngSubmit)="GetPatientPortalUserDetail()">
+                <div class=" row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-3">
+                        <div class="form-row">
+                            <label>CellNumber:</label>
+                            <input formControlName="CellNumber" type="text" (input)="customValidation()"
+                                class="form-control" mask='0000-0000000'[showMaskTyped]="true"
+                                [ngClass]="{'invalid': GetPatientPortalUserDetailByFilters.get('CellNumber').errors, 'invalid-highlighted': GetPatientPortalUserDetailByFilters.get('CellNumber').errors && isSubmitted }" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-3">
+                        <div class="form-row">
+                            <label>UserName:</label>
+                            <input formControlName="UserName" type="text"
+                                class="form-control" (input)="customValidation()"
+                                [ngClass]="{'invalid': GetPatientPortalUserDetailByFilters.get('UserName').errors, 'invalid-highlighted': GetPatientPortalUserDetailByFilters.get('UserName').errors && isSubmitted }" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-3">
+                        <div class="form-row">
+                            <label>Email:</label>
+                            <input formControlName="Email" type="text" (input)="customValidation()"
+                                class="form-control" placeholder="example@domain.com" maxlength="50"
+                                [ngClass]="{'invalid': GetPatientPortalUserDetailByFilters.get('Email').errors, 'invalid-highlighted': GetPatientPortalUserDetailByFilters.get('Email').errors && isSubmitted }" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-3">
+                        <button class="btn btn-primary mt-7 pull-right">
+                            <span><i class="fa fa-search"></i>Search User</span>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.userDetailsTable"
+                                    bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                                    [fullScreen]="false">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+            <div class="table-responsive table-container d-none d-md-block fixed-height-table mt-5" *ngIf="userDetailsList.length">
+                <table class="table table-hover compact">
+                    <thead>
+                        <tr>
+                            <th>UserID </th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Login Name</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!userDetailsList">
+                            <td colspan="6" style="text-align: center;"><strong class="text-primary">
+                                No Record Found...</strong></td>
+                          </tr>
+                        <tr *ngFor="let patient of userDetailsList" >
+                            <td>{{patient.PatientPortalUserID}}</td>
+                            <td>{{patient.Name}}</td>
+                            <td>{{patient.CellNumber}}</td>
+                            <td>{{patient.Email}}</td>
+                            <td>{{patient.LoginName}}</td>
+                            <td class="text-right">
+                                <button  class="btn btn-success btn-sm mr-1" (click)="patientRowDoubleClick(patient)"
+                                    ngbTooltip="Select Patient">Select</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+              
+
+            </div>
+        </div>
+
+    </div>
+    
+</div>

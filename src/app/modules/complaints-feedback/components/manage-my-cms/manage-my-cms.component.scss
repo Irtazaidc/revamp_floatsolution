@@ -1,0 +1,149 @@
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+.box{
+    height: 59px !important;
+    width: 150px !important
+}
+.cms-tag{
+  text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.center-aligned {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  height: 3.2vh;
+  width: 9vh;
+}
+.search-btn{
+padding:5px 28px !important;
+}
+.center-aligned p{
+padding-top: 10px;
+font-size: smaller;
+line-height: initial;
+text-align: center;
+}
+
+.center-aligned p:hover {
+transition: 700ms ease;
+}
+
+.aligned{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hc-stats p{
+    font-size: revert;
+    padding-left: 15px;
+    margin-bottom: 0px;
+}
+.hc-stats h1{
+    padding-left: 15px;
+    font-weight: bold;
+    font-size: xx-large;
+    margin-top: 0px;
+}
+.content-wrapper{
+  max-width: 100%;
+overflow-wrap: break-word;
+}
+::ng-deep .mat-standard-chip {
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  border-radius: 5px !important;
+  // min-height: 32px;
+  // background-color: #0bb7af !important;
+}
+
+
+ 
+  ::ng-deep .accordion .card-header {
+    background-color: white !important;
+    position: relative;
+  }
+  
+  ::ng-deep .accordion .card-header.collapsed::after {
+    transform: translateY(-50%) rotate(-45deg);
+  }
+  
+  // ::ng-deep .accordion .card {
+  //   margin-top: 5px;
+  //   background-color: #F3F6F9 !important;
+  // }
+  
+  ::ng-deep .btn-link {
+    color: #3F4254 !important;
+    width: 100%;
+    background-color: white !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+  }
+  .dropdown-menu{
+    transform: translate(-115px, 28px) !important;
+}
+ .aligned p{
+  font-weight: lighter;
+ }
+
+  ::ng-deep .card-header {
+    background-color: #ffffff !important;
+    position: relative;
+
+  }
+  
+  ::ng-deep .card {
+    margin-bottom: 4px;
+    // background-color: #F3F6F9 !important;
+  }
+  
+
+  
+  ::ng-deep .modal-fss {
+    width: 100vw;
+    max-width: 80%;
+    height: 100%;
+  }
+  
+
+  .borderless-accordion  {
+    border: none;
+    border-radius: 0;
+    margin:0;
+  }
+
+  @media only screen and (max-width: 1450px) {
+    /* For desktop: */
+    .empty-div{
+      width: 30% !important;
+    }
+    .center-aligned {
+        height: 28px;
+        width: 70px;
+    }
+    
+    .center-aligned p{
+      font-size: small;
+    font-weight: lighter;
+    padding-top: 9px;
+    }
+    .chart-wrapper{
+      width: 250px;
+      height: 250px;
+    }
+  }
+  @media only screen and (max-width: 1024px) {
+    .chart-wrapper{
+      width: 200px;
+      height: 200px;
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .chart-wrapper{
+      width: 300px;
+      height: 300px;
+    }
+  }

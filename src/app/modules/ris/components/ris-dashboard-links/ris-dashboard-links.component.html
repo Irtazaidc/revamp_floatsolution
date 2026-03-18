@@ -1,0 +1,110 @@
+<mat-card class="example-card">
+    <mat-card-content>
+        <div class="row">
+            <div class="col-xl-4 col-lg-4">
+               <div class="kt-widget4">
+                  <div
+                  *ngIf="stateObject['questionnaire'] || stateObject['radiologist'] || stateObject['ris-dictionary'] || stateObject['ris-user-dictionary'] || stateObject['report-templates'] || stateObject['user-report-templates'] || stateObject['ris-machine-mgt'] || stateObject['assign-level'] || stateObject['assign-share'] || stateObject['refby-radiologist-mapping']"
+                   class="kt-widget4__item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                     <div class="kt-menu__container">
+                        <h6>
+                           <i aria-hidden="true" class="ti-settings text-success"></i> RIS Configurations
+                        </h6>
+                        <p class="kt-menu__distext kt-margin-b-5">
+                           <span *ngIf="stateObject['questionnaire']"><a href="#/ris/questionnaire" class="kt-link text-info kt-font-bold">Questionnaire</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['radiologist']"><a href="#/ris/radiologist" class="kt-link text-info kt-font-bold">Radiologists</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['ris-dictionary']"><a href="#/ris/ris-dictionary" class="kt-link text-info kt-font-bold">RIS Dictionary</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['ris-user-dictionary']"><a href="#/ris/ris-user-dictionary" class="kt-link text-info kt-font-bold">RIS User Dictionary</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['report-templates']"><a href="#/ris/report-templates" class="kt-link text-info kt-font-bold">Report Templates</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['user-report-templates']"><a href="#/ris/user-report-templates" class="kt-link text-info kt-font-bold">User Report Templates</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['ris-machine-mgt']"><a href="#/ris/ris-machine-mgt" class="kt-link text-info kt-font-bold">RIS Machine Config</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['assign-level']"><a href="#/ris/assign-level" class="kt-link text-info kt-font-bold">Assign Dr Level</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['assign-share']"><a href="#/ris/assign-share" class="kt-link text-info kt-font-bold">Dr Share Config</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['refby-radiologist-mapping']"><a href="#/ris/refby-radiologist-mapping" class="kt-link text-info kt-font-bold">RefBy Radiologist Mapping</a></span>
+                        </p>
+                     </div>
+                  </div>
+                  <div 
+                  *ngIf="stateObject['mo-worklist'] || stateObject['tech-worklist'] || stateObject['ris-services'] || stateObject['queue-management'] || stateObject['queue-management'] || stateObject['assign-bulk-test'] || stateObject['reporting-worklist']"
+                  class="kt-widget4__item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                     <div class="kt-menu__container">
+                        <h6>
+                           <i aria-hidden="true" class="fas fa-th-list text-success"></i> RIS Worklists
+                        </h6>
+                        <p class="kt-menu__distext">
+                           <span *ngIf="stateObject['mo-worklist']"><a href="#/ris/mo-worklist" class="kt-link text-info kt-font-bold">MO Worklist</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['tech-worklist']"><a href="#/ris/ris-services" class="kt-link text-info kt-font-bold">Technician Worklist</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['ris-services']"><a href="#/ris/ris-services" class="kt-link text-info kt-font-bold">Tech Services</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['queue-management']"><a href="#/ris/queue-management" class="kt-link text-info kt-font-bold">Queue Management</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['assign-bulk-test']"><a href="#/ris/assign-bulk-test" class="kt-link text-info kt-font-bold">Queue Management (Bulk)</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['reporting-worklist']"><a href="#/ris/reporting-worklist" class="kt-link text-info kt-font-bold">Reporting Worklist</a></span>
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-xl-4 col-lg-4">
+               <div class="kt-widget4">
+                  <div *ngIf="stateObject['tech-audit'] || stateObject['tech-audit-summary-report'] || stateObject['my-tech-audit-summary-report']" class="kt-widget4__item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                     <div class="kt-menu__container">
+                        <h6>
+                           <i class="fas fa-clipboard-list text-success"></i> Tech Audit
+                        </h6>
+                        <p class="kt-menu__distext kt-margin-b-5">
+                           <span *ngIf="stateObject['tech-audit']"><a href="#/ris/tech-audit" class="kt-link text-info kt-font-bold">Technologist Audit</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['tech-audit-summary-report']"><a href="#/ris/tech-audit-summary-report" class="kt-link text-info kt-font-bold">Tech Audit Summary Report (Mgr)</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['my-tech-audit-summary-report']"><a href="#/ris/my-tech-audit-summary-report" class="kt-link text-info kt-font-bold">My Tech Audit Summary Report(Technologist)</a></span>
+                        </p>
+                     </div>
+                  </div>
+                  <div 
+                     *ngIf="stateObject['send-for-audit'] || stateObject['audit-report'] || stateObject['audit-summary-report'] || stateObject['audit-findings'] || stateObject['radiologist-audit-findings']"
+                     class="kt-widget4__item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                     <div class="kt-menu__container">
+                        <h6>
+                           <i class="fa-clipboard-check fas  text-success"></i> Radiologist Report Audit
+                        </h6>
+                        <p class="kt-menu__distext">
+                           <span *ngIf="stateObject['send-for-audit']"><a href="#/ris/send-for-audit" class="kt-link text-info kt-font-bold">Send Random Reports for Audit</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['audit-report']"><a href="#/ris/audit-report" class="kt-link text-info kt-font-bold">Audit The Report</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['audit-summary-report']"><a href="#/ris/audit-summary-report" class="kt-link text-info kt-font-bold">Audit Summary Report(Dr)</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['audit-findings']"><a href="#/ris/audit-findings" class="kt-link text-info kt-font-bold">Audit Findings(Mgr)</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['radiologist-audit-findings']"><a href="#/ris/radiologist-audit-findings" class="kt-link text-info kt-font-bold">Radiologist Audit Findings</a></span>
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-xl-4 col-lg-4">
+               <div class="kt-widget4">
+                  <div 
+                  *ngIf="stateObject['report-reset-request'] || stateObject['recommend-reject-request'] || stateObject['approve-reject-request']"
+                  class="kt-widget4__item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                     <div class="kt-menu__container">
+                        <h6>
+                           <i class="fa-recycle fas text-success"></i> Reset Report
+                        </h6>
+                        <p class="kt-menu__distext kt-margin-b-5">
+                           <span *ngIf="stateObject['report-reset-request']"><a href="#/ris/report-reset-request" class="kt-link text-info kt-font-bold">Reset Request</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['recommend-reject-request']"><a href="#/ris/recommend-reject-request" class="kt-link text-info kt-font-bold">Recommend/Reject Req.</a>&nbsp; | &nbsp;</span>
+                           <span *ngIf="stateObject['approve-reject-request']"><a href="#/ris/approve-reject-request" class="kt-link text-info kt-font-bold">Approve/Reject Req.</a></span>
+                        </p>
+                     </div>
+                  </div>
+                  <div 
+                  *ngIf="stateObject['addendum-second-opinion-request']"
+                  class="kt-widget4__item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                     <div class="kt-menu__container">
+                        <h6>
+                           <i class="fa-file-medical fas text-success"></i> Addendum/Second Opinion
+                        </h6>
+                        <p class="kt-menu__distext">
+                           <span *ngIf="stateObject['addendum-second-opinion-request']"><a href="#/ris/addendum-second-opinion-request" class="kt-link text-info kt-font-bold">Addendum/Second Opinion Request</a></span>
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+    </mat-card-content>
+</mat-card>

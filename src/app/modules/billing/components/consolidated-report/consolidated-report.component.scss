@@ -1,0 +1,41 @@
+::ng-deep .mat-checkbox-checked.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+      background-color: #0BB7AF !important;
+  }
+
+  .mat-checkbox-background,
+  .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+      background-color: #0BB7AF;
+  }
+
+  .mat-checkbox-frame,
+  .mat-checkbox-checkmark {
+      border-color: #0BB7AF;
+  }
+
+  .mat-checkbox-checkmark-path {
+      fill: #0BB7AF;
+  }
+}
+
+/* Unchecked state */
+::ng-deep .mat-checkbox.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+      background-color: #0BB7AF !important;
+  }
+
+  .mat-checkbox-frame {
+      border-color: #0BB7AF;
+  }
+}
+::ng-deep .mat-checkbox-disabled .mat-checkbox-frame {
+  border-color: #d7d7d8 !important;
+}
+
+.sticky-total {
+  position: sticky;
+  bottom: 0;
+  background: white; /* Match your table background */
+  z-index: 2; /* Keep it above other rows */
+  border-top: 2px solid #ccc; /* Optional visual separation */
+}

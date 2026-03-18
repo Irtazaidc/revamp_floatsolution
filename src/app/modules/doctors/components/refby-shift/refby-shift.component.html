@@ -1,0 +1,332 @@
+<!-- <div class="card card-custom">
+  <div class="card-header">
+    <div class="card-title">
+      <span class="card-icon">
+        <i class="ti-share text-primary"></i>
+      </span>
+      <h3 class="card-label">
+        Shift Temporary Referring Doctors
+        <small
+          >Approve and move doctors added during registration to the main
+          list</small
+        >
+      </h3>
+    </div>
+
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row container form-group justify-content-center">
+        <div class="col-md-3 col-sm-12">
+          <label class="control-label">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            value="1980-08-26"
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            value=""
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label class="control-label">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            placeholder="dd-mm-yyyy"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control mb-4"
+            name="dateTo"
+            type="text"
+            value=""
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+            <label for="byPIN" class="col-5 col-form-label">PIN:</label>
+              <input
+                class="form-control"
+                (input)="onPINInput()"
+                placeholder="Enter Visit ID"
+                type="text"
+                [value]=""
+                formControlName="byVisitID"
+                (keypress)="validateNo($event)"
+                minlength="12"
+                maxlength="15"
+              />
+        </div>
+
+        <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+          <div
+            (click)="getRefByDoctors()"
+            class="btn btn-primary"
+            type="button"
+          >
+            Search
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="card card-custom mt-1">
+  <div class="card-body pb-0">
+    
+  </div>
+</div>
+ -->
+
+<div class="card card-custom">
+  <div class="card-body pb-0">
+    <form [formGroup]="filterForm" class="form-horizontal" role="form">
+      <div class="row container form-group justify-content-center">
+        <!-- Date From -->
+        <div class="col-md-3 col-sm-12">
+          <label>Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            ngbDatepicker
+            placeholder="dd-mm-yyyy"
+            formControlName="dateFrom"
+            class="form-control"
+            type="text"
+            [maxDate]="maxDate"
+          />
+        </div>
+
+        <!-- Date To -->
+        <div class="col-md-3 col-sm-12">
+          <label>Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            placeholder="dd-mm-yyyy"
+            formControlName="dateTo"
+            class="form-control"
+            type="text"
+            [maxDate]="maxDate"
+          />
+        </div>
+
+        <!-- PIN -->
+        <div class="col-md-3 col-sm-12">
+          <label>Visit ID:</label>
+          <input
+            class="form-control"
+            placeholder="Enter Visit ID"
+            type="text"
+            formControlName="byVisitID"
+            (input)="onPINInput()"
+            (keypress)="validateNo($event)"
+            minlength="12"
+            maxlength="15"
+          />
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-md-2 col-sm-12 mt-8 text-center">
+          <button
+            type="button"
+            class="btn btn-primary px-4"
+            (click)="getRefByDoctors()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TABLE CARD -->
+<div class="card mt-3">
+  <div class="card-body">
+    <!-- Spinner -->
+    <ngx-spinner
+      [name]="spinnerRefs.searchTable"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+
+    <!-- Search & Count -->
+    <div class="row mb-2" *ngIf="dataSetList.length">
+      <div class="col-md-6 offset-md-6">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup)="filterResults()"
+          placeholder="Search..."
+          class="form-control form-control-sm"
+        />
+        <div class="mt-1 text-right text-primary">
+          <strong>
+            Total: {{ dataSetList.length }} | Selected:
+            {{ selectedCheckboxesCount }}
+          </strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE / NO DATA -->
+    <div class="table-responsive table-container fixed-height-table">
+      <table
+        class="table table-hover compact table-bordered"
+        style="width: 100%"
+        cellpadding="0"
+        cellspacing="0"
+      >
+        <thead>
+          <tr class="sticky-header">
+            <th width="3%">
+              <mat-checkbox
+                [(ngModel)]="mainChk"
+                [ngModelOptions]="{ standalone: true }"
+                (change)="selectAllItems($event.checked)"
+              >
+              </mat-checkbox>
+            </th>
+            <th>Name</th>
+            <th>PMDC#</th>
+            <th>Med Type</th>
+            <th>City</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>PIN</th>
+            <th>Added By</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="text-center" *ngIf="pagination.paginatedSearchResults.length < 1">
+            <td colspan="100">No Record Found</td>
+          </tr>
+          <tr
+            *ngFor="
+              let data of pagination.paginatedSearchResults;
+              let i = index
+            "
+          >
+            <td width="3%">
+              <mat-checkbox
+                [(ngModel)]="data.checked"
+                [ngModelOptions]="{ standalone: true }"
+                (change)="onSelectedDoctor(data)"
+              >
+              </mat-checkbox>
+            </td>
+            <td width="10%">
+              <input
+                [(ngModel)]="data.Name"
+                class="form-control form-control-sm"
+              />
+            </td>
+            <td width="10%">
+              <input
+                [(ngModel)]="data.PMDCNo"
+                class="form-control form-control-sm"
+              />
+            </td>
+            <td width="10%">
+              <select
+                [(ngModel)]="data.MedType"
+                class="form-control form-control-sm"
+              >
+                <option [ngValue]="null">--Select--</option>
+                <option *ngFor="let s of medTypes" [ngValue]="s.id">
+                  {{ s.title }}
+                </option>
+              </select>
+            </td>
+            <td width="10%">
+              <ng-select
+                [items]="citiesList"
+                bindLabel="CityName"
+                bindValue="CityName"
+                [(ngModel)]="data.City"
+              >
+              </ng-select>
+            </td>
+            <td width="10%">
+              <input
+                [(ngModel)]="data.ContactNo"
+                class="form-control form-control-sm"
+              />
+            </td>
+            <td width="10%">
+              <input
+                [(ngModel)]="data.Email"
+                class="form-control form-control-sm"
+              />
+            </td>
+            <td width="20%">
+              <input
+                [(ngModel)]="data.Address"
+                class="form-control form-control-sm"
+              />
+            </td>
+            <td width="10%">{{ data.VisitNo }}</td>
+            <td width="7%">{{ data.CreatedByName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+      <div class="col-md-6 col-sm-12">
+        <ngb-pagination
+          [collectionSize]="pagination.collectionSize"
+          [(page)]="pagination.page"
+          [pageSize]="pagination.pageSize"
+          [boundaryLinks]="true"
+          [maxSize]="5"
+          [rotate]="true"
+          (pageChange)="refreshPagination()"
+        >
+        </ngb-pagination>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <select
+          class="custom-select pull-right"
+          style="width: auto"
+          [(ngModel)]="pagination.pageSize"
+          (ngModelChange)="refreshPagination()"
+        >
+          <option [ngValue]="5">5 items per page</option>
+          <option [ngValue]="10">10 items per page</option>
+          <option [ngValue]="20">20 items per page</option>
+          <option [ngValue]="50">50 items per page</option>
+          <option [ngValue]="100">100 items per page</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SAVE BUTTON -->
+    <div class="mt-3 text-right" *ngIf="dataSetList.length">
+      <button
+        class="btn btn-primary"
+        [disabled]="disabledButton"
+        (click)="saveRefByDoctor()"
+      >
+        <i class="fa fa-save"></i> Save
+      </button>
+    </div>
+  </div>
+</div>

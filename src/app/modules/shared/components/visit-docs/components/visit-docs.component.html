@@ -1,0 +1,657 @@
+<div class="visit-attachments-container">
+  <div class="">
+    <fieldset class="fieldset-primary fieldset-border-top">
+      <legend>
+        {{ sectionHead }} Documents ({{ visitAttachments.length }})
+        <i *ngIf="propVisitNo" class="ti-reload text-primary cursor-pointer" title="refresh"
+          (click)="reloadVisitDocs()"></i>
+      </legend>
+
+      <div class="row action-buttons-area">
+        <div class="col-12">
+          <!-- <span>Attachments</span> -->
+
+          <!-- <span class="loaded-files-count" style="font-size: 20px;">({{(visitAttachments.length)}})</span> -->
+          <span>
+            <input type="file" #uploadVisitAttachment class="d-none"
+              (change)="loadSelectedAttachmentFileMultiple($event)" multiple accept="image/*" />
+            <!-- accept="text/plain, application/pdf, image/*"  -->
+            <!--<button *ngIf="this.editing.select" class="btn btn-outline-dark btn-mini btn-select-visit-attachments mb-1" type="button" (click)="uploadVisitAttachment.click()"><i class="ti-image"></i> Select</button>
+                        <button *ngIf="this.editing.camera" class="btn btn-outline-dark btn-mini ml-1 mb-1" type="button" (click)="openCamera('attachment')"> <i class="ti-camera"></i> camera</button>
+                        <button *ngIf="this.editing.select" class="btn btn-outline-dark btn-mini btn-select-visit-attachments mb-1" type="button" (click)="scanImage()"><i class="ti-image"></i> Scan
+                            <span>
+                                <i style="font-size: 0.8rem; color: #339933" class="fa fa-circle" *ngIf="multiAppConnectionStatus" title="WebDesk: Connected"></i>-->
+            <!-- (click)="disconnectToMultiApp()" -->
+            <!--<i style="font-size: 0.8rem; color: #dc3545" class="fa fa-circle" *ngIf="!multiAppConnectionStatus" title="WebDesk: Not Connected"></i> --><!-- (click)="connectToMultiApp()"  -->
+            <!--</span>
+                        </button>-->
+            <div class="btn-group mb-2" role="group" aria-label="Basic example">
+              <button *ngIf="this.editing.select" type="button" class="btn btn-primary"
+                (click)="uploadVisitAttachment.click()">
+                <i class="fas fa-image"></i> Select
+              </button>
+              <button *ngIf="this.editing.camera" type="button" class="btn btn-warning"
+                (click)="openCamera('attachment')">
+                <i class="flaticon-photo-camera"></i> Camera
+              </button>
+              <button *ngIf="this.editing.select" type="button" class="btn btn-dark" (click)="scanImage()">
+                <i class="flaticon2-printer"></i> Scan
+                <span>
+                  &nbsp;<i style="font-size: 0.8rem; color: #00fb00" class="fa fa-circle"
+                    *ngIf="multiAppConnectionStatus" title="WebDesk: Connected"></i>
+                  <!-- (click)="disconnectToMultiApp()" -->
+                  &nbsp;<i style="font-size: 0.8rem; color: #ff0018" class="fa fa-circle"
+                    *ngIf="!multiAppConnectionStatus" title="WebDesk: Not Connected"></i>
+                  <!-- (click)="connectToMultiApp()"  -->
+                </span>
+              </button>
+              <button *ngIf="showSaveDocsButton()" class="btn btn-primary" title="Save" mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                [confirmText]="confirmationPopoverConfig.confirmText"
+                [cancelText]="confirmationPopoverConfig.cancelText"
+                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="saveVisitDocs()"
+                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="primary"
+                cancelButtonType="outline-secondary" (click)="
+                  confirmationPopoverConfig.confirmClicked = false;
+                  confirmationPopoverConfig.cancelClicked = false
+                " [appendToBody]="true">
+                <i class="ti-save"></i> Save
+              </button>
+
+              <button *ngIf="showSaveCMSDocsButton()" class="btn btn-info" title="Save" mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                [confirmText]="confirmationPopoverConfig.confirmText"
+                [cancelText]="confirmationPopoverConfig.cancelText"
+                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="insertCMSDocuments()"
+                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="primary"
+                cancelButtonType="outline-secondary" (click)="
+                  confirmationPopoverConfig.confirmClicked = false;
+                  confirmationPopoverConfig.cancelClicked = false
+                " [appendToBody]="true">
+                <i class="ti-save"></i> Save
+              </button>
+            </div>
+          </span>
+
+          <span class="mt-3 change-view-area pull-right" *ngIf="
+              layoutButtons && layoutButtons.length && visitAttachments.length
+            ">
+            View Options:
+            <i *ngIf="layoutBtnAllowed('compact')" class="ti-view-list btn-outline-secondary" [ngClass]="{
+                'bg-primary text-light': attachmentLayout == 'compact'
+              }" (click)="attachmentLayout = 'compact'"></i>
+            <i *ngIf="layoutBtnAllowed('list')" class="ti-view-list-alt btn-outline-secondary" [ngClass]="{
+                'bg-primary text-light': attachmentLayout == 'list'
+              }" (click)="attachmentLayout = 'list'"></i>
+            <i *ngIf="layoutBtnAllowed('grid')" class="ti-view-grid btn-outline-secondary" [ngClass]="{
+                'bg-primary text-light': attachmentLayout == 'grid'
+              }" (click)="attachmentLayout = 'grid'"></i>
+            <i *ngIf="layoutBtnAllowed('grid2')" class="ti-layout-grid3-alt btn-outline-secondary" [ngClass]="{
+                'bg-primary text-light': attachmentLayout == 'grid2'
+              }" (click)="attachmentLayout = 'grid2'"></i>
+          </span>
+          <!-- <button class="btn btn-outline-secondary btn-mini btn-select-visit-attachments" type="button" (click)="uploadVisitAttachment.click()"><i class="ti-plus"></i> Scan</button>
+                    &nbsp; -->
+          <!-- <button class="btn btn-outline-danger btn-mini btn-remove-all-visit-attachments" type="button" (click)="removeVisitAttachment('')"><i class="ti-close"></i> Remove All</button> -->
+          <!-- <button *ngIf="showRemoveAllDocsButton()"
+                        class="btn btn-outline-danger btn-mini btn-remove-all-visit-attachments pull-right"
+                        title="Remove All"
+                        mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                        [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]"
+                        (confirm)="removeVisitAttachment('')"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                        confirmButtonType="danger"
+                        cancelButtonType="outline-secondary"
+                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                        [appendToBody]="true"
+                    > <i class="ti-close"></i>
+                    Remove All
+                    </button> -->
+
+          <hr class="m-0" />
+        </div>
+      </div>
+
+      <div class="row" *ngIf="visitAttachments && visitAttachments.length">
+        <div class="col-12 attachments-group attachments-group-compact" *ngIf="attachmentLayout == 'compact'">
+          <div class="table-responsive">
+            <table class="table table-hover narrow-rows">
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Creation Info</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let va of visitAttachments; let i = index" >
+                  <!-- [ngClass]="{'active-rec-border-left': i == rowIndex}" -->
+                  <td style="position: relative">
+                    <div class="overlayForDoc" (click)="getDocById(va.docId, va.uniqueIdentifier, 0)"></div>
+                    <h5><i class="ti-eye text-primary"></i></h5>
+                  </td>
+                  <td>
+                    <input type="text" class="visit-attachment-name-field" #fileNameField name="fileName" maxlength="30"
+                      *ngIf="
+                        enableRenameVisitAttachmentField == va.uniqueIdentifier
+                      " [(ngModel)]="va.fileName" (blur)="toggleRenameField('hide', va)"
+                      (keyup.enter)="toggleRenameField('hide', va)" />
+                    <span title="click to rename | {{ va.fileName }}" class="visit-attachment-name"
+                      (click)="toggleRenameField('show', va)" [hidden]="
+                        enableRenameVisitAttachmentField == va.uniqueIdentifier
+                      ">{{ va.fileName }}</span>
+                  </td>
+                  <td>{{ va.fileType.split("/")[1] }}</td>
+                  <td> {{va.CreatedName || 'NA' }} ({{ va.CreatedOn | date:'dd MMM yyyy, hh:mm a'}})</td>
+                  <td>
+                    <i *ngIf="allowRemove || !va.docId" class="ti-close m-0 text-danger"
+                      (click)="removeVisitAttachment(va)"></i>
+                    <!-- *ngIf="!va.docId" -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-12 attachments-group attachments-group-list" *ngIf="attachmentLayout == 'list'">
+          <div class="table-responsive">
+            <table class="table table-hover narrow-rows">
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Creation Info</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let va of visitAttachments; let i = index">
+                  <!-- [ngClass]="{'active-rec-border-left': i == rowIndex}" (click)=getIndex(i)--> 
+                  <td style="position: relative">
+                    <div class="overlayForDoc" (click)="getDocById(va.docId, va.uniqueIdentifier, 0)"></div>
+
+                    <ng-container [ngSwitch]="va.fileType.split('/')[0]" *ngIf="va.sanitizedData">
+                      <ng-container *ngSwitchCase="'image'">
+                        <ng-container [ngSwitch]="va.fileType.split('/')[1]">
+                          <ng-container *ngSwitchCase="'svg+xml'">
+                            <embed [src]="va.sanitizedData" class="attachment-display-frame" />
+                            <!-- <img [src]="va.sanitizedThumbnail || va.sanitizedData" alt="visit attachment" class="attachment-display-frame"> -->
+                          </ng-container>
+
+                          <ng-container *ngSwitchDefault>
+                            <img [src]="va.sanitizedThumbnail || va.sanitizedData" alt="thumbnail unavailable"
+                              class="attachment-display-frame" />
+                          </ng-container>
+                        </ng-container>
+
+                        <!-- <span [src]="va.sanitizedThumbnail || va.sanitizedData" *ngIf="va.fileType.split('/')[1] == 'svg+xml'"  style="width: 100%;height: 100%;border: none;" ></span> -->
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                        <ng-container [ngSwitch]="va.fileType.split('/')[1]">
+                          <ng-container *ngSwitchCase="'pdf'">
+                            <!-- <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                            <embed [src]="va.sanitizedData" class="attachment-display-frame" />
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'plain'">
+                            <!-- <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                            <embed [src]="va.sanitizedData" class="attachment-display-frame" />
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'x-zip-compressed'">
+                            <h4>ZIP file</h4>
+                          </ng-container>
+                          <ng-container *ngSwitchDefault>
+                            <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                              {{ va.fileType.split("/")[1] }}
+                            </h3>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+
+                    <div *ngIf="!va.sanitizedData">
+                      <h4><i class="ti-eye"></i></h4>
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="visit-attachment-name-field" #fileNameField name="fileName" maxlength="30"
+                      *ngIf="
+                        enableRenameVisitAttachmentField == va.uniqueIdentifier
+                      " [(ngModel)]="va.fileName" (blur)="toggleRenameField('hide', va)"
+                      (keyup.enter)="toggleRenameField('hide', va)" />
+                    <span title="click to rename | {{ va.fileName }}" class="visit-attachment-name"
+                      (click)="toggleRenameField('show', va)" [hidden]="
+                        enableRenameVisitAttachmentField == va.uniqueIdentifier
+                      ">{{ va.fileName }}</span>
+                  </td>
+                  <td>{{ va.fileType.split("/")[1] }}</td>
+                  <td> {{va.CreatedName || 'NA' }} ({{ va.CreatedOn | date:'dd MMM yyyy, hh:mm a'}})</td>
+                  <td>
+                    <i *ngIf="allowRemove || !va.docId" class="ti-close m-0 text-danger"
+                      (click)="removeVisitAttachment(va)"></i>
+                    <!-- *ngIf="!va.docId" -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!--  -->
+
+        <div class="col-12 attachments-group attachments-group-grid" *ngIf="attachmentLayout == 'grid'">
+          <div class="attachment-item mb-2 p-2 border rounded shadow-sm bg-light"
+            *ngFor="let va of visitAttachments; let i = index" style="position: relative; max-width: 150px;">
+            <!-- <a [href]="va.sanitizedThumbnail || va.sanitizedData" target="_blank"> -->
+
+            <!-- <div class="overlayForDoc"
+                     (click)="getDocById(va.docId, va.uniqueIdentifier)"
+                 ></div> -->
+
+            <ng-container [ngSwitch]="va.fileType.split('/')[0]" *ngIf="va.sanitizedData">
+              <ng-container *ngSwitchCase="'image'">
+                <ng-container [ngSwitch]="va.fileType.split('/')[1]">
+                  <ng-container *ngSwitchCase="'svg+xml'">
+                    <embed [src]="va.sanitizedData" class="attachment-display-frame w-100" style="height: 60px" />
+                    <!-- <img [src]="va.sanitizedThumbnail || va.sanitizedData" alt="visit attachment" class="attachment-display-frame"> -->
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <img [src]="va.sanitizedThumbnail || va.sanitizedData" alt="thumbnail unavailable"
+                      class="attachment-display-frameimg-thumbnail w-100" style="height: 60px" />
+                  </ng-container>
+                </ng-container>
+
+                <!-- <img [src]="va.sanitizedThumbnail" *ngIf="va.fileType.split('/')[1] != 'svg+xml'" alt="visit attachment" class="attachment-display-frame">
+                         <embed [src]="va.sanitizedData" *ngIf="va.fileType.split('/')[1] == 'svg+xml'"  style="width: 100%;height: 100%;border: none;" /> -->
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <ng-container [ngSwitch]="va.fileType.split('/')[1]">
+                  <ng-container *ngSwitchCase="'pdf'">
+                    <!-- <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                    <embed [src]="va.sanitizedData" class="attachment-display-frame w-100" style="height: 60px" />
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'plain'">
+                    <!-- <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                    <embed [src]="va.sanitizedData" class="attachment-display-frame w-100" style="height: 60px" />
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'x-zip-compressed'">
+                    <h1 style="text-align: center; margin-top: 19px">
+                      ZIP file
+                    </h1>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                      {{ va.fileType.split("/")[1] }}
+                    </h3>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <div *ngIf="!va.sanitizedData" class="text-center text-muted my-3">
+              <h4><i class="ti-eye"></i> Preview Not Available</h4>
+            </div>
+
+            <!--
+                     <div [ngSwitch]="va.fileType.split('/')[0]">
+                         <div *ngSwitchCase="'image'">
+                             <img [src]="va.sanitizedThumbnail" alt="visit attachment" class="attachment-display-frame">
+                         </div>
+                         <div *ngSwitchCase="'pdf'">
+                             <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe>
+                         </div>
+                         <div *ngSwitchCase="'plain'">
+                             <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe>
+                         </div>
+                         <div *ngSwitchDefault>
+                             <h3 *ngIf="va.fileType.split('/')[0] != 'image'">{{va.fileType.split('/')[1]}}</h3>
+                         </div>
+                         
+                     </div>
+                 -->
+            <!-- <embed [src]="va.sanitizedData" width="200px" height="200px" /> -->
+            <!-- </a> -->
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <input type="text" class="visit-attachment-name-field" #fileNameField name="fileName" maxlength="30"
+                *ngIf="enableRenameVisitAttachmentField == va.uniqueIdentifier" [(ngModel)]="va.fileName"
+                (blur)="toggleRenameField('hide', va)" (keyup.enter)="toggleRenameField('hide', va)" />
+              <span title="click to rename | {{ va.fileName }}" class="visit-attachment-name"
+                (click)="toggleRenameField('show', va)" [hidden]="
+               enableRenameVisitAttachmentField == va.uniqueIdentifier
+             " style="
+               display: block;
+               padding: 7px;    
+               text-align: center;
+               font-size: 0.8rem;
+               font-weight: 500;
+               color: #ffffff;
+               background-color: rgba(
+                 0,
+                 0,
+                 0,
+                 0.6
+               );
+               border-radius: 5px; 
+               overflow: hidden;
+               text-overflow: ellipsis; 
+               white-space: nowrap;
+             ">{{ va.fileName }}</span>
+              <!-- <button
+             type="button"
+             *ngIf="allowRemove || !va.docId"
+             class="btn btn-outline-danger btn-sm p-0 text secondary remove-attachment-btn"
+             (click)="removeVisitAttachment(va)"
+             title="Remove / Delete"
+             style="width: 20px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
+           >
+             <i class="ti-close m-0"></i>
+           </button> -->
+              <!--  *ngIf="!va.docId" -->
+            </div>
+            <!-- <div class="d-flex mt-3" style="justify-content: space-evenly; ">
+              
+              <a class="text-primary" (click)="getDocById(va.docId, va.uniqueIdentifier, 1)" title="Download"
+                style="font-size: 1.2rem; cursor: pointer">
+                <i class="fa fa-download mr-4" style="color: #1bc5bd !important;"></i>
+              </a>
+              <a class="text-danger" (click)="removeVisitAttachment(va)" title="Remove/Delete"
+                style="font-size: 1.2rem; cursor: pointer">
+                <i class="fa fa-trash mr-4" style="color: #c82333;"></i>
+              </a>
+              <a class="text-secondary" (click)="getDocById(va.docId, va.uniqueIdentifier, 0)" title="Fullscreen"
+                style="font-size: 1.2rem; cursor: pointer">
+                <i class="ti-arrows-corner mr-4" style="color: #6c757d;"></i>
+              </a>
+            </div> -->
+            <div class="d-flex mb-2 justify-content-around align-items-center image-actions">
+              <!-- Download Button -->
+              <a class="action-btn text-success" 
+                 (click)="getDocById(va.docId, va.uniqueIdentifier, 1)" 
+                 title="Download" 
+                 aria-label="Download">
+                <i class="fa fa-download" style="color: #1bc5bd !important;"></i>
+              </a>
+            
+              <!-- Delete Button -->
+              <!-- <a class="action-btn text-danger" 
+                 (click)="removeVisitAttachment(va)" 
+                 title="Delete" 
+                 aria-label="Delete">
+                <i class="fa fa-trash" style="color: #c82333;"></i>
+              </a> -->
+            
+              <!-- Fullscreen Button -->
+              <a class="action-btn text-secondary" 
+                 (click)="getDocById(va.docId, va.uniqueIdentifier, 0)" 
+                 title="Fullscreen View" 
+                 aria-label="Fullscreen">
+                <i class="fa fa-expand-arrows-alt" style="color: #6c757d;"></i>
+              </a>
+            </div>
+            
+            <div class="mt-1" style="margin-top: 1rem;">
+              <label for="remarks-{{ i }}" class="form-label font-weight-bold"></label>
+              <textarea *ngIf="!va.docId || va.Remarks" id="remarks-{{ i }}" class="form-control form-control-sm"
+                rows="1" [(ngModel)]="va.Remarks" [readonly]="!!va.docId" style="resize: none; border: none; background-color: #f8f9fa;
+             position: absolute;
+             top: 12rem;
+             overflow-y: auto;
+             font-size: 14px;" placeholder="Add remarks here.."
+                (input)=" addRemarks(va,$event.target.value)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!--  -->
+
+        <div class="col-12 attachments-group attachments-group-grid2" *ngIf="attachmentLayout == 'grid2'">
+          <div class="attachment-item" *ngFor="let va of visitAttachments; let i = index" style="position: relative"
+             [title]= "va.fileName + ' - ' + (va.CreatedName || 'NA') + ' (' + (va.CreatedOn | date:'dd MMM yyyy, hh:mm a') + ')'"  [ngClass]="{'active-image-border': i == rowIndex}">
+            <div class="overlayForDoc" (click)="getDocById(va.docId, va.uniqueIdentifier, 0); getIndex(i)"></div>
+
+            <ng-container [ngSwitch]="va.fileType.split('/')[0]" *ngIf="va.sanitizedData">
+              <ng-container *ngSwitchCase="'image'">
+                <ng-container [ngSwitch]="va.fileType.split('/')[1]">
+                  <ng-container *ngSwitchCase="'svg+xml'">
+                    <embed [src]="va.sanitizedData" class="attachment-display-frame" />
+                    <!-- <img [src]="va.sanitizedThumbnail || va.sanitizedData" alt="visit attachment" class="attachment-display-frame"> -->
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <img [src]="va.sanitizedThumbnail || va.sanitizedData" alt="thumbnail unavailable"
+                      class="attachment-display-frame" />
+                  </ng-container>
+                </ng-container>
+
+                <!-- <img [src]="va.sanitizedThumbnail" *ngIf="va.fileType.split('/')[1] != 'svg+xml'" alt="visit attachment" class="attachment-display-frame">
+                                <embed [src]="va.sanitizedData" *ngIf="va.fileType.split('/')[1] == 'svg+xml'"  style="width: 100%;height: 100%;border: none;" /> -->
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <ng-container [ngSwitch]="va.fileType.split('/')[1]">
+                  <ng-container *ngSwitchCase="'pdf'">
+                    <!-- <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                    <embed [src]="va.sanitizedData" class="attachment-display-frame" />
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'plain'">
+                    <!-- <iframe [src]="va.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                    <embed [src]="va.sanitizedData" class="attachment-display-frame" />
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'x-zip-compressed'">
+                    <h4 style="text-align: center; margin-top: 10px">
+                      ZIP file
+                    </h4>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                      {{ va.fileType.split("/")[1] }}
+                    </h3>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <div *ngIf="!va.sanitizedData">
+              <h4><i class="ti-eye"></i></h4>
+            </div>
+
+            <button type="button" *ngIf="allowRemove || !va.docId"
+              class="btn btn-outline-danger btn-sm remove-attachment-btn" (click)="removeVisitAttachment(va)"
+              title="Remove / Delete">
+              <i class="ti-close m-0"></i>
+            </button>
+            <!-- *ngIf="!va.docId" -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row py-10 text-center bg-gray" *ngIf="!visitAttachments.length && isLoadClick">
+        <div class="col font-weight-bold text-center">
+          <i class="flaticon-exclamation text-danger"></i> No Documents Found!
+        </div>
+      </div>
+      <div class="row py-10 text-center bg-gray" *ngIf="!isLoadClick">
+        <div class="col font-weight-bold">
+          To load the documents <br />
+          <a [routerLink]="" class="cursor-pointer text-primary" style="text-decoration: underline"
+            (click)="reloadVisitDocs()">Click here</a>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.visitDocs" size="medium"
+    color="#fff" type="square-loader" [fullScreen]="false">
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
+</div>
+
+<div class="camera-container-row" [hidden]="!activeVideoCameraStream">
+  <div class="col-sm-12">
+    <app-card>
+      <!-- [title]="'Camera'" [cardClass]="'tim-card tim-card-success'" -->
+      <div class="camera-area">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center">
+              <video style="background-color: black" #videoElement [width]="videoDimensions.width"
+                [height]="videoDimensions.height"></video>
+
+              <div class="row">
+                <div class="col-12">
+                  <!-- <button (click)="startCamera()" class="btn btn-sm btn-outline-success">Play</button> -->
+                  <!-- <button (click)="pause()" class="btn btn-warning">Pause</button> -->
+                  <!-- <button (click)="resume()" class="btn btn-info">Resume</button> -->
+                  <button (click)="capture()" *ngIf="openCameraFromSource == 'patient_pic'"
+                    class="btn btn-sm btn-outline-success m-r-10">
+                    Capture
+                  </button>
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" (click)="captureDocument()" *ngIf="openCameraFromSource == 'attachment'"
+                      class="btn btn-primary font-weight-bold">
+                      Capture Picture
+                    </button>
+                    <button type="button" (click)="stopCamera()" class="btn btn-light-danger font-weight-bold"
+                      data-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+
+                  <!-- <button (click)="captureDocument()" *ngIf="openCameraFromSource == 'attachment'" class="btn btn-sm btn-success m-r-10">Capture Document</button>
+                                    <button (click)="stopCamera()" class="btn btn-sm btn-outline-danger">Close</button> -->
+                  <select class="form-control" [(ngModel)]="selectedCamera" (change)="cameraChangedEvent()">
+                    <option *ngFor="let cam of cameraDevicesList" [value]="cam.id">
+                      {{ cam.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <canvas [hidden]="true" #canvas id="canvas" [width]="videoDimensions.width"
+                [height]="videoDimensions.height"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<ng-template #documentPopup let-documentPopup>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">
+      <b>{{ selectedImg?.fileName }}</b>
+    </h5>
+    <span class="text-danger cursor-pointer" aria-hidden="true">
+      <!-- <button type="button" class="close text-danger cursor-pointer" aria-label="Close" >
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+      <svg focusable="false" width="24" height="24" viewBox="0 0 24 24" (click)="documentPopup.dismiss('Cross click')"
+        class="close-btn text-danger cursor-pointer">
+        <!-- <i class="fas fa-window-close text-danger cursor-pointer mr-1 float-right"
+                aria-label="Close" (click)="documentPopup.dismiss('Cross click')">
+                </i> -->
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+        </path>
+      </svg>
+    </span>
+  </div>
+  <div class="modal-body" style="height: 85vh">
+    <div class="row" style="height: 100%">
+      <div class="col-12 text-center" *ngIf="selectedImg" style="height: inherit">
+        <ng-container [ngSwitch]="selectedImg?.fileType.split('/')[0]">
+          <ng-container *ngSwitchCase="'image'">
+            <ng-container [ngSwitch]="selectedImg?.fileType.split('/')[1]">
+              <ng-container *ngSwitchCase="'svg+xml'">
+                <embed [src]="selectedImg?.sanitizedData" class="attachment-display-frame"
+                  style="width: 100%; height: 100%; object-fit: contain" />
+                <!-- <img [src]="selectedImg.sanitizedData" alt="visit attachment" class="attachment-display-frame"> -->
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="btn-group pull-right" role="group">
+                      <button type="button" class="btn btn-sm btn-outline-danger no-print" (click)="rotateImage()">
+                        <i aria-hidden="true" class="fa fa-retweet"></i>Rotate
+                      </button>
+                      <button type="button" class="btn btn-sm btn-light-primary no-print ml-1" (click)="zoomOut()">
+                        <i aria-hidden="true" class="fa fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-light-primary pull-right no-print ml-1"
+                        (click)="zoomIn()">
+                        <i aria-hidden="true" class="fa fa-plus"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-primary pull-right no-print ml-1"
+                        ngbTooltip="Print Document" (click)="printDocument('doc-print')">
+                        <i aria-hidden="true" class="fa fa-print"></i>Print
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-1" style="width: 100%; height: 96%; overflow: auto">
+                  <span class="doc-print" id="doc-print" style="
+                      display: block;
+                      overflow: auto;
+                      width: 100%;
+                      height: 100%;
+                    " (wheel)="onMouseWheel($event)" (mousedown)="startDrag($event)"
+                    (document:mousemove)="onDrag($event)">
+                    <img [src]="selectedImg?.sanitizedData" alt="file not found" [ngStyle]="getImageStyles()"
+                      class="attachment-display-frame" style="width: 100%; height: 100%; object-fit: scale-down" />
+                  </span>
+                </div>
+              </ng-container>
+            </ng-container>
+
+            <!-- [style.transform]="'rotate(' + imageRotation + 'deg)'" 
+                        style="width: 100%; height: 100%; object-fit: contain;"-->
+            <!-- <img [src]="selectedImg.sanitizedData" *ngIf="selectedImg.fileType.split('/')[1] != 'svg+xml'" alt="visit attachment" class="attachment-display-frame">
+                        <embed [src]="selectedImg.sanitizedData" *ngIf="selectedImg.fileType.split('/')[1] == 'svg+xml'" class="attachment-display-frame" /> -->
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <ng-container [ngSwitch]="selectedImg?.fileType.split('/')[1]">
+              <ng-container *ngSwitchCase="'pdf'">
+                <!-- <iframe [src]="selectedImg.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                <embed [src]="selectedImg?.sanitizedData" style="width: 100%; border: none"
+                  class="attachment-display-frame" style="width: 100%; height: 100%; object-fit: contain" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'plain'">
+                <!-- <iframe [src]="selectedImg.sanitizedData" style="width: 100%;height: 100%;border: none;"></iframe> -->
+                <embed [src]="selectedImg?.sanitizedData" width="100%" class="attachment-display-frame"
+                  style="width: 100%; height: 100%; object-fit: contain" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'x-zip-compressed'">
+                <h2>
+                  <a [href]="selectedImg?.sanitizedData">Download</a> ZIP file
+                </h2>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <h3 *ngIf="selectedImg?.fileType.split('/')[0] != 'image'" cl>
+                  {{ selectedImg?.fileType.split("/")[1] }}
+                </h3>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.selectedDoc" size="medium"
+      color="#fff" type="square-loader" [fullScreen]="false">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </div>
+  <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" (click)="documentPopup.dismiss('close button clicked')"><i class="ti-close"></i>Close</button>
+    </div> -->
+</ng-template>

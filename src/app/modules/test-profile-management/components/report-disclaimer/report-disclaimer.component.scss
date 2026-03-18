@@ -1,0 +1,42 @@
+:host ::ng-deep ckeditor .ng-invalid.ng-touched .cke_contents,
+:host ::ng-deep ckeditor.ng-invalid.ng-touched .cke_contents {
+    border: 1px solid red;
+}
+
+.mat-card {
+    box-shadow: none; /* or box-shadow: 0 0 0 transparent; */
+  }
+  
+  ::ng-deep .mat-tab-label-active {
+    border-bottom: 2px solid #1BC5BD // #1BC5BD; /* Change the color to your desired shade of green */
+  }
+  
+  /* Optional: You can style the tab labels themselves, for example, changing their text color */
+  ::ng-deep  .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+      background-color: #1BC5BD // #1BC5BD;
+  }
+  ::ng-deep .cke_chrome{
+      width: 100% !important;
+  }
+  .custom-title h5 {
+    color: #1BC5BD;
+  }
+
+//   .disclaimer-container {
+//     margin-top: 10px;
+// }
+
+.disclaimer-text {
+    color: #d9534f; /* Bootstrap 'text-danger' equivalent */
+    font-size: 0.9rem; /* Slightly smaller than normal text for emphasis */
+    font-weight: bold; /* Make it more prominent */
+    text-transform: capitalize; /* Uniform text style */
+    background-color: rgba(217, 83, 79, 0.1); /* Light red background for subtle attention */
+    padding: 5px 10px; /* Add spacing around the text */
+    border-radius: 5px; /* Rounded corners for a polished look */
+    border: 1px solid #d9534f; /* Optional: Border for clear emphasis */
+    display: inline-block; /* Prevent the background from stretching too wide */
+}
+  ::ng-deep .cke_contents {
+    height: 4in !important;
+  }

@@ -1,0 +1,14 @@
+.example-chip-list {
+    width: 100%;
+}
+::ng-deep .mat-form-field-infix {
+    width: 100% !important;
+}
+
+.ng-select.custom ::ng-deep .ng-select-container  {            
+  border-radius: 10px;
+}
+
+::ng-deep .tooltip .tooltip-inner  {            
+  text-align: left;
+}

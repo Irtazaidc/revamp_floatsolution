@@ -1,0 +1,331 @@
+
+<div class="container" *ngIf="IsValidUser!=1">
+    <div class="card">
+        <div class="container mt-2">
+          <div class="row col-12 mb-5 mt-4">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 mb-2 text-center" >
+                <div class="alert alert-danger text-center ml-12 col-12"><span style="display: inline;"> <strong>Warning!</strong> To proceed this operation you need to login...!</span>
+                  <!-- <strong>Warning!</strong> To proceed this operation you need to login...!<i class="fa fa-sign-in-alt fa-2x text-danger cursor-pointer ml-3" aria-hidden="true" (click)="openLoginModal()"></i> -->
+                  <span style="display: inline; cursor: pointer;" class="material-icons icon-image-preview" (click)="openLoginModal()"> login</span>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="push-notifications-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="'Broadcast Push Notifications'" [cardClass]="'tim-card tim-card tim-card-danger'">
+                <!-- <a class="pull-right" href="#sendNotificationSpecificCardToggle" aria-controls="sendNotificationSpecificCardToggle" aria-expanded="true" data-toggle="collapse" role="button">
+                    <i class="icofont icofont-sort"></i>
+                </a>
+                <span class="pull-right">&nbsp;&nbsp;&nbsp;</span> -->
+                <a class="refresh-widget pull-right" href="javascript:void(0)" role="button" (click)="getPushNotificationTokens_generic()">
+                    <i class="icofont icofont-refresh"></i>
+                </a>
+                <p class="card-category">My IDC App Users</p>
+
+                <div class="collapse show" id="sendNotificationSpecificCardToggle">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 col-12">
+                            <label>Title: <span class="mandatory-field">*</span></label>
+                            <input type="text" placeholder="" class="form-control" [(ngModel)]="notificationForms.generic.title" />
+                        </div>
+                        <div class="form-group col-md-6 col-12">
+                            <label>Sub Title: (optional) </label>
+                            <input type="text" placeholder="" class="form-control" [(ngModel)]="notificationForms.generic.subtitle" />
+                        </div>
+                        <div class="form-group col-md-6 col-12">
+                            <label>Body:<span class="mandatory-field">*</span> </label>
+                            <input type="text" placeholder="" class="form-control" [(ngModel)]="notificationForms.generic.body" />
+                        </div>
+                        <div class="form-group col-md-6 col-12 d-none">
+                            <label>Data: (optional)</label>
+                            <input type="text" placeholder="json" class="form-control" [(ngModel)]="notificationForms.generic.data" />
+                        </div>
+                        <div class="col-12">
+                            <!-- <button class="btn btn-danger pull-right" (click)="sendNotifications('generic')">Send</button> -->
+                            <button tabindex="20"
+                                class="btn btn-sm btn-danger pull-right"
+                                title="Save"
+                                mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="sendNotifications('generic')"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary"
+                                cancelButtonType="outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                            > <i class="fa fa-save m-0"></i>
+                            Send
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-danger text-center">
+                            <hr class="hr hr-primary">
+                            <h4>Notification will be broadcasted to <br><strong>{{pushNotificationTokens_generic.length}}</strong> users of <strong>My IDC App</strong></h4>
+                        </div>
+                    </div>
+                    <!-- <ul class="fixed-height-list">
+                        <li class="select-all-list-item">
+                            <input type="checkbox"(change)="checkAll($event, 'generic')" /> &nbsp; <strong>Select / Deselect All </strong> <span class="float-right">(Total: {{pushNotificationTokens_generic.length}})</span>
+                        </li>
+                        <li *ngFor="let item of pushNotificationTokens_generic">
+                            <div class="form-group">
+                                <input type="checkbox" [(ngModel)]="item.checked" /> &nbsp;
+                                {{item.title || ''}} &nbsp;  <span class="device-token">{{item.deviceToken}}</span>
+                            </div>
+                        </li>
+                    </ul> -->
+
+                    <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.pushNotification_generic" size="large" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+
+                </div>
+            </app-card>
+        </div>
+
+    </div>
+
+
+    <div class="row" *ngIf="showSpecificUsersNotificationsArea">
+        <div class="col-md-12">
+            <app-card [title]="'Send Push Notifications to Specific Users'" [cardClass]="'tim-card tim-card tim-card-info'">
+
+                <!-- <a class="pull-right" href="#sendNotificationGenericCardToggle" aria-controls="sendNotificationGenericCardToggle" aria-expanded="true" data-toggle="collapse" role="button">
+                    <i class="icofont icofont-sort"></i>
+                </a>
+                <span class="pull-right">&nbsp;&nbsp;&nbsp;</span> -->
+                <a class="refresh-widget pull-right" href="javascript:void(0)" role="button" (click)="getPushNotificationTokens_specific()">
+                    <i class="icofont icofont-refresh"></i>
+                </a>
+
+                <p class="card-category">Device Tokens of My IDC App Users</p>
+
+                <div class="collapse show" id="sendNotificationGenericCardToggle">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 col-12">
+                            <label>Title: <span class="mandatory-field">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="notificationForms.specific.title" />
+                        </div>
+                        <div class="form-group col-md-6 col-12">
+                            <label>Sub Title: (optional)</label>
+                            <input type="text" class="form-control" [(ngModel)]="notificationForms.specific.subtitle" />
+                        </div>
+                        <div class="form-group col-md-6 col-12">
+                            <label>Body: <span class="mandatory-field">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="notificationForms.specific.body" />
+                        </div>
+                        <div class="form-group col-md-6 col-12 d-none">
+                            <label>Data: (optional)</label>
+                            <input type="text" placeholder="json" class="form-control" [(ngModel)]="notificationForms.specific.data" />
+                        </div>
+                        <div class="col-12">
+                            <!-- <button class="btn btn-sm btn-info float-right" (click)="sendNotifications('specific')">Send</button> -->
+                            <button tabindex="20"
+                                class="btn btn-sm btn-info float-right"
+                                title="Save"
+                                mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="sendNotifications('specific')"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary"
+                                cancelButtonType="outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                            > <i class="fa fa-save m-0"></i>
+                            Send
+                            </button>
+
+                        </div>
+                    </div>
+                    <ul class="fixed-height-list">
+                        <li>
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                        </li>
+                        <li class="select-all-list-item">
+                            <input type="checkbox"(change)="checkAll($event, 'specific')" /> &nbsp; <strong>Select / Deselect All </strong> <span class="float-right">(Total: {{pushNotificationTokens_specific.length}})</span>
+                        </li>
+                        <li *ngFor="let item of pushNotificationTokens_specific | filterByKey: searchText: ['title','deviceToken']">
+                            <div class="form-group">
+                                <input type="checkbox" [(ngModel)]="item.checked" /> &nbsp; {{item.title || ''}} &nbsp;  
+                                <span class="device-token">{{item.deviceToken}}</span> &nbsp; &nbsp; 
+                                <span class="unread-tokens-count"> ({{item.unReadNotificationCount}})</span>
+                            </div>
+                        </li>
+                    </ul>    
+                    
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.pushNotification_specific" size="large" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+
+                </div>
+
+            </app-card>
+        </div>
+
+    </div>
+
+    
+    <div class="row" *ngIf="showSpecificUsersNotificationsArea">
+        <div class="col-md-12">
+            <app-card [title]="'Save Push Notifications'" [cardClass]="'tim-card tim-card tim-card-success'">
+
+                <!-- <a class="pull-right" href="#notificationListCardToggle" aria-controls="notificationListCardToggle" aria-expanded="true" data-toggle="collapse" role="button">
+                    <i class="icofont icofont-sort"></i>
+                </a>
+                <span class="pull-right">&nbsp;&nbsp;&nbsp;</span> -->
+                <a class="refresh-widget pull-right" href="javascript:void(0)" role="button" (click)="getPushNotificationsList()">
+                    <i class="icofont icofont-refresh"></i>
+                </a>
+
+                <p class="card-category">My IDC App Notifications List</p>
+
+                <div class="collapse show" id="notificationListCardToggle">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 col-12">
+                            <label>Title: <span class="mandatory-field">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="notificationForms.new.title" />
+                        </div>
+                        <div class="form-group col-md-6 col-12">
+                            <label>Sub Title: (optional) </label>
+                            <input type="text" class="form-control" [(ngModel)]="notificationForms.new.subtitle" />
+                        </div>
+                        <div class="form-group col-md-6 col-12">
+                            <label>Body:<span class="mandatory-field">*</span> </label>
+                            <input type="text" class="form-control" [(ngModel)]="notificationForms.new.body" />
+                        </div>
+                        <div class="form-group col-md-6 col-12 d-none">
+                            <label>Data: (optional)</label>
+                            <input type="text" class="form-control" placeholder="json" [(ngModel)]="notificationForms.new.data" />
+                        </div>
+                        <div class="col-12">
+                            <!-- <button class="btn btn-sm btn-success float-right" (click)="saveNotification(2, '')">Save</button> -->
+                            <button tabindex="20"
+                                class="btn btn-sm btn-success float-right"
+                                title="Save"
+                                mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="saveNotification(2, '')"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary"
+                                cancelButtonType="outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                            > <i class="fa fa-save m-0"></i>
+                            Save
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <hr>
+                            <h4 class="text-success">Notifications List:</h4>
+                        </div>
+                        <div class="table-responsive fixed-height-table">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Sub Title</th>
+                                        <th>Body</th>
+                                        <!-- <th>Data</th> -->
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of pushNotificationsList" [ngClass]="selectedNotification == item ? 'selected-notification-row' : ''">
+                                        <td>{{item.mobileNotificationID || ''}}</td>
+                                        <td>{{item.notificationTitle || ''}}</td>
+                                        <td>{{item.notificationSubTitle || ''}}</td>
+                                        <td>{{item.notificationBody || ''}}</td>
+                                        <!-- <td>{{item.notificationData || ''}}</td> -->
+                                        <td>
+                                            <input type="checkbox" [checked]="selectedNotification == item" class="btn btn-sm btn-outline-success" (click)="selectedNotification = item" />
+                                            <!-- <input type="checkbox" *ngIf="selectedNotification != item" class="btn btn-sm btn-outline-success" (click)="selectedNotification = item" /> -->
+
+                                            <!-- <button *ngIf="selectedNotification != item" class="btn btn-sm btn-outline-success" (click)="selectedNotification = item">Select</button>
+                                            <button *ngIf="selectedNotification == item" class="btn btn-sm btn-outline-danger" (click)="selectedNotification = ''">UnSelect</button> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.pushNotificationsList" size="large" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+
+                </div>
+                  
+            </app-card>
+        </div>
+
+    </div>
+
+
+</div>
+      
+
+
+
+
+
+
+<!------begin:: Authenticate Admin Popup-->
+<ng-template #authenticateAdmin  let-c="close" let-d="dismiss">
+    <form class="pt-4">
+      <div class="modal-body">
+          <div class="container">
+            <div class="row login-header">
+              <div class="col-12">
+                <h4>Login to your admin account</h4>
+              </div>
+            </div>
+            <hr>
+            <div class="d-flex flex-column pb-3" >
+              <label for="uname">Username</label>
+              <input type="text"placeholder="Enter username" [(ngModel)]="username" name="uname" required
+                class="form-control">
+            </div>
+            <div class="d-flex flex-column pb-3" >
+              <label for="psw">Password</label>
+              <input type="password" placeholder="Enter Password" [(ngModel)]="password" name="psw" required
+                class="form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-sm btn-outline-danger" data-dismiss="modal" (click)="closeImageModal()">
+              <i class="fa fa-times-circle"></i> Cancel</button>
+        <button class="btn btn-sm btn-outline-success" (click)="Login()"  [disabled]="disabledButtonModal">
+                <i class="fa fa-check-circle"></i>  Login <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinner"></i></button>
+      </div>
+    </form>
+</ng-template>
+<!------end:: Authenticate Admin Popup-->

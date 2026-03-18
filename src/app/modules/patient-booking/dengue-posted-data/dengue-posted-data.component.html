@@ -1,0 +1,75 @@
+<div class="card card-custom gutter-t">
+    <div class="card-body px-4 py-4">
+        <form [formGroup]="DenForm" class="form-horizontal" name="form" role="form">
+            <div class="row form-group justify-content-center">
+                <div class="col-md-2 col-sm-12">
+                    <label class="control-label">Date From</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                        value="1980-08-26" formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                        type="text" value="" />
+                </div>
+                <div class="col-md-2 col-lg-2 col-sm-12">
+                    <label class="control-label">Date To</label>
+                    <input (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker" ngbDatepicker
+                        formControlName="dateTo" class="form-control mb-4" name="dateTo" type="text" value="" />
+                </div>
+                <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+                    <div (click)="getDenguePostedData()" class="btn btn-primary" type="button">Search</div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card card-custom gutter-t">
+    <div class="card-body px-4 py-4">
+        <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText"
+            name="searchText" />
+        <table class="table table-hover compact">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Patient Name</th>
+                    <th>VisitId</th>
+                    <th>Param Code</th>
+                    <th>Result</th>
+                    <th>District</th>
+                    <th>Tehsil</th>
+                    <th>Permanent District</th>
+                    <th>Permanent Tehsil</th>
+                    <th>Address</th>
+                    <th>Permanent Address</th>
+                    <th>ReportingDate</th>
+                    <th>Posted Date</th>
+                    <th>Response StatusCode</th>
+                    <th>Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!denguePostedData.length">
+                    <td colspan="15" style="text-align: center;">
+                        <strong class="text-primary mt-8">No Record Found..</strong>
+                    </td>
+                </tr>
+                <tr
+                    *ngFor="let den of this.denguePostedData | filterByKey: searchText:['VisitId', 'District', 'Tehsil', 'CreatedOn']; let i = index">
+                    <td>{{i + 1}}</td>
+                    <td>{{den.PatientName}}</td>
+                    <td>{{den.VisitId}}</td>
+                    <td>{{den.PCode}}</td>
+                    <td>{{den.Result}}</td>
+                    <td>{{den.District}}</td>
+                    <td>{{den.Tehsil}}</td>
+                    <td>{{den.PermenentDistrict}}</td>
+                    <td>{{den.PermenentTehsil}}</td>
+                    <td>{{den.Address || 'NA'}}</td>
+                    <td>{{den.PermanentAddress || 'NA'}}</td>
+                    <td>{{den.ReportingDate | date: "dd MMM, yyyy, h:mm a"}}</td>
+                    <td>{{den.CreatedOn | date: "dd MMM, yyyy, h:mm a"}}</td>
+                    <td>{{den.ResponseStatusCode }}</td>
+                    <td>{{den.ResponseJSON || 'NA'}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

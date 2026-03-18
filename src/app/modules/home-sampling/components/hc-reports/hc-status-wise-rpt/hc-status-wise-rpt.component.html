@@ -1,0 +1,109 @@
+<app-card [title]="'HC Status Wise Report'" [cardClass]="'tim-card tim-card tim-card-primary'"
+    [cardHeaderClass]="'card-header-narrow'">
+    <div class="mt-2" id="">
+        <form [formGroup]="HCStatusWiseRptForm" class="form-horizontal" name="form" role="form"
+            (ngSubmit)="getHCStatusWiseRpt()">
+            <div class="row form-group">
+                <div class="col-md-3 col-sm-12">
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                        value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                        class="form-control mb-4" type="text" value="" [ngClass]="{'invalid': HCStatusWiseRptForm.get('dateFrom').errors , 'invalid-highlighted': HCStatusWiseRptForm.get('dateFrom').errors && isSubmitted }" />
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <input (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" value="1980-08-26" #dateTo="ngbDatepicker"
+                        ngbDatepicker formControlName="dateTo" class="form-control mb-4" name="dateTo"
+                        type="text" value="" [ngClass]="{'invalid': HCStatusWiseRptForm.get('dateTo').errors , 'invalid-highlighted': HCStatusWiseRptForm.get('dateTo').errors && isSubmitted }" />
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12">
+                    <ng-select tabindex="1" placeholder="HC Status" formControlName="hcStatus" name="hcStatus" [ngClass]="{'invalid': HCStatusWiseRptForm.get('hcStatus').errors , 'invalid-highlighted': HCStatusWiseRptForm.get('hcStatus').errors && isSubmitted }"
+                        [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="bs.HCBookingStatusID" 
+                            *ngFor="let bs of BookingStatusList">
+                            {{bs.HCBookingStatus}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-primary" type="submit">
+                        <i ngbTooltip="Search Requests" class="fa fa-search"></i>
+                    </button>
+                </div>
+                &nbsp;
+                <div class="pull-right">
+                    <button *ngIf="hcStatusWiseRptList.length" (click)="exportAsXLSX()" class="btn btn-primary"
+                        type="submit">
+                        <i ngbTooltip="Export Report" class="fa fa-download" aria-hidden="true"></i> 
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</app-card>
+<app-card [cardClass]="'tim-card tim-card tim-card-primary'">
+    <div class="row mt-3 ml-0 mr-0">
+        <div style="height: 4;" class="table-responsive">
+            <input type="text" placeholder="Search Here " style="float: right;"
+                class="col-lg-12 col-sm-12 form-control form-control-sm mb-4 " [(ngModel)]="searchInHCStatusWiseRpt"
+                name="searchInHCStatusWiseRpt" />
+
+            <table class="table table-hover compact">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>HCRequestID</th>
+                        <th>RiderName</th>
+                        <th>BookingPatientID</th>
+                        <th>Action Performed By</th>
+                        <th>HCStaffRemarks</th>
+                        <th>HCAdminRemarks</th>
+                        <th>Visit ID</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center" *ngIf="hcStatusWiseRptList.length<=0">
+                        <td colspan="100">No Record Found</td>
+                    </tr>
+                    <tr
+                        *ngFor="let rpt of hcStatusWiseRptList | filterByKey: searchInHCStatusWiseRpt:['HCRequestID','BookingPatientID', 'HCStaffName', 'HCStaffRemarks', 'HCAdminRemarks' ]; let i = index">
+
+                        <td>
+                            {{i+1}}
+                        </td>
+                        <td>
+                            {{ rpt.HCRequestID}}
+                        </td>
+                        <td>
+                            {{ rpt.RiderName}}
+                        </td>
+                        <td>
+                            {{ rpt.BookingPatientID}}
+                        </td>
+                        <td>
+                            {{ rpt.HCStaffName}}
+                        </td>
+                        <td>
+                            {{ rpt.HCStaffRemarks}}
+                        </td>
+                        <td>
+                            {{ rpt.HCAdminRemarks}}
+                        </td>
+                        <td>
+                            {{ rpt.VisitId}}
+                        </td>
+                        <td>
+                            <button *ngIf="isDiscardEnable" class="btn btn-primary" [disabled]="rpt.isDiscard == 1"
+                                (click)="discardHCShare(rpt)">Discard
+                                share</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</app-card>
+
+<ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="square-loader"
+    [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>

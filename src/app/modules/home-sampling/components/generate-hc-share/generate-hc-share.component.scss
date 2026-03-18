@@ -1,0 +1,109 @@
+.nav.nav-pills .nav-item {
+    margin-right: 0;
+}
+
+.card.card-custom>.card-header.card-header-tabs-line .nav .nav-link {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+th {
+    padding: 0.7rem;
+}
+
+td {
+    padding: 0.7rem;
+}
+
+.tableBorder {
+    font-size: small;
+    border: rgb(202, 198, 198) solid 1px;
+    border-radius: 5px;    
+    overflow: scroll;
+}
+
+
+.alert.r-c-alert-info {
+    background-color: #1bc5bd;
+    border-color: #148d85;
+    color: #ffffff;
+  }
+
+.alert.p-c-alert-info {
+    background-color: #f64e60;
+    border-color: #862730;
+    color: #ffffff;
+  }
+
+.alert.a-c-alert-info {
+    background-color: #6993ff;
+    border-color: #2f4c96;
+    color: #ffffff;
+  }
+
+
+
+
+
+
+
+
+  .card-toolbar .nav {
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-item {
+    flex: 1;
+}
+
+.nav-link {
+    display: block;
+    // text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.nav-content {
+    display: flex;
+    flex-direction: row;
+    // align-items: center;
+    // justify-content: center;
+    gap: 5px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.nav-content i {
+    font-size: 20px;
+}
+
+.active-tab .nav-content {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bg-warning {
+    background-color: #ffc107;
+}
+
+.bg-primary {
+    background-color: #007bff;
+}
+
+.bg-green {
+    background-color: #28a745;
+}
+
+.text-dark {
+    color: #343a40;
+}
+
+.text-white {
+    color: #ffffff;
+}

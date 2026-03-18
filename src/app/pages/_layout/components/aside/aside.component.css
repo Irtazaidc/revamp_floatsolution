@@ -1,0 +1,16 @@
+:host .aside {
+  height: 100%;
+}
+
+:host .aside .aside-menu {
+  margin: 0;
+}
+
+:host .aside .tooltip {
+  z-index: 1000 !important;
+}
+
+:host .menu-text {
+  white-space: nowrap;
+}
+/*# sourceMappingURL=aside.component.css.map */

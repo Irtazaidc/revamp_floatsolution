@@ -1,0 +1,517 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                            <div class="p-2" style="border: 1px solid #eee; ">
+                                <!-- <form [formGroup]="formSearchFAQ" (ngSubmit)="searchFAQ()">
+                                    <div class="row"> 
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="faqCategoryList"
+                                                    bindLabel="FAQCategory" 
+                                                    placeholder="All"
+                                                    bindValue="FAQCategoryID"
+                                                    formControlName="faqCategoryId"
+                                                    [multiple]="false"
+                                                    [closeOnSelect]="true"
+                                                    placeholder="-Select Category-"
+                                                    >
+            
+                                                </ng-select>
+                                            </div>
+                                        </div>                                                                        
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <button type="button" (click)="clearForms()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Post New Job"><i class="ti-plus"></i>New</button>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm pull-right"><i class="ti-search"></i>Search</button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form> -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search Item"
+                                                class="form-control form-control-sm" [(ngModel)]="searchText"
+                                                name="searchText" />
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-primary input-group-btn-custom"
+                                                (click)="getRider(0)" ngbTooltip="Load HC Staff"> <i
+                                                    class="ti-reload"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive fixed-height-table">
+                                    <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)"
+                                        [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader"
+                                        [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <table class="table table-hover compact">
+                                        <thead>
+                                            <tr>
+                                                <!-- <th></th> -->
+                                                <th width="5%">#</th>
+                                                <th width="12%">EmpNo</th>
+                                                <th width="33%">Staff Name</th>
+                                                <!-- <th>CNIC</th> -->
+                                                <th width="25%">Cell No.</th>
+                                                <th width="15%">Staff Type</th>
+                                                <!-- <th width="10%" class="text-right">Action</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="cursor-pointer"
+                                                *ngFor="let rider of RiderList | filterByKey: searchText:['RiderFullName', 'RiderCell', 'RiderEmpNo', 'HCStaffType']; let i = index"
+                                                [ngClass]="{'active': i==rowIndex}"
+                                                (click)="getRiderByID(rider.RiderID,i)">
+                                                <!-- <td> -->
+                                                <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <label for="isActive" class="control-label"></label>
+                                                            <div class="checkbox-inline mt-4">
+                                                                <label class="checkbox">
+                                                                    <input [checked]="!rider.IsActive"  name="isActive" class="form-control"
+                                                                        ([ngModel])="isActive" #isActive id="isActive"
+                                                                        type="checkbox"
+                                                                        (change)="inActiveRider(rider.RiderID, isActive.checked)" />
+                                                                    <span></span></label>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                <!-- </td> -->
+                                                <td width="5%">{{i+1}}</td>
+                                                <td width="12%">{{rider.RiderEmpNo}}</td>
+                                                <!-- <td>{{rider.RiderFirstName}} {{rider.RiderLastName}}</td>                                                 -->
+                                                <td width="33%">{{rider.RiderFullName}}</td>
+                                                <!-- <td>{{rider.CNIC}} </td> -->
+                                                <td width="25%">{{rider.RiderCell}} </td>
+                                                <td width="15%">{{rider.HCStaffType}} </td>
+                                                <!-- <td width="10%" class="text-right">
+                                                    <a (click)="getRiderByID(rider.RiderID)" class="cursor-pointer"
+                                                        style="font-size: 17px;" ngbTooltip="View Detail">
+                                                        <i class="fa fa-eye text-info"></i>
+                                                    </a>
+                                                </td> -->
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6" *ngIf="!RiderList.length">
+                                                    <div class="alert alert-info text-center" role="alert">
+                                                        No HC Staff found <i class="fa fa-info" aria-hidden="true"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-7">
+                            <div class="p-2" style="border: 1px solid #eee; ">
+                                <form class="container" #container class="RiderForm" [formGroup]="RiderForm"
+                                    (ngSubmit)="addUpdateRider()">
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                        [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader"
+                                        [fullScreen]="false">
+                                        <p style="color: white"> Please wait... </p>
+                                    </ngx-spinner>
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                        [name]="spinnerRefs.employeesLoadingSection" size="medium" color="#fff"
+                                        type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Employees are loading... </p>
+                                    </ngx-spinner>
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-5 col-xl-3">
+                                            <!-- <img class="rider-img"
+                                            src="https://images.unsplash.com/photo-1640817105556-463aa0502d5c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80"
+                                            alt="Rider Image" /> -->
+                                            <img class="rider-img" [src]="EmployeePic || defaultPatientPic"
+                                                alt="Rider Image" />
+                                        </div>
+
+                                        <div class="col-md-12 col-lg-7 col-xl-9">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-xl-12 pull-right">
+                                                    <div class="form-group">
+                                                        <label for="EmpNumber" class="control-label">Load Employee
+                                                            Data:</label>
+                                                        <div class="input-group" style="position: relative;">
+                                                            <!-- <input type="text" class="form-control form-control-sm" [required]="!isRider" name="EmpNumber" #EmpNumber formControlName="EmpNumber" /> -->
+                                                            <ng-select class="custom" style="width: 90%;"
+                                                                [items]="employeesList" #EmpNumber tabindex="1"
+                                                                placeholder="-Select Person-"
+                                                                formControlName="EmpNumber" bindLabel="FullName"
+                                                                bindValue="EmpNo" [closeOnSelect]="true">
+                                                            </ng-select>
+                                                            <!-- [readonly]="!isRider" -->
+                                                            <span class="md-line"></span>
+                                                            <button type="button" [disabled]="ButtonClip"
+                                                                class="btn btn-sm btn-outline-primary input-group-btn-custom"
+                                                                (click)="loadEmployee(RiderForm.get('EmpNumber').value)"
+                                                                ngbTooltip="Load Employee  data"> <i
+                                                                    class="fa fa-search"></i>
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                    <div class="input-group">
+                                                        <input #EmployeeNumber type="text" class="form-control"
+                                                            name="EmployeeNumber" formControlName="EmployeeNumber"
+                                                            placeholder="Search By Emp-ID">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-primary" type="button"
+                                                                ngbTooltip="Load Employee data"
+                                                                (click)="loadEmployeeByEmployeeID(RiderForm.get('EmployeeNumber').value)">
+                                                                <i class="fa fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- [checked]="isRider" -->
+
+                                    <div class="row">
+                                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="IsExternal" class="control-label"></label>
+                                                <div class="checkbox-inline mt-4">
+                                                    <label class="checkbox">
+                                                      <input 
+                                                        [checked]="isRider"
+                                                        name="IsExternalRider" 
+                                                        class="form-control"  
+                                                        ngModel [ngModelOptions]="{standalone: true}" 
+                                                        #IsExternalRider
+                                                        id="IsExternalRider"
+                                                        type="checkbox"
+                                                        [checked]="IsExternalRider"
+                                                        (change)="externalRider(IsExternalRider.checked)"
+                                                      />
+                                                      <span></span>External Staff</label>
+                                                  </div>
+                                            </div>
+                                        </div> -->
+
+
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="Salutation" class="control-label">HC Staff Type:</label>
+                                                <!-- [required]="!DisableAllfields" -->
+                                                <select class="form-control form-control-sm"
+                                                    formControlName="HcStaffType" #HcStaffType required
+                                                    [ngClass]="{'invalid': RiderForm.get('HcStaffType').errors, 'invalid-highlighted': RiderForm.get('HcStaffType').errors}">
+                                                    <option [value]="''">--Select HC Staff Type--</option>
+                                                    <option *ngFor="let hc of HCUserType" [value]="hc.HCUserTypeID">
+                                                        {{hc.HCStaffType}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="Salutation" class="control-label">Salutation:</label>
+                                                <!-- [required]="!DisableAllfields" -->
+                                                <select class="form-control form-control-sm"
+                                                    formControlName="NotationId" #NotationId
+                                                    [attr.disabled]="DisableAllfields" [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('NotationId').errors, 'invalid-highlighted': RiderForm.get('NotationId').errors}">
+                                                    <option [value]="''">--Select Salutation--</option>
+                                                    <option *ngFor="let s of NotationsList" [value]="s.NotationID">
+                                                        {{s.NotationTitle}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="FirstName" class="control-label">First Name:</label>
+                                                <input [attr.disabled]="DisableAllfields" type="text"
+                                                    [required]="isRider" class="form-control form-control-sm"
+                                                    name="FirstName" formControlName="FirstName"
+                                                    [ngClass]="{'invalid': RiderForm.get('FirstName').errors, 'invalid-highlighted': RiderForm.get('FirstName').errors}">
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="MiddleName" class="control-label">Middle Name:</label>
+                                                <input  [attr.disabled]="DisableAllfields" type="text" class="form-control form-control-sm" name="MiddleName" formControlName="MiddleName">
+                                            </div>
+                                        </div> -->
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="LastName" class="control-label">Last Name:</label>
+                                                <input type="text" [attr.disabled]="DisableAllfields"
+                                                    class="form-control form-control-sm" name="LastName"
+                                                    formControlName="LastName">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="CNIC" class="control-label">CNIC:</label>
+                                                <input #cnic id="pat_cnic" type="text"
+                                                    class="form-control form-control-sm" mask='00000-0000000-0'
+                                                    [showMaskTyped]="true" placeHolderCharacter="*"
+                                                    formControlName="CNIC" [attr.disabled]="DisableAllfields"
+                                                    [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('CNIC').errors, 'invalid-highlighted': RiderForm.get('CNIC').errors}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="Email" class="control-label">Email:</label>
+                                                <input type="email" [attr.disabled]="DisableAllfields"
+                                                    [required]="isRider" class="form-control form-control-sm"
+                                                    name="Email" formControlName="Email"
+                                                    [ngClass]="{'invalid': RiderForm.get('Email').errors, 'invalid-highlighted': RiderForm.get('Email').errors}">
+
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="Cell" class="control-label">Cell No:</label>
+                                                <input
+                                                    id="pat_phone"
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    mask="0*"
+                                                    formControlName="Cell" #phone 
+                                                    [attr.disabled]="DisableAllfields" 
+                                                    [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('Cell').errors, 'invalid-highlighted': RiderForm.get('Cell').errors}"
+                                                    >
+                                            </div>
+                                        </div> -->
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <label for="MobileOperatorID">Personal Cell No: </label>
+                                            <div class="input-group">
+                                                <select class="form-control form-control-sm col-5 pl-1 pr-0"
+                                                    [required]="isRider" formControlName="MobileOperatorID"
+                                                    [ngClass]="{'invalid': RiderForm.get('MobileOperatorID').errors, 'invalid-highlighted': RiderForm.get('MobileOperatorID').errors}">
+                                                    <option [value]="''">--select--</option>
+                                                    <option *ngFor="let item of mobileOperatorList" [value]="item.id">
+                                                        {{item.name}}</option>
+                                                </select>
+
+                                                <input id="Cell" type="text" class="form-control form-control-sm"
+                                                    mask="0*" formControlName="Cell" [required]="isRider"
+                                                    [attr.disabled]="DisableAllfields"
+                                                    [ngClass]="{'invalid': RiderForm.get('Cell').errors, 'invalid-highlighted': RiderForm.get('Cell').errors}"
+                                                    (blur)="getMobileOperatorByCode(RiderForm.get('Cell').value)">
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="ReferenceContactNo" class="control-label">Official
+                                                    No:</label>
+                                                <input id="pat_phone" type="text" class="form-control form-control-sm"
+                                                    formControlName="ReferenceContactNo" [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('ReferenceContactNo').errors, 'invalid-highlighted': RiderForm.get('ReferenceContactNo').errors}"
+                                                    maxlength="11"
+                                                    pattern="\d{11}"
+                                                    inputmode="numeric"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                    >
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="RiderLicense" class="control-label">Licence No:</label>
+                                                <input id="pat_phone" type="text" class="form-control form-control-sm"
+                                                    formControlName="RiderLicense" [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('RiderLicense').errors, 'invalid-highlighted': RiderForm.get('RiderLicense').errors}">
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="RiderLicense" class="control-label">Image:</label>
+                                                <input
+                                                    id="pat_phone"
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    mask="0*"
+                                                    formControlName="Cell" #phone 
+                                                    [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('Cell').errors, 'invalid-highlighted': RiderForm.get('Cell').errors}"
+                                                    >
+                                            </div>
+                                        </div> -->
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="VehicleType" class="control-label">Vehicle Type:</label>
+                                                <select class="form-control form-control-sm"
+                                                    formControlName="VehicleType" [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('VehicleType').errors, 'invalid-highlighted': RiderForm.get('VehicleType').errors}">
+                                                    <option [value]="''">--Select Vehicle--</option>
+                                                    <option *ngFor="let v of VehicleTypesList"
+                                                        [value]="v.VehicleTypeID">{{v.VehicleType}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="Registration" class="control-label">Registration No:</label>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    formControlName="Registration" [required]="isRider"
+                                                    [ngClass]="{'invalid': RiderForm.get('Registration').errors, 'invalid-highlighted': RiderForm.get('Registration').errors}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="LicenseExpiryDate" class="control-label">Licence Expiry
+                                                    Date:</label>
+                                                <input readOnly #dStart type="text"
+                                                    class="form-control form-control-sm mt-1 mr-1"
+                                                    (click)="dFrom_date.toggle()" placeholder="dd-mm-yyyy"
+                                                    autocomplete="off" name="dStart" ngbDatepicker
+                                                    #dFrom_date="ngbDatepicker" formControlName="LicenseExpiryDate"
+                                                    [ngClass]="{'invalid': !dStart.value, 'invalid-highlighted': !dStart.value && RiderForm.get('LicenseExpiryDate').touched}">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="CityID" class="control-label">City:</label>
+                                                <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="citesList"
+                                                    bindLabel="CityName" placeholder="-Select City-" bindValue="CityID"
+                                                    formControlName="CityID" [closeOnSelect]="true" #CityID
+                                                    (change)="getAreasByCityID($event)">
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)"
+                                                                aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.CityName}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="AreaID" class="control-label">Area:</label>
+                                                <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                                    [items]="cityAreasList" bindLabel="CityArea"
+                                                    placeholder="-Select Area-" bindValue="IOrgCityAreaID"
+                                                    formControlName="IOrgCityAreaID" [closeOnSelect]="true"
+                                                    [disabled]="true">
+
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)"
+                                                                aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.CityArea}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="LocId" class="control-label">Branch:</label>
+                                                <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                                    [items]="SampleCenters" bindLabel="Code"
+                                                    placeholder="-Select Branch-" bindValue="LocId"
+                                                    formControlName="LocId" [closeOnSelect]="true" [disabled]="true">
+
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span
+                                                                class="ng-value-icon right form-control form-control-sm"
+                                                                (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <!-- <span class="ng-value-label"> {{item.LocationCode}}</span> -->
+                                                            <span class="ng-value-label"> {{item.Code}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="UserName" class="control-label">Username:</label>
+                                                <input type="text" [attr.disabled]="DisableAllfields"
+                                                    [required]="isRider && RiderID==0" ([ngModel])="DisableAllfields"
+                                                    class="form-control form-control-sm" name="UserName"
+                                                    formControlName="UserName"
+                                                    [ngClass]="{'invalid': RiderForm.get('UserName').errors, 'invalid-highlighted': RiderForm.get('UserName').errors}">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
+                                            *ngIf="!isRider && RiderID==0 && ishShowPassMessage">
+                                            <div class="form-group">
+                                                <label for="UserName" class="control-label"></label>
+                                                <strong class="text-warning"
+                                                    style="display: block;padding-top:23px;">Use Metacubes
+                                                    Password</strong>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
+                                            *ngIf="isRider && RiderID==0">
+                                            <div class="form-group">
+                                                <label for="Password" class="control-label">Password:</label>
+                                                <input type="password" [required]="isRider && RiderID==0"
+                                                    ([ngModel])="DisableAllfields" class="form-control form-control-sm"
+                                                    name="Password" formControlName="Password"
+                                                    [ngClass]="{'invalid': RiderForm.get('Password').errors && RiderID==0, 'invalid-highlighted': RiderForm.get('Password').errors}">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="docs-area mt-2">
+                                        <app-visit-docs [inputDocs]="ld" [allowRemove]="true" [forFilterComp]="7"
+                                            [sectionHead]="'Licence'"
+                                            (outputDocs)="getLoadedDocs($event)"></app-visit-docs>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mt-3"> <!--[disabled]="disabledButton"-->
+                                            <input type="hidden" name="RiderEmpId" formControlName="RiderEmpId">
+                                            <input type="hidden" name="UserId" formControlName="UserId">
+                                            <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right"
+                                                (click)="clearImageData()"><i
+                                                    class="fa fa-eraser text-danger"></i>Clear<i
+                                                    aria-hidden="true"></i></button>
+                                                    
+                                            <button type="submit" class="btn btn-sm btn-info pull-right ml-2"><i
+                                                    class="{{ActionButtonIcon}}"
+                                                    aria-hidden="true"></i>{{ActionButtonText}}<i
+                                                    aria-hidden="true"></i><i class="spinner-border-custom"
+                                                    aria-hidden="true" [hidden]="isSpinner"></i></button>
+
+                                            <button type="button" (click)="newRider()"
+                                                class="btn btn-sm btn-danger pull-right ml-2"><i
+                                                    class="fa fa-plus"></i>New<i aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

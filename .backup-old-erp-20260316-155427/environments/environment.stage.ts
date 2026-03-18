@@ -1,0 +1,22 @@
+export const environment = {
+  production: true,  
+  appVersion: 'v726demo1',
+  USERDATA_KEY: 'authf649fc9a5f1',
+  isMockEnabled: true,
+  testingEnv: true,
+  deployedAppName: '/metacubes_data/',
+  // apiUrl: 'https://reports.idc.net.pk/metacubes_service_data/api/',
+  apiUrl: 'https://stgapi.metacubes.net/meta/api/',
+  // patientReportsPortalUrl: 'https://reports.idc.net.pk/PatientReportsPortalStg/',
+  patientReportsPortalUrl: 'https://stgreports.metacubes.net/',
+  vimsApiUrl: '', // 'https://reports.idc.net.pk/vimsService/api/',
+  // patientPortalApiUrl: 'https://reports.idc.net.pk/OnlinePortalsServiceData/api/',
+  patientPortalApiUrl: 'https://stgapi.metacubes.net/p/api/',
+  // pushNotificationsApiUrl: 'https://reports.idc.net.pk/NotificationsServiceData/api/',
+  pushNotificationsApiUrl: 'https://stgapi.metacubes.net/ns/api/',
+  fbrApiUrl: 'http://localhost:8524/api/IMSFiscal/',
+  RealtimeMetacubesUrl: 'https://reports.idc.net.pk/RealtimeMetacubesData',
+  RealtimeMetacubesUrl1: 'https://stgapi.metacubes.net/meta/',
+  smartReportApiUrl: 'https://stgapi.metacubes.net/sr/api/',
+  EmailServiceUrl: 'https://reports.idc.net.pk/EmailServicestg/#/'
+};

@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-6 col-lg-6">
+        <app-visit-list *ngIf="visitInfo" [visitInfo]="visitInfo"
+            (selVisit)="selVisitRecieved($event)" (selPIN)="selPINRecieved($event)"></app-visit-list>
+    </div>
+    <div class="col-md-6 col-lg-6">
+        <app-visit-detail *ngIf="selVisit" [selVisit]="selVisit" [selPIN]="selPIN"></app-visit-detail>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-lg-6"> 
+        <app-visit-docs [propVisitNo]="cusselpin" [editing]="{save:true,select: true, camera: true}"
+        [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+    </div>
+    <div class="col-md-6 col-lg-6">
+        <app-visit-remarks [propVisitNo]="cusselpin" [editing]="{save: true}" ></app-visit-remarks>
+    </div>
+</div>

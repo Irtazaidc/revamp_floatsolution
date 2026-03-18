@@ -1,0 +1,93 @@
+/* Card wrapper */
+.radiologist-card {
+  border: 1px solid #eee;
+  background-color: #F3F6F9;
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Horizontal layout */
+.radiologist-header {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+/* Image area (SIZE UNCHANGED) */
+.pic-area {
+  position: relative;
+  min-width: 90px; /* Important for flex shrink */
+}
+
+.radiologist-img {
+  width: 81px;
+  height: 81px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+
+/* Spinner text */
+.spinner-text {
+  color: #fff;
+  margin-top: 48px;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Info section */
+.info-area {
+  flex: 1;
+  min-width: 0; /* 🔑 allows text to wrap inside flex */
+}
+
+/* Grid layout with gaps */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px 12px;
+}
+
+/* Full-width items in grid */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Individual info block */
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Labels */
+.label-name {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Values */
+.label-value {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere; /* ensures wrapping */
+  word-break: normal;
+  white-space: normal;
+}
+
+/* Responsive tweak */
+@media (max-width: 768px) {
+  .radiologist-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px 0;
+  }
+}

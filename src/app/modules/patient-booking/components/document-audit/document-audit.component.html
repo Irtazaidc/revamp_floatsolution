@@ -1,0 +1,301 @@
+<div class="card card-custom">
+    <div class="card-body pb-0">
+        <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form">
+            <div class="row form-group justify-content-center">
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Date From:</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                        value="1980-08-26" formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                        type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateFrom').errors , 'invalid-highlighted': filterForm.get('dateFrom').errors && isSubmitted }"
+                        [maxDate]="maxDate" />
+                </div>
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Date To:</label>
+                    <input (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker" ngbDatepicker
+                        formControlName="dateTo" class="form-control mb-4" name="dateTo" type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateTo').errors , 'invalid-highlighted': filterForm.get('dateTo').errors && isSubmitted }"
+                        [maxDate]="maxDate" />
+                </div>
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Branch:</label>
+
+                    <div class="form-group">
+                        <ng-select id="pat_branch" style="width: 100%;"
+                            [ngClass]="{'invalid': filterForm.get('locID').errors, 'invalid-highlighted': filterForm.get('locID').errors && isSubmitted}"
+                            formControlName="locID" [items]="branchList" bindLabel="Title" [closeOnSelect]="false"
+                            bindValue="LocId" placeholder="- Select Branch -">
+
+                            <!-- <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                    <span class="ng-value-label"> {{item.Title}}</span>
+                                </div> -->
+                            <!-- <div class="ng-value" *ngIf="items.length > 2">
+                                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                    </div> -->
+                            <!-- </ng-template> -->
+                            <!-- <ng-template ng-header-tmp>
+                                    <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary"
+                                        type="button"><i class="ti-check"></i>Select all</button>
+                                    <button (click)="onUnselectAllBranches()"
+                                        class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                            class="ti-close"></i>Unselect all</button>
+                                </ng-template> -->
+                        </ng-select>
+
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">User:</label>
+                    <div class="form-group">
+                        <ng-select style="width: 100%;" [items]="employeesList" bindLabel="EmpFullName"
+                            formControlName="UserId" bindValue="UserID" placeholder="- Select User -">
+                        </ng-select>
+                    </div>
+                </div>
+                <!-- (change)="empSelectedEvent($event)" -->
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Patient Type:</label>
+                    <div class="form-group">
+                        <ng-select style="width: 100%;" value="" [items]="patientTypeList" bindLabel="Title"
+                            placeholder="- Select Patient Type -" bindValue="TypeId" formControlName="PatTypeId"
+                            name="TypeId" (change)="patientTypeChanged($event)">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Panel:</label>
+                    <div class="form-group">
+                        <!-- <ng-select [items]="panelList" bindLabel="CodeName" bindValue="PanelId"
+                            formControlName="PanelId" placeholder="- Select Panel -" name="panel">
+                        </ng-select> -->
+                         <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="panelList"
+                                                    bindLabel="CodeName" bindValue="PanelId"
+                                                    formControlName="PanelId" placeholder="- Select Panel -" name="panel"
+                                                    [multiple]="true"
+                                                    [closeOnSelect]="false"
+                                                    [groupBy]="groupPanelByTypeFn"
+                                                    [groupValue]="groupPanelsByTypeValueFn"
+                                                    [selectableGroup]="true"
+                                                    [selectableGroupAsModel]="false"
+                                                    [searchFn]="searchPanelsCustomFn"
+                                                    >
+                        
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.Code}}</span>
+                                                        </div>
+                                                        <div class="ng-value" *ngIf="items.length > 2">
+                                                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template ng-optgroup-tmp let-item="item">
+                                                        <span>{{item.PanelTypeName}}</span>
+                                                    </ng-template>
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div class="ng-value-label">{{item.PanelTypeName}}</div>
+                                                        <div class="ng-value-label text-secondary small">{{item.Code}}: {{item.Name}}</div>
+                                                    </ng-template>
+                                                    <ng-template ng-header-tmp>
+                                                         <button class="btn btn-mini btn-outline-dark" *ngFor="let reg of panelsTypeList" (click)="onSelectPanelsType(reg)"  >{{reg.PanelTypeName}}</button>
+                                                         <!-- [ngbTooltip]="reg.PanelTypeName" -->
+                                                        <button (click)="onUnselectAllPanels()" Title="Unselect all" class="btn btn-mini btn-dark m-l-10 pull-right" type="button"><i class="ti-close"></i></button>
+                                                    </ng-template>
+                                                </ng-select>
+                    </div>
+                    <!-- (change)="panelListChanged($event)"  -->
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <label for="vis_doc">Ref By. Doc:</label>
+                    <div class="input-group" style="position: relative;">
+                        <input id="vis_doc" type="text" class="form-control" name="ngbSearchRefBy"
+                            formControlName="RefDoc" [ngbTypeahead]="ngbSearchRefBy" placeholder="type to search"
+                            [editable]='false' [resultFormatter]="ngbFormatterRefBy_output"
+                            [inputFormatter]="ngbFormatterRefBy_input" />
+                        <!-- (selectItem)="refByDocSelected($event)"
+                         [ngClass]="{'invalid': filterForm.get('RefDoc').errors, 'invalid-highlighted': filterForm.get('RefDoc').errors && patientBasicInforFormSubmitted}"
+                            required -->
+                        <span class="md-line"></span>
+                        <button type="button" class="btn btn-sm btn-light-primary" (click)="getRefByDoctors()"
+                            title="Reload Doctors">
+                            <i class="flaticon2-reload"></i>
+                        </button>
+
+                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.refByDocField" size="small" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <label class="control-label">Attachment:</label>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="AttachmentId" [ngModelOptions]="{standalone: true}">
+                            <option [value]="'0'">All</option>
+                            <option [value]="'1'">Attachment</option>
+                            <option [value]="'2'">No Attachment</option>
+                        </select>
+                    </div>
+                    <!-- (change)="panelListChanged($event)"  -->
+                </div>
+                <div class="mt-8 col-xl-2 col-lg-4 col-md-6 col-sm-12">
+                    <!-- <button type="button" (click)="getDocAuditDataList()" class="btn btn-primary"
+                        [disabled]="isDisable">
+                        <span *ngIf="isDisable">Search
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </span>
+
+                        <span *ngIf="!isDisable">Search</span>
+                    </button> -->
+                    <button type="button" (click)="getDocAuditDataList();" [disabled]="isDisable" class="btn btn-primary"><span> <i class="spinner-border-custom" aria-hidden="true"
+                        [hidden]="isSpinnerDisable"></i> &nbsp;<i class="fa fa-search"></i></span> Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-custom mt-2">
+    <div class="card-body ">
+        <div class="row ">
+            <div class="col-md-8 col-sm-12">
+                <fieldset class="fieldset-primary fieldset-border-top">
+                    <legend>
+                        <span class="text-dark">
+                            Search Results - Total Records: {{TotalRecord}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Attachment Found:
+                        {{AttachmentFound}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No Attachment Found: {{NoAttachmentFound}}
+                        </span>
+                    </legend>
+                    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.dataTable" bdColor="rgba(0,0,0,0.8)"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <div class="table-responsive table-container fixed-height-table">
+                        <table class="table table-hover compact table-bordered" style="width: 100%; overflow: hidden;"
+                            cellpadding=0 cellspacing=0>
+                            <thead class="">
+                                <th>PIN #</th>
+                                <th>Patient Name</th>
+                                <th>Registered By</th>
+                                <th>Registered Location</th>
+                                <th>Ref By.</th>
+                                <th>Patient Type</th>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center" *ngIf="!docAuditDataList">
+                                    <td colspan="6">
+                                        <!-- <app-no-record-found></app-no-record-found> -->
+                                        <div class="text-center">No Record Found</div>
+                                    </td>
+                                </tr>
+                                <ng-container *ngFor="let data of docAuditDataList; let i = index">
+                                    
+                                    <!-- <tr 
+                                        (click)="getTableRowData(data, i)" [ngClass]="{'active-rec-border-left': i === rowIndex'}">
+                                        
+                                        <td>{{data.PIN}}</td>
+                                        <td>{{data.Name}}</td>
+                                        <td>{{data.RegisteredBy}}</td>
+                                        <td>{{data.RegisteredLocation}}</td>
+                                        <td>{{data.RefBy }}</td>
+                                        <td>{{data.PatientType }}</td>
+                                    </tr> -->
+                                    <tr 
+                                        (click)="getTableRowData(data, i)" 
+                                        [ngClass]="{
+                                            'active': i === rowIndex,
+                                            'text-green': data.DocumentsFound != 0,
+                                            'text-danger': data.DocumentsFound === 0
+                                        }">
+                                        <td>{{data.PIN}}</td>
+                                        <td>{{data.Name}}</td>
+                                        <td>{{data.RegisteredBy}}</td>
+                                        <td>{{data.RegisteredLocation}}</td>
+                                        <td>{{data.RefBy}}</td>
+                                        <td>{{data.PatientType}}</td>
+                                    </tr>
+
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="row">
+                    <div class="col-md-12 ">
+                                <fieldset class="fieldset-primary fieldset-border-top">
+                                    <legend>
+                                        Visit Test(s) / Profile(s)
+                                    </legend>
+                                    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.dataTable"
+                                        bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                                        [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <div class="table-responsive table-container fixed-height-table">
+                                        <table class="table table-hover compact table-bordered"
+                                            style="width: 100%; overflow: hidden;" cellpadding=0 cellspacing=0>
+                                            <thead class="">
+                                                <th>Test</th>
+                                                <th>Price</th>
+                                                <th>Status</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="text-center" *ngIf="!docAuditDataTestList">
+                                                    <td colspan="3">
+                                                        <!-- <app-no-record-found></app-no-record-found> -->
+                                                        <div class="text-center">No Record Found</div>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngFor="let data of docAuditDataTestList; let i = index">
+                                                    <td>{{data.Test}}</td>
+                                                    <td>{{data.Price}}</td>
+                                                    <td>{{data.TestStatus}}</td>
+                                                    <!-- <td>{{data.RecDate | date:"dd MMM, yyyy, h:mm a"}}</td> -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row  mt-2">
+    <div class="col-md-6 col-sm-12">
+        <div class="card card-custom">
+            <div class="card-body ">
+                <div class="container-fluid" style="min-height: 245px;">
+                        <app-visit-docs [propVisitNo]="selectedVisitID" [layout]="'grid'"
+                            [layoutButtons]="['compact', 'list', 'grid', 'grid2']"
+                            [editing]="{insert:false,select: false, camera: false}"></app-visit-docs>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="col-md-6 col-sm-12">
+        <div class="card card-custom">
+            <div class="card-body ">
+                <div class="container-fluid">
+                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.dataTable" bdColor="rgba(0,0,0,0.8)"
+                                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <app-visit-remarks [propVisitNo]="selectedVisitID" [editing]="{save: true}"
+                                [showRemarksPriority]="true"></app-visit-remarks>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>

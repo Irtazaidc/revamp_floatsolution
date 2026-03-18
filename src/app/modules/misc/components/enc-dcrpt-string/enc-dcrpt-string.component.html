@@ -1,0 +1,44 @@
+<app-card [title]="'Encrypt And Decrypt String'" [cardClass]="'tim-card tim-card tim-card-primary'"
+    [cardHeaderClass]="'card-header-narrow'">
+    <form class="container" #container class="" [formGroup]="encDecform">
+
+        <div class="row mt-4" style="place-content: center;">
+            <div class="">
+                <div class="form-group" style="text-align-last: center;">
+                    <div class="input-group" style="position: relative;">
+                        <input ngbTooltip="string" #string type="text" class="form-control" name="string"
+                            [ngClass]="{'invalid': encDecform.get('string').errors && encDecform.get('string').touched, 'invalid-highlighted': encDecform.get('string').errors}"
+                            formControlName="string" placeholder="Enter String">
+                    </div>
+                </div>
+            </div> &nbsp;
+            <div class="">
+                <button ngbTooltip="Search" class="btn  btn-primary  mr-1 pull-left" (click)="encryptString()">
+                    Encrypt
+                </button>
+
+                <button ngbTooltip="Search" class="btn  btn-primary  mr-1 pull-left" (click)="decryptString()">
+                    Decrypt
+                </button>
+                <button ngbTooltip="Clear Text" type="reset" class="btn  btn-danger  pull-left "><i class="fa fa-eraser"
+                        aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </form>
+
+</app-card>
+
+<app-card [title]="'Result'" [cardClass]="'tim-card tim-card tim-card-primary'"
+    [cardHeaderClass]="'card-header-narrow'">
+    <div class="col-md-12" style="text-align: center;">
+        <span *ngIf="encryptedString">
+            {{encryptedString}}
+        </span>
+        <span *ngIf="decryptedString">
+            {{decryptedString}}
+        </span>
+        <span *ngIf="!decryptedString && !encryptedString">
+            No String Yet
+        </span>
+    </div>
+</app-card>

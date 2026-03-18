@@ -1,0 +1,99 @@
+.RackDiv {
+    margin-bottom: 10px;
+}
+.RackIconDev {
+    height: 55px;
+    background: url(https://192.168.1.100/Avicenna/Content/assets/images/RackIconImages/icon_rack_chemistry.png) no-repeat #2e6602;
+    background-position-x: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.RackDesciptionDiv {
+    padding-left: 0px;
+    // background: #ade46ca3;
+    padding-right: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 55px;
+}
+
+.ChemistryRackIcon {
+    height: 55px;
+    background: url(https://192.168.1.100/Avicenna/Content/assets/images/RackIconImages/icon_rack_chemistry.png) no-repeat #2e6602;
+    background-position-x: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.ParaRackIcon {
+    height: 55px;
+    background: url(https://192.168.1.100/Avicenna/Content/assets/images/RackIconImages/icon_rack_Parasitology.png) no-repeat #d96d23;
+    background-position-x: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.ChemistryRackDesciptionDiv {
+    padding-left: 0px;
+    // background: #ade46ca3;
+    padding-right: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 55px;
+}
+.ParaRackDesciptionDiv {
+    padding-left: 0px;
+    // background: #d96d2380;
+    padding-right: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 55px;
+}
+
+.rackSectionName {
+    font-size: 15px;
+    font-weight: bold;
+    color: #000;
+    margin-left: 7px;
+}
+// .minimun-padding-left {
+//     padding-left: 1px;
+// }
+// .minimun-padding-right {
+//     padding-right: 1px;
+// }
+.labelrackDetail {
+    font-size: 10px;
+    font-weight: bold;
+    color: #000;
+}
+.rackName{
+    margin-left: 10px;
+}
+.rackCapacity{
+    margin-right: 20px;
+}
+
+.rack-item{
+    /* padding-right: 30px; */
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    overflow: hidden;
+    background-color: #fff;
+    border: none;
+    border-radius: 10px;
+    /* width: 190px; */
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    overflow: hidden;
+}
+
+@media (max-width:768px)  { 
+    .rackSectionName{
+        margin-left: 20px;
+    }
+    .rackName{
+        margin-left: 20px;
+    }
+    .rackCapacity{
+        margin-right: 20px;
+    }
+
+ }

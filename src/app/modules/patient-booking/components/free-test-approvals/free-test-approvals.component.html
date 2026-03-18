@@ -1,0 +1,361 @@
+<div class="pa-page container-fluid py-3">
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h4 class="pa-title mb-0">Pending Approvals</h4>
+      <div class="pa-subtitle">Review and process free test requests</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- LEFT: Pending List -->
+    <div class="col-lg-5 col-xl-4 mb-3">
+      <div class="card pa-card shadow-sm">
+        <div class="card-header pa-card-header">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="pa-section-title">Pending Queue</div>
+            <span class="badge pa-badge-soft"
+              >Total: {{ pendingList?.length || 0 }}</span
+            >
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="pa-table-scroll">
+            <table class="table table-hover mb-0">
+              <thead class="pa-thead-sticky">
+                <tr>
+                  <th class="pa-th">Patient Id</th>
+                  <th class="pa-th">Patient Name</th>
+                  <th class="pa-th text-right">Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center" *ngIf="pendingList?.length < 1">
+                  <td colspan="3">No pending requests found</td>
+                </tr>
+
+                <tr
+                  class="pa-row"
+                  tabindex="0"
+                  *ngFor="let item of pendingList"
+                  (click)="onSelectRequest(item)"
+                  [class.active]="selectedRequest?.RequestId === item.RequestId"
+                >
+                  <td>
+                    <div class="pa-primary">{{ item.PatientId }}</div>
+                    <div class="pa-secondary">
+                      Previous Total: {{ item.PreviousPendingTotal }} <br />
+                      Current Total: {{ item.CurrentTotal }} <br />
+                      Previous Approved Total: {{ item.PreviousApprovedTotal }}
+                      <br />
+                      Grand Total:
+                      {{ item.GrandTotal }}
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="pa-primary">{{ item.PatientDisplay }}</div>
+                  </td>
+
+                  <td class="text-right">
+                    <div class="pa-primary">{{ item.RegLocation || "-" }}</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail Panel -->
+    <div class="col-lg-7 col-xl-8 mb-3">
+      <div class="card pa-card shadow-sm">
+        <div
+          class="card-header pa-detail-header d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <div class="pa-detail-title">Free Test Request Detail</div>
+            <div class="pa-detail-sub">
+              Request No: {{ selectedRequest?.RequestNo || "----" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body pa-detail-body">
+          <!-- No selection state -->
+          <div class="pa-empty" *ngIf="!selectedRequest">
+            <div class="pa-empty-title">Select a request</div>
+            <div class="pa-empty-sub">
+              Click a row from the left table to view details here.
+            </div>
+          </div>
+
+          <!-- Selected detail -->
+          <ng-container *ngIf="selectedRequest">
+            <!-- Summary Card -->
+            <div class="card pa-inner-card shadow-sm mb-3">
+              <div class="card-body">
+                <div
+                  class="d-flex flex-wrap justify-content-between align-items-start"
+                >
+                  <div class="pa-minw">
+                    <div class="pa-label">Patient</div>
+                    <div class="pa-h5">
+                      {{ selectedRequest?.PatientDisplay }}
+                    </div>
+                    <div class="pa-label mt-1">
+                      Patient ID: {{ selectedRequest?.PatientId }}
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <div class="pa-label">Requested Date</div>
+                    <div class="pa-strong">
+                      {{
+                        selectedRequest?.RequestDate | date: "dd-MMM-yyyy HH:mm"
+                      }}
+                    </div>
+                    <div class="mt-2">
+                      <span class="badge pa-badge-warn">
+                        {{ selectedRequest?.Status }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="my-3" />
+
+                <div class="row">
+                  <div class="col-md-3 col-sm-6 mb-2">
+                    <div class="pa-metric pa-metric-indigo">
+                      <div class="pa-metric-label">Current Total Amount</div>
+                      <div class="pa-metric-value">
+                        {{ selectedRequest?.CurrentTotal }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 col-sm-6 mb-2">
+                    <div class="pa-metric pa-metric-cyan">
+                      <div class="pa-metric-label">Previous Pending Total</div>
+                      <div class="pa-metric-value">
+                        {{ selectedRequest?.PreviousPendingTotal }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 col-sm-6 mb-2">
+                    <div class="pa-metric pa-metric-orange">
+                      <div class="pa-metric-label">Approved Items</div>
+                      <div class="pa-metric-value">
+                        {{ selectedRequest?.ApprovedItemCount || 0 }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 col-sm-6 mb-2">
+                    <div
+                      class="pa-metric pa-metric-green pa-clickable"
+                      role="button"
+                      tabindex="0"
+                      (click)="openAttachmentsModal(attachmentsModal)"
+                    >
+                      <div class="pa-metric-label">Attachments</div>
+                      <div class="pa-metric-value">
+                        {{ selectedRequest?.AttachmentCount || 0 }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 mt-2">
+                    <div class="form-group">
+                      <label class="pa-metric-label">Request Remarks</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        [(ngModel)]="requestRemarks"
+                        placeholder="Enter remarks for this request..."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="card pa-inner-card shadow-sm">
+              <div class="card-body">
+                <div
+                  class="d-flex align-items-center justify-content-between mb-2"
+                >
+                  <div class="pa-section-title">Pending Items</div>
+                  <span class="badge pa-badge-soft"
+                    >Total: {{ pendingItemList?.length || 0 }}</span
+                  >
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover mb-0">
+                    <thead class="pa-thead-sticky">
+                      <tr>
+                        <!-- Parent checkbox -->
+                        <th class="pa-th" style="width: 40px">
+                          <input
+                            type="checkbox"
+                            [checked]="isAllSelected()"
+                            [indeterminate]="isIndeterminate()"
+                            (change)="toggleSelectAll($event)"
+                          />
+                        </th>
+
+                        <th class="pa-th">Code</th>
+                        <th class="pa-th text-right">Unit Price</th>
+                        <th class="pa-th">Remarks</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr
+                        class="text-center"
+                        *ngIf="pendingItemList?.length < 1"
+                      >
+                        <td colspan="4">No Items Found</td>
+                      </tr>
+
+                      <tr *ngFor="let it of pendingItemList; let i = index">
+                        <!-- Row checkbox -->
+                        <td class="mt-2">
+                          <input type="checkbox" [(ngModel)]="it.IsSelected" />
+                        </td>
+
+                        <!-- Code -->
+                        <td class="pa-primary mt-2">
+                          {{ it.Code || it.TestCode || "-" }}
+                        </td>
+
+                        <!-- Unit Price -->
+                        <td class="text-right mt-2">
+                          {{ it.UnitPrice || it.Price || 0 }}
+                        </td>
+
+                        <!-- Remarks -->
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            placeholder="Enter remarks..."
+                            [(ngModel)]="it.Remarks"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="card-footer pa-card-footer d-flex justify-content-end">
+          <button
+            [disabled]="!selectedRequest"
+            type="button"
+            [disabled]="disabledButton"
+            class="btn btn-success btn-sm btn-outline-primary"
+            mwlConfirmationPopover
+            [popoverTitle]="'Please Confirm...!'"
+            [popoverMessage]="'Are you sure you want to submit?'"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="submitRequest()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-success"
+            cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="
+              confirmationPopoverConfig.confirmClicked = false;
+              confirmationPopoverConfig.cancelClicked = false
+            "
+            [appendToBody]="true"
+          >
+            <i class="fa fa-save"></i> Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #attachmentsModal let-modal>
+  <div class="modal-header border-0 pb-2">
+    <div>
+      <h5 class="modal-title mb-1">Request Attachments</h5>
+      <small class="text-muted">
+        Total Attachments: {{ attachmentsList.length }}
+      </small>
+    </div>
+
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body pt-2">
+    <div *ngIf="attachmentsList.length === 0" class="text-center text-muted py-4">
+      No attachments available
+    </div>
+
+    <div class="row" *ngIf="attachmentsList.length > 0">
+      <div
+        class="col-lg-4 col-md-6 mb-3"
+        *ngFor="let item of attachmentsList; trackBy: trackByAttachment"
+      >
+        <div class="card attachment-card h-100 shadow-sm border-0">
+          <div class="attachment-preview bg-light d-flex align-items-center justify-content-center">
+            <ng-container *ngIf="isImageFile(item.FileExtension) && !item.HasError; else noPreview">
+              <img
+                [src]="item.PreviewUrl"
+                [alt]="item.FileName"
+                class="attachment-thumb"
+                (error)="onImageError(item)"
+              />
+            </ng-container>
+
+            <ng-template #noPreview>
+              <div class="text-center text-muted px-3">
+                <i class="fa fa-file-image-o fa-2x mb-2"></i>
+                <div class="small">Preview not available</div>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="card-body d-flex flex-column">
+            <div class="font-weight-bold text-truncate mb-1" [title]="item.FileName">
+              {{ item.FileName }}
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-primary btn-sm mt-auto"
+              (click)="openAttachmentInNewTab(item)"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer border-0 pt-0">
+    <button class="btn btn-light" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>

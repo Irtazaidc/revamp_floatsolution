@@ -1,0 +1,154 @@
+<div class="roles-page">
+  <div class="row">
+    <div class="col-12">
+      <app-card
+        [title]="'Outsource Hospital Detail'"
+        [cardClass]="'tim-card tim-card tim-card-primary'"
+      >
+        <div class="card-body">
+          <form [formGroup]="HospitalDetailsForm" (ngSubmit)="onSubmit()" #box>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="OutSourceHospitalName">Hospital Name:</label>
+                  <input
+                    type="text"
+                    id="OutSourceHospitalName"
+                    class="form-control form-control-sm"
+                    formControlName="OutSourceHospitalName"
+                    [ngClass]="{
+                      invalid: HospitalDetailsForm.get('OutSourceHospitalName')
+                        .errors,
+                      'invalid-highlighted':
+                        HospitalDetailsForm.get('OutSourceHospitalName')
+                          .errors && isSubmitted
+                    }"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="ContactNo" class="control-label"
+                    >Contact Number:</label
+                  >
+                  <input
+                    type="text"
+                    id="ContactNo"
+                    class="form-control form-control-sm"
+                    formControlName="ContactNo"
+                    [ngClass]="{
+                      invalid: HospitalDetailsForm.get('ContactNo').errors,
+                      'invalid-highlighted':
+                        HospitalDetailsForm.get('ContactNo').errors &&
+                        isSubmitted
+                    }"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="ContactEmail" class="control-label"
+                    >Contact Email:</label
+                  >
+                  <input
+                    type="text"
+                    id="ContactEmail"
+                    class="form-control form-control-sm"
+                    formControlName="ContactEmail"
+                    [ngClass]="{
+                      invalid: HospitalDetailsForm.get('ContactEmail').errors,
+                      'invalid-highlighted':
+                        HospitalDetailsForm.get('ContactEmail').errors &&
+                        isSubmitted
+                    }"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="ContactPerson" class="control-label"
+                    >Contact Person:</label
+                  >
+                  <input
+                    type="text"
+                    id="ContactPerson"
+                    class="form-control form-control-sm"
+                    formControlName="ContactPerson"
+                    [ngClass]="{
+                      invalid: HospitalDetailsForm.get('ContactPerson').errors,
+                      'invalid-highlighted':
+                        HospitalDetailsForm.get('ContactPerson').errors &&
+                        isSubmitted
+                    }"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="HospitalAddress">Hospital Address:</label>
+                  <textarea
+                    rows="4"
+                    id="HospitalAddress"
+                    class="form-control form-control-sm"
+                    formControlName="HospitalAddress"
+                    placeholder="Enter Hospital Address"
+                    [ngClass]="{
+                      invalid:
+                        HospitalDetailsForm.get('HospitalAddress').errors,
+                      'invalid-highlighted':
+                        HospitalDetailsForm.get('HospitalAddress').errors &&
+                        isSubmitted
+                    }"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger pull-right ml-2"
+                (click)="clearformValues()"
+              >
+                Clear
+              </button>
+              <button
+                [disabled]="disabledButton"
+                type="submit"
+                class="btn btn-sm btn-primary pull-right"
+                title=""
+                mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                [confirmText]="confirmationPopoverConfig.confirmText"
+                [cancelText]="confirmationPopoverConfig.cancelText"
+                [placement]="confirmationPopoverConfig.placements[0]"
+                (confirm)="onSubmit()"
+                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary"
+                cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="
+                  confirmationPopoverConfig.confirmClicked = false;
+                  confirmationPopoverConfig.cancelClicked = false
+                "
+                [appendToBody]="true"
+              >
+                <i class="fa fa-save"></i>
+                {{ OutSourceHospitalID ? "Update" : "Save" }}
+                <i
+                  class="spinner-border-custom"
+                  aria-hidden="true"
+                  [hidden]="isSpinner"
+                ></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>

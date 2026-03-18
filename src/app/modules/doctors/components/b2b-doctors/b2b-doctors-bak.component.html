@@ -1,0 +1,349 @@
+<div class="b2b-doctors-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-success'">
+
+                <div class="row">
+                    <div class="col-12">
+                        <span style="font-size: 24px;">B2B Doctor(s)</span>
+                        <button class="btn btn-outline-success pull-right" *ngIf="!showB2BDoctorsForm" (click)="showAddB2BDoctorForm(true)"><i class="ti-plus"></i>Add New</button>
+                        <button class="btn btn-outline-danger pull-right" *ngIf="showB2BDoctorsForm" (click)="showAddB2BDoctorForm(false)"><i class="ti-close"></i></button>
+                    </div>
+                    <div class="col-12" *ngIf="showB2BDoctorsForm">
+                        <form class="md-float-material" [formGroup]="doctorForm">
+
+                            <div class="row">
+
+                                <div class="col-md-4 d-none">
+                                    <label>Doc ID:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="B2BDoctorID">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Title | First Name <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="Title" [disabled]="true" style="max-width: 50px;"
+                                            [ngClass]="{'invalid': doctorForm.get('Title').errors, 'invalid-highlighted': doctorForm.get('Title').errors && doctorFormSubmitted}"
+                                        >
+                                        <input type="text" class="form-control"  formControlName="FirstName"
+                                            [ngClass]="{'invalid': doctorForm.get('FirstName').errors, 'invalid-highlighted': doctorForm.get('FirstName').errors && doctorFormSubmitted}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Last Name <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <input 
+                                            type="text" class="form-control" formControlName="LastName"
+                                            [ngClass]="{'invalid': doctorForm.get('LastName').errors, 'invalid-highlighted': doctorForm.get('LastName').errors && doctorFormSubmitted}"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Type <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <select class="form-control" formControlName="B2BType"
+                                            [ngClass]="{'invalid': doctorForm.get('B2BType').errors, 'invalid-highlighted': doctorForm.get('B2BType').errors && doctorFormSubmitted}"
+                                        >
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let s of b2bTypes" [value]="s.id">{{s.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Gender</label>
+                                    <div class="input-group">
+                                        <select class="form-control" formControlName="Gender"
+                                            [ngClass]="{'invalid': doctorForm.get('Gender').errors, 'invalid-highlighted': doctorForm.get('Gender').errors && doctorFormSubmitted}"
+                                        >
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let s of genders" [value]="s.id">{{s.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Phone</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="Phone" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Mobile</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="Cell"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>E-Mail</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="Email" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Qualification</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="Education"
+                                            [ngClass]="{'invalid': doctorForm.get('Education').errors, 'invalid-highlighted': doctorForm.get('Education').errors && doctorFormSubmitted}"
+                                        />
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-4">
+                                    <label>Speciality</label>
+                                    <div class="input-group">
+                                        <select class="form-control" formControlName="SpecialityId">
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let s of doctorSpecialityList" [value]="s.SpecialityId">{{s.Title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Discount (%)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="Discount"
+                                            mask="separator.2" separatorLimit="99"
+                                            [ngClass]="{'invalid': doctorForm.get('Discount').errors, 'invalid-highlighted': doctorForm.get('Discount').errors && doctorFormSubmitted}"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Lab. Share (%)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="LISShare"
+                                            mask="separator.2" separatorLimit="99"
+                                            [ngClass]="{'invalid': doctorForm.get('LISShare').errors, 'invalid-highlighted': doctorForm.get('LISShare').errors && doctorFormSubmitted}"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Radiology Share (%)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="RISShare"
+                                            mask="separator.2" separatorLimit="99" 
+                                            [ngClass]="{'invalid': doctorForm.get('RISShare').errors, 'invalid-highlighted': doctorForm.get('RISShare').errors && doctorFormSubmitted}"
+                                        />
+                                    </div>
+                                </div>
+
+    
+                                <div class="col-md-4">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group">
+                                        <button
+                                            class="btn btn-success mr-2"
+                                            title="Save"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="submitForm()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="success"
+                                            cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                        > <i class="ti-save m-0"></i>
+                                        Save
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger m-l-10" (click)="resetForm()">Clear</button>
+                                    </div>
+                                </div>
+    
+                            </div>
+                
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <hr style="border-color: #3699FF;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                        <button class="btn btn-outline-success btn-mini" (click)="getB2BDoctors()"><i class="ti-reload"></i></button>
+                        <button class="btn btn-outline-success btn-mini" (click)="optionalColumnsVisibility = !optionalColumnsVisibility"><span *ngIf="!optionalColumnsVisibility">show all columns</span> <span *ngIf="optionalColumnsVisibility">show less columns</span></button>
+                    </div>
+                    </div>
+                </div>
+                <div class="table-responsive fixed-height-table">
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Gender</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Phone</th>
+                                <th>Mobile</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Email</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Education</th>
+                                <th>Speciality</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr 
+                                *ngFor="let item of b2bDoctorsList | filterByKey: searchText:['FirstName', 'LastName', 'Phone', 'Email']; let i = index"
+                                [ngClass]="{'active': doctorForm.get('B2BDoctorID').value == item.B2BDoctorID}"
+                            >
+                                <td>{{item.Title}}</td>
+                                <td>{{item.FirstName}}</td>
+                                <td>{{item.LastName}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.Gender}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.Phone}}</td>
+                                <td>{{item.Cell}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.Email}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.Education}}</td>
+                                <td>{{item.Speciality}}</td>
+                                <td class="text-right">
+                                    <button
+                                        class="btn btn-outline-danger btn-mini"
+                                        title="Delete"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="delete(item)"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="danger"
+                                        cancelButtonType="outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    >
+                                        <i class="ti-trash m-0"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-outline-success btn-mini ml-2"
+                                        title="Edit"
+                                        (click)="edit(item)"
+                                    >
+                                        <i class="ti-pencil m-0"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </app-card>
+        </div>
+    </div>
+
+    <app-card [title]="bTobPanelName" [cardClass]="'tim-card tim-card tim-card-success'">
+        <!-- <div class="row">
+            <div class="col-12">
+                <span style="font-size: 24px;">Doctors mapping</span>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col-12">
+                <form class="" [formGroup]="form">
+                    <div class="row">
+                        
+                        <div class="col-md-6">
+                            <label>Ref. By Doctor: <span class="mandatory-asterisk">*</span></label>
+                            <div class="input-group ref-by-doc-control">
+                                <input
+                                    [hidden]="isB2BDocDisabled"
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="RefByDoc"
+                                    [ngbTypeahead]="ngbTypeahead_config.search"
+                                    placeholder="type to search"
+                                    [editable]='false'
+                                    [resultFormatter]="ngbTypeahead_config.formatter.result"
+                                    [inputFormatter]="ngbTypeahead_config.formatter.input"
+                                    [ngClass]="{'invalid': form.get('RefId').errors, 'invalid-highlighted': form.get('RefId').errors && formSubmitted}"
+                                    required
+                                    (selectItem)="ngbTypeahead_config.change($event)"
+                                    (blur)="ngbTypeahead_config.blur($event)"
+                                />
+                                <input
+                                    [hidden]="!isB2BDocDisabled"
+                                    disabled
+                                    type="text"
+                                    class="form-control"
+                                    [value]="form.get('RefByDoc').value?.Name" />
+                                <!-- <ng-select style="width: 100%;"
+                                    (change)="refByChanged()"
+                                    [items]="refByDoctors"
+                                    formControlName="RefId"
+                                    bindLabel="Name" 
+                                    bindValue="RefId" 
+                                    [ngClass]="{'invalid': form.get('RefId').errors, 'invalid-highlighted': form.get('RefId').errors && formSubmitted}" required>
+                                </ng-select> -->
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-md-4">
+                            <label>B2B Doctor: <span class="mandatory-asterisk">*</span></label>
+                            <div class="input-group">
+                                <ng-select
+                                    style="width: 100%;"
+                                    formControlName="B2BDoctorID" 
+                                    [items]="b2bDoctors" tabindex="2" 
+                                    bindLabel="FullName" 
+                                    bindValue="B2BDoctorID" 
+                                    [ngClass]="{'invalid': form.get('B2BDoctorID').errors, 'invalid-highlighted': form.get('B2BDoctorID').errors && formSubmitted}" required>
+                                </ng-select>
+                            </div>
+                        </div> -->
+
+                        <div class="col-md-6">
+                            <div class="input-group justify-content-end">
+                                <button
+                                    class="btn btn-success mr-2 mt-8"
+                                    title="Add"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="save()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="success"
+                                    cancelButtonType="outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                    [disabled]="form.invalid"
+                                > <i class="fa fa-save m-0"></i>
+                                Add
+                                </button>
+                                <button class="btn btn-outline-danger m-l-10 mt-8" (click)="reset()">Cancel</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>                        
+            </div>
+        </div>
+    </app-card>
+    
+    <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+
+</div>
+      

@@ -1,0 +1,378 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="'Applicant List [Short list for 3rd interview]'" [cardClass]="'tim-card tim-card tim-card-info'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="p-2">
+                                <form [formGroup]="formSearch" (ngSubmit)="getJobApplicantResultByJobRequestID()">
+                                    <div class="row"> 
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="OpenJobsList"
+                                                    bindLabel="FullName" 
+                                                    placeholder="-Select Job Request-"
+                                                    bindValue="JobRequestID"
+                                                    formControlName="JobRequestID"
+                                                    [closeOnSelect]="true"
+                                                    >
+            
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.FullName}}</span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                        </div>                                                                        
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn  btn-outline-primary"><i class="ti-search"></i>Search</button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.applicantListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <div class="row">
+                                <div class="col-6 mb-2"></div>
+                                <div class="col-3 text-right mb-2 mt-4">
+                                    <label><strong>Interview Date:</strong></label>
+                                </div>
+                                <div class="col-3 mb-2">
+                                    <input 
+                                        readOnly 
+                                        #dStart
+                                        type="text"
+                                        class="form-control mt-1 mr-1"
+                                        (click)="dFrom_date.toggle()"
+                                        placeholder="dd-mm-yyyy"
+                                        autocomplete="off"
+                                        name="dStart"
+                                        ngbDatepicker
+                                        #dFrom_date="ngbDatepicker"
+                                        [(ngModel)]="InterviewDate"
+                                    >
+                                </div>
+                            </div>
+                            <table class="table table-hover compact">
+                                <thead> 
+                                    <tr>
+                                        <th>#</th>
+                                        <th width="10px"> <input type="checkbox" class="" (change)="selectAllRequests($event)" /> </th>
+                                        <th>Applicant</th>
+                                        <th>Job</th>
+                                        <th>Avg Weightage</th>
+                                        <th>Remarks</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" *ngIf="!ApplicantResult.length"> 
+                                            <div class="alert alert-info text-center" role="alert">
+                                                No result found
+                                                <!-- <i class="fa fa-info" aria-hidden="true"></i> -->
+                                          </div>
+                                        </td>
+                                    </tr>
+                                    <tr  *ngFor = "let item of ApplicantResult let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td> 
+                                            <input
+                                                type="checkbox"
+                                                class=""
+                                                [(ngModel)]="item.checked"
+                                                [ngModelOptions]="{standalone: true}"
+                                            />
+                                        </td>
+                                        <td>{{item.ApplicantName}}</td>
+                                        <td>[{{item.JobRequestCode}}] {{item.JobRequestTitle}}</td>
+                                        <td>{{item.Weightage}}</td>
+                                        <td><textarea class="form-control" name="LineItemRemarks" cols="30" [(ngModel)]="item.JobApplicantRemarks" [(ngModel)]="item.JobRemarksSelected" [ngClass]="{'invalid invalid-highlighted': !(item.JobRemarksSelected)}"></textarea></td>
+                                        <td>
+                                            <select name="JobStatus" class="form-control" [(ngModel)]="item.JobStatusIDSelected" [ngClass]="{'invalid invalid-highlighted': !(item.JobStatusIDSelected)}">
+                                                <!-- <option *ngFor = "let jobSt of ApplicantStatusList" value="{{jobSt.ApplicantStatusID}}" >{{jobSt.ApplicantStatus}}</option>  -->
+                                                
+                                                <ng-container *ngFor = "let jobSt of ApplicantStatusList">
+                                                    <option *ngIf = "(item.InterviewLevel == 2 && jobSt.ApplicantStatusID == 12)
+                                                                      || (item.InterviewLevel != 2 && jobSt.ApplicantStatusID == 9)  
+                                                                      || (jobSt.ApplicantStatusID == 3)" 
+                                                            value="{{jobSt.ApplicantStatusID}}" >{{jobSt.ApplicantStatus}}</option>     
+                                                    </ng-container>
+
+                                            </select>
+                                        </td>
+                                        <td class="text-right">
+                                            <a (click)="showApplicantDetail(item.ApplicantID)" class="cursor-pointer" style="font-size: 17px;" placement="top" ngbTooltip="View Detail"> 
+                                                <i class="fa fa-eye text-info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td colspan="6">
+                                        </td>
+                                        <td class="text-right" style="vertical-align:bottom;">
+                                            <strong>Interview date:</strong>
+                                        </td>
+                                        <td>
+                                            <input 
+                                            readOnly 
+                                            #dStart
+                                            type="text"
+                                            class="form-control mt-1 mr-1"
+                                            (click)="dFrom_date.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            name="dStart"
+                                            ngbDatepicker
+                                            #dFrom_date="ngbDatepicker"
+                                            [(ngModel)]="InterviewDate"
+                                            >
+                                        </td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mt-3">
+                            <button
+                                [disabled]="disabledButton"
+                                    class="btn btn-danger pull-right ml-2"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="applicantProcess(true)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="danger"
+                                    cancelButtonType="outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                > <i class="fa fa-check-square-o"></i>Finalize <i class="spinner-border-custom" aria-hidden="true"
+                                [hidden]="isSpinner" ></i>
+                            </button>
+                            <button
+                                [disabled]="disabledButton"
+                                    class="btn btn-info pull-right"
+                                    title="Submit"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="applicantProcess(false)"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="danger"
+                                    cancelButtonType="outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true"
+                                > <i class="fa fa-check-square-o"></i>Submit <i class="spinner-border-custom" aria-hidden="true"
+                                [hidden]="isSpinner" ></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>
+
+<!------begin:: Job Request Detail Popup-->
+<!------begin:: Job Request Detail Popup-->
+<ng-template #applicantDetail let-applicantDetail>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Applicant Detail</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeLoginModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.applicantDetailModal" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default invoice" id="invoice">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                    <h4 class="marginright text-info mb-3">{{JobRequestCode}}-{{JobTitle}}</h4>
+                                </div>
+                                <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 text-right">
+                                    <span class="marginright">Job Validity</span><br/>
+                                    <span class="marginright">14 April 2014 - 14 May 2014</span>
+                                </div> -->
+                            </div>
+                            <div class="row" style="border: 1px solid #dee2e6;
+                            padding: 8px 0px;">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>Name: </p>
+                                            <p>Cell: </p>
+                                            <p>Email: </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>{{FirstName}}  {{LastName}}</strong></p>
+                                            <p><strong>{{Cell}}</strong></p>
+                                            <p><strong>{{EMail}}</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 ">
+                                    <!-- <div class="row">
+                                        <div class="col-6">
+                                            <p>NIC: </p>
+                                            <p>Status:</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>{{CNIC}}</strong></p>
+                                            <p><strong>Applied</strong></p>
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>NIC: </p>
+                                            <p>Status:</p>
+                                            <p>Interview Levels:</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p><strong>{{CNIC}}</strong></p>
+                                            <p><strong>{{ApplicantStatus}}</strong></p>
+                                            <p><strong>{{InterviewLevel == 1 ? 'One': InterviewLevel==2? 'Two' :  'Three'}}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 section-border-right" >
+                                     <label>Address:</label>
+                                     <address>{{ApplicantAddress}}</address>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4" >
+                                    <label>Download CV:</label>
+                                    <a  *ngIf="CVFile" class="pl-2" (click)="getPdf()"  ><i class="fa fa-file-pdf text-primary" aria-hidden="true" style="font-size: 25px; cursor: pointer;"></i></a>
+                                    <!-- <a  *ngIf="CVFile" class="pl-2" (click)="showApplicantDocument()"  >View<i class="fa fa-file-pdf text-primary" aria-hidden="true" style="font-size: 25px; cursor: pointer;"></i></a> -->
+                                    <!-- <a class="view-btn-attach" [href]="{{CVFile}}" target="_blank">View</a> -->
+                                    <!-- <a ng-href="file:///F:/FilesStore/{{r.id_file}}-{{r.nameOfUploader}}" /> -->
+                                     
+                                    <!-- <button type="button" (click)="getPdf()">Save PDF</button> -->
+                               </div>
+                              
+                            </div>
+                            <div class="row">
+                                <!-- <div class="col-12">
+                                    <ngx-doc-viewer
+                                        [url]="doc"
+                                        viewer="google"
+                                        style="width:100%;height:50vh;">
+                                    </ngx-doc-viewer>
+                                </div> -->
+                                <!-- <div class="col-12">
+                                    <ngx-doc-viewer
+                                        [url]="'http://www.africau.edu/images/default/sample.pdf'"
+                                        viewer="url"
+                                        style="width:100%;height:50vh;"
+                                        >
+                                    </ngx-doc-viewer>
+                                </div> -->
+                            </div>
+                            <form [formGroup]="formUpdateStatus" >
+                                <!-- <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                                        <div class="container pt-2" style="border: 1px solid #eee;" >
+                                            <div *ngFor = "let rem of ExistingRowRemarks let i = index">
+                                                <label for="Remarks"><strong>{{rem.JobStatus}} Remarks:</strong></label>
+                                                <p 
+                                                [ngClass]="rem.JobStatusID == 1 ? ' text-primary': rem.JobStatusID=='2'? 'text-info' : rem.JobStatusID==3? 'text-warning':rem.JobStatusID==4? 'text-danger':'text-info'"                                                   
+                                                
+                                                >{{rem.JobRequestRemarks}}</p>
+                                                <hr style="border-top: 1px dashed #d6d3d3;">
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div> -->
+                    
+                                <div class="row mt-3">
+                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4" >
+                                        <label for="InterviewDate">Interview Date:</label>
+                                        <input 
+                                            readOnly 
+                                            #dStart
+                                            type="text"
+                                            class="form-control mt-1 mr-1"
+                                            (click)="dFrom_date.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            name="dStart"
+                                            formControlName="InterviewDate"
+                                            ngbDatepicker
+                                            [required]="isInterviewDateRequired"
+                                            #dFrom_date="ngbDatepicker"
+                                            [ngClass]="{'invalid': formUpdateStatus.get('InterviewDate').errors && formUpdateStatus.get('InterviewDate').touched  && isInterviewDateRequired, 'invalid-highlighted': formUpdateStatus.get('InterviewDate').errors}"
+                                            
+                                        >
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                                        <label for="StatusRemarks">Remarks:</label>
+                                        <textarea name="StatusRemarks" formControlName="StatusRemarks" class="form-control" cols="30" rows="5" 
+                                        [ngClass]="{'invalid': formUpdateStatus.get('StatusRemarks').errors && formUpdateStatus.get('StatusRemarks').touched, 'invalid-highlighted': formUpdateStatus.get('StatusRemarks').errors}"
+                                        >
+                                        </textarea>
+                                        <small *ngIf="formUpdateStatus.get('StatusRemarks').errors && formUpdateStatus.get('StatusRemarks').touched" class="text-danger">{{RemarksErrorMessage}}</small>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+       
+        <button *ngIf="InterviewLevel!=2" type="button" class="btn btn-sm btn-outline-primary" (click)="changeJobApplicantRequestStatus(9)" >
+            <i class="fa fa-check-circle"></i>  Short List <i class="spinner-border-custom" aria-hidden="true"
+              [hidden]="isSpinnerShortListed"></i></button>
+        <button  type="button" class="btn btn-sm btn-outline-primary" (click)="changeJobApplicantRequestStatus(12)" >
+                <i class="fa fa-check-double"></i> Finalize <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinnerFinalized"></i></button>
+        <button *ngIf="InterviewLevel==2" type="button" class="btn btn-sm btn-outline-primary" (click)="changeJobApplicantRequestStatus(12)" >
+                    <i class="fa fa-check-double"></i> Finalize <i class="spinner-border-custom" aria-hidden="true"
+                      [hidden]="isSpinnerFinalized"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="changeJobApplicantRequestStatus(3)" >
+        <i class="fa fa-times"></i>  Reject <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerRejected"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal" (click)="closeLoginModal()">
+                    <i class="fa fa-times-circle"></i> Close</button>
+      </div>
+
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"  size="medium" color="#fff" type="square-loader" [fullScreen]="false"> <!--[name]="spinnerRefs.searchEmployee"-->
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+</ng-template>
+

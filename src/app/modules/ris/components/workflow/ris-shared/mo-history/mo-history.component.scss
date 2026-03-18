@@ -1,0 +1,39 @@
+hr.dash-primary {
+    border-top: 1px dashed #1bc5bd;
+}
+.border-bottom-dash-primary{
+    border-bottom: 1px dashed #1bc5bd;
+}
+.border-bottom-dash-gray{
+    border-bottom: 1px dashed #b5b9c7;
+}
+
+.border-bottom-primary{
+    border-bottom: 1px #1bc5bd;
+}
+.border-bottom-gray{
+    border-bottom: 1px #b5b9c7;
+}
+.tp-name{
+    padding: 5px 0px;
+    color: #fff;
+    border-radius: 4px;
+    background-image: linear-gradient(90deg, #186f9a, #2b7acc, #168a9c, #169e97);
+}
+
+.fixed-height-table-mo-history {
+    max-height: 550px;
+  
+    table thead {
+      background-color: £fff;
+  
+      tr th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        border-bottom: 1px solid #777;
+        z-index: 2;
+      }
+    }
+  }

@@ -1,0 +1,244 @@
+.icons {
+    cursor: pointer;
+    color: goldenrod;
+}
+
+.mapicon {
+    color: #ef0017;
+    cursor: pointer;
+}
+
+.admin-feedback-icon {
+    color: #08a2f0;
+}
+
+
+.admin-task-complete-icon {
+    color: #002540;
+}
+
+.change-rider-icon {
+    color: #FF5A60;
+}
+
+.filter-icon {
+    float: right;
+    color: #2c2c2c;
+}
+
+.rider-icon {
+    cursor: pointer;
+    color: #212529;
+}
+
+.zone-icon {
+    cursor: pointer;
+    color: #28a745;
+}
+
+.refresh-icon {
+    color: indianred;
+    cursor: pointer;
+}
+
+.cancel-icon {
+    cursor: pointer;
+    color: darkred;
+}
+
+.eidt-button {
+    cursor: pointer;
+    color: darkolivegreen;
+}
+
+.eidt-info {
+    cursor: pointer;
+    color: lightseagreen;
+}
+
+.mat-tab-label {
+    opacity: 1 !important;
+}
+
+.nav.nav-pills .nav-item {
+    margin-right: 0;
+}
+
+.card.card-custom>.card-header {
+    min-height: 60px;
+}
+
+.card.card-custom>.card-header.card-header-tabs-line .nav .nav-link {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.card-header {
+    padding: 2rem 0rem;
+}
+
+.ccr-chat-msj {
+    float: right;
+    color: #28a745;
+}
+
+.rider-chat-msj {
+    text-align: left;
+    color: #ef0017
+}
+
+
+/* Target your chat bubbles specifically */
+.ccr-chat-msj mat-chip,
+.rider-chat-msj mat-chip {
+  margin: 0;          /* remove spacing around chip */
+  padding: 2px 6px;   /* reduce internal padding */
+  height: auto;       /* let it shrink to content */
+  line-height: normal;
+}
+
+.chat-mat-list {
+  margin: 0 !important;          /* remove extra margin at bottom */
+  padding: 0 !important;
+}
+
+
+.modal {
+    display: block !important;
+    /* I added this to see the modal, you don't need this */
+}
+
+
+.modal-dialog {
+    overflow-y: initial !important
+}
+
+.modal-body {
+    height: 50vh;
+    overflow-y: auto;
+}
+
+.notification {
+
+    color: white;
+    text-decoration: none;
+    // padding: 15px 26px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+.notification:hover {
+    background: lightcyan;
+}
+
+.notification .badge {
+    position: absolute;
+    top: -2px;
+    right: -5px;
+    padding: 0.2em 0.6em !important;
+    padding: 5px 10px;
+    // border-radius: 50%;
+    background: #d1d1cd;
+    color: crimson;
+}
+
+
+img {
+    border-radius: 20px;
+}
+
+img.active {
+    box-shadow: 1px -1px 7px 1px;
+    color: #6c757d;
+    height: 62px;
+    cursor: pointer;
+
+}
+
+.block-img {
+    border: 1px solid gray;
+    padding: 2px;
+    border-radius: 34px;
+    cursor: pointer;
+}
+
+
+::ng-deep ngb-datepicker .dropdown-menu{
+    z-index: 999;
+    transform: translate(110px, 36px) !important;
+}
+ .dropdown-menu{
+    transform: translate(-80px, 38px) !important;
+}
+
+
+/* Style for the active tab */
+.active-nav {
+    // .nav-item{
+        transition: all 0.3s ease-in-out;
+        // padding: 15px 20px;
+        border-left: 5px solid black;
+        box-shadow: rgba(6, 3, 3, 0.85) 0px -50px 36px -28px inset;
+        // font-size: 16px; 
+    // }
+
+}
+
+.active-nav .nav-icon i, 
+.active-nav .nav-text {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Add hover effects for elegance */
+.nav-item  {
+    transition: all 0.3s ease-in-out;
+    margin-right: 3px;
+    margin-top: 4px; 
+    border-radius: 10px;
+}
+
+.nav-item a.nav-link:hover {
+    // background-color: #0fe96d;
+    transform: scale(1.05);
+    // color: black;
+}
+
+::ng-deep .popover{
+    z-index: 9999 !important;
+    width: 220px !important;
+    .popover-title{
+        width: 220px !important;
+    }
+    .popover-content{
+        width: 220px !important;
+    }
+}
+
+// ::ng-deep .popover .btn {
+//     padding: 2px 6px !important;
+//     font-size: 11px !important;
+//     line-height: 1 !important;
+//     height: auto !important;
+//     border-radius: 3px !important;
+// }
+
+// ::ng-deep .popover .btn-success,
+// ::ng-deep .popover .btn-outline-secondary {
+//     min-width: 60px !important; /* optional: makes them consistent */
+// }
+
+// .table-container {
+//   overflow: visible !important;
+// }
+
+.dropdown-menu {
+  z-index: 9999 !important;
+  
+}
+
+// ::ng-deep .tooltip .tooltip-inner {
+//   max-width: 300px;
+//   min-width: 150px;
+// }

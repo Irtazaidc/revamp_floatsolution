@@ -1,0 +1,221 @@
+<!-- start::::: Form Dropdowns -->
+
+<div class="card card-custom mb-4">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <h3 class="card-label">Test Finder</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <form
+      class="form-horizontal"
+      [formGroup]="testFinderForm"
+      (ngSubmit)="GetTestFinderResult()"
+      name="form"
+      role="form"
+    >
+      <div class="row">
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label>Category<span class="mandatory-field"> *</span> </label>
+          <ng-select
+            style="width: 100%"
+            [items]="BodyParts"
+            [multiple]="true"
+            placeholder="Please Select"
+            bindLabel="BodyPartTitle"
+            bindValue="IBodyPartsID"
+            [closeOnSelect]="false"
+            name="BodyPartTitle"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="selectedBodyparts"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-item$="item$"
+              let-index="index"
+            >
+              <input
+                id="item-{{ index }}"
+                [ngModelOptions]="{ standalone: true }"
+                type="checkbox"
+                [ngModel]="item$.selected"
+              />
+              {{ item.BodyPartTitle }}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label
+            >Select Diseases:<span class="mandatory-field"> *</span>
+          </label>
+          <ng-select
+            style="width: 100%"
+            [items]="DiseaseTitleList"
+            [multiple]="true"
+            placeholder="Please Select"
+            bindLabel="DiseaseTitle"
+            bindValue="IDiseasesID"
+            [closeOnSelect]="false"
+            name="DiseaseTitle"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="selectedDiseases"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-item$="item$"
+              let-index="index"
+            >
+              <input
+                id="item-{{ index }}"
+                [ngModelOptions]="{ standalone: true }"
+                type="checkbox"
+                [ngModel]="item$.selected"
+              />
+              {{ item.DiseaseTitle }}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label>Select Symptoms:</label>
+          <ng-select
+            style="width: 100%"
+            [items]="sysmtomsList"
+            [multiple]="true"
+            placeholder="Please Select"
+            bindLabel="SymptomTitle"
+            bindValue="ISymptomID"
+            [closeOnSelect]="false"
+            name="SymptomTitle"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="selectedSymptoms"
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-item$="item$"
+              let-index="index"
+            >
+              <input
+                id="item-{{ index }}"
+                [ngModelOptions]="{ standalone: true }"
+                type="checkbox"
+                [ngModel]="item$.selected"
+              />
+              {{ item.SymptomTitle }}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label>Gender: <span class="mandatory-field">*</span></label>
+          <select
+            #select="ngModel"
+            id="select"
+            [(ngModel)]="Gender"
+            [ngModelOptions]="{ standalone: true }"
+            name="Gender"
+            class="form-control"
+          >
+            <option value="">Please Select</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="B">Both</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label for="departmentIds">Department</label>
+                    <div class="form-group">
+                        <select class="form-control" placeholder="-Select Department-"   [ngModelOptions]="{standalone: true}" [(ngModel)]="labDeptID" >
+                            <option  [ngValue]="-1">Select All</option>
+                            <option  [ngValue]="1">Lab</option>
+                            <option  [ngValue]="2">Imaging</option>              
+                        </select>
+                    </div> 
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button type="submit" class="btn btn-primary" [disabled]="isDisable">
+            <span *ngIf="isDisable"
+              >Search
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </span>
+            <span *ngIf="!isDisable">Search</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- end::::: Form Dropdowns -->
+
+<!-- start::::: Table Section -->
+
+<div class="card card-custom">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row">
+      <div class="col-md-12">
+        <!-- <small class="pull-right text-danger">
+            <strong>Total Records:</strong>
+          </small> -->
+        <div class="table-responsive" style="min-height: 330px">
+          <table class="table table-hover" cellpadding="0" cellspacing="0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Delivery Date</th>
+                <th class="text-right">Price</th>
+                <!-- <th class="text-center">Cancelled Tasks</th>
+                  <th class="text-center">In Progress Tasks</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noRecord>
+    <div
+      class="no-record-message"
+      style="
+        text-align: center;
+        padding: 1rem;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+      "
+    >
+      <strong>No Record Found</strong>
+    </div>
+  </ng-template>
+</div>
+
+<!-- end::::: Form Dropdowns -->

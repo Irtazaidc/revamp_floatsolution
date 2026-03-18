@@ -1,0 +1,629 @@
+<div class="visit-samples-page">
+
+    <div class="row">
+        <div class="col-sm-4">
+            <app-card [title]="'Search Visits'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                
+                <div class="">
+                    <div class="row">
+                        <div class="col">
+                            <div class="search-filters-area p-2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <form class="" [formGroup]="searchVisitsForm">
+                                            <div class="form-inline">
+        
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="branchesList"
+                                                    bindLabel="Title" 
+                                                    placeholder="-select branch-"
+                                                    bindValue="LocId"
+                                                    formControlName="branchIds"
+                                                    [multiple]="true"
+                                                    [closeOnSelect]="false"
+                                                    [groupBy]="groupBranchesByRegionFn"
+                                                    [groupValue]="groupBranchesByRegionValueFn"
+                                                    [selectableGroup]="true"
+                                                    [selectableGroupAsModel]="false"
+                                                    [searchFn]="searchBranchesCustomFn"
+                                                    >
+        
+                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                                        </div>
+                                                        <div class="ng-value" *ngIf="items.length > 2">
+                                                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template ng-optgroup-tmp let-item="item">
+                                                        <span>{{item.RegCode}} - {{item.RegName}}</span>
+                                                    </ng-template>
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div class="ng-value-label">{{item.Title}}</div>
+                                                        <div class="ng-value-label text-secondary small">{{item.RegCode}}: {{item.RegName}} - {{item.CityName}}</div>
+                                                    </ng-template>
+                                                    <ng-template ng-header-tmp>
+                                                        <button (click)="onSelectAllBranches()" class="btn btn-mini btn-dark" type="button"><i class="ti-check"></i> Select All</button>
+                                                        <button class="btn btn-mini btn-outline-dark" *ngFor="let reg of branchRegions" (click)="onSelectRegionBranches(reg)" [ngbTooltip]="reg.RegName" >{{reg.RegCode}}</button>
+                                                        <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-dark m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect All</button>
+                                                    </ng-template>
+                                                </ng-select>
+        
+                                                <input
+                                                    #dFrom
+                                                    type="text"
+                                                    style="max-width: 100%;"
+                                                    class="form-control mt-3 mr-1"
+                                                    (click)="dFrom_date.toggle()"
+                                                    placeholder="dd-mm-yyyy"
+                                                    autocomplete="off"
+                                                    name="dFrom"
+                                                    ngbDatepicker
+                                                    #dFrom_date="ngbDatepicker"
+                                                    formControlName="fromDate"
+                                                    [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                                    required>
+        
+                                                <input
+                                                    #dTo
+                                                    type="text"
+                                                    style="max-width: 100%;"
+                                                    class="form-control mt-3 mr-1"
+                                                    (click)="dTo_date.toggle()"
+                                                    placeholder="dd-mm-yyyy"
+                                                    autocomplete="off"
+                                                    name="dTo"
+                                                    ngbDatepicker
+                                                    #dTo_date="ngbDatepicker"
+                                                    formControlName="toDate"
+                                                    [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                                    required>
+                                                <select
+                                                    class="form-control mt-3 mr-1"
+                                                    style="max-width: 100%;"
+                                                    formControlName="statusId"
+                                                    (change)="statusChangedEvent($event)"
+                                                    >
+                                                    <!-- <option [value]="0">All Status</option> -->
+                                                    <option *ngFor="let item of testStatusList" [value]="item.StatusId">{{item.Title}}</option>
+                                                </select>
+
+                                            <select
+                                                class="form-control mt-3 mr-1"
+                                                style="max-width: 100%;"
+                                                formControlName="filtertype"                                                
+                                                >
+                                                <!-- <option [value]="0">All Status</option> -->
+                                                <option  [value]="3">Home Collection Patients</option>
+                                                <option  [value]="2">Walk In Patients</option>
+                                                <option  [value]="1">All</option>
+                                            </select>
+                                                <button class="btn btn-outline-primary mt-3 ml-1" type="button" title="Fetch Record(s)" (click)="getVisitsList()"><i class="flaticon2-search-1"></i></button>
+                                            </div>
+            
+                                            <div class="">
+                                                <hr class="mt-0">
+                                                <input type="text" class="form-control" placeholder="type to filter" [ngModelOptions]="{standalone: true}" [(ngModel)]="pinFilterString" (keyup)="onKeyUpPinFilter($event)" />
+                                            </div>     
+                                        </form>
+                                    </div>
+                                </div>
+                                
+
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div  style="border-top: 1px solid #eee; max-height: 350px; overflow-y: auto;" class="mt-2 pl-2">
+                                            <!-- <label>Total Records: <strong>{{visitsList.length}}</strong></label> -->
+                                            <label class="text-danger">Total Records: <strong>{{visitsList.length}}</strong></label>
+                                            <!-- <ul class="visits-list">
+                                                <li
+                                                class="cursor-pointer"
+                                                [ngClass]="{'active-li': selectedVisit.VisitId == visit.VisitId}"
+                                                *ngFor="let visit of visitsList | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                                style="border-bottom: 1px solid #eee;padding: 6px 0px;font-size: medium;"
+                                                (click)="visitSelectedEvent(visit)"
+                                                >
+                                                    <a class="text-dark anchor"
+                                                    href="javascript:void(0)"
+                                                    [ngClass]="{'font-weight-bolder': selectedVisit.VisitId == visit.VisitId,  'text-danger font-weight-bold': visit.ProcessId == 2}"
+                                                    >{{visit.PIN}}</a>
+                                                </li>
+                                            </ul> -->
+
+                                            <ul class="visits-list list-unstyled px-2">
+                                                <li
+                                                    class="visit-item mb-2 p-3 rounded shadow-sm d-flex justify-content-between align-items-center"
+                                                    [ngClass]="{
+                                                        'bg-light border border-primary': selectedVisit?.VisitId === visit.VisitId,
+                                                        'bg-white': selectedVisit?.VisitId !== visit.VisitId
+                                                    }"
+                                                    *ngFor="let visit of visitsList | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                                    (click)="visitSelectedEvent(visit)"
+                                                >
+                                                    <!-- PIN Display -->
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-id-card mr-2 text-muted"></i>
+                                                        <span
+                                                            class="pin-text"
+                                                            [ngClass]="{
+                                                                'font-weight-bolder text-primary': selectedVisit?.VisitId === visit.VisitId,
+                                                                'text-danger font-weight-bold': visit.ProcessId === 2
+                                                            }"
+                                                        >
+                                                            {{ visit.PIN }}
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Invoice Button / Anchor -->
+                                                    <button
+                                                        class="btn btn-outline-primary btn-mini"  title="Print Registration Invoice"
+                                                        (click)="openInvoice(visit); $event.stopPropagation()">
+                                                        <i class="ti-receipt py-1"></i>
+                                                     </button>
+                                                </li>
+
+                                                </ul>
+
+                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.pinsList" size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                                <!-- <p style="color: white"> Loading data... </p> -->
+                                            </ngx-spinner>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </app-card>
+        </div>
+        <div class="col-sm-8">
+            <app-card [title]="'Visit Samples (' + (selectedVisit.PIN || '') + ')'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                    
+                <div>
+    
+
+                    <ng-container *ngIf="selectedVisit; then visitSamplesContainer else noVisitSamplesContainer"></ng-container>
+                    <!-- visitSamplesList && visitSamplesList.length -->
+                    <ng-template #visitSamplesContainer>
+                        <div class="row">
+    
+                            <div class="col">
+                                <div>
+                                    <div class="header">
+        
+                                        <div class="patient0-info-bar-container" style="position: relative;">
+                                            <app-patient-basic-info class="mb-3" [PatientId]="selectedVisit.PatientId" [VisitId]="selectedVisit.VisitId"></app-patient-basic-info>
+        
+                                            <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.patientInfoBar" size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                                <!-- <p style="color: white"> Loading... </p> -->
+                                            </ngx-spinner>
+                                        </div>
+        
+                                        
+                                        <!-- <h5>Samples  <span *ngIf="selectedVisit.PIN">of (PIN <strong class="text-primary">{{selectedVisit.PIN}}</strong>)</span></h5> -->
+                                        <!-- <pre>{{selectedVisit | json}}</pre> -->
+                                        <!-- <hr /> -->
+                                        
+                                    </div>
+        
+                                    <div class="body" style="position: relative;">
+
+                                         <fieldset class="fieldset-primary fieldset-border-top">
+                                            <legend>Tests <span *ngIf="selectedVisit.PIN">of (PIN <strong class="text-primary">{{selectedVisit.PIN}}</strong>)</span></legend>
+                                            <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.patientInfoBar" size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                                <!-- <p style="color: white"> Loading... </p> -->
+                                            </ngx-spinner>
+                                            <div class="table-responsive">
+                                                <table class="table test-results-table narrow-rows">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="10px"> <input type="checkbox" class="" (change)="selectAllSamples($event)" /> </th>
+                                                            <th>Code</th>
+                                                            <th>Name</th>
+                                                            <th>Sample</th>
+                                                            <th>Quantity</th>
+                                                            <th>Process</th>
+                                                            <th>Collection</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let sample of visitSamplesList"
+                                                        [ngClass]="{'text-danger': sample.ProcessId == 2, 'text-warning': sample.ProcessId == 3, 'font-weight-bold': (sample.ProcessId == 2 || sample.ProcessId == 3), 'light-muted': sample.PackageId != -1}"
+                                                        >
+                                                            <td>
+                                                                <input
+                                                                type="checkbox"
+                                                                class=""
+                                                                [(ngModel)]="sample.checked"
+                                                                 />
+                                                                 
+                                                            </td>
+                                                            <td>{{sample.Code}}</td>
+                                                            <td>{{sample.Name}}</td>
+                                                            <td>{{sample.Title}}</td>
+                                                            <td>{{sample.SampleQuantity}}</td>
+                                                            <td>{{sample.ProcessTitle}}</td>
+                                                            <td>
+                                                                <select class="" [(ngModel)]="sample.SCollectionId" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="1">In</option>
+                                                                    <option value="2">Out</option>
+                                                                    <!-- <option *ngFor="let proc of labTestProcessList" [value]="proc.ProcessId">{{proc.Title}}</option> -->
+                                                                </select>
+                                                            </td>
+        
+        
+                                                        </tr>
+                                                        <tr class="text-center" *ngIf="!visitSamplesList.length">
+                                                            <td colspan="100">
+                                                                <div class="container-fluid">
+                                                                    <app-no-record-found></app-no-record-found>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <!-- <pre> {{visitSamplesList | json}} </pre> -->
+                                            </div>
+                                        </fieldset>
+                
+                                        <div *ngIf="visitSamplesList && visitSamplesList.length">
+
+                                            <!-- <div class="row">
+                                                <div class="col-lg-6">
+                                                    <app-visit-remarks [propVisitNo]="selectedVisit.VisitId" [editing]="{save: true}"></app-visit-remarks>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'compact'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [editing]="{save: true}"></app-visit-docs>
+                                                </div>
+                                            </div> -->
+
+                                            <div class="visit-remarks-area mb-2">
+                                                <app-visit-remarks [propVisitNo]="selectedVisit.VisitId" [editing]="{save: true}"></app-visit-remarks>
+                                            </div>
+                                            
+                                            <div class="visit-docs-area">
+                                                <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [editing]="{save: true}"></app-visit-docs>
+                                            </div>
+
+                                            <!-- <div class="row visit-docs-area">
+                                                <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'list'" (outputDocs)="getLoadedVisitDocs($event)"></app-visit-docs>
+                                            </div>
+
+                                            <div class="row visit-docs-area">
+                                                <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'grid'"></app-visit-docs>
+                                            </div>
+                                             -->
+
+
+                                            <!-- <div class="row visit-docs-area">
+                                                <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'grid'"></app-visit-docs>
+                                            </div>                                     -->
+
+
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <hr class="mb-3 mt-0">
+            
+                                                    <span class="ml-1 pull-right" *ngIf="screenPermissionsObj.transfer_samples">
+                                                        <ng-container *ngIf="true; then transferBtn else transferBtnDummy"></ng-container>
+                                                        <!-- visitSamplesList[0].StatusId < 4 -->
+                                                        <ng-template #transferBtn>
+                                                            <button
+                                                            class="btn btn-primary btn-sm waves-effect text-center"
+                                                            title="Tranfer"
+                                                            mwlConfirmationPopover
+                                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[1]"
+                                                            (confirm)="statusUpdate(4)"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="primary"
+                                                            cancelButtonType="outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true"
+                                                            >Transfer<i class="ti-arrow-top-right"></i></button>
+                                                        </ng-template>
+                                                        <ng-template #transferBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i class="ti-arrow-top-right"></i>Transfer</button>
+                                                        </ng-template>
+                                                    </span>
+            
+                                                    <span class="ml-1 pull-right" *ngIf="screenPermissionsObj.print_barcode">
+                                                        <ng-container *ngIf="true; then printReportBtn else printReportBtnDummy"></ng-container>
+                                                        <!-- visitSamplesList[0].StatusId >= 3 -->
+                                                        <ng-template #printReportBtn>
+                                                            <button class="btn btn-outline-primary btn-sm waves-effect text-center" (click)="printBarcode()"><i class="ti-printer"></i>Print Barcode</button>
+                                                        </ng-template>
+                                                        <ng-template #printReportBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i class="ti-printer"></i>Print Barcode</button>
+                                                        </ng-template>
+                                                    </span>
+            
+                                                    <span class="ml-1 pull-right" *ngIf="screenPermissionsObj.pending_sample">
+                                                        <ng-container *ngIf="searchVisitsForm.value.statusId == 2; then pendingBtn else pendingBtnDummy"></ng-container>
+                                                        <!-- visitSamplesList[0].StatusId < 4 -->
+                                                        <ng-template #pendingBtn>
+                                                            <button
+                                                            class="btn btn-primary btn-sm waves-effect text-center"
+                                                            title="Send to Pending"
+                                                            mwlConfirmationPopover
+                                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                                            (confirm)="statusUpdate(3)"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="primary"
+                                                            cancelButtonType="outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true"
+                                                            >
+                                                            <i class="ti-back-left"></i>Pending</button>
+                                                        </ng-template>
+                                                        <ng-template #pendingBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i class="ti-back-left"></i>Pending</button>
+                                                        </ng-template>
+                                                    </span>
+        
+        
+                                                    <span class="mr-1">
+                                                        <ng-container *ngIf="true; then questionnaireBtn else questionnaireBtnDummy"></ng-container>
+                                                        <ng-template #questionnaireBtn>
+                                                            <button
+                                                            class="btn btn-outline-primary btn-sm waves-effect text-center"
+                                                            title="Questionnaire"
+                                                            (click)="getVisitQuestionnaire()"
+                                                            >
+                                                            <i class="ti-file"></i>Questionnaire</button>
+                                                        </ng-template>
+                                                        <ng-template #questionnaireBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i class="ti-file"></i>Questionnaire</button>
+                                                        </ng-template>
+                                                    </span>
+        
+                                                    <!-- <span class="mx-1">
+                                                        <ng-container *ngIf="true; then visitRemarksBtn else visitRemarksBtnDummy"></ng-container>
+                                                        <ng-template #visitRemarksBtn>
+                                                            <button
+                                                            class="btn btn-outline-primary btn-sm waves-effect text-center"
+                                                            title="Questionnaire"
+                                                            (click)="getVisitRemarks()"
+                                                            >
+                                                            <i class="ti-file"></i> Remarks
+                                                            </button>
+                                                        </ng-template>
+                                                        <ng-template #visitRemarksBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled" disabled> <i class="ti-file"></i>Questionnaire</button>
+                                                        </ng-template>
+                                                    </span> -->
+                                                    
+                                                </div>
+                                            </div>
+        
+        
+                                            <div class="row d-none">
+                                                <div class="col-12">
+                                                    <hr>
+            
+                                                    <span class="mx-1 pull-right form-inline" *ngIf="screenPermissionsObj.transfer_samples">
+                                                        <select
+                                                            #updateStatusDropdownRef
+                                                            class="form-control mr-1"
+                                                            >
+                                                            <!-- <option [value]="0">All Status</option> -->
+                                                            <option [value]="4">Send to Accessioning</option>
+                                                            <option [value]="3">Send to Pending</option>
+                                                        </select>
+        
+                                                        <ng-container *ngIf="true; then pendingBtn else pendingBtnDummy"></ng-container>
+                                                        <!-- visitSamplesList[0].StatusId < 4 -->
+                                                        <ng-template #pendingBtn>
+                                                            <button
+                                                            class="btn btn-primary btn-sm waves-effect text-center"
+                                                            title="Final Result"
+                                                            mwlConfirmationPopover
+                                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                                            (confirm)="statusUpdate(updateStatusDropdownRef.value)"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="primary"
+                                                            cancelButtonType="outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true"
+                                                            >
+                                                            <i class="ti-save"></i>
+                                                            Save
+                                                            </button>
+                                                        </ng-template>
+                                                        <ng-template #pendingBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i class="ti-save"></i>Save</button>
+                                                        </ng-template>
+                                                    </span>
+            
+                                                    <span class="mx-1 mr-2 pull-right" *ngIf="screenPermissionsObj.print_barcode">
+                                                        <ng-container *ngIf="true; then printReportBtn else printReportBtnDummy"></ng-container>
+                                                        <!-- visitSamplesList[0].StatusId >= 3 -->
+                                                        <ng-template #printReportBtn>
+                                                            <button class="btn btn-outline-primary btn-sm waves-effect text-center" (click)="printBarcode()"> <i class="ti-printer"></i>Print Barcode</button>
+                                                        </ng-template>
+                                                        <ng-template #printReportBtnDummy>
+                                                            <button class="btn btn-outline-primary btn-sm btn-disabled"  disabled> <i class="ti-printer"></i>Print Barcode</button>
+                                                        </ng-template>
+                                                    </span>
+                                                        
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.visitSamples" size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                            <!-- <p style="color: white"> Loading... </p> -->
+                                        </ngx-spinner>
+
+                                    </div>
+
+                                </div>
+                            </div>
+        
+                        </div>                        
+                    </ng-template>
+                    <ng-template #noVisitSamplesContainer>
+
+                       <div class="row justify-content-center my-4">
+                            <div class="col-md-12">
+                                <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-lock fa-2x text-primary mb-3"></i>
+                                    <h4 class="font-weight-bold mb-2">Select PIN to View Tests</h4>
+                                    <p class="text-muted mb-0">Please choose a PIN from the list to see related test details.</p>
+                                </div>
+                                </div>
+                            </div>
+                       </div>
+                        
+                    </ng-template>
+    
+           
+    
+                </div>
+    
+            </app-card>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<ng-template #visitQuestionnairePopup let-visitQuestionnairePopup>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Visit Questionnaire (PIN: <span class="font-weight-bold">{{selectedVisit.VisitId}}</span>)</h4>
+      <!-- <button type="button" class="close" aria-label="Close" (click)="visitQuestionnairePopup.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button> -->
+    </div>
+    <div class="modal-body">
+        <div>
+
+            <div class="row">
+
+                <!-- <div class="col-6">
+                    <pre>{{visitQuestionnaire|json}}</pre>
+                </div> -->
+                
+
+                <div class="col-12" *ngIf="visitQuestionnaire.length">
+                    <div class="patient0-info-bar-container" style="position: relative;">
+                        <app-patient-basic-info class="mb-3" [PatientId]="selectedVisit.PatientId"></app-patient-basic-info>
+                    </div>
+                    <ul>
+                        <li *ngFor="let q of visitQuestionnaire">
+                            <div> <label>{{q.Question}}</label></div>
+                            <div class="mb-3" style="display:flex">
+                                <ng-container [ngSwitch]="q.AnsTypeId">
+                                    <ng-container *ngSwitchCase="1">
+                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="q.Answer" />
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="2">
+                                        <textarea class="form-control form-control-sm" rows="2" [(ngModel)]="q.Answer"></textarea>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="3">
+                                        <select class="form-control form-control-sm" [(ngModel)]="q.Answer">
+                                            <option
+                                                *ngFor="let opt of q.formattedOptions"
+                                                [value]="opt"
+                                            >
+                                            <!-- ([].constructor(q.Options || ''))[0].split('•') -->
+                                            {{opt}}
+                                            </option>
+                                        </select>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="4">
+                                        <select class="form-control form-control-sm" [(ngModel)]="q.formattedAnswer[0]">
+                                            <option
+                                                *ngFor="let opt of q.formattedOptions"
+                                                [value]="opt"
+                                            >
+                                            {{opt}}
+                                            </option>
+                                        </select>
+                                        <input type="text" class="form-control form-control-sm" [(ngModel)]="q.formattedAnswer[1]" />
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="5">
+                                        <input type="checkbox" [(ngModel)]="q.Answer" />
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="6">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            (click)="qDate.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            ngbDatepicker
+                                            #qDate="ngbDatepicker"
+                                            [(ngModel)]="q.Answer"
+                                        >
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="7">
+                                        <input type="number" min="q.formattedOptions[0]" class="form-control form-control-sm" [(ngModel)]="q.formattedAnswer[1]" />
+                                        <input type="number" max="q.formattedOptions[1]" class="form-control form-control-sm" [(ngModel)]="q.formattedAnswer[1]" />
+                                    </ng-container>
+                                    <ng-container *ngSwitchDefault>
+                                        <input type="text" [(ngModel)]="q.Answer" />
+                                    </ng-container>
+                                </ng-container>
+
+                                <!-- <pre> {{q | json}}</pre> -->
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 text-center" *ngIf="!visitQuestionnaire.length">
+                    <span>No Questionnaire</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" (click)="visitQuestionnairePopup.dismiss('close button clicked')"><i class="ti-close"></i>Close</button>
+        <!-- <button
+            class="btn btn-sm btn-primary ml-1"
+            title="Save Questionnaire"
+            mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="saveVisitQuestionnaire()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="primary"
+            cancelButtonType="outline-secondary"
+            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+            [appendToBody]="true"
+            >
+            <i class="ti-save"></i> Save
+        </button> -->
+        <button class="btn btn-sm btn-primary ml-1" (click)="saveVisitQuestionnaire()"><i class="ti-save"></i>Save</button>
+    </div>
+</ng-template>
+
+

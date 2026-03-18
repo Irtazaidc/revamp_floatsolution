@@ -1,0 +1,135 @@
+<!-- <div class="card card-custom mt-2 mb-2">
+    <div class="card-toolbar">
+        <div class="container mt-5 mb-5">
+            <div class="row mt-2 mb-2">
+                <div class="col">
+                    <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form"
+                        (ngSubmit)="getAdminDashboardcounts()">
+                        <div class="row d-flex justify-content-center align-items-center">
+                            <div class="col-3">
+                                <div class="form-row">
+                                    <label for="dateFrom">Date From</label>
+                                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                        placeholder="YYYY-MM-DD" autocomplete="off" ngbDatepicker
+                                        formControlName="dateFrom" name="dateFrom" class="form-control" type="text"
+                                        [value]="" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-row">
+                                    <label for="dateTo">Date To</label>
+                                    <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="YYYY-MM-DD"
+                                        autocomplete="off" ngbDatepicker formControlName="dateTo" name="dateTo"
+                                        class="form-control" type="text" [value]="" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn btn-light-danger font-weight-bold btn-hover-primary mt-7">
+                                    <span> <i class="fas fa-search"></i>Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="card card-custom mt-5 mb-5">
+    <div class="card-toolbar">
+        <div class="row mt-8">
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12"> </div>
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 ">
+                <div class="row form-group mr-5">
+                    <label class="col-4 col-form-label">Filter By Date:</label>
+                    <div class="col-8">
+                    <select class="form-control" [(ngModel)]="StatsDate"
+                        (change)="onDateChangeofStats($event.target.value)">
+                        <option value="" selected hidden>--Select--</option>
+                        <option [value]="1">Today</option>
+                        <option [value]="2">Week</option>
+                        <option [value]="3">Month</option>
+                        <option [value]="4">Year</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container row  mb-8 flexbox">
+            <div class="col-12  mb-8">
+                <h2>CMS Statistics and Analytics</h2>
+            </div>
+            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.TotalRequestCount" bdColor="rgba(0,0,0,0.8)"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <div class="flex-item " style="border-left: 10px solid orange;">
+                    <span class="hc-stats">
+                        <p>Total</p>
+                        <h1>{{countList.TotalRequests}}</h1>
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <div class="flex-item " style="border-left: 10px solid green;">
+                    <span class="hc-stats">
+                        <p>Closed</p>
+                        <h1>{{countList.ResolvedRequests}}</h1>
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <div class="flex-item" style="border-left: 10px solid blue;">
+                    <span class="hc-stats">
+                        <p>In-Progress</p>
+                        <h1>{{countList.InprogressRequests}}</h1>
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <div class="flex-item" style="border-left: 10px solid red;">
+                    <span class="hc-stats">
+                        <p>Rejected</p>
+                        <h1>{{countList.CancelledRequests}}</h1>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card card-custom mt-5 mb-5">
+    <div class="card-toolbar">
+        <div class="row mt-2">
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12"></div>
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 ">
+                <div class="row form-group mr-5">
+                    <label class="col-4 col-form-label">Filter By Date:</label>
+                    <div class="col-8">
+                    <select class="form-control" [(ngModel)]="ChartDate"
+                        (change)="onDateChangeofChart($event.target.value)">
+                        <option value="" selected hidden>--Select--</option>
+                        <option [value]="1">Today</option>
+                        <option [value]="2">Week</option>
+                        <option [value]="3">Month</option>
+                        <option [value]="4">Year</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container row d-flex justify-content-center align-items-center mb-5">
+            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.chartGraphStats" bdColor="rgba(0,0,0,0.8)"
+            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+                <div class="chart-wrapper">
+                    <canvas baseChart [datasets]="ChartData" [labels]="ChartLabels" [options]="ChartOptions"
+                        [legend]="ChartLegend" [type]="ChartType" [plugins]="ChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

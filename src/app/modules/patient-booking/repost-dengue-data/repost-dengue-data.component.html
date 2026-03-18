@@ -1,0 +1,55 @@
+<div class="card card-custom gutter-t">
+    <div class="card-body px-4 py-4">
+        <div style="float: right;" class="">
+            <div class="col-md-4 col-lg-4 col-sm-4">
+                <button class="btn btn-primary" (click)="checkdatatopost()">Post Data</button>
+            </div>
+        </div>
+        <table class="table table-hover compact">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Patient Name</th>
+                    <th>VisitId</th>
+                    <th>Param Name</th>
+                    <th>Result</th>
+                    <th>District</th>
+                    <th>Tehsil</th>
+                    <th>Permanent District</th>
+                    <th>Permanent Tehsil</th>
+                    <th>ReportingDate</th>
+                    <th>Posted Date</th>
+                    <th>Response Code</th>
+                    <th>Response</th>
+                    <th>Branch</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!denguePostedData.length">
+                    <td colspan="7" style="text-align: center;">
+                        <strong class="text-primary mt-8">No Record Found..</strong>
+                    </td>
+                </tr>
+                <tr *ngFor="let den of this.denguePostedData; let i = index">
+                    <td> <input [(ngModel)]="den.isSelected" class="" type="checkbox" /></td>
+
+                    <td>{{i + 1}}</td>
+                    <td>{{den.PatientName}}</td>
+                    <td>{{den.VisitId}}</td>
+                    <td>{{den.PCode}}</td>
+                    <td>{{den.Result}}</td>
+                    <td>{{den.District}}</td>
+                    <td>{{den.Tehsil}}</td>
+                    <td>{{den.PermenentDistrict}}</td>
+                    <td>{{den.PermenentTehsil}}</td>
+                    <td>{{den.ReportingDate | date: "dd MMM, yyyy, h:mm a"}}</td>
+                    <td>{{den.PostedDateTime | date: "dd MMM, yyyy, h:mm a"}}</td>
+                    <td>{{den.ResponseStatusCode}}</td>
+                    <td>{{den.ResponseJSON}}</td>
+                    <td>{{den.RegLoc}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

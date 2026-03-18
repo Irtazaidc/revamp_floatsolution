@@ -1,0 +1,9 @@
+::ng-deep .custom-popover {
+    max-width: 800px; /* Set the desired width */
+    width: auto !important; /* Use !important to override default styles if needed */
+  }
+  tr td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}

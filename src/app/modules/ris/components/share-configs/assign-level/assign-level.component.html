@@ -1,0 +1,143 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Assign Level
+                <small>Assign levels to radiologist</small>
+            </h3>
+        </div>
+    </div>
+    <!-- <div class="card-body pb-4">
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="assignForm" class="form-horizontal" name="form" role="form">
+                    <div class="row form-group justify-content-center">
+                        <div class="col-md-3 col-sm-12">
+                            <label class="">Radiologist Level:</label>
+                            <ng-select style="width: 100%;" class="" placeholder="-Select Level-"
+                                [items]="doctorlevelList" bindLabel="LevelName" bindValue="LevelID"
+                                formControlName="radlevel"
+                                [ngClass]="{'invalid': assignForm.get('radlevel').errors , 'invalid-highlighted': assignForm.get('radlevel').errors && isSubmitted }">
+                            </ng-select>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <label class="">Radiologist Designation:</label>
+                            <ng-select style="width: 100%;" class="" placeholder="-Select Designation-"
+                                [items]="radoiologistList" bindLabel="FullName" bindValue="EmpId"
+                                formControlName="radID"
+                                [ngClass]="{'invalid': assignForm.get('radID').errors , 'invalid-highlighted': assignForm.get('radID').errors && isSubmitted }">
+                            </ng-select>
+                        </div>
+                        <div class="mt-8 col-md-2 col-sm-12">
+                            <div (click)="getLevelList()" class="btn btn-primary" type="button">Search</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+</div>
+<div class="card card-custom">
+    <div class="card-body pb-4">
+        <div class="row">
+            <div class="col-md-12 ">
+                <ngx-spinner class="spinner-warning" [name]="spinnerRefs.searchTable" bdColor="rgba(0,0,0,0.8)"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="row justify-content-center">
+                    <!-- <div class="col-md-6 col-sm-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" 
+                            [(ngModel)]="searchText" name="searchText"/>
+                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getRadiologistInfoDetail()"><i class="ti-reload"></i></button>
+                        </div>
+                    </div> -->
+                    <div class="offset-md-3 offset-lg-3 offset-xl-3 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" 
+                            [(ngModel)]="searchText" name="searchText"/>
+                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getRadiologistInfoDetail()"><i class="ti-reload"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <small class="pull-right text-danger"><strong>Total Records: {{radoiologistList.length}}</strong></small>
+                    </div>
+
+                </div>
+                <div class="table-responsive table-container fixed-height-table">
+                    <table class="table table-hover compact table-bordered cursor-pointer" style="width: 100%; min-height: 200px;"
+                        cellpadding=0 cellspacing=0>
+                        <thead class="sticky-header">
+                            <th>
+                                <input type="checkbox" 
+                                [(ngModel)]="mainChk" 
+                                class="cursor-pointer"
+                                [disabled]="searchText?.length > 0"
+                                [ngModelOptions]="{standalone: true}" 
+                                (change)="selectAllItems($event.target.checked)" 
+                                [disabled]="isFieldDisabled" />
+                            </th>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Designation</th>
+                            <th>Employment Status</th>
+                            <th>Level</th>
+                        <tbody> 
+                            <tr class="text-center" *ngIf="!radoiologistList">
+                                <td colspan="100">No Record Found</td>
+                            </tr>
+                            <tr *ngFor="let data of radoiologistList | filterByKey: searchText:['FullName','EmpNoWithPrefix','Designation','LocationFromIorgLoc']; let i = index">
+                                <td>
+                                    <input
+                                        class="cursor-pointer"
+                                        type="checkbox"
+                                        (change)="onSelectedDoctor(data)"
+                                        [(ngModel)]="data.checked"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="isDissabledChk"/>
+                                </td>
+                                <td>{{data.FullName}} - {{data.EmpNoWithPrefix}}</td>
+                                <td>{{data.LocationFromIorgLoc}}</td>
+                                <td>{{data.Designation}}</td>
+                                <td>{{data.EmploymentStatus}}</td>
+                                <td>
+                                    <ng-select style="width: 100%;"  
+                                        class="mr-1"
+                                        [items]="doctorlevelList"
+                                        bindLabel="LevelName"
+                                        [(ngModel)]="data.LevelID"
+                                        placeholder="-Please Select Level-"
+                                        [ngClass]="{ 'invalid': !data.LevelID && data.checked,'invalid-highlighted': !data.LevelID && data.checked && isSubmitted }"
+                                        bindValue="LevelID">
+                                    </ng-select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5">
+                <!-- <button (click)="updateDoctorLevel()" type="button" class="btn btn-primary pull-right">
+                    <i class="fa fa-save m-0" aria-hidden="true"></i>Save
+                </button> -->
+                <button type="button" [disabled]="disabledButton"
+                    class="btn btn-primary pull-right mr-10" mwlConfirmationPopover
+                    [popoverTitle]="'Please Confirm...!'"
+                    [popoverMessage]="'Are you sure want to save?'"
+                    [confirmText]="confirmationPopover.confirmText"
+                    [cancelText]="confirmationPopover.cancelText"
+                    [placement]="confirmationPopover.placements[0]" 
+                    (confirm)="updateDoctorLevel()" 
+                    (cancel)="confirmationPopover.confirmPopoverCancel()"
+                    confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                    (click)="confirmationPopover.confirmClicked = false; confirmationPopover.cancelClicked = false" [appendToBody]="true">
+                    <i class="fa fa-save"></i>Save<i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,197 @@
+<div class="row">
+    <div class="col-sm-12">
+        <app-card [title]="'Test Profile Rate'" [cardClass]="'tim-card tim-card'">
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="BList">Locations:</label>
+                    <ng-select [items]="branchList" bindLabel="Title" bindValue="LocId"
+                        (change)="branchListChanged($event)" placeholder="--select--" [(ngModel)]="selectedLocId">
+                    </ng-select>
+                </div>
+                <div class="col-md-5">
+                    <label for="PList">Panel:</label>
+                    <ng-select [items]="panelList" bindLabel="CodeName" bindValue="PanelId"
+                        (change)="panelListChanged($event)" placeholder="--select--" name="panel"
+                        [(ngModel)]="selectedPanelId">
+                    </ng-select>
+                </div>
+                <!-- <div class="form-check col-md-2">
+    <div class="row"> -->
+                <!-- <input  class="form-check-input" type="radio" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode" id="byCode1" checked>
+    <label for="radio1" class="form-check-label">By Code</label> -->
+                <!-- </div>
+<div class="row"> -->
+                <!-- <input type="radio" class="form-check-input" name="rdSearchBy" (click)="rdSearchByClick('byName')" value="byName"  id="byName1"> -->
+                <!-- <label for="radio2" class="form-check-label">By Name</label> -->
+                <!-- </div> -->
+                <!-- </div> -->
+                <div class="col-md-4">
+                    <label class="">Tests:</label>
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byName')" value="byName" id="byName1">
+                        <label for="radio2" class="form-check-label">By Name</label>
+                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode" id="byCode1" checked>
+                        <label for="radio1" class="form-check-label">By Code</label>
+                        <input type="checkbox" *ngIf="rdSearchBy == 'byCode'" class="form-check-input ml-2" name="chkSearchByExactMatch" id="chkSearchByExactMatch" [(ngModel)]="chkSearchByExactMatch">
+                        <label for="chkSearchByExactMatch" *ngIf="rdSearchBy == 'byCode'" class="form-check-label"> <small>Exact match</small></label>
+                    </div>
+                    <div>
+                        <ng-select [items]="testList" bindLabel="TestProfileName" bindValue="TPId"
+                            (change)="testListChanged($event)" placeholder="--select--" name="tests"
+                            [searchFn]="customSearchFn" [(ngModel)]="selectedTPID">
+
+                            <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                <span><strong>{{ item.TestProfileCode }} </strong>- {{ item.TestProfileName }}</span>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mt-3 ml-0 mr-0">
+                <div class="table-responsive">
+                    <ng-template #tpParamsPopTitle><b>Parameters</b></ng-template>
+                    <ng-template #tpParamsPopContent>
+                        <div class="row">
+                            <div class="col-12">
+                                <p style="border-bottom: 1px solid #e5e5e5; margin-top: -10px;padding-bottom: 4px;"><strong>Protocol:</strong> {{protocol || 'No protocol.'}}</p>
+                                <!-- <hr> -->
+                            </div>
+                            <div class="col-12">
+                                <p style="border-bottom: 1px solid #e5e5e5; margin-top: -10px;padding-bottom: 4px;"><strong>Patient Instruction:</strong> {{patientInstruction || 'No patient instruction.'}}</p>
+                                <!-- <hr> -->
+                            </div>
+                            <div class="col-12" style=" max-height: 400px; overflow-y: auto;">
+                                <strong>Parameters:</strong>
+                                <table class="table narrow-rows">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="!tpParametersForPopover.length">
+                                            <td colspan="3" class="text-center"><strong>No parameter found.</strong></td>
+                                        </tr>
+                                        <tr *ngFor="let param of tpParametersForPopover; let i = index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{param.Code}}</td>
+                                            <td>{{param.Name}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </ng-template>
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.TestSection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <table class="table table-bordered selected-test-rate-table compact">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Delivery Date</th>
+                                <th class="text-right">Price</th>
+                                <th class="text-right">Discount</th>
+                                <th class="text-right">Discounted Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let tp of selectedTPIDs; let i = index; "
+                            [ngClass]="{'package-tp-row': tp.forPkg, 'package-row': tp.TypeId == 3, 'strike-through-row': tp.allowForReg == false}">
+
+                                <td [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''">
+                                    {{i+1}}
+                                </td>
+                                <td [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''">
+                                    <span>{{tp.TestProfileCode}}</span>
+                                    <i *ngIf="tp.TypeId == 1 || tp.TypeId == 2" (click)="showTestDetail(tp)" class="fa fa-info-circle text-warning cursor-pointer pull-right" ngbTooltip="Click to view test detail"  [popoverTitle]="'Test Detail'"[ngbPopover]="tpParamsPopContent"
+                                    [popoverTitle]="'Test Profile Detail'"
+                                    placement="bottom"
+                                    ></i>
+                                </td>
+                                <td [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''">
+                                    {{tp.TestProfileName}}
+                                </td>
+                                <td [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''">
+                                    {{tp.DeliveryDate | date:'dd-MMM-yyyy HH:mm:ss' }}
+                                </td>
+                                <td style="text-align: right"
+                                    [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''">
+                                    {{tp.TestProfilePrice || '0'}}
+                                </td>
+                                <td style="text-align: right"
+                                    [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''"
+                                    [ngClass]="tp.IsDiscountable == 0 ? 'text-danger font-weight-bold': ''">
+                                    <ng-container *ngIf="tp.IsDiscountable == 0 then noDesc else desc"></ng-container>
+                                    <ng-template #noDesc>Non Discountable</ng-template>
+                                    <ng-template #desc> {{tp.itemDiscount || '0'}}</ng-template>
+                                </td>
+                                <td style="text-align: right"
+                                    [ngClass]="tp.isMatch == 0 ? 'strike-through-row text-danger': ''">
+                                    {{tp.discountedPrice || '0'}}
+                                </td>
+                                <td>
+                                    <i *ngIf="!tp.forPkg" style="cursor: pointer;" class="ti-close text-danger" title="Remove"
+                                        (click)="removeItem(tp.TPId)"></i>
+                                </td>
+                            </tr>
+                            <tr class="no-border" >
+                                <td colspan="8"></td>
+                            </tr>
+                            
+                            <tr class="no-border">
+                                <td colspan="5"></td>
+                                <td><strong>Discount Percentage</strong> </td>
+                                <td style="text-align:right" class="p-0">
+                                    <input min="0" max="100" oninput="this.value = Math.abs(this.value)" type="number"
+                                        #discountPerct class="form-control p-0" id="discountPerc"
+                                        (input)="enforceRange(discountPerct)"
+                                        [value]="discountPercentage" placeholder="Enter Discount percentage"
+                                        (keyup)="discountPercentageChanged(discountPerct.value) "
+                                        style="text-align: right;">
+
+                                </td>
+                                <td></td>
+                            </tr>
+
+                            <tr class="no-border">
+                                <td colspan="5"></td>
+                                <td><strong>Total Charges:</strong> </td>
+                                <td style="text-align:right"> <strong class="text-warning">{{totalTPPrice}}</strong></td>
+                                <td></td>
+                            </tr>
+
+                            <tr class="no-border">
+                                <td colspan="5"></td>
+                                <td><strong>Total Discount Amount:</strong> </td>
+                                <td style="text-align:right"> <strong class="text-warning">{{discountAmount}}</strong></td>
+                                <td></td>
+                            </tr>
+
+                            <tr class="no-border">
+                                <td colspan="5"></td>
+                                <td><strong>Discounted Charges</strong></td>
+                                <!-- <td style="text-align:right" class="p-0"> <input type="number" class="form-control p-0"
+                                        id="discountedCharges" [value]="discountedCharges" readonly
+                                        style="text-align: right;">
+                                </td> -->
+                                <td style="text-align:right"> <strong class="text-green">{{discountedCharges}}</strong></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </app-card>
+    </div>
+</div>

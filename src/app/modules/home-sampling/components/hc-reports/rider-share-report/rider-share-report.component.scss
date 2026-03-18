@@ -1,0 +1,88 @@
+.hc-stats p{
+    font-size: revert;
+    padding-left: 15px;
+    margin-bottom: 0px;
+}
+.box{
+    height: 59px !important;
+    width: 150px !important
+}
+.hc-stats h1{
+    padding-left: 15px;
+    font-weight: bold;
+    font-size: xx-large;
+    margin-top: 0px;
+}
+.flexbox {
+    display: flex;
+    justify-content:  space-between;
+    flex-wrap: wrap;
+ }
+ .flex-item {
+    width: 100px;
+    height: 50px;
+    margin: 10px auto;
+ }
+
+
+ .card-custom {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1bc5bd;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .filter-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .filter-label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .filter-select {
+    width: 200px;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  .table-custom thead th {
+    background-color: #1bc5bd;
+    color: white;
+    text-align: left;
+    padding: 10px;
+  }
+  
+  .table-custom tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .table-custom tbody tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
+  
+  .table-custom tbody td:first-child {
+    font-weight: bold;
+  }
+  
+  .table-custom tbody tr:last-child td {
+    border-bottom: none;
+  }

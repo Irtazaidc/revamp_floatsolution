@@ -1,0 +1,63 @@
+<div class="container">
+    <div class=" row">
+        <div class="col-md-6">
+            <form [formGroup]="formForTpGen" class="form-horizontal" name="form" role="form">
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="testCode">Code</label>
+                            <input formControlName="testCode" type="text"
+                                class="form-control" [readonly]="true"/>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="testName">Name</label>
+                            <input formControlName="testName" type="text"
+                                class="form-control" [readonly]="true"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="testType">Type</label>
+                            <input formControlName="testType" type="text"
+                                class="form-control" [readonly]="true"/>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="CC">Report Title</label>
+                            <input formControlName="reportTitle" type="text"
+                                class="form-control" [readonly]="true"/>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Report Footer<span
+                                        class="mandatory-asterisk">*</span></label>
+                                <textarea  
+                                    id="reportFooter" rows="3" formControlName="reportFooter" type="text"
+                                    class="form-control" placeholder="" [readonly]="true"></textarea>
+                                <!-- [ngClass]="{'invalid': ComplaintDetailsForm.get('cmsMessage').errors, 'invalid-highlighted': ComplaintDetailsForm.get('cmsMessage').errors && isSubmitted }"<div class="text-right text-muted">Remaining: {{ remainingCharacters
+                                    }}/2000</div> -->
+                            </div>
+                    </div> 
+                    <div class="col-md-12">
+                        <app-sample-information></app-sample-information>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                     <app-groups></app-groups>
+                </div>
+                <div class="col-md-12">
+                     <app-parameters></app-parameters>   
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

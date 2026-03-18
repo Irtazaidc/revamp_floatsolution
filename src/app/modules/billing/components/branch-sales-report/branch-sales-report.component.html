@@ -1,0 +1,425 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-custom">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">
+            <i class="fas fa-chart-line text-primary"></i>
+          </span>
+          <h3 class="card-label">
+            Branch Sales Report
+            <small>Review branch sales</small>
+          </h3>
+        </div>
+      </div>
+      <div class="card-body pb-0">
+        <form class="" [formGroup]="filterForm">
+          <div class="row justify-content-center">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <label class="control-label">Date From:</label>
+              <input (click)="DateFrom.toggle()" #DateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                value="1980-08-26" formControlName="DateFrom" name="DateFrom" class="form-control mb-4" type="text"
+                value=""
+                [ngClass]="{'invalid': filterForm.get('DateFrom').errors , 'invalid-highlighted': filterForm.get('DateFrom').errors && isSubmitted }"
+                [maxDate]="maxDate" />
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <label class="control-label">Date To:</label>
+              <input (click)="DateTo.toggle()" #DateTo="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                value="1980-08-26" formControlName="DateTo" name="DateTo" class="form-control mb-4" type="text"
+                value=""
+                [ngClass]="{'invalid': filterForm.get('DateTo').errors , 'invalid-highlighted': filterForm.get('DateTo').errors && isSubmitted }"
+                [maxDate]="maxDate" />
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <label class="control-label">Branch:</label>
+              <div class="form-group">
+                <ng-select id="pat_branch" style="width: 100%;"
+                  [ngClass]="{'invalid': filterForm.get('locId').errors, 'invalid-highlighted': filterForm.get('locId').errors && isSubmitted}"
+                  formControlName="locId" [items]="branchList" bindLabel="Title" [multiple]="true"
+                  [closeOnSelect]="true" bindValue="LocId" placeholder="Select Branch">
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      <span class="ng-value-label"> {{item.Title}}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="mt-8 col-xl-2 col-lg-3 col-md-4 col-sm-12">
+              <button type="button" (click)="GetBranchClosingDataList()" class="btn btn-primary"
+                type="button">Search</button>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <!-- <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row">
+               <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.SalesDataBar" size="medium"
+              color="#fff" type="square-loader" [fullScreen]="false">
+              <p style="color: white">Please wait...</p>
+            </ngx-spinner>
+              <div class="col-md-12">
+                <div class="summary-section mb-3"
+                  *ngIf="(BranchSummaryReport.length && BranchSummaryReport.length) || !searchText.length">
+                  <div class="d-flex justify-content-between align-items-center card-header bg-light"
+                    style="padding: 1rem 1rem;">
+                    <h6 class="mb-0">
+                      <i class="fa fa-hospital text-info me-1"></i> Branch Summary
+                    </h6>
+                    <span class="badge bg-white text-primary py-1 px-2 small">PKR</span>
+                  </div>
+                  <div class=" p-0">
+                    <div class="table-responsive">
+                      <table class="table table-sm table-hover compact mb-0">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Patient Type</th>
+                            <th>Payment Mode</th>
+                            <th class="text-end">Counts</th>
+                            <th class="text-end">Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngIf="!BranchSummaryReport || BranchSummaryReport.length === 0" class="text-center">
+                            <td colspan="5" class="py-4 text-muted">No summary found</td>
+                          </tr>
+                          <tr *ngFor="let item of BranchSummaryReport; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ item.PatientType }}</td>
+                            <td>
+                              <span class="badge" [ngClass]="{
+                                        'bg-primary': item.PaymentMode === 'Cash',
+                                        'bg-success': item.PaymentMode === 'Credit Card',
+                                        'bg-info': item.PaymentMode === 'Bank Transfer',
+                                        'bg-secondary': item.PaymentMode !== 'Cash' 
+                                                        && item.PaymentMode !== 'Credit Card' 
+                                                        && item.PaymentMode !== 'Bank Transfer'
+                                      }">
+                                {{ item.PaymentMode || 'None' }}
+                              </span>
+                            </td>
+                            <td class="text-end">{{ item.Total }}</td>
+                            <td class="text-end">{{ formatAmountWithCommas(item.TotalAmount) }}</td>
+                          </tr>
+                        </tbody>
+                        <tfoot class="table-light">
+                          <tr>
+                            <td colspan="4" class="text-end fw-bold">Grand Total:</td>
+                            <td class="text-end text-green fw-bold">{{ formatAmountWithCommas(closingData.totalAmount)
+                              }}</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="print-left">
+                  <div class="d-flex justify-content-between align-items-center card-header bg-light"
+                    style="padding: 1rem 1rem;">
+                    <h6 class="mb-0">
+                      <i class="fa fa-calculator text-info me-1"></i> Currency Calculator
+                    </h6>
+                    <span class="badge bg-white text-primary py-1 px-2 small">PKR</span>
+                  </div>
+                  <div class="">
+                    <div class="table-responsive">
+                      <table class="table table-borderless compact mb-0">
+                        <thead>
+                          <tr>
+                            <th class="ps-3" width="30%">Notes</th>
+                            <th width="30%">Qty</th>
+                            <th width="40%">Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let note of notes" class="align-middle">
+                            <td class="ps-3">Rs. {{ note.denomination | number:'1.0-0' }}</td>
+                            <td>
+                              <input type="text"
+                                class="form-control form-control-sm w-75 border-primary border-opacity-25"
+                                placeholder="0" (keypress)="validateNo($event)" [(ngModel)]="note.quantity"
+                                (ngModelChange)="calculateNoteTotals()" />
+                            </td>
+                            <td class="text-end pe-3 fw-semibold">Rs. {{ note.total | number:'1.0-0' }}</td>
+                          </tr>
+                        </tbody>
+                        <tfoot class="bg-light">
+                          <tr>
+                            <td colspan="2" class="ps-3 text-end fw-bold">Calculated Total</td>
+                            <td class="text-end pe-3 fw-bold">Rs. {{ grandTotal | number:'1.0-0' }}</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" class="ps-3 text-end fw-bold">Cash Amount</td>
+                            <td class="text-end pe-3 fw-bold">Rs. {{ formatAmountWithCommas(Totalcash) }}</td>
+                          </tr>
+                          <tr [ngClass]="{
+                                      'table-success': grandTotal === Totalcash,
+                                      'table-danger': grandTotal !== Totalcash
+                                      }">
+                            <td colspan="2" class="fw-bold text-end">Difference</td>
+                            <td class="pe-3">
+                              <span *ngIf="grandTotal === Totalcash" class="text-success">
+                                <i class="bi bi-check-circle me-1"></i>Matched
+                              </span>
+                              <span *ngIf="grandTotal !== Totalcash" class="text-danger">
+                                Rs. {{ (grandTotal - Totalcash) | number:'1.0-0' }}
+                              </span>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                    <div class="px-3 py-2 bg-light">
+                      <span [ngClass]="{
+                                      'text-success': grandTotal === Totalcash,
+                                      'text-danger': grandTotal !== Totalcash
+                                  }">
+                        {{ grandTotal === Totalcash ? 'Amounts are balanced' : 'Discrepancy detected - please verify' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div> -->
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.dataTable" size="medium"
+              color="#fff" type="square-loader" [fullScreen]="false">
+              <p style="color: white">Please wait...</p>
+            </ngx-spinner>
+            <div class="d-flex justify-content-between align-items-center card-header bg-light"
+                    style="padding: 1rem 1rem;">
+                <h6 class="mb-0">
+                        <i class="fas fa-chart-bar text-info me-1"></i> Sale Details
+                      </h6>
+                <span class="badge bg-white text-dark py-2 px-2 small">
+                  <i class="fas fa-database me-1"></i> Total Records: {{ depositList.length }}
+                </span>
+            </div>
+            <div class="table-responsive table-container">
+              <table class="table table-hover compact table-bordered" style="width: 100%;" cellpadding="0" cellspacing="0">
+                <thead >
+                  <!-- <th class="text-center">
+                    <input type="checkbox" [(ngModel)]="mainChk" class="cursor-pointer" *ngIf="pagination.paginatedSearchResults.length > 0" 
+                      [ngModelOptions]="{standalone: true}" (change)="selectAllItems($event.target.checked)" />
+                  </th> -->
+                  <th>Sr.#</th>
+                  <th>FDO Name</th>
+                  <th>Branch</th>
+                  <th>Cash</th>
+                  <th>Credit Card</th>
+                  <th>Others</th>
+                  <th>Total Amount</th>
+                  <th>Closing Date</th>
+                  <th>Action</th>
+                </thead>
+                <tbody>
+                  <tr class="text-center"
+                    *ngIf="!pagination.paginatedSearchResults || pagination.paginatedSearchResults.length < 1">
+                    <td colspan="9">No Record Found</td>
+                  </tr>
+                <tr *ngFor="let item of pagination.paginatedSearchResults; let i = index">
+                <!-- Deposit Row -->
+                    <ng-container *ngIf="item.rowType === 'deposit'">
+                      <td>{{ item.serialNo }}</td>
+                      <td>{{ item.EmployeeName }}</td>
+                      <td>{{ item.LocCode }}</td>
+                      <td>Rs.{{ item.Cash }}</td>
+                      <td>Rs.{{ item.CreditCard }}</td>
+                      <td>Rs.{{ item.Others }}</td>
+                      <td>Rs.{{ item.TotalAmount }}</td>
+                      <td>{{ item.SaleClosingDate | date:"dd MMM, yyyy, h:mm a" }}</td>
+                      <td>
+                        <button class="btn btn-link p-0 view-details-btn" (click)="openSalesDetails(item)"
+                          ngbTooltip="View Sales Details">
+                          <i class="ti-receipt me-1 text-primary"></i>
+                          <span>
+                            View Details
+                          </span>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <!-- Account Row -->
+                    <ng-container *ngIf="item.rowType === 'account'">
+                      <td colspan="4" class="fw-bold" style="text-align: right">
+                        <strong>Account Details</strong></td>
+                      <td class="fw-bold">{{ item.AccountTitle || 'N/A' }}</td>
+                      <td class="fw-bold">{{ item.EmployeeName || 'N/A'}} - {{ item.LocCode || '-'}}</td>
+                      <td class="fw-bold"> <span title="Deposit Amount">Rs.{{ item.Amount || 'N/A'}}</span> 
+                        <span *ngIf="item.AdjustmentAmt" title="Adjustment Amount" class="text-warning"> <br> Rs.{{ item.AdjustmentAmt || 'N/A'}}</span> </td>
+                      <td class="fw-bold">{{ item.EntryOn  | date:"dd MMM, yyyy, h:mm a" }}</td>
+                       <td class="fw-bold" style="word-break: break-word"><span title="Deposit Remarks">{{ item.DepositRemarks || 'N/A'}}</span> 
+                        <span *ngIf="item.Remarks" title="Adjustment Remarks" class="text-warning"><br>{{ item.Remarks || 'N/A'}}</span></td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row no-print" *ngIf="(pagination.paginatedSearchResults).length">
+              <div class="col-md-6 col-sm-12">
+                <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page"
+                  [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                  (pageChange)="refreshPagination()">
+                </ngb-pagination>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <select class="custom-select pull-right" style="width: auto" [(ngModel)]="pagination.pageSize"
+                  (ngModelChange)="refreshPagination()">
+                  <option [ngValue]="5">5 items per page</option>
+                  <option [ngValue]="10">10 items per page</option>
+                  <option [ngValue]="20">20 items per page</option>
+                  <option [ngValue]="50">50 items per page</option>
+                  <option [ngValue]="100">100 items per page</option>
+                </select>
+              </div>
+            </div>
+            <div class="offset-md-4 col-md-8 col-sm-12 mt-1 mb-2">
+              <div class="row">
+                <div class="col-md-12 mb-5">
+                  <div class="printable-area-totals printable-area print-right">
+                    <div class="d-flex justify-content-between align-items-center card-header bg-light"
+                      style="padding: 1rem 1rem;">
+                      <h6 class="mb-0">
+                        <i class="fas fa-chart-pie me-1 text-info"></i> Closing Summary
+                      </h6>
+                      <span class="badge bg-white text-primary py-1 px-2 small">PKR</span>
+                    </div>
+                    <div class="p-0">
+                      <table class="table table-bordered mb-0">
+                        <tbody>
+                          <tr>
+                            <td><strong>Cash Amount</strong></td>
+                            <td class="text-end">{{ formatAmountWithCommas(closingData.Cash) }}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Credit Card Amount</strong></td>
+                            <td class="text-end">{{
+                              formatAmountWithCommas(closingData.CreditCard) }}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Other Amount</strong></td>
+                            <td class="text-end">{{
+                              formatAmountWithCommas(closingData.Others) }}</td>
+                          </tr>
+                          <tr class="table-light">
+                            <td><strong>Total Amount</strong></td>
+                            <td class="text-end text-green fw-bold">
+                              <strong>{{ formatAmountWithCommas(closingData.totalAmount) }}</strong>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12">
+                  <!-- <span>Remarks: 
+                    <strong>{{ accountDetails.DepositRemarks }}</strong>
+                </span> -->
+                </div>
+                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="docs-area mt-2">
+                      <img
+                      *ngFor="let doc of BranchClosingDocumentdData"
+                      [src]="doc.DocDirPath"
+                      [alt]="doc.DocName"
+                      class="doc-img"
+                      (click)="openImage(doc.DocDirPath)"
+                    />
+                    </div>
+                </div>
+
+                <!-- Popup -->
+                <div class="image-modal" *ngIf="selectedImage" (click)="closeImage()">
+                  <img [src]="selectedImage" class="full-image" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<ng-template #fdoSales let-fdoSales>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">FDO Sale List</h4>
+    <button type="button" class="close" aria-label="Close" (click)="fdoSales.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="position: relative">
+    <!-- <label>Select visit to open Invoice</label> -->
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <input type="text" placeholder="Search Visit" class="form-control form-control-sm" [(ngModel)]="searchTextSales"
+          name="searchTextVisit" />
+      </div>
+    </div>
+    <div class="table-responsive table-container fixed-height-table">
+      <table class="table table-hover compact">
+        <thead>
+          <tr>
+            <th>PIN</th>
+            <th>Name</th>
+            <th>Receipt No</th>
+            <th>Patient Type</th>
+            <!-- <th class="text-end">Due Balance</th> -->
+            <th class="text-end">Amount</th>
+            <th>Payment Mode</th>
+            <th>Date/Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!fdoSalesDataAll || fdoSalesDataAll.length === 0" class="text-center">
+            <td colspan="8" class="py-4 text-muted">No transactions found</td>
+          </tr>
+          <tr
+            *ngFor="let item of fdoSalesDataAll | filterByKey: searchTextSales:['VisitNo','ReceiptNo']; let i = index">
+            <td>{{ item.VisitNo }}</td>
+            <td>{{ item.PatientName }}</td>
+            <td>{{ item.ReceiptNo }}</td>
+            <td>{{ item.PanelCode || item.PatientTypeName || '-' }}</td>
+            <!-- <td class="text-end">{{ item.DueBalance || '-' }}</td> -->
+            <td class="text-end fw-bold">{{ formatAmountWithCommas(item.PaidAmount) }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                      'bg-primary': item.PaymentMode === 'Cash',
+                      'bg-success': item.PaymentMode === 'Credit Card',
+                      'bg-info': item.PaymentMode === 'Bank Transfer',
+                      'bg-secondary': item.PaymentMode !== 'Cash' 
+                                      && item.PaymentMode !== 'Credit Card' 
+                                      && item.PaymentMode !== 'Bank Transfer'
+                    }">
+                {{ item.PaymentMode || '-' }}
+              </span>
+            </td>
+            <td>{{ item.CreatedOn | date:'dd MMM yyyy, hh:mm a' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.FDOsales" size="medium"
+      color="#fff" type="square-loader" [fullScreen]="false">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-dark" (click)="fdoSales.dismiss('close button clicked')">
+      Close
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,249 @@
+<div class="roles-page">
+  <div class="row">
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <app-card
+            [title]="''"
+            [cardClass]="'tim-card tim-card tim-card-primary'"
+          >
+            <form
+              [formGroup]="serviceConfigForm"
+              class="form-horizontal"
+              (ngSubmit)="getBranchServices()"
+              novalidate
+            >
+              <div class="row g-3 align-items-end">
+                <!-- Location Field -->
+                <div class="col-12 col-md-3 col-lg-3">
+                  <label for="locID" class="control-label">Location</label>
+                  <ng-select
+                    style="width: 100%"
+                    [items]="BranchesList"
+                    bindLabel="DropDownCode"
+                    bindValue="LocId"
+                    placeholder="-Select Location-"
+                    formControlName="LocID"
+                    (change)="onLocationChange()"
+                    [clearable]="true"
+                  ></ng-select>
+                </div>
+
+                <!-- Service Field -->
+                <div class="col-12 col-md-3 col-lg-3">
+                  <label for="DKBSServicesID" class="control-label"
+                    >Service</label
+                  >
+                  <ng-select
+                    style="width: 100%"
+                    [items]="ServicessList"
+                    bindLabel="ServiceName"
+                    bindValue="DKBSServicesID"
+                    placeholder="-Select Service-"
+                    formControlName="DKBSServicesID"
+                    [clearable]="true"
+                  ></ng-select>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-12 col-md-3 col-lg-3 mt-2">
+                  <button
+                    class="btn btn-primary btn-md px-4"
+                    type="submit"
+                    [disabled]="disabledButton"
+                  >
+                    <ngx-spinner
+                      *ngIf="isSpinner"
+                      size="sm"
+                      bdColor="rgba(0,0,0,0.8)"
+                      color="#fff"
+                      type="square-loader"
+                      [fullScreen]="false"
+                      style="display: inline-block; margin-right: 5px"
+                    ></ngx-spinner>
+                    <i class="fa fa-search"></i> Search
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Summary Row (shows only on search with location selected) -->
+            <div *ngIf="showLocationSummary" class="mb-3 mt-5">
+              <h6 class="text-danger">Selected Location Details</h6>
+              <div class="row selected-location-row">
+                <div class="col-12 col-md-4">
+                  <strong>Address:</strong>
+                  {{ selectedLocation.Address || "-" }}
+                </div>
+                <div class="col-12 col-md-2">
+                  <strong>Manager/Supervisor Name:</strong>
+                  {{ selectedLocation.ManagerAndReceptionistName || "-" }}
+                </div>
+                <div class="col-12 col-md-2">
+                  <strong>Manager/Supervisor Extension:</strong>
+                  {{ selectedLocation.ManagerAndReceptionistExt || "-" }}
+                </div>
+                <div class="col-12 col-md-3">
+                  <strong>Branch Timing:</strong>
+                  {{ selectedLocation.TimingHead || "-" }}
+                </div>
+              </div>
+            </div>
+            <small
+              *ngIf="showLocationSummary && selectedLocation?.LocCode"
+              class="pull-right text-danger"
+            >
+              <strong>Selected Location: {{ selectedLocation.LocCode }}</strong>
+            </small>
+
+            <div class="input-group align-items-center mt-3">
+              <input
+                type="text"
+                placeholder="Type to filter services..."
+                class="form-control form-control-sm"
+                [(ngModel)]="searchServiceText"
+                name="searchText"
+              />
+
+              <button
+                *ngIf="servicesList && servicesList.length > 0"
+                class="btn btn-sm btn-outline-primary ml-1"
+                ngbTooltip="Export To Excel"
+                type="button"
+                (click)="exportAsExcel()"
+              >
+                <i class="fa fa-file-excel"></i>
+              </button>
+            </div>
+
+            <!-- Table -->
+            <div
+              class="table-responsive table-container mt-2"
+              style="overflow-x: auto"
+            >
+              <ngx-spinner
+                class="spinner-info"
+                bdColor="rgba(0,0,0,0.8)"
+                [name]="spinnerRefs.listSection"
+                size="medium"
+                color="#fff"
+                type="square-loader"
+                [fullScreen]="false"
+              >
+                <p style="color: white">Loading...</p>
+              </ngx-spinner>
+
+              <table
+                class="table table-bordered table-hover mt-2"
+                style="width: 100%; table-layout: auto"
+              >
+                <thead>
+                  <tr>
+                    <th width="3%">#</th>
+                    <th width="7%">Service Name</th>
+
+                    <!-- Show Location column & Extension/Timing only if no summary -->
+                    <th *ngIf="!showLocationSummary" width="5%">Location</th>
+                    <th width="5%">Extension</th>
+                    <th width="9%">Operational Time</th>
+                    <th width="5%">Status</th>
+                    <th width="33%">Services Detail</th>
+                    <th width="33%">Special Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class="text-center"
+                    *ngIf="!servicesList || servicesList.length === 0"
+                  >
+                    <td colspan="8">
+                      <div class="container-fluid">
+                        <app-no-record-found></app-no-record-found>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngFor="
+                      let item of servicesList
+                        | filterByKey
+                          : searchServiceText
+                          : [
+                              'ServiceName',
+                              'LocCode',
+                              'Extension',
+                              'OptTiming',
+                              'ServiceStatus'
+                            ];
+                      let i = index
+                    "
+                  >
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.ServiceName || "-" }}</td>
+
+                    <!-- Show Location column if no summary -->
+                    <td
+                      *ngIf="!showLocationSummary"
+                      [ngbTooltip]="item.Address"
+                      [container]="'body'"
+                      style="cursor: pointer"
+                    >
+                      {{ item.LocCode || "-" }}
+                    </td>
+                    <td>
+                      {{ item.Extension || "-" }}
+                    </td>
+                    <td>
+                      <span
+                        class="display-html"
+                        [innerHTML]="item.OptTiming"
+                      ></span>
+                    </td>
+
+                    <td
+                      [ngClass]="{
+                        'text-primary':
+                          item.ServiceStatus?.toString()
+                            .toLowerCase()
+                            .trim() === 'active',
+                        'text-danger':
+                          item.ServiceStatus?.toString()
+                            .toLowerCase()
+                            .trim() === 'inactive'
+                      }"
+                    >
+                      {{
+                        item.ServiceStatus?.toString().toLowerCase().trim() ===
+                        "active"
+                          ? "Active"
+                          : "Inactive"
+                      }}
+                    </td>
+                    <td>
+                      <span
+                        class="display-html"
+                        [innerHTML]="item.ServiceDetail"
+                      ></span>
+                    </td>
+
+                    <td>
+                      <span
+                        class="display-html"
+                        [innerHTML]="item.SpecialRemarks"
+                      ></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </app-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <ng-template #noRecord>
+    <div class="no-record-message mt-5">
+      <app-no-record-found></app-no-record-found>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,202 @@
+<div class="container-fluid">
+  <div class="card card-custom">
+    <div class="card-body pb-0">
+      <form [formGroup]="filterForm" class="form-horizontal">
+        <div class="row justify-content-center form-group">
+          <!-- Date From -->
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <label>Date From:</label>
+            <input
+              ngbDatepicker
+              #dateFrom="ngbDatepicker"
+              (click)="dateFrom.toggle()"
+              class="form-control"
+              placeholder="dd-mm-yyyy"
+              formControlName="dateFrom"
+              [maxDate]="maxDate"
+            />
+          </div>
+
+          <!-- Date To -->
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <label>Date To:</label>
+            <input
+              ngbDatepicker
+              #dateTo="ngbDatepicker"
+              (click)="dateTo.toggle()"
+              class="form-control"
+              placeholder="dd-mm-yyyy"
+              formControlName="dateTo"
+              [maxDate]="maxDate"
+            />
+          </div>
+
+          <!-- Status -->
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <label>Status:</label>
+            <select
+              class="form-control"
+              [(ngModel)]="allEmails"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <option *ngFor="let b of statusOptions" [value]="b.value">
+                {{ b.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Search -->
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-8">
+            <button
+              class="btn btn-primary w-100"
+              type="button"
+              (click)="getAlfalahEmailData()"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="card mt-3">
+    <div class="card-body">
+
+      <ngx-spinner
+        [name]="spinnerRefs.dataTable"
+        bdColor="rgba(0,0,0,0.7)"
+        size="medium"
+        color="#fff"
+        type="square-loader"
+        [fullScreen]="false"
+      >
+        <p class="text-white">Loading...</p>
+      </ngx-spinner>
+
+      <!-- Search / Actions -->
+      <div class="row justify-content-center mt-3">
+          <div class="col-md-6 col-sm-12">
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="type to filter"
+                class="form-control form-control-sm"
+                (keyup)="filterResults()"
+                [(ngModel)]="searchText"
+                name="searchText"
+              />
+              <button
+                class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                (click)="getAlfalahEmailData()"
+              >
+                <i class="ti-reload"></i>
+              </button>
+              <button
+                class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+                ngbTooltip="Export To Excel"
+                (click)="exportAsExcel()"
+              >
+                <i class="fa fa-file-excel"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+
+      <!-- Counters -->
+      <div class="row mt-1">
+        <div class="col text-right">
+          <span class="badge badge-success p-2 mr-2">
+            Successfully Sent: {{ totalSuccess }}
+          </span>
+          <span class="badge badge-danger p-2 mr-2">
+            Not Successfully Sent: {{ totalFailed }}
+          </span>
+          <span class="badge badge-secondary p-2">
+            Not Sent: {{ totalNotSent }}
+          </span>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-container mt-3">
+        <table class="table table-hover table-bordered mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th *ngIf="failedEmails.length">
+                <input
+                  type="checkbox"
+                  [checked]="selectAllFailed"
+                  (change)="toggleSelectAll($event)"
+                />
+              </th>
+              <th>Visit ID</th>
+              <th>Email To</th>
+              <th>Reg Date</th>
+              <th>Status</th>
+              <th>Attempts</th>
+              <th>Email API Response</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngIf="!alfalahEmailList?.length">
+              <td [attr.colspan]="failedEmails.length ? 8 : 7" class="text-center">
+                <app-no-record-found></app-no-record-found>
+              </td>
+            </tr>
+
+            <tr *ngFor="let data of alfalahEmailList; let i = index">
+              <td>{{ i + 1 }}</td>
+
+              <td *ngIf="failedEmails.length" class="text-center">
+                <input
+                  type="checkbox"
+                  *ngIf="data.EmailStatus === 'Not SuccessFully Sent'"
+                  [checked]="selectedEmails.includes(data)"
+                  (change)="toggleSelection(data, $event)"
+                />
+              </td>
+
+              <td>{{ data.VisitId || '-' }}</td>
+              <td>{{ data.EmailTo || '-' }}</td>
+              <td>
+                {{ data.RegDate ? (data.RegDate | date:'dd MMM yyyy, h:mm a') : '-' }}
+              </td>
+
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'badge-danger': data.EmailStatus === 'Not SuccessFully Sent',
+                    'badge-success': data.EmailStatus !== 'Not SuccessFully Sent'
+                  }"
+                >
+                  {{ data.EmailStatus }}
+                </span>
+              </td>
+
+              <td>{{ data.Attempts || '-' }}</td>
+              <td class="text-wrap">
+                {{ data.EMailAPIResponse || '-' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Resend -->
+      <div class="row mt-3" *ngIf="showResendButton">
+        <div class="col text-right">
+          <button class="btn btn-warning" (click)="resendSelected()">
+            Resend Selected ({{ selectedEmails.length }})
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

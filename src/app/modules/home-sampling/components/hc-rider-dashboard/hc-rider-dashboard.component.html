@@ -1,0 +1,219 @@
+<!-- <p>hc-rider-dashboard works!</p>
+ -->
+<!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.RiderDashboardSpinner" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: red"> Loading... </p>
+</ngx-spinner> -->
+
+<div class="card card-custom">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="card-icon">
+          <i class="flaticon2-setup text-primary ml-3"></i>
+        </span>
+        <h3 class="card-label">
+          HC Rider Dashboard
+          <!-- <small>Search HC Requests Data</small> -->
+        </h3>
+      </div>
+    </div>
+    <div class="card-body">
+       
+        <div class="row">
+            <div class="col-md-4 col-lg-4 col-sm-12">
+                <div class="form-group">
+                    <!-- <label class="control-label">HC City</label> -->
+                    <ng-select multiple="true" tabindex="1" placeholder="HC City" [(ngModel)]="hcCity" (change)="hcCitychange()"
+                        name="hcCity" [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="city.HCCityID" *ngFor="let city of HomeCollectionCites">
+                            {{city.Code}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div *ngIf="hcCity" class="col-md-4 col-lg-4 col-sm-12">
+                <div class="form-group">
+                    <!-- <label class="control-label">HC City</label> -->
+                    <ng-select multiple="true" tabindex="1" placeholder="HC Zone" [(ngModel)]="hczones" name="hczones"
+                        [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="zones.HCZoneID" *ngFor="let zones of ZonesList">
+                            {{zones.HCZoneCode}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <button type="button" class="btn btn-primary" (click)="getRiderDashboardInfo()"> Search</button>
+            </div>
+        </div>
+
+        <div class="custom-container mt-4">
+            <ngx-spinner
+            class="spinner-warning"
+            [name]="spinnerRefs.RiderDashboardSpinner"
+            bdColor="rgba(0,0,0,0.8)"
+            size="medium"
+            color="#fff"
+            type="ball-atom"
+            [fullScreen]="false">
+            <!-- <p style="color: white">Loading...</p> -->
+          </ngx-spinner>
+            <div class="row">
+                <div *ngFor="let riderD of RiderDashboardInfo" class="col-lg-3 col-md-3 col-sm-12 mb-3">
+                    <div class="card item">
+                        <div class="card-body">
+                            <div class="row">
+                                <div ngbTooltip="Click To See Full Image" class="col-lg-5 col-md-5 col-sm-12">
+                                    <img style="height: 130px; width: 100px;cursor: pointer;"
+                                        (click)="OpenRiderFullImage(riderD)" src="{{riderD.RiderPicBase64}}"
+                                        class="card-img-top" alt="...">
+                                </div>
+                                <div class="col-lg-7 col-md-7 col-sm-12">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <a
+                                                class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary cursor-pointer">
+
+                                                <span style="font-size: xx-small;"><i
+                                                        [ngStyle]="{'color': riderD.RiderStatusID == 1 ? '#1fc645' : (riderD.RiderStatusID == 2 ? 'grey' : null) }"
+                                                        class="fas fa-circle " placement="left"
+                                                        ngbTooltip="Select HC Staff"></i>
+                                                    {{riderD.RiderName}}
+                                                </span>
+                                                <br /> <span style="font-size: xx-small;">
+                                                    <i style="color: #6993ff;font-size: xx-small;" class="fa fa-map"></i>
+                                                    {{riderD.RiderZone}}
+                                                </span><span>
+                                                    <div style="font-size: xx-small;font-size:xx-small"
+                                                        class="progress progress-xs w-100 mt-2">
+                                                        <!-- 'background-color': rider.Percentage == 100 ? 'bg-green' : '#1bc5bd'  -->
+                                                        <div class="progress-bar bg-green" role="progressbar"
+                                                            [ngStyle]="{'width': riderD.CheckListPercentage + '%'}  "
+                                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </span>
+                                                <!-- <i class="fa fa-check-circle" style="color:green"></i> -->
+                                            </a>
+                                            <div class="text-muted"> </div>
+                                            <div style="font-size: x-small;" class="mt-4">
+                                                <!-- <a
+                                                    class="btn btn-sm btn-primary font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 cursor-pointer">
+                                                    Check List</a> -->
+                                                <!-- <a
+                                                    class="btn btn-sm btn-success font-weight-bold py-2 px-3 px-xxl-5 my-1 cursor-pointer">Track Staff</a> -->
+                                                <span style="cursor: pointer;" (click)="OpenRiderCheckList(riderD.RiderID)">
+                                                    <i style="color: crimson;" class="fa fa-list-ol" aria-hidden="true"></i>
+                                                </span>
+                                                <!-- <i class="fa fa-list-ul" aria-hidden="true"></i> -->
+                                                &nbsp;
+                                                <i style="color:purple;" class="fa fa-street-view" aria-hidden="true"></i>
+                                                &nbsp;
+                                                <i style="color:chartreuse;" class="ti-bar-chart" aria-hidden="true"></i>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 mt-4">
+                                            <div class="d-flex">
+                                                <div *ngIf="riderD.TotalHCRequests">
+                                                    <span ngbTooltip="Total Requests"
+                                                        style="border-radius: 6px;background-color: lightcoral;">&nbsp;
+                                                        {{riderD.TotalHCRequests}}
+                                                        &nbsp;</span>
+                                                    &nbsp;
+                                                    <div class="vl" style=" border-left: 1px solid darkslategray;
+                                                "> </div>&nbsp;
+                                                </div>
+                                                <div *ngIf="riderD.TotalInProgressRequests">
+                                                    <span ngbTooltip="In Progress"
+                                                        style="border-radius: 6px;background-color: lightgoldenrodyellow">&nbsp;
+                                                        {{riderD.TotalInProgressRequests}}
+                                                        &nbsp;</span>&nbsp;
+                                                    <div class="vl" style=" border-left: 1px solid darkslategray;
+                                            "></div>
+                                                </div>
+                                                &nbsp;
+                                                <div *ngIf="riderD.TotalCompletedRequests">
+                                                    <span *ngIf="riderD.TotalCompletedRequests" ngbTooltip="Completed Requests"
+                                                        style="border-radius: 6px;background-color: lightskyblue">&nbsp;
+                                                        {{riderD.TotalCompletedRequests}}
+                                                        &nbsp;</span>
+                                                    &nbsp;
+                                                    <div class="vl" style=" border-left: 1px solid darkslategray;
+                                                    "></div> &nbsp;
+                                                </div>
+                                                <div *ngIf="riderD.TotalUpcomingRequests">
+                                                    <span *ngIf="riderD.TotalUpcomingRequests" ngbTooltip="Upcoming Requests"
+                                                        style="border-radius: 6px;background-color: lightskyblue">&nbsp;
+                                                        {{riderD.TotalUpcomingRequests}}
+                                                        &nbsp;</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <ng-template #RiderCheckListModal let-RiderCheckListModal>
+            <div class="modal-body ">
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="table-responsive fixed-height-table">
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr>
+                                        <th> Question </th>
+                                        <th> Answer </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let  rchk of RiderCheckList">
+                                        <td>{{rchk.Question}}</td>
+                                        <td>{{rchk.Answer}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+            </div>
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="square-loader"
+                [fullScreen]="true">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+        </ng-template>
+
+
+        <ng-template #riderPicModal let-riderPicModal>
+            <div class="modal-body ">
+
+                <!-- <div class="container">
+                    <div class="col-md-12"> -->
+
+                <img src="{{selRiderImage}}" class="riderImg" alt="...">
+
+                <!-- </div>
+                </div> -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+            </div>
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="square-loader"
+                [fullScreen]="true">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+        </ng-template>
+
+    </div>
+</div>        

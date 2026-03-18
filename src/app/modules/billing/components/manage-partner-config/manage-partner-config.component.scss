@@ -1,0 +1,57 @@
+::ng-deep .mat-tab-label {
+    border-right: 1px solid #e5e5e5;
+    background-color: #f3f6f9;;
+    border-radius: 5px;
+    margin-left: 5px;
+    border-radius: 8px;
+
+}
+
+::ng-deep .mat-tab-label:hover {
+    background-color: #1BC5BD; 
+    color: #ffffff;
+    .custom-icons{
+        color: #ffffff !important;
+    }
+}
+::ng-deep .mat-tab-label-container {
+    margin-bottom: 5px !important;
+}
+
+::ng-deep .mat-tab-label-active {
+    background-color: #1BC5BD;
+    color: #ffffff;
+    // box-shadow: 0px 0px 0px 3px #FF0000;
+    .custom-icons{
+        color: #ffffff !important;
+    }
+}
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar,
+::ng-deep .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: transparent;
+}
+
+::ng-deep .mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+}
+
+.custom-tooltip-box {
+  position: absolute;
+  top: -30px;
+  left: 0;
+  background-color: #343a40;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+.custom-form-control {
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.15);
+}

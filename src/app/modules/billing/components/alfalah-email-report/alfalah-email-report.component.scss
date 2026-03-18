@@ -1,0 +1,27 @@
+.table-container {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+/* Sticky Header */
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;
+  z-index: 5;
+}
+
+/* Table consistency */
+.table th,
+.table td {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Allow wrapping only for response column */
+.table td.text-wrap {
+  white-space: normal;
+  word-break: break-word;
+}

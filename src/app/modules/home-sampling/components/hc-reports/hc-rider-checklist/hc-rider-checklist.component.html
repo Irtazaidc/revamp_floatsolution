@@ -1,0 +1,117 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+          <span class="card-icon">
+            <i class="flaticon2-setup text-primary ml-3"></i>
+          </span>
+          <h3 class="card-label">
+            HC Rider Checklist
+            <small>HC Rider routine checklist</small>
+          </h3>
+        </div>
+      </div>
+    <div class="card-body pb-0">
+        <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form">
+            <div class="row container  form-group justify-content-center">
+                <div class="col-md-3 col-sm-12">
+                    <label class="control-label">Date:<span
+                        class="mandatory-asterisk">*</span></label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                         value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                        class="form-control mb-4" type="text" value="" [ngClass]="{'invalid': filterForm.get('dateFrom').errors , 'invalid-highlighted': filterForm.get('dateFrom').errors && isSubmitted }" [maxDate]="maxDate"/>
+                </div>
+                <!-- <div class="col-md-3 col-lg-3 col-sm-12">
+                    <label class="control-label">Date To:</label>
+                    <input (click)="dateTo.toggle()"  placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker"  ngbDatepicker
+                        formControlName="dateTo" class="form-control mb-4" name="dateTo" type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateTo').errors , 'invalid-highlighted': filterForm.get('dateTo').errors && isSubmitted }" [maxDate]="maxDate" />
+                </div> -->
+                <div class="col-md-3 col-lg-3 col-sm-12">
+                    <label class="font-weight-bold">Rider:<span
+                        class="mandatory-asterisk">*</span></label>
+                    <ng-select
+                      name="rider"
+                      style="width: 100%"
+                      [closeOnSelect]="true"
+                      [items]="RidersDetailListInParam"
+                      bindValue="RiderID"
+                      bindLabel="RiderFullName"
+                      formControlName="RiderId"
+                      placeholder="Select Rider"
+                      [ngClass]="{'invalid': filterForm.get('RiderId').errors , 'invalid-highlighted': filterForm.get('RiderId').errors && isSubmitted }"
+                    >
+                    </ng-select>
+                  </div>
+               
+             
+               
+                <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+                    <div (click)="getRiderRoutineData()" class="btn btn-primary" type="button">Search</div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card card-custom mt-2">
+    <div class="card-body pb-3">
+        <ngx-spinner class="spinner-info" [name]="spinnerRefs.RiderTable" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+        [fullScreen]="false">
+    </ngx-spinner>
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
+                <div class="table-responsive fixed-height-table">
+                    <table class="table table-bordered table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Question</th>
+                                <th>Answer</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="RiderCheckList.length <= 0">
+                                <td colspan="4" class="text-center">
+                                    <div class="container-fluid">
+                                        <app-no-record-found></app-no-record-found>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let  rchk of RiderCheckList; let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{rchk.Question}}</td>
+                                <td>{{rchk.Answer}}</td>
+                                <td style="word-break: break-word">{{rchk.Remarks || '-'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div  >
+                    <img style="height: 200px; width: 200px;cursor: pointer;" ngbTooltip="Click To See Full Image"
+                        (click)="OpenRiderFullImage(riderRoutinePic)"
+                        src="{{ImageUrl!=null?ImageUrl:'assets/images/brand/no-image.png'}}"
+                        class="card-img-top" alt="...">
+                </div>
+            </div>
+            
+        </div>
+
+
+    </div>
+</div>        
+
+
+<ng-template #RiderPIcture let-RiderPIcture>
+    <div class="modal-body ">
+      <div class="container-fluid">
+        <img src="{{ImageUrl!=null?ImageUrl:'assets/images/brand/no-image.png'}}" width="100%" class="riderImg" alt="...">
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger"  (click)="RiderPIcture.close()">Close</button>
+    </div>
+   
+</ng-template>
+

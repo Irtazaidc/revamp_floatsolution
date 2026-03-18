@@ -1,0 +1,138 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-setup text-primary ml-3"></i>
+            </span>
+            <h3 class="card-label">
+                HC Rider Checklist
+                <small>HC Rider routine checklist</small>
+            </h3>
+        </div>
+    </div>
+    <div class="card-body pb-0">
+        <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form">
+            <div class="row container  form-group justify-content-center">
+                <div class="col-md-3 col-sm-12">
+                    <label class="control-label">Date:<span class="mandatory-asterisk">*</span></label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                        value="1980-08-26" formControlName="dateFrom" name="dateFrom" class="form-control mb-4"
+                        type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateFrom')?.errors , 'invalid-highlighted': filterForm.get('dateFrom')?.errors && isSubmitted }"
+                        [maxDate]="maxDate" />
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12">
+                    <label class="font-weight-bold">Rider:<span class="mandatory-asterisk">*</span></label>
+                    <ng-select name="rider" style="width: 100%" [closeOnSelect]="true" [items]="RidersDetailListInParam"
+                        bindValue="UserID" bindLabel="RiderFullName" formControlName="RiderId"
+                        placeholder="Select Rider"
+                        [ngClass]="{'invalid': filterForm.get('RiderId')?.errors , 'invalid-highlighted': filterForm.get('RiderId')?.errors && isSubmitted }">
+                    </ng-select>
+                </div>
+
+                <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+                    <div (click)="getRiderRoutineData()" class="btn btn-primary" type="button">Search</div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card card-custom mt-2">
+    <div class="card-body pb-3">
+        <ngx-spinner class="spinner-info" [name]="spinnerRefs.RiderTable" bdColor="rgba(0,0,0,0.8)" size="large"
+            color="#fff" type="ball-atom" [fullScreen]="false">
+        </ngx-spinner>
+
+        <div class="row mb-2">
+
+            <div class="col-md-4" *ngFor="let d of deviceSummary">
+                <div class="device-card">
+
+                    <div class="device-title">
+                        📱 {{d.DeviceName}}
+                    </div>
+
+                    <div class="device-info">
+                        <div>Network: <b>{{d.NetworkType}}</b></div>
+                        <!-- <div>Latest Battery: <b>{{d.BatteryPercentage}}%</b></div> -->
+                        <div [ngClass]="{
+                            'text-success': d.BatteryPercentage > 50,
+                            'text-warning': d.BatteryPercentage <= 50 && d.BatteryPercentage > 20,
+                            'text-danger': d.BatteryPercentage <= 20
+                            }">
+                            Latest Battery: <b>{{d.BatteryPercentage}}%</b>
+                        </div>
+                        <div>App Version: {{d.AppVersion}}</div>
+                        <div>Update On: {{d.CreatedOn | date:'shortTime'}}</div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+        <div class="table-container table-responsive mt-4" *ngIf="RiderDevieInfoList?.length" style="max-height: 300px;">
+
+            <table class="table table-bordered" >
+
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Time</th>
+                        <th>Device</th>
+                        <th>Battery</th>
+                        <th>Network</th>
+                        <th>App Version</th>
+                        <th>OS (Android)</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let d of RiderDevieInfoList">
+
+                        <td>{{d.CreatedOn | date:'shortTime'}}</td>
+
+                        <td>
+                            📱 {{d.DeviceName}}
+                        </td>
+
+                        <td>
+                            <div class="battery-bar">
+
+                                <div class="battery-fill" [style.width.%]="d.BatteryPercentage">
+                                </div>
+
+                                <span>{{d.BatteryPercentage}}%</span>
+
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="badge badge-info">
+                                {{d.NetworkType}}
+                            </span>
+                        </td>
+
+                        <td>{{d.AppVersion}}</td>
+
+                        <td>{{d.OSVersion}}</td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-6" *ngIf="timelineChartData?.length">
+                <div class="chart-box">
+                    <h5 class="chart-title">Rider Activity Timeline</h5>
+                    <canvas baseChart [datasets]="timelineChartData" [labels]="timelineLabels"
+                        [options]="timelineChartOptions" [legend]="true" [chartType]="'line'">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

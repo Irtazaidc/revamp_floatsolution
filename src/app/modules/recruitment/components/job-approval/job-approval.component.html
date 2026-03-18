@@ -1,0 +1,348 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-info'">
+                <div class="card-body pb-0">
+                    <form [formGroup]="formSearchJob" (ngSubmit)="searchJobRequest()">
+                        <div class="row">                        
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label for="LocationTitle" class="control-label">Location:</label>
+                                    <ng-select style="width: 100%;"
+                                        class=" mt-1 mr-1"
+                                        [items]="branchesList"
+                                        bindLabel="Title" 
+                                        placeholder="All"
+                                        bindValue="LocId"
+                                        formControlName="branchIds"
+                                        [closeOnSelect]="true"
+                                        >
+
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.Title}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label for="DepartmentTitle" class="control-label">Department:</label>
+                                    <ng-select style="width: 100%;"
+                                        class=" mt-1 mr-1"
+                                        [items]="departmentsList"
+                                        bindLabel="DepartmentName" 
+                                        placeholder="All"
+                                        bindValue="DepartmentId"
+                                        formControlName="departmentIds"
+                                        [multiple]="false"
+                                        [closeOnSelect]="true"
+                                        >
+
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label for="JobStatus" class="control-label">Job Status:</label>
+                                    <select name="JobStatus" class="form-control" formControlName="JobStatus">
+                                        <option value="">All</option>
+                                        <option *ngFor = "let jobSt of JobStatusList" value="{{jobSt.JobStatusID}}">{{jobSt.JobStatus}}</option>                                        
+                                    </select>
+                                </div>
+                            </div>                                                                          -->
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 pull-right">
+                                <label></label>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-outline-info btn-sm mt-3" ><i class="ti-search"></i>Search</button>
+                                </div>
+                            </div>
+                            <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 pull-right">
+                                <a [routerLink]="['../job-mgt']"  class="btn btn-danger btn-sm  mt-10 pull-right" title="Post new Job"><i class="ti-plus"></i>New Job</a>
+                            </div> -->
+                        </div>
+                    </form>
+                </div>
+                <form #frmRecomendation="ngForm" class="form-horizontal" name="form" role="form">
+                    <div class="row">
+                        <div class="col-3 offset-9 pull-right">
+                            <input style="margin-top: -15px;" type="text" placeholder="Search" class="form-control form-control-sm  pull-right" [(ngModel)]="searchText" name="searchText"/>
+                        </div>
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.jobSearchSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> {{spinnerText}} </p>
+                            </ngx-spinner>
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th width="10px"> <input type="checkbox" class="" (change)="selectAllRequests($event)" /> </th>
+                                        <th>Post Code</th>
+                                        <th>Title</th>
+                                        <!-- <th>Current Status</th> -->
+                                        <th>Remarks</th>
+                                        <th>Status</th>
+                                        <th>Location</th>
+                                        <th>Current Vaccencies</th>
+                                        <th>Vaccancies</th>
+                                        <th>Interview Level</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="11" *ngIf="!JobList.length"> 
+                                            <div class="alert alert-info text-center" role="alert">
+                                                No record available <i class="fa fa-exclamation-triangle text-light" aria-hidden="true"></i>
+                                          </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor = "let sJob of JobList  | filterByKey: searchText:['JobRequestCode', 'JobTitle']; let i = index"  >
+                                        <td>{{i+1}}</td>
+                                        <td> 
+                                            <input
+                                                type="checkbox"
+                                                class=""
+                                                [(ngModel)]="sJob.checked"
+                                                [ngModelOptions]="{standalone: true}"
+                                            />
+                                        </td>
+                                        <td>{{sJob.JobRequestCode}}</td>
+                                        <td>{{sJob.JobTitle}}</td>
+                                        <!-- <td><label [ngClass]="'badge badge-inverse-primary'">{{sJob.JobStatus}}</label></td> -->
+                                        <td><textarea name="LineItemRemarks" class="form-control" cols="30" [(ngModel)]="sJob.Remarks" [(ngModel)]="sJob.JobRemarksSelected" [ngClass]="{'invalid invalid-highlighted': !(sJob.JobRemarksSelected)}" ></textarea></td>
+                                        <td>
+                                            <select name="JobStatus" class="form-control" [(ngModel)]="sJob.JobStatusID" [(ngModel)]="sJob.JobStatusIDSelected" [ngClass]="{'invalid invalid-highlighted': !(sJob.JobStatusIDSelected)}">
+                                                <option value="">-Select Satus-</option>
+                                                <option *ngFor = "let jobSt of JobStatusList" value="{{jobSt.JobStatusID}}" >{{jobSt.JobStatus}}</option>                                        
+                                            </select>
+                                        </td>
+                                        <td>{{sJob.ShortName}}</td>
+                                        <td>
+                                            <!-- {{convertDate(sJob.JobExpiry)}} -->
+                                            <label [ngClass]="'badge badge-inverse-primary ml-2'">{{sJob.VaccanciesRequired}}</label>
+                                        </td>
+                                        <td>
+                                            <input style="width: 50%;" type="number" min="1" class="form-control" name="VaccanciesApproved" [(ngModel)]="sJob.VaccanciesApproved"  [(ngModel)]="sJob.VaccancySelected" [ngClass]="{'invalid invalid-highlighted': !(sJob.VaccancySelected)}" >
+                                        </td>
+                                        <td>
+                                            <select name="InterviewLevel" class="form-control" [(ngModel)]="sJob.InterviewLevel" [ngClass]="{'invalid invalid-highlighted': !(sJob.InterviewLevel)}">
+                                                <option value="1" >One</option>                                        
+                                                <option value="2" >Two</option>                                        
+                                                <option value="3" >Three</option>                                          
+                                            </select>
+                                        </td>
+                                        <td class="text-right">
+                                            <a href="javascript:void()" (click)="showRequestDetail(sJob.JobRequestID)" class="cursor-pointer" style="font-size: 17px;" placement="top" ngbTooltip="View Detail"> 
+                                                <i class="fa fa-eye text-info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- <pre>{{JobList | json}}</pre> -->
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="JobList.length">
+                        <div class="col-12 mt-3">
+                            <button
+                            [disabled]="disabledButton"
+                                class="btn btn-sm btn-info pull-right"
+                                title="Submit"
+                                mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]"
+                                (confirm)="apporvalProcess()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="danger"
+                                cancelButtonType="outline-secondary"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"
+                            > <i class="fa fa-check-square-o"></i>Submit <i class="spinner-border-custom" aria-hidden="true"
+                            [hidden]="isSpinner" ></i>
+                            </button>
+                            <!-- <button type="submit" (click)="apporvalProcess(frmRecomendation.value)" class="btn btn-sm btn-info pull-right ml-2"><i class="fa fa-save"></i> Submit<i aria-hidden="true"></i></button> -->
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+    </div>
+</div>
+
+
+<!------begin:: Job Request Detail Popup-->
+  <ng-template #jobRequestDetail let-jobRequestDetail>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Job Request Detail</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeLoginModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default invoice" id="invoice">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                    <!-- <span class="marginright">Job Title</span> -->
+                                    <h3 class="marginright text-info">{{JobTitle}} ({{JobRequestCode}})</h3>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 text-right">
+                                    <span class="marginright">Job Validity</span><br/>
+                                    <span class="marginright"><strong>{{StartDate|date:"dd MMM yy"}} - {{ExpiryDate|date:"dd MMM YYY"}}</strong></span>
+                                </div>
+                            </div>
+                            <div class="row" style="border: 1px solid #dee2e6;
+                            padding: 8px 0px;">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 section-border-right">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <!-- <p class="lead marginbottom">Job He</p> -->
+                                            <p>Job Category: </p>
+                                            <p>Job Shift: </p>
+                                            <p>Degree Level: </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <!-- <p class="lead marginbottom">Job He</p> -->
+                                            <p><strong>{{JobCategory}}</strong></p>
+                                            <p><strong>{{JobShift}}</strong></p>
+                                            <p><strong>{{DegreeLevel}}</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 section-border-right">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p>Location: <strong class="pl-2">{{Location}}</strong></p>
+                                            <p>Department:<strong class="pl-2">{{Department}}</strong></p>
+                                            <p>Designation: <strong class="pl-2">{{Designation}}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 section-pt">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <!-- <p class="lead marginbottom">To : John Doe</p> -->
+                                            <p>Gender: </p>
+                                            <p>Age Limit:</p>
+                                            <p>Vacancies:</p>
+                                            <p>Experience:</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <!-- <p class="lead marginbottom">To : John Doe</p> -->
+                                            <p><strong>{{Gender}}</strong></p>
+                                            <p><strong>{{AgeLimit}} Years</strong></p>
+                                            <p><strong>{{VaccanciesRequired}}</strong></p>
+                                            <p><strong>{{ExperienceInYear}} Years</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 section-border-right" >
+                                     <h5 class="mb-3"><strong>Job Description:</strong></h5>
+                                     <div class="container" [innerHtml]='JobDescription'>
+
+                                     </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                    <h5 class="mb-3"><strong>Skills Required:</strong></h5>
+                                    <strong>
+                                        <label class="badge badge-inverse-primary badge-skill mr-1" style="font-size: 100%;" *ngFor="let skill of SkillsArray; let i = index">
+                                             {{skill}}
+                                        </label>
+                                    </strong>
+                                        <!-- <label class="label label-primary">Bootstrap</label></strong> -->
+                                        
+                                </div>
+                            </div>
+                            <hr>
+                            <form [formGroup]="formUpdateStatus" >
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                                        <div class="container pt-2" style="border: 1px solid #eee;" >
+                                            <div *ngFor = "let rem of ExistingRowRemarks let i = index">
+                                                <label for="Remarks"><strong>{{rem.JobStatus}} Remarks:</strong></label>
+                                                <p 
+                                                [ngClass]="rem.JobStatusID == 1 ? ' text-primary': rem.JobStatusID=='2'? 'text-info' : rem.JobStatusID==3? 'text-warning':rem.JobStatusID==4? 'text-danger':'text-info'"                                                   
+                                                
+                                                >{{rem.JobRequestRemarks}}</p>
+                                                <hr style="border-top: 1px dashed #d6d3d3;">
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                    
+                                <div class="row mt-3">
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4" >
+                                        <label for="VacancyApproved">Vaccancies to be approved: <span class="text-primary">(Required: {{VaccanciesRequired}})</span></label>
+                                        <input class="form-control" type="number" name="VacancyApproved" formControlName="VacancyApproved"
+                                        [ngClass]="{'invalid': formUpdateStatus.get('VacancyApproved').errors && formUpdateStatus.get('VacancyApproved').touched, 'invalid-highlighted': formUpdateStatus.get('VacancyApproved').errors}"
+                                        >
+                                        <small class="text-danger" *ngIf="VaccancyError">Approved Vaccancies should be less then or equal to Required Vaccancies</small>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4" >
+                                        <label for="InterviewLevel">Interview Levels:</label>
+                                        <select name="InterviewLevel" formControlName ="InterviewLevel" class="form-control" 
+                                        [ngClass]="{'invalid': formUpdateStatus.get('InterviewLevel').errors && formUpdateStatus.get('InterviewLevel').touched, 'invalid-highlighted': formUpdateStatus.get('InterviewLevel').errors}"
+                                        >
+                                            <option value="1" >One</option>                                        
+                                            <option value="2" >Two</option>                                        
+                                            <option value="3" >Three</option>                                        
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                                        <label for="StatusRemarks">Remarks:</label>
+                                        <textarea name="StatusRemarks" formControlName="StatusRemarks" class="form-control" cols="30" rows="5" 
+                                        [ngClass]="{'invalid': formUpdateStatus.get('StatusRemarks').errors && formUpdateStatus.get('StatusRemarks').touched, 'invalid-highlighted': formUpdateStatus.get('StatusRemarks').errors}"
+                                        >
+                                        </textarea>
+                                        <small  class="text-danger" *ngIf="formUpdateStatus.get('StatusRemarks').errors && formUpdateStatus.get('StatusRemarks').touched">{{RemarksErrorMessage}}</small>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+       
+        <button type="button" class="btn btn-sm btn-outline-info" (click)="changeJobStatus(5)" >
+            <i class="fa fa-check-circle"></i>  Approve <i class="spinner-border-custom" aria-hidden="true"
+              [hidden]="isSpinnerApprove"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-warning" (click)="changeJobStatus(3)" >
+            <i class="fa fa-history"></i>  Pend <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinnerPend"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="changeJobStatus(4)" >
+        <i class="fa fa-times"></i>  Cancel <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerCancel"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal" (click)="closeLoginModal()">
+                    <i class="fa fa-times-circle"></i> Close</button>
+      </div>
+
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"  size="medium" color="#fff" type="square-loader" [fullScreen]="false"> <!--[name]="spinnerRefs.searchEmployee"-->
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+</ng-template>

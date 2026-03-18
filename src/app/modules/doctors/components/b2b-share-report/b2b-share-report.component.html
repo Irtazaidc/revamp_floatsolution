@@ -1,0 +1,247 @@
+<div class="b2b-doctor-share-page">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="pull-right">
+                <button (click)="uiDesign = 1" class="btn btn-sm btn-outline-success mr-1"><i class="fa fa-columns"></i></button>
+                <button (click)="uiDesign = 2" class="btn btn-sm btn-outline-success"><i class="fa fa-bars"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="min-height: 450px;">
+
+        <div class="col-md-3" [ngClass]="{'col-md-12': uiDesign == 2, 'col-md-3': uiDesign == 1}">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-success'">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="" [formGroup]="form">
+                            <div class="row">
+                
+                                <div class="row col-12" [ngClass]="{'col-md-6': uiDesign == 2, 'col-md-12': uiDesign == 1}">
+                                    <div class="col-md-12">
+                                        <label class="font-weight-bold">Report Type</label>
+                                        <div class="">
+                                            <ng-container *ngFor="let type of reportType; let i = index">
+                                                <div>
+                                                    <input
+                                                        type="radio"
+                                                        name="ReportType"
+                                                        formControlName="ReportType"
+                                                        [value]="type.id"
+                                                        id="reportType_radio_{{i}}">
+                                                    <label
+                                                        for="reportType_radio_{{i}}"
+                                                        class="ml-1"
+                                                    >{{type.name}}</label>
+                                                </div>
+                                            </ng-container>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row col-12" [ngClass]="{'col-md-6': uiDesign == 2, 'col-md-12': uiDesign == 1}">
+                                    <div class="col-md-12">
+                                        <label class="font-weight-bold">B to B</label>
+                                        <div class="input-group">
+                                            <ng-select style="width: 100%;"
+                                                class=" mt-1 mr-1"
+                                                [items]="b2bDoctorsList"
+                                                bindLabel="FullName" 
+                                                placeholder="Select B to B"
+                                                bindValue="B2BDoctorID"
+                                                formControlName="B2BDoctorID"
+                                                >
+                                            </ng-select>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <label class="font-weight-bold">Date From</label>
+                                        <div class="input-group">
+                                            <input
+                                                #dFrom
+                                                type="text"
+                                                style="max-width: 100%;"
+                                                class="form-control mt-1 mr-1"
+                                                (click)="dFrom_date.toggle()"
+                                                placeholder="dd-mm-yyyy"
+                                                autocomplete="off"
+                                                name="dFrom"
+                                                ngbDatepicker
+                                                #dFrom_date="ngbDatepicker"
+                                                formControlName="DateFrom"
+                                                [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                                required
+                                                readonly
+                                            >
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <label class="font-weight-bold">Date To</label>
+                                        <div class="input-group">
+                                            <input
+                                                #dTo
+                                                type="text"
+                                                style="max-width: 100%;"
+                                                class="form-control mt-1 mr-1"
+                                                (click)="dTo_date.toggle()"
+                                                placeholder="dd-mm-yyyy"
+                                                autocomplete="off"
+                                                name="dTo"
+                                                ngbDatepicker
+                                                #dTo_date="ngbDatepicker"
+                                                formControlName="DateTo"
+                                                [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                                required
+                                                readonly
+                                            >
+                                       </div>
+                                    </div>
+    
+                                    <div class="col-md-12">
+                                        <button class="btn btn-sm btn-primary mt-1 pull-right" type="button" title="Fetch Record(s)" (click)="getB2BDoctorShareReport()"><i class="ti-search"></i>Search</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                
+                        </form>                
+                    </div>
+                </div>
+            </app-card>
+        </div>
+
+        <div class="col-md-9" [ngClass]="{'col-md-12': uiDesign == 2, 'col-md-3': uiDesign == 1}">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-success'">
+                <!-- <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                            <button class="btn btn-outline-success btn-mini" (click)="getB2BDoctorShareReport()"><i class="ti-reload"></i></button>
+                            <button class="btn btn-outline-success btn-mini" (click)="optionalColumnsVisibility = !optionalColumnsVisibility"><span *ngIf="!optionalColumnsVisibility">show all columns</span> <span *ngIf="optionalColumnsVisibility">show less columns</span></button>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div *ngIf="form.get('ReportType').value == 3">
+                    <h3 class="text-info">Covering Letter</h3>
+                    <div class="table-responsive fixed-height-table mb-2" *ngIf="b2bDoctorShareReportData.CoveringData.headers.length">
+                        <table class="table table-hover table-striped compact">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let header of b2bDoctorShareReportData.CoveringData.headers">{{header}}</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr  *ngFor="let item of b2bDoctorShareReportData.CoveringData.data; let i = index">
+                                    <td *ngFor="let header of b2bDoctorShareReportData.CoveringData.headers">{{item[header]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                </div>
+
+                <div *ngIf="form.get('ReportType').value == 2">
+                    <h3 class="text-info">Summary Report</h3>
+                    <div class="table-responsive fixed-height-table mb-2" *ngIf="b2bDoctorShareReportData.Summary.headers.length">
+                        <table class="table table-hover table-striped compact">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let header of b2bDoctorShareReportData.Summary.headers">{{header}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr 
+                                    *ngFor="let item of b2bDoctorShareReportData.Summary.data | filterByKey: searchText:['DoctorName', 'VisitID']; let i = index"
+                                >
+                                    <td *ngFor="let header of b2bDoctorShareReportData.Summary.headers">{{item[header]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                </div>
+
+                <div *ngIf="form.get('ReportType').value == 1">
+                    <h3 class="text-info">Detailed Report</h3>
+                    <div class="row">
+                        <div class="offset-4 col-4">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" 
+                                [(ngModel)]="searchText" name="searchText"/>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-sm btn-outline-info" (click)="Export()"
+                                >Export</button>
+                            </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table" *ngIf="b2bDoctorShareReportData.Detailed.headers.length">
+                        <table class="table table-hover table-striped compact">
+                            <thead>
+                                <tr *ngIf="b2bDoctorShareReportData.Detailed?.doctorWise">
+                                    <!-- <th *ngFor="let header of b2bDoctorShareReportData.Detailed.headers">{{header}}</th> -->
+                                    <th>Sr#</th> 
+                                    <th>PIN</th>
+                                    <th>Patient Name</th>
+                                    <th>LTC/Discount Card NO</th>
+                                    <th>Visit Date</th>
+                                    <th>Visit/Profile Name</th>
+                                    <th>Department</th>
+                                    <th>Test Price Actual</th>
+                                    <th>Test Price Panel</th>
+                                    <th>Lab Share Value</th>
+                                    <th>Imaging Share Value</th>
+                                    <th>Total Share Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="!b2bDoctorShareReportData.Detailed?.doctorWise">
+                                <tr>
+                                    <td colspan="100" style="text-align: center;"><strong class="text-primary">
+                                        No Record Found</strong></td>
+                                </tr>
+                            </tbody > 
+                            <tbody *ngIf="b2bDoctorShareReportData.Detailed?.doctorWise">
+                                <ng-container *ngFor="let doctor of b2bDoctorShareReportData.Detailed.doctorWise">
+                                    <tr>
+                                        <td colspan="11" class="text-primary"> <h4>{{doctor.b2bName}}</h4> </td>
+                                        <td colspan="1" class="text-primary"> <h4>Rs. {{doctor.totalRISShareAmt || '00' }}/- </h4> </td>
+                                    </tr>
+                                    <tr *ngFor="let item of doctor.data | filterByKey:searchText:['isLabTest','VisitID']; let i = index">
+                                        <td>{{i+1}} </td>
+                                        <td>{{item.VisitID}}</td>
+                                        <td>{{item.PatientName}}</td>
+                                        <td>{{item.DisCardNo || "NA"}}</td>
+                                        <td>{{item.VisitDate | date : "dd MMM, yyyy, h:mm a"}}</td> 
+                                        <td>{{item.TestName || 'NA'}}</td>
+                                        <td><strong>{{item.isLabTest}}</strong></td>
+                                        <td>{{item.ActualPrice || '-'}}</td>
+                                        <td>{{item.TotalTPPrice || '-'}}</td>
+                                        <td>{{item.LISShareAmt || '-'}}</td>
+                                        <td>{{item.RISShareAmt || '-'}}</td>
+                                        <td>{{item.TotalShare || '-'}}</td>
+                                        <!-- <td *ngFor="let header of b2bDoctorShareReportData.Detailed.headers">{{item[header]}}</td> -->
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </app-card>
+        </div>
+
+    </div>
+
+    
+    <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+
+</div>

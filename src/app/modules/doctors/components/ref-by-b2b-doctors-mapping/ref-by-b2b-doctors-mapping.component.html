@@ -1,0 +1,180 @@
+<div class="doctors-mapping-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="'Doctors Mapping'" [cardClass]="'tim-card tim-card tim-card-success'">
+                <!-- <div class="row">
+                    <div class="col-12">
+                        <span style="font-size: 24px;">Doctors mapping</span>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-12">
+                        <form class="" [formGroup]="form">
+                            <div class="row">
+                                <!-- <div class="col-12">
+                                    <button type="button" class="btn btn-mini btn-info pull-right" (click)="displayRefTable()"
+                                      ngbTooltip="Show B2B Doctors"><i class="fa fa-plus-circle text-center"></i></button>
+                                  </div> -->
+                                <div class="col-md-6">
+                                    <label>Ref. By Doctor: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group ref-by-doc-control">
+                                        <input
+                                            [hidden]="isB2BDocDisabled"
+                                            type="text"
+                                            class="form-control"
+                                            formControlName="RefByDoc"
+                                            [ngbTypeahead]="ngbTypeahead_config.search"
+                                            placeholder="type to search"
+                                            [editable]='false'
+                                            [resultFormatter]="ngbTypeahead_config.formatter.result"
+                                            [inputFormatter]="ngbTypeahead_config.formatter.input"
+                                            [ngClass]="{'invalid': form.get('RefId').errors, 'invalid-highlighted': form.get('RefId').errors && formSubmitted}"
+                                            required
+                                            (selectItem)="ngbTypeahead_config.change($event)"
+                                            (blur)="ngbTypeahead_config.blur($event)"
+                                        />
+                                        <input
+                                            [hidden]="!isB2BDocDisabled"
+                                            disabled
+                                            type="text"
+                                            class="form-control"
+                                            [value]="$any(form.get('RefByDoc').value)?.Name" 
+                                             />
+                                        <!-- <ng-select style="width: 100%;"
+                                            (change)="refByChanged()"
+                                            (click)="getRefByB2bDoctorsMapping()"
+                                            [items]="refByDoctors"
+                                            formControlName="RefId"
+                                            bindLabel="Name" 
+                                            bindValue="RefId" 
+                                            [ngClass]="{'invalid': form.get('RefId').errors, 'invalid-highlighted': form.get('RefId').errors && formSubmitted}" required>
+                                        </ng-select> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>B to B Doctors: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <ng-select
+                                            style="width: 100%;"
+                                            formControlName="B2BDoctorID" 
+                                            [items]="b2bDoctors" 
+                                            tabindex="2" 
+                                            bindLabel="FullName" 
+                                            placeholder="Select B to B Doctor"
+                                            bindValue="B2BDoctorID" 
+                                            (change)="getRefByB2bDoctorsMapping()"
+                                            [ngClass]="{'invalid': form.get('B2BDoctorID').errors, 'invalid-highlighted': form.get('B2BDoctorID').errors && formSubmitted}" required>
+                                        </ng-select>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-12 justify-content-end">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group justify-content-end">
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button
+                                            class="btn btn-sm btn-success"
+                                            title="Save"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="save()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="success"
+                                            cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                        > <i class="fa fa-save m-0"></i>
+                                        Add
+                                        </button>
+                                        <!-- <button class="btn btn-sm btn-outline-danger ml-1" (click)="reset()">Cancel</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>                        
+                    </div>
+                </div>
+            </app-card>
+        </div>
+
+        <div class="col-md-12" >
+            <app-card [title]="'(Ref. By) & (B to B Doctors)'" [cardClass]="'tim-card tim-card tim-card-success'">
+                <div class="row">
+                    <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                        <button class="btn btn-outline-success btn-mini" (click)="getRefByB2bDoctorsMapping()"><i class="ti-reload"></i></button>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive fixed-height-table" style="max-height:350px; overflow-y: auto;">
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>Ref. By Doc.</th>
+                                <th>B to B Doc.</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!refByB2BDoctorsMapping.length">
+                                <td colspan="100" style="text-align: center;"><strong class="text-primary">
+                                    No Record Found</strong></td>
+                            </tr>
+                            <tr 
+                                *ngFor="let item of refByB2BDoctorsMapping | filterByKey: searchText:['RefByDocName', 'B2BDocName']; let i = index"
+                                [ngClass]="{'active-rec-border-left': i == rowIndex}" >
+                                <td>{{item.RefByDocName}}</td>
+                                <td>{{item.B2BDocName}}</td>
+                                <td class="text-right">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button
+                                        class="btn btn-outline-danger btn-mini"
+                                        title="Delete"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="delete(item)"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="danger"
+                                        cancelButtonType="outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    >
+                                        <i class="ti-trash m-0"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-outline-success btn-mini ml-1"
+                                        title="Edit"
+                                        (click)="edit(item, i)"
+                                    >
+                                        <i class="ti-pencil m-0"></i>
+                                    </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </app-card>
+        </div>
+    </div>
+
+    <ngx-spinner class="spinner-success" [name]="spinnerRefs.mappingList"  bdColor="rgba(0,0,0,0.8)" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+
+</div>
+      

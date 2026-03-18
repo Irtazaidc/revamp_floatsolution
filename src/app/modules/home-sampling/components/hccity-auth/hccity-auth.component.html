@@ -1,0 +1,69 @@
+<div class="hc-city-auth-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="'Home Collection City Wise Roles'" [cardClass]="'tim-card tim-card tim-card-danger'">
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <form class="" [formGroup]="hcCityAuthForm">
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <label>Users: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <!-- (change)="userChanged()" -->
+                                        <ng-select (change)="getAuthorizedCitiesByUser()" style="width: 100%;" [items]="usersList" tabindex="1"
+                                            formControlName="userID" bindLabel="UserName" bindValue="UserID"
+                                            [ngClass]="{'invalid': hcCityAuthForm.get('userID').errors, 'invalid-highlighted': hcCityAuthForm.get('userID').errors}"
+                                            required>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <!-- userRoleID -->
+                                <div class="col-md-4">
+                                    <label>Home Collection Cities: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">   
+                                        <ng-select   [multiple]="true" style="width: 100%;" formControlName="hcCityID" [items]="gcCitiesList"
+                                            tabindex="2" bindLabel="Code" bindValue="HCCityID"
+                                            [ngClass]="{'invalid': hcCityAuthForm.get('hcCityID').errors, 'invalid-highlighted': hcCityAuthForm.get('hcCityID').errors }"
+                                            required>
+                                        </ng-select>
+
+                                        <!-- <select class="form-control" tabindex="2" formControlName="userRoleID" [ngClass]="{'invalid': hcCityAuthForm.get('userRoleID').errors, 'invalid-highlighted': hcCityAuthForm.get('userRoleID').errors && hcCityAuthFormSubmitted}" required>
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let r of rolesList" [value]="r.userRoleID">{{r.userRoleTitle}}</option>
+                                        </select> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group">
+                                        <button class="btn btn-danger btn-sm" title="Save Role" mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="assignHCCityToHCStaff()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"> <i class="fa fa-save m-0"></i>
+                                            Save
+                                        </button>
+                                        &nbsp;
+                                        <button class="btn btn-outline-secondary btn-sm m-l-10"
+                                            (click)="resethcCityAuthForm()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>

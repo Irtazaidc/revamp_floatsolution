@@ -1,0 +1,444 @@
+<div class="roles-page">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <app-card [title]="'Reg Section Statistics'" [cardClass]="'tim-card tim-card tim-card-info'">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-xl-2">
+                <div class="form-group">
+                  <label for="StartDate" class="control-label">Start Date:</label>
+                  <input readOnly #dStart type="text" class="form-control mt-1 mr-1" (click)="dFrom_date.toggle()"
+                    placeholder="dd-mm-yyyy" autocomplete="off" name="dStart" ngbDatepicker #dFrom_date="ngbDatepicker" 
+                    [(ngModel)]="fromDate">
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-xl-2">
+                <div class="form-group">
+                  <label for="Expiry Date" class="control-label">End Date:</label>
+                  <input readOnly #dExpiry type="text" class="form-control mt-1 mr-1" (click)="dExpiry_date.toggle()"
+                    placeholder="dd-mm-yyyy" autocomplete="off" name="ExpiryDate" ngbDatepicker
+                    #dExpiry_date="ngbDatepicker" [(ngModel)]="toDate">
+  
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-xl-2">
+                <div class="form-group">
+                  <label for="groupBy">Group By:</label>
+                  <div >
+                    <select class="form-control" name="groupBy" placeholder="--Select Calendar--" [(ngModel)]="groupBy">
+                       <option *ngFor="let s of arrGroupBy" [value]="s.id">{{s.title}}</option>
+                      <!-- <option value="2">Month Wise</option>
+                      <option value="3">Week Wise</option> -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                <div class="form-group">
+  
+                  <label for="branchIds" class="control-label">Locations</label>
+                  <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="branchesList" bindLabel="Title"
+                    placeholder="-Select Branch-" bindValue="LocId" [(ngModel)]="branchIds" name="branchIds"
+                    [multiple]="true" [closeOnSelect]="false">
+  
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        <span class="ng-value-label"> {{item.Title}}</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                    <ng-template ng-header-tmp>
+                      <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary" type="button"><i
+                          class="ti-check"></i> Select all</button>
+                      <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                        type="button"><i class="ti-close"></i> Unselect all</button>
+                    </ng-template>
+                  </ng-select>
+  
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                <div class="form-group btn-group" role="group">
+  
+                  <button  type="button" ngbTooltip="Search Registration" (click)="searchBranchWiseRegistrationCount()"
+                    class="btn btn-sm btn-info mt-10">
+                    <i class="fa fa-search"></i> Search<i aria-hidden="true"></i>
+                  </button>
+                  <button  type="button" ngbTooltip="Search Registration" (click)="exportAsXLSX(1)"
+                    class="btn btn-sm btn-info mt-10">
+                    <i class="fa fa-download"></i> Download<i aria-hidden="true"></i>
+                  </button>
+                  <button  type="button" ngbTooltip="Comparative Graph" (click)="showComparativeChart()"
+                    class="btn btn-sm btn-info mt-10">
+                    <i class="ti-stats-up"></i> Relative Chart<i aria-hidden="true"></i>
+                  </button>                  
+                </div>             
+              </div>
+              <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 col-xl-12">
+                            <form class="form-inline">
+                                <div class="form-group hidden">
+                                  <div class="input-group">
+                                    <input name="datepicker"
+                                           class="form-control"
+                                           ngbDatepicker
+                                           #datepicker="ngbDatepicker"
+                                           [showWeekNumbers]="true"
+                                           (dateSelect)="onDateSelection($event)"
+                                           [displayMonths]="2"
+                                           [dayTemplate]="t"
+                                           outsideDays="hidden"
+                                           [startDate]="fromDate!"
+                                           tabindex="-1">
+                                    <ng-template #t let-date let-focused="focused">
+                                      <span class="custom-day"
+                                            [class.focused]="focused"
+                                            [class.range]="isRange(date)"
+                                            [class.faded]="isHovered(date) || isInside(date)"
+                                            (mouseenter)="hoveredDate = date"
+                                            (mouseleave)="hoveredDate = null">
+                                        {{ date.day }}
+                                      </span>
+                                    </ng-template>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="input-group">
+                                    <input #dpFromDate
+                                           class="form-control" placeholder="yyyy-mm-dd"
+                                           name="dpFromDate"
+                                           [value]="formatter.format(fromDate)"
+                                           (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                                    <div class="input-group-append">
+                                      <button class="btn btn-outline-secondary fa fa-calendar" (click)="datepicker.toggle()" type="button"></button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group ml-2">
+                                  <div class="input-group">
+                                    <input #dpToDate
+                                           class="form-control" placeholder="yyyy-mm-dd"
+                                           name="dpToDate"
+                                           [value]="formatter.format(toDate)"
+                                           (input)="toDate = validateInput(toDate, dpToDate.value)">
+                                    <div class="input-group-append">
+                                      <button class="btn btn-outline-secondary fa fa-calendar" (click)="datepicker.toggle()" type="button"></button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">                                 
+                                    <label for="groupBy" >Group By:</label>
+                                    <select class="form-control" name="groupBy" placeholder="--Select Calendar--" [(ngModel)] = "groupBy">                                        
+                                        <option value="1">Day Wise</option>
+                                        <option value="2">Month Wise</option>
+                                        <option value="3">Week Wise</option>
+                                      </select>                                    
+                                </div>
+                                  <div class="form-group">                                 
+                                    
+                                    <label for="branchIds" class="control-label">Locations</label>
+                                    <ng-select style="width: 100%;"
+                                        class=" mt-1 mr-1"
+                                        [items]="branchesList"
+                                        bindLabel="Title" 
+                                        placeholder="-Select Branch-"
+                                        bindValue="LocId"
+                                        [(ngModel)]="branchIds"
+                                        name = "branchIds"
+                                        [multiple]="true"
+                                        [closeOnSelect]="false"    
+                                        >
+    
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                <span class="ng-value-label"> {{item.Title}}</span>
+                                            </div>
+                                            <div class="ng-value" *ngIf="items.length > 2">
+                                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template ng-header-tmp>
+                                            <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary" type="button"><i class="ti-check"></i> Select all</button>
+                                            <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect all</button>
+                                        </ng-template>
+                                    </ng-select>                                  
+                                   
+                                  </div>                                                                  
+                                <div class="form-group">                                 
+                                          
+                                    <button 
+                                        type="button" 
+                                        ngbTooltip="Search Registration"
+                                        (click)="searchBranchWiseRegistrationCount()"                                        
+                                        class="btn btn-sm btn-info pull-right ml-2">
+                                        <i class="fa fa-search"></i> Search<i aria-hidden="true"></i>
+                                        
+                                    </button>                                     
+                                   
+                                  </div>
+                            </form>
+                              
+                              <hr/>
+                            
+                        </div> -->
+            </div>
+            <div class="row">
+              <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.mainRegCount" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+              <div *ngIf="regCountList.length" class="table-responsive fixed-height-table">
+  
+                <table class="table table-hover" style="width: 100%;">
+                  <thead>
+                    <tr>
+                      <ng-container *ngFor="let header of _object.keys(regCountList[0]); let i = index ">
+                        <ng-container>
+                          <th *ngIf="header != 'LocID'">{{header}}</th>
+                        </ng-container>
+                      </ng-container>
+                      <th class="text-right"> Section Detail </th>
+                      <th class="text-right"> Show Graph </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of regCountList; let i = index ">
+  
+                      <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                        <td *ngIf="objKey != 'LocID'">{{ row[objKey] }} </td>
+                      </ng-container>
+                      <td class="text-right">
+                        <span (click)="showSectionWiseRegCount(row)" class="cursor-pointer" style="font-size: 17px;"
+                          placement="top" ngbTooltip="View Detail">
+                          <i class="fa fa-eye text-info"></i>
+                        </span>
+                      </td>
+                      <td class="text-right">
+                        <span (click)="showBranchWiseRegChart(row)" class="cursor-pointer" style="font-size: 17px;"
+                          placement="top" ngbTooltip="View Chart">
+                          <i class="fa fa-eye text-info"></i>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+  
+              </div>
+  
+            </div>
+  
+          </div>
+        </app-card>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <!------begin:: TestWiseRegCount Popup-->
+  <ng-template #testWiseRegCount let-testWiseRegCount>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Section Wise Registration Detail for {{branchName}}</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeLoginModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-xl-2">
+            <div class="form-group">
+              <label for="labDeptID">Lab Department:</label>
+              <select class="form-control" name="labDeptID" placeholder="--Select Department--" [(ngModel)]="labDeptID" 
+                (change)= "getSubSection(); getTestProfile();">
+                <option value="-1">-Select All-</option>
+                <option value="1">Lab</option>
+                <option value="2">Imaging</option>              
+              </select>
+            </div>
+          </div> 
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="form-group">
+  
+              <label for="subSectionIDs" class="control-label">Sub Section:</label>
+              <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList" bindLabel="SubSectionTitle"
+                placeholder="-Select Sub Section-" bindValue="SubSectionId" [(ngModel)]="subSectionIDs" name="subSectionIDs"
+                [multiple]="true" [closeOnSelect]="false" (ngModelChange)= "getTestProfile()">
+  
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+                <ng-template ng-header-tmp>
+                  <button (click)="onSelectAllSubSections()" class="btn btn-mini btn-outline-primary" type="button"><i
+                      class="ti-check"></i> Select all</button>
+                  <button (click)="onUnselectAllSubSections()" class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                    type="button"><i class="ti-close"></i> Unselect all</button>
+                </ng-template>
+              </ng-select>
+  
+            </div>
+          </div>           
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="form-group btn-group" role="group">
+  
+              <button  type="button" ngbTooltip="Search Registration" 
+                (click)="searchSectionWiseRegistrationCount(locationID,testProfileIDs,labDeptID,subSectionIDs)"
+                class="btn btn-sm btn-info mt-10">
+                <i class="fa fa-search"></i> Search<i aria-hidden="true"></i>
+              </button>
+              <button  type="button" ngbTooltip="Search Registration" (click)="exportAsXLSX(2)"
+                class="btn btn-sm btn-info mt-10">
+                <i class="fa fa-download"></i> Download<i aria-hidden="true"></i>
+              </button>
+            </div>             
+          </div>
+          
+        </div>
+  
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div>
+                  <div class="row">
+                    <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.testRegCount" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                      <p style="color: white"> Loading... </p>
+                  </ngx-spinner>
+                    <div *ngIf="testRegCountList.length" class="table-responsive fixed-height-table">
+  
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <ng-container *ngFor="let header of _object.keys(testRegCountList[0]); let i = index ">
+                              <ng-container>
+                                <th>{{header}}</th>
+                              </ng-container>
+                            </ng-container>
+                            <!-- <th class="text-right"> Action </th> -->
+                            <th class="text-right"> Show Graph </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let row of testRegCountList; let i = index ">
+                            <td *ngFor="let objKey of _object.keys(row); let j = index">{{ row[objKey] }} </td>
+                            <!-- <td class="text-right">
+                      <span   (click)="showTestWiseRegCount(row)" class="cursor-pointer" style="font-size: 17px;" placement="top" ngbTooltip="View Detail"> 
+                          <i class="fa fa-eye text-info"></i>
+                      </span>
+                  </td> -->
+                  <td class="text-right">
+                    <span (click)="showBranchWiseRegChart(row)" class="cursor-pointer" style="font-size: 17px;"
+                      placement="top" ngbTooltip="View Chart">
+                      <i class="fa fa-eye text-info"></i>
+                    </span>
+                  </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+  
+      <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal" (click)="closeLoginModal()">
+        <i class="fa fa-times-circle"></i> Close</button>
+    </div>
+  
+    
+  </ng-template>
+  
+  
+  
+  <!------begin:: BranchWiseRegChart Popup-->
+  <ng-template #branchWiseRegChart let-branchWiseRegChart>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Branch Wise Registration Chart  for {{branchName}}</h5>
+      <button type="button"  aria-label="Close" (click)="branchWiseRegChart.close()">X
+        
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row btn-group-margin-top">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="changeChart(1)">Line Chart</button>
+            <button type="button" class="btn btn-sm btn-outline-info" (click)="changeChart(2)">Bar Chart</button>
+            <!-- <button type="button" class="btn btn-sm btn-outline-success">Pie Chart</button> -->
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="changeChart(3)">Pie Chart</button>
+            <!-- <button type="button" class="btn btn-sm btn-outline-warning">Pie Chart</button> -->
+          </div>
+          <!-- <button type="button" class="btn btn-sm btn-outline-info"  (click)="changeChart(1)">
+            <i class="fa fa-times-circle"></i> Line Chart</button>
+            <button type="button" class="btn btn-sm btn-outline-info"  (click)="changeChart(2)">
+              <i class="fa fa-times-circle"></i> Bar Chart</button>
+              <button type="button" class="btn btn-sm btn-outline-info"  (click)="changeChart(3)">
+                <i class="fa fa-times-circle"></i> Pie Chart</button>             -->
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div>
+                  <div *ngIf = "chartType == 2" class="chart-wrapper">
+                    <canvas baseChart 
+                    [datasets]="barChartData"
+                    [labels]="barChartLabels"
+                    [options]="barChartOptions"
+                    [plugins]="barChartPlugins"
+                    [legend]="barChartLegend"
+                    [chartType]="barChartType">
+                  </canvas>                  
+                </div>
+                <div *ngIf = "chartType == 1" class="chart-wrapper">
+                  <canvas baseChart 
+                      [datasets]="lineChartData" 
+                      [labels]="lineChartLabels" 
+                      [options]="lineChartOptions"
+                      [colors]="lineChartColors" 
+                      [legend]="lineChartLegend" 
+                      [chartType]="lineChartType" 
+                      [plugins]="lineChartPlugins">
+                  </canvas>                 
+              </div>    
+              <div *ngIf = "chartType == 3" class="chart-wrapper">
+                <canvas baseChart 
+                [data]="pieChartData" 
+                [labels]="pieChartLabels" 
+                [chartType]="pieChartType"
+                [options]="pieChartOptions"
+                [plugins]="pieChartPlugins"
+                [legend]="pieChartLegend">
+              </canvas>                
+            </div>                                        
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+  
+      <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal" (click)="branchWiseRegChart.close()">
+        <i class="fa fa-times-circle"></i> Close</button>
+    </div>
+  
+  
+  </ng-template>
+  
+  

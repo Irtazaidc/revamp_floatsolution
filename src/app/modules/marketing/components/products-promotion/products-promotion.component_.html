@@ -1,0 +1,151 @@
+
+<div class="products-page" *ngIf="IsValidUser!=1">
+    <div class="row">
+        <div class="col-md-12"> 
+            <app-card [title]="'Products Promotion'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="alert alert-danger text-center ml-12 offset-2 col-8"><span style="display: inline;"> 
+                    <strong>Warning!</strong> To proceed this operation you need to login...!</span><i class="fa fa-sign-in fa-2x text-danger cursor-pointer ml-3" aria-hidden="true" (click)="openLoginModal()"></i>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>
+
+<div class="products-page" *ngIf="IsValidUser==1">
+    <div class="row">
+        <div class="col-md-12"> 
+            <app-card [title]="'Products Promotion'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-plus"></i>Add Product</button> -->
+                        <!-- <a [routerLink]="['../../product-promotion/addupdate-product-promotion']">
+                            <i class="image-remove fa fa-plus pull-right" placement="left" ngbTooltip="Add Recored"></i>
+                        </a> -->
+                        <a [routerLink]="['../addupdate-product-promotion']">
+                            <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-plus"></i>Add Product</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr style="border-color: #4680ff;">
+                    </div>
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white;margin-top: 80px;"> Please wait while loading data... </p>
+                    </ngx-spinner>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-2" *ngFor="let item of ProductsPromotionsList">
+                        <div class="card">
+                            <img src="{{item.PromotionImage}}" class="card-img-top" alt="Product Promotion Image" height="200">
+                            <div class="card-body" style="margin-top: -10px;">
+                                <h5 class="card-title promo-title">{{item.PromotionTitle}}</h5>
+                                <p class="card-text">{{item.PromotionDescription}}</p> 
+                                <span class="badge" [ngClass]="item.isActive ? 'badge-primary' : 'badge-danger'">{{item.isActive ? 'Active' : 'Deactive'}}</span>
+                                <span class="badge ml-2 badge-info">Display Order: {{item.PromotionOrder}}</span>
+                                <span *ngIf="item.PromotionFor==1" class="badge ml-2 badge-success cursor-pointer" ngbTooltip="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" ngbPopover="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" popoverTitle="Promotion Use For">Promotion For: Web</span>
+                                <span *ngIf="item.PromotionFor==2" class="badge ml-2 badge-success cursor-pointer" ngbTooltip="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" ngbPopover="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" popoverTitle="Promotion Use For">Promotion For: Mobile</span>
+                                <span *ngIf="item.PromotionFor==3" class="badge ml-2 badge-success cursor-pointer" ngbTooltip="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" ngbPopover="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" popoverTitle="Promotion Use For">Promotion For: Both</span>
+                                <span *ngIf="item.PromotionFor==4" class="badge badge-purple cursor-pointer ml-2" ngbTooltip="Use For Pop-up Ad" ngbPopover="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" popoverTitle="Promotion Use For"><i aria-hidden="true" class="fa fa-bullhorn text-white" style="font-size: 10px;"></i> <span class="blink-orange"> Pop-up Ad </span></span>
+                            </div>
+                            <section class="wow fadeIn bg-gray animated m-2" style="visibility: visible; animation-name: fadeIn; border: 1px dotted; border-radius: 10px; padding-bottom: 10px;">
+                              <div class="container">
+                                  <div class="row">
+                                      <div class="col-md-12 col-sm-12 center-col text-right">  
+                                        <mat-checkbox *ngIf="item.PromotionFor!=4"style="float: left !important;margin-top: 31px;" class="text-left example-margin"  [(ngModel)]="item.isShowDetail" (change)="changeDetailVisibality(item,$event)"> <span>Show Description</span> </mat-checkbox>
+                                        <!-- <mat-checkbox style="float: left !important;margin-top: 31px;" class="text-left example-margin" (click)="changeDetailVisibality(item,$event)"><strong>Show Detail</strong></mat-checkbox> -->
+                                        <a [routerLink]="['../addupdate-product-promotion', item.ProductPromotionIDEnc]" class="btn btn-sm btn-success mr-2" placement="top" ngbTooltip="Edit Item"><i class="fa fa-edit btn-round"></i></a> 
+                                        <!-- <a href="javascript:void(0)" (click)="openDeletePromotionModal(item.ProductPromotionID,1)" class="btn btn-sm btn-danger  mr-2" placement="top" ngbTooltip="Delete Item"><i class="fa fa-trash btn-round" style="color: aliceblue;"></i></a> -->
+                                        <button
+                                        ngbTooltip="Delete Item"
+                                        class="btn btn-danger btn-sm mr-2"
+                                        title=""
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="deleteProductPromotion(item.ProductPromotionID,1)"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="danger"
+                                        cancelButtonType="outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    > <i class="fa fa-trash m-0"></i>
+                                    </button>
+
+                                    
+                                        <label class="switch" placement="top" ngbTooltip="{{item.isActive==1 ? 'Deactivate Item' : 'Activate Item' }}">
+                                          <input type="checkbox" [(ngModel)]="item.isActive" [checked]="item.isActive"  (change)="activeDeactiveItem(item.ProductPromotionID,$event);"> 
+                                          <span class=""></span>
+                                        </label>
+                                        
+                                      </div>
+                                  </div>
+                              </div>
+                          </section>
+                        </div>
+                    </div>
+                    <div class="col-12" *ngIf="!ProductsPromotionsList.length">
+                        <div class="alert alert-info text-center" >
+                            <strong>{{productPromotionMessage}}</strong> 
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>
+      
+
+
+
+
+<!------begin:: Authenticate Admin Popup-->
+<ng-template #authenticateAdmin  let-c="close" let-d="dismiss">
+    <form class="pt-4">
+      <div class="modal-body">
+          <div class="container">
+            <div class="row login-header">
+              <div class="col-12">
+                <h4>Login to your admin account</h4>
+              </div>
+            </div>
+            <hr>
+            <div class="d-flex flex-column pb-3" >
+              <label for="uname">Username</label>
+              <input type="text"placeholder="Enter username" [(ngModel)]="username" name="uname" required
+                class="input-custom form-control">
+            </div>
+            <div class="d-flex flex-column pb-3" >
+              <label for="psw">Password</label>
+              <input type="password" placeholder="Enter Password" [(ngModel)]="password" name="psw" required
+                class="input-custom form-control">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal" (click)="closeLoginModal()">
+          <i class="fa fa-times-circle"></i> Cancel</button>
+          <button class="btn btn-sm btn-outline-primary" (click)="Login()"  [disabled]="disabledButtonModal">
+            <i class="fa fa-check-circle"></i>  Login <i class="spinner-border-custom" aria-hidden="true"
+              [hidden]="isSpinner"></i></button>
+      </div>
+    </form>
+  </ng-template>
+  <!------end:: Authenticate Admin Popup-->
+
+  <!------begin:: Delete Product Promotion Modal Popup-->
+    <!-- <ng-template #deletepromotionview  let-c="close" let-d="dismiss">
+        <div class="modal-body">
+            <i class="fa fa-exclamation-circle icon-warning-confirmbox-sm" aria-hidden="true"></i>
+            <h5 class="warning-confirmbox-sm-message">Are you sure?</h5>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-primary" (click)="deleteProductPromotion(ProductPromotionID,Action)"  [disabled]="disabledButtonModal">
+            <i class="fa fa-check-circle"></i>  Yes <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinner"></i></button>
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" (click)="closeLoginModal()">
+                <i class="fa fa-times-circle"></i> No</button>
+        </div>
+    </ng-template> -->
+    <!------end:: Delete Product Promotion Modal Popup-->

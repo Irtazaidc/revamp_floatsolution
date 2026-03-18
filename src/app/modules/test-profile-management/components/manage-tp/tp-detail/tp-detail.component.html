@@ -1,0 +1,99 @@
+<div class="container">
+    <div class=" row">
+        <div class="col-md-12">
+            <form [formGroup]="formForTpDetail" class="form-horizontal" name="form" role="form">
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Protocol<span class="mandatory-asterisk">*</span></label>
+                            <textarea rows="3" formControlName="protocol" type="text" class="form-control"
+                                placeholder="" [readonly]="true"></textarea>
+                            <!-- [ngClass]="{'invalid': ComplaintDetailsForm.get('cmsMessage').errors, 'invalid-highlighted': ComplaintDetailsForm.get('cmsMessage').errors && isSubmitted }"<div class="text-right text-muted">Remaining: {{ remainingCharacters
+                                    }}/2000</div> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Instruction<span class="mandatory-asterisk">*</span></label>
+                            <textarea rows="3" formControlName="instruction" type="text" class="form-control"
+                                placeholder="" [readonly]="true"></textarea>
+                            <!-- [ngClass]="{'invalid': ComplaintDetailsForm.get('cmsMessage').errors, 'invalid-highlighted': ComplaintDetailsForm.get('cmsMessage').errors && isSubmitted }"<div class="text-right text-muted">Remaining: {{ remainingCharacters
+                                }}/2000</div> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Methodology<span class="mandatory-asterisk">*</span></label>
+                            <textarea rows="3" formControlName="methodology" type="text" class="form-control"
+                                placeholder="" [readonly]="true"></textarea>
+                            <!-- [ngClass]="{'invalid': ComplaintDetailsForm.get('cmsMessage').errors, 'invalid-highlighted': ComplaintDetailsForm.get('cmsMessage').errors && isSubmitted }"<div class="text-right text-muted">Remaining: {{ remainingCharacters
+                                }}/2000</div> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Performed Method<span class="mandatory-asterisk">*</span></label>
+                            <textarea rows="3" formControlName="performedMethod" type="text" class="form-control"
+                                placeholder="" [readonly]="true"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <label for="testHead" class="control-label">Head</label>
+                                    <ng-select style="width: 100%" class="mt-1" [items]=""
+                                        bindLabel="CMSContactBackStatusTitle" placeholder="-Head-"
+                                        bindValue="accesionForm" formControlName="testHead">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <label for="testQuestion" class="control-label">Questionnaire</label>
+                                    <ng-select style="width: 100%" class="mt-1" [items]=""
+                                        bindLabel="CMSContactBackStatusTitle" placeholder="-Questionnaire-"
+                                        bindValue="accesionForm" formControlName="testQuestion">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="container">
+                            <div class="row mt-12">
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <div class="checkbox-inline">
+                                            <label class="checkbox checkbox-primary">
+                                                <input type="checkbox" formcontrolname="reportable"
+                                                    class="ng-valid ng-dirty ng-touched"><span></span></label>
+                                        </div><label class="form-label">Reportable</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <div class="checkbox-inline">
+                                            <label class="checkbox checkbox-primary">
+                                                <input type="checkbox" formcontrolname="smsAlert"
+                                                    class="ng-valid ng-dirty ng-touched"><span></span></label>
+                                        </div><label class="form-label">SMS Alert</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <div class="checkbox-inline">
+                                            <label class="checkbox checkbox-primary">
+                                                <input type="checkbox" formcontrolname="showOnlineReport"
+                                                    class="ng-valid ng-dirty ng-touched"><span></span></label>
+                                        </div><label class="form-label">Show Online Report</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

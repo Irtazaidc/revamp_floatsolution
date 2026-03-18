@@ -1,0 +1,108 @@
+<div class="card card-custom scrollable scrollable-element perfect-scrollbar">
+  
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.tableList" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>  
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" 
+                            [(ngModel)]="searchText" name="searchText"/>
+                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom" 
+                            ><i class="ti-reload"></i></button>
+                        </div>
+                    </div>
+                </div> 
+                <div style="overflow-y: auto;">
+                    <div class="table-responsive fixed-height-table">
+                        <!-- max-height: 450px; min-height: 450px;  <ng-container *ngIf="smsHistoryList !==null && smsHistoryList.length"> -->
+                            <table class="table cursor-pointer table-hover compact table-bordered">
+                                <thead>
+                                    <!-- <tr>
+                                        <th width="10%">Cell No</th>
+                                    </tr> -->
+                                </thead>
+                                <tbody> 
+                                    <tr *ngIf="!TestProfileList">
+                                        <td colspan="4" style="text-align: center;"><strong class="text-primary">
+                                            No Record Found..</strong></td>
+                                    </tr>
+                                    <tr *ngFor="let item of TestProfileList | filterByKey:searchText:['ExtensionNo']; let i = index" (click)="getTableRowData(item, i)" 
+                                    [ngClass]="{'active': i == selectedTPId}">
+                                        <td>
+                                            {{item.CellNo}}
+                                        </td>
+                                        <td class="text-right">
+                                            {{item.SentOn | date:"dd MMM, yyyy, h:mm a"}} 
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        <!-- </ng-container> -->
+                    <!-- <ng-container *ngIf="smsHistoryList===null || !smsHistoryList.length">
+                            <p style="border-bottom: 1px dashed #cccdd3; text-align: center;">
+                                <strong class="text-primary">No Record Found</strong>
+                            </p>
+                    </ng-container> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-12">
+                <mat-card>
+                    <mat-card-content>
+                        <mat-tab-group class="demo-tab-group" animationDuration="0ms" style="background-color: #fff;">
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i>
+                                    General
+                                </ng-template>
+                                <app-tp-general></app-tp-general>
+                            </mat-tab>
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <i class="fas fa-file-signature icon-lg text-danger custom-icons mr-2"></i>
+                                    Detail
+                                </ng-template>
+                                <app-tp-detail></app-tp-detail>
+                            </mat-tab>
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <i class="flaticon2-search icon-lg text-danger mr-2 custom-icons"></i>
+                                    Accounts
+                                </ng-template>
+                                <app-tp-accounts></app-tp-accounts>
+                            </mat-tab>
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <i class="flaticon2-layers icon-lg text-danger mr-2 custom-icons"></i>
+                                    Locations/TAT/FST
+                                </ng-template>
+                                <app-tp-locations></app-tp-locations>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-md-12 text-right">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-sm btn-primary ml-1">
+                    <i class="flaticon-refresh"></i>Refresh</button>
+                    <!-- <button type="button" class="btn btn-sm btn-outline-primary ml-1">
+                    <i class="flaticon-interface-4"></i>Restore</button> -->
+                    <button type="button" class="btn btn-sm btn-danger ml-1">
+                    <i class="flaticon-delete"></i>Delete</button>
+                    <button type="button" class="btn btn-sm btn-warning ml-1">
+                    <i class="flaticon-edit"></i>Edit</button>
+                    <button type="button" class="btn btn-sm btn-info ml-1">
+                    <i class="flaticon2-copy"></i>Copy</button>
+                    <button type="button" class="btn btn-sm btn-success ml-1" >
+                    <i class="flaticon-add-circular-button"></i>New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

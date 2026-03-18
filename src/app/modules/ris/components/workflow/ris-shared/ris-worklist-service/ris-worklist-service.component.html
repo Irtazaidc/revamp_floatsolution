@@ -1,0 +1,470 @@
+<div class="card card-custom mt-2">
+    <div class="card-toolbar row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
+            <div class="row" >
+                <div class="col-12">
+                    <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pl-5 pt-1 test-summary-info-section" [ngClass]="noticeBoardStyle">
+                        <span *ngIf="active!=7"  class="text-dark-75 font-weight-bolder font-size-lg text-white"> {{testSummaryInfoHeader}}</span>
+                        <span *ngIf="active==7"  class="text-dark-75 font-weight-bolder font-size-lg text-white"> All Tests ({{risWorklist.length}})</span>
+                        <span *ngIf="active!=7 && risWorklist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> There are <strong style="font-size: 14px;">({{risWorklist.length}})</strong> {{testSummaryInfoDesc}} to be processed</span>
+                        <span *ngIf="active!=7 && !risWorklist.length" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> No test(s) registered</span>
+                        <span *ngIf="active==7" class="text-muted font-weight-bold pb-1 font-size-sm text-white"> List of all services</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
+            <div class="text-right mt-2">
+                <button tabindex="1" class="btn mr-1" [ngClass]="active==2 ? 'btn-primary' : 'btn-outline-primary'" (click)="getActive(2,null,1,'bg-primary','RIS Services - Films','Films',1);">
+                    <i class="fa fa-film"></i> Films <span class="badge badge-light badge-light-custom">{{filmCount}}</span>
+                </button>
+                <button tabindex="4" class="btn mr-1" [ngClass]="active==3 ? 'btn-danger' : 'btn-outline-danger'"  (click)="getActive(3,2,2,'bg-tomato','RIS Services - Contrast','Contrasts',2)">
+                    <i class="fa fa-desktop"></i> Contrast <span class="badge badge-light badge-light-custom">{{contrastCount}}</span>
+                </button>
+                <button tabindex="4" class="btn mr-1" [ngClass]="active==4 ? 'btn-warning' : 'btn-outline-warning'"  (click)="getActive(4,2,3,'bg-warning','RIS Services - Other','Other',3)">
+                    <i class="fa fa-cube"></i> Other <span class="badge badge-light badge-light-custom">{{otherCount}}</span>
+                </button>
+                <button tabindex="6" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-100,'bg-purple','RIS All Services','All',4);">
+                    <i class=" flaticon2-grids" [ngClass]="showAllTab || active==7 ? 'text-white' : 'text-purple'"></i> All
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <!--start::Search Filter-->
+        <div class="row" *ngIf="risWorklist.length">
+            <div class="col-12">
+                <div class="input-group">
+                    <input type="text" placeholder="type atleast 2 characters to filter" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                </div>
+            </div>
+        </div>
+        <!--end::Search Filter-->
+
+        <!--start::Table and rows section-->
+        <div class="row text-center" *ngIf="!risWorklist.length && screenIdentity!='assign-bulk-test'">
+            <div class="col-12">
+                <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
+                <p class="text-primary" style="margin-top: -20px;">
+                    <strong>Info! </strong> No record found...
+                </p>
+            </div>
+        </div>
+        <div class="row" *ngIf="screenIdentity!='assign-bulk-test'">
+            <div class="col-md-12">
+                <div class="table-responsive" style="min-height: 330px;">
+                    <table *ngIf="risWorklist.length" class="table table-hover" cellpadding=0 cellspacing=0>
+                        <thead>
+                            <tr *ngIf="pagination.paginatedSearchResults.length">
+                                <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
+                                    <ng-container>
+                                        <th style="cursor: pointer"
+                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='DeliveryDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='ServiceType')">
+                                            {{header}}</th>
+                                    </ng-container>
+                                </ng-container>
+                                <th *ngIf="pagination.paginatedSearchResults.length">Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index " (dblclick)="verifyUserBiomatericForService(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
+                                <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                                    <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
+                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey !='ServiceType')">
+                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                            <i 
+                                                [ngClass]="returnCopyClasses(i)"
+                                                class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                                (click)="copyText(row,i)">&nbsp;</i>
+                                        </span>
+                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+            
+                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey == 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
+                                    </td>
+                                </ng-container>
+                                <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'ris-worklist-service'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <div class="btn-group menu-drop-down_" ngbDropdown role="group" 
+                                            aria-label="Button group with nested dropdown">
+                                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                <i class="fas fa-ellipsis-h cursor-pointer"></i>
+                                            </button>
+                                            <div class="dropdown-menu pb-2" ngbDropdownMenu>
+                                                <button *ngIf="actionsPermission[0]=='ques'" (click)="openPopupModal(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-user-circle text-primary cursor-pointer"></i>
+                                                    Verify User</span>
+                                                </button>
+                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                    class="dropdown-item">
+                                                    <span><i class="fa fa-barcode text-primary cursor-pointer"></i>
+                                                        Print Radio Lable</span>
+                                                </button>
+                                                <button (click)="openVitals(row)" class="dropdown-item">
+                                                    <span><i class="fa fa-heartbeat text-primary cursor-pointer"></i>
+                                                        Vitals </span>
+                                                </button>
+                                                <button (click)="openEMR(row)" class="dropdown-item">
+                                                    <span><i class="ti-receipt text-primary cursor-pointer"></i>
+                                                        EMR </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end::Table and rows section-->
+
+        <!--start::Pagination-->
+        <div class="row" *ngIf="risWorklist.length && screenIdentity!='assign-bulk-test'">
+            <div class="col-12">
+                <div class="d-flex justify-content-between p-2">
+                    <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                    </ngb-pagination>
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                        <option [ngValue]="5">5 items per page</option>
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                        <option [ngValue]="100">100 items per page</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <!--end::Paginition-->
+    </div>
+</div>
+<ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="square-loader" [fullScreen]="true">
+    <p style="color: white"> Please verify your thumb ... </p>
+</ngx-spinner>
+
+<!------begin:: User Verification Popup---------------------------------->
+<ng-template #userVerificationServiceModal let-userVerificationServiceModal  let-c="close" let-d="dismiss">
+    <form class="pt-4" [formGroup]="userVerificationForm">
+      <div class="modal-body">
+          <!-- <div class="container"> -->
+            <div class="row login-header">
+              <div class="col-12 text-center pt-1">
+                <h4>Enter Your Credentials</h4>
+              </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="uname">Username</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fa fa-user text-primary"></span>
+                        </span>                    
+                    </div>
+                    <input type="text" placeholder="Enter username" formControlName="techUsername" 
+                    [ngClass]="{'invalid': userVerificationForm.get('techUsername').errors && userVerificationForm.get('techUsername').touched, 'invalid-highlighted': userVerificationForm.get('techUsername').errors}"
+                        class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="psw">Password</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-lock text-primary"></i>
+                        </span>                    
+                    </div>
+                    <input
+                        [type]="(showPassword && !isInputFocused) ? 'text' : 'password'"
+                        placeholder="Enter Password"
+                        formControlName="techPassword"
+                        [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                        class="form-control"
+                        (focus)="isInputFocused = true"
+                        (blur)="isInputFocused = false"
+                        />
+                        <i
+                        class="fa fa-eye-slash fa-eye text-primary"
+                        style="position: absolute; right: 3px; top: 19px; cursor: pointer;z-index: 9999;"
+                        (mouseenter)="showPassword = true"
+                        (mouseleave)="showPassword = false"
+                        ></i>
+                </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal" (click)="userVerificationServiceModal.close()">
+              <i class="fa fa-times-circle"></i>Cancel</button>
+        <button type="submit" class="btn btn-sm btn-outline-primary" (click)="verifyUserSrv()"  [disabled]="disabledButtonVerify">
+                <i class="fa fa-check-circle"></i>Verify <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinnerVerify"></i></button>
+      </div>
+    </form>
+</ng-template>
+<!------end:: User Verification Popup------------------------------------>
+
+
+<ng-template #vitalsServiceModal let-vitalsServiceModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2" aria-label="Close" (click)="vitalsServiceModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:true, cardSection:false}"></app-vitals>
+    </div>
+</ng-template>
+<ng-template #emrServiceModal let-emrServiceModal>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2" aria-label="Close" (click)="emrServiceModal.close()">
+                    <span aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <app-emr [visitInfo]="visitInfo"></app-emr>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-info" data-dismiss="modal" (click)="emrServiceModal.close()">
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+
+<!--begin:: Service Process Modal-------------------------------------->
+<ng-template #processService let-processService>
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="close mb-2 fsl-close"
+                style="color: #ffffff !important;
+                background-color: #f42a3f !important;
+                border-color: #f41d34 !important;
+                height: 21px;
+                width: 20px;
+                margin-top: 12px;
+                margin-right: 5px" 
+                aria-label="Close" 
+                mwlConfirmationPopover
+                [popoverTitle]="confirmationPopoverConfigCloseModal.popoverTitle"
+                [popoverMessage]="confirmationPopoverConfigCloseModal.popoverMessage"
+                [confirmText]="confirmationPopoverConfigCloseModal.confirmText"
+                [cancelText]="confirmationPopoverConfigCloseModal.cancelText"
+                [placement]="confirmationPopoverConfigCloseModal.placements[3]" 
+                (confirm)="closeModal1('processService')"
+                (cancel)="confirmationPopoverConfigCloseModal.confirmPopoverCancel()"
+                confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                (click)="confirmationPopoverConfigCloseModal.confirmClicked = false; confirmationPopoverConfigCloseModal.cancelClicked = false"
+                [appendToBody]="true"
+                >
+                    <span aria-hidden="true" style="display: inline-block; color:#ffffff;">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+               <!-- PatitenName = {{PatientName}}-
+               PatientId = {{PatientId}}-
+               VisitID = {{VisitID}}-
+               TPId = {{TPId}}-
+               TPCode = {{TPCode}} -->
+                <app-patient-basic-info class="bg-light" [PatientId]="PatientId" [VisitId]="VisitID" [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}"></app-patient-basic-info>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <!-- <ng-template *ngIf="isShowVitalsCard">
+
+                </ng-template> -->
+
+                <ng-container *ngIf="isShowVitalsCard; else actionButtonLarge">
+                    <app-vitals [visitInfo]="visitInfo" [vitalSectionShow]="{formSection:false, cardSection:true}"></app-vitals>
+                    <app-action-buttons-small [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:true}"></app-action-buttons-small>
+                </ng-container>
+                <ng-template #actionButtonLarge>
+                    <div class="bg-light">
+                        <app-action-buttons-large [VisitDateTime]="{RegistrationDate:RegistrationDate,DeliveryDate:DeliveryDate}" (isShowCard)="isVistalSaved($event)"  [QuestionnairePayload]="{TPID:TPId,VisitID:VisitID,PatientID:PatientId,RISStatusID:RISStatusID,RISWorkListID:RISWorkListID, PatientPhoneNumber: PatientPhoneNumber,MOBy:MOBy}" [btnPermission]="{vitals: true, emr:true, moConsent:true, pacs:false,moConsentView:true}"></app-action-buttons-large>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Inventory Info</legend>
+            <ng-container *ngIf="TPItemsList.length; else noTPItems">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" placeholder="Search" class="form-control form-control-sm  pull-right" [(ngModel)]="searchText" name="searchText"/>
+                    </div>
+                    <div class="col-md-6"> 
+                        <h4 class="ml-2 mb-1 test-name"><strong [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}">{{TPName}}</strong>
+                            <i aria-hidden="true" class="fa fa-qrcode cursor-pointer text-white pull-right" style="margin-top: 2px;" ngbTooltip="Print Label" 
+                            mwlConfirmationPopover
+                            [popoverTitle]="'Please Confirm...!'"
+                            [popoverMessage]="'Are your <strong>sure</strong> want to print?'"
+                            [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                            [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                            [placement]="confirmationPopoverConfigCheckout.placements[0]" 
+                            (confirm)="printRadioLablePopup()"
+                            (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                            [appendToBody]="true"></i>
+                        </h4>
+                    </div>
+                    <div class="col-12">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.inventorySection"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 1%;">#</th>
+                                        <th style="width: 4%;"><input type="checkbox" class="cursor-pointer" (change)="selectAllTPStoreItems($event)" [disabled]="isFieldDisabled" /></th>
+                                        <th style="width: 40%;" scope="col" class="col-md">Item Name</th>
+                                        <th style="width: 10%;" scope="col" class="col-md">Max Qty</th>
+                                        <th style="width: 12%;" scope="col" class="col-md">Consumed</th>
+                                        <th style="width: 12%;" scope="col" class="col-md">Damaged</th>
+                                        <th style="width: 21%;" scope="col" class="col-md">Remarks</th>
+                                        <!-- <th style="width: 20%;" scope="col" class="col-md">Comments</th> -->
+                                        <!-- <th style="width: 5%;" scope="col" class="col-md">Action</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of TPItemsList| filterByKey: searchText:['StoreItemTitle']; let i = index">
+                                        <td style="width: 1%;" >{{i+1}}</td>
+                                        <td style="width: 4%;"> 
+                                            <input
+                                                type="checkbox"
+                                                class=""
+                                                [(ngModel)]="item.checked"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="isFieldDisabled"
+                                            />
+                                        </td>
+                                        <td style="width: 40%;" class="col-md">{{ item.StoreItemTitle }}</td>
+                                        <td style="width: 10%;" class="col-md"><label [ngClass]="'badge badge-primary ml-2'">{{item.RecQuantity}}</label></td>
+                                        <td style="width: 12%;" class="col-md">
+                                            <input [disabled]="isFieldDisabled" type="number" [(ngModel)] ="item.ConsumedQuantity"class="form-control form-control-sm" min="1" oninput="this.value =!!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                                [ngClass]="{'invalid': (!item.ConsumedQuantity && !item.DamagedQuantity) && item.checked, 'invalid-highlighted': (item.checked && buttonserviceInventoryClicked && (!item.ConsumedQuantity && !item.DamagedQuantity))}"
+                                                
+                                                >
+                                        </td>
+                                        <td style="width: 12%;" class="col-md">
+                                            <input [disabled]="isFieldDisabled" type="number" [(ngModel)] ="item.DamagedQuantity"class="form-control form-control-sm" min="1" oninput="this.value =!!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                                [ngClass]="{'invalid': (!item.ConsumedQuantity && !item.DamagedQuantity) && item.checked, 'invalid-highlighted': (item.checked && buttonserviceInventoryClicked && (!item.ConsumedQuantity && !item.DamagedQuantity))}">
+                                        </td>
+                                    
+                                        <td style="width: 21%;" class="col-md">
+                                            <input [disabled]="isFieldDisabled" type="text" 
+                                            [ngClass]="{'invalid': !item.Remarks && ((item.DamagedQuantity)||(item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)) && item.checked, 'invalid-highlighted':  (item.checked && buttonserviceInventoryClicked && !item.Remarks && ((item.DamagedQuantity) || (item.ConsumedQuantity + (item.DamagedQuantity||0) > item.RecQuantity)))}"
+                                            [(ngModel)] ="item.Remarks" 
+                                            class="form-control form-control-sm" >
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="!TPItemsList.length">
+                                        <td colspan="6" class="text-center">
+                                            <p class="text-success">
+                                                <strong>Info! </strong> No store item(s) associated...
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noTPItems>
+                <div class="container">
+                    <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="'No inventory associated with this service'"></app-no-record-found>
+                </div>
+            </ng-template>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="visit-docs-area mt-8">
+                        <app-visit-docs [propVisitNo]="VisitID" [editing]="{save:true,select: true, camera: true}"
+                            [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs>
+                    </div>
+                </div>
+                <div class="col-xs-12 mx-0 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="visit-remarks-area  mt-8">
+                        <app-visit-remarks [propVisitNo]="VisitID" [editing]="{save: true}"
+                            [moduleName]="'RIS Services'"></app-visit-remarks>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="modal-footer">
+        <div class="form-check pull-right mt-2 mr-2" style="display: inline;">
+            <input class="form-check-input pointer" type="checkbox" [checked]="true" value="1" [(ngModel)]="printRadioLabel" >
+            <label class="form-check-label pointer" for="anyChild">
+                <strong>Print Radio Label</strong> 
+            </label>
+        </div>
+        <button type="button" [disabled]="disabledButtonInventory"
+            class="btn btn-sm btn-primary pull-right mr-2" mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverConfigInventory.popoverTitle"
+            [popoverMessage]="confirmationPopoverConfigInventory.popoverMessage"
+            [confirmText]="confirmationPopoverConfigInventory.confirmText"
+            [cancelText]="confirmationPopoverConfigInventory.cancelText"
+            [placement]="confirmationPopoverConfigInventory.placements[0]" 
+            (confirm)="insertUpdateVisitTPServiceInventory()" 
+            (cancel)="confirmationPopoverConfigInventory.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverConfigInventory.confirmClicked = false; confirmationPopoverConfigInventory.cancelClicked = false"
+            [appendToBody]="true">
+            <i class="fa fa-save"></i>Process<i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerInventory"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal" style="margin-right: 10px !important;"
+            mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverConfigCloseModal.popoverTitle"
+            [popoverMessage]="confirmationPopoverConfigCloseModal.popoverMessage"
+            [confirmText]="confirmationPopoverConfigCloseModal.confirmText"
+            [cancelText]="confirmationPopoverConfigCloseModal.cancelText"
+            [placement]="confirmationPopoverConfigCloseModal.placements[0]" 
+            (confirm)="closeModal1('processService')"
+            (cancel)="confirmationPopoverConfigCloseModal.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverConfigCloseModal.confirmClicked = false; confirmationPopoverConfigCloseModal.cancelClicked = false"
+            [appendToBody]="true"
+            >
+            <i class="fa fa-times-circle"></i> Close
+        </button>
+    </div>
+</ng-template>
+<!--end:: Service Process Modal-------------------------------------->

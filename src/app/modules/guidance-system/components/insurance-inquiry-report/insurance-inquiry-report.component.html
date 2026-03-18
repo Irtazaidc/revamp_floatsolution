@@ -1,0 +1,275 @@
+<div class="insurance-inquiry-report">
+  <div class="card card-custom">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="card-icon">
+          <i class="fas fa-search text-primary"></i>
+        </span>
+        <h3 class="card-label">
+          FIT Coverage Report
+          <small>Inquiry report for FIT Coverage </small>
+        </h3>
+      </div>
+      <div class="card-toolbar">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            class="btn btn-sm btn-success"
+            (click)="advancedSearch()"
+            ngbTooltip="Advanced Search"
+          >
+            <i class="ti-search"></i>Advanced
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <form
+        [formGroup]="reportInquiryParams"
+        class="form-horizontal"
+        name="form"
+        role="form"
+        (ngSubmit)="getInsuranceInquiryReport()"
+      >
+        <div class="row form-group">
+          <div class="col-md-3">
+            <label>Contact No: <span class="mandatory-asterisk"></span></label>
+            <div class="position-relative">
+              <input
+                minlength="11"
+                (change)="clearFields('Cell')"
+                type="text"
+                (keypress)="allowOnlyNumbers($event)"
+                class="form-control mb-4"
+                name="Cell"
+                formControlName="Cell"
+                (focus)="handleFocus('Cell')"
+                (keydown.enter)="reportInquiryParams.valid && getInsuranceInquiryReport()"
+              />
+              <span class="md-line"></span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label>PIN:</label>
+            <div class="">
+              <input
+                (change)="clearFields('VisitId')"
+                type="text"
+                class="form-control"s
+                (keypress)="allowOnlyNumbers($event)"
+                name="VisitId"
+                formControlName="VisitID"
+                (focus)="handleFocus('VisitID')"
+                (input)="removeHyphens('VisitID')"
+                (keydown.enter)="reportInquiryParams.valid && getInsuranceInquiryReport()"
+              />
+              <span class="md-line"></span>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label>MRN:</label>
+            <div class="">
+              <input
+                type="text"
+                class="form-control"
+                name="MRNo"
+                formControlName="MRNo"
+                mask="A-0-00000"
+                placeholder="D-0-00000"
+                style="text-transform:uppercase"
+                (focus)="handleFocus('MRNo')"
+                (keydown.enter)="reportInquiryParams.valid && getInsuranceInquiryReport()"
+              />
+              <span class="md-line"></span>
+            </div>
+          </div>
+
+          <div
+            class="col-md-3"
+            *ngIf="advancedSearchEnabled"
+            [@fadeInOutTranslate]
+          >
+            <label>CNIC: <span class="mandatory-asterisk"></span></label>
+            <div class="">
+              <input
+                type="text"
+                class="form-control"
+                name="cnic"
+                (keypress)="allowOnlyNumbers($event)"
+                formControlName="CNIC"
+                (focus)="handleFocus('CNIC')"
+                (keydown.enter)="reportInquiryParams.valid && getInsuranceInquiryReport()"
+              />
+              <span class="md-line"></span>
+            </div>
+          </div>
+
+          <div
+            class="col-md-3"
+            *ngIf="advancedSearchEnabled"
+            [@fadeInOutTranslate]
+          >
+            <label>UIC: <span class="mandatory-asterisk"></span></label>
+            <div class="">
+              <input
+                type="text"
+                class="form-control"
+                name="passportNo"
+                (keypress)="allowOnlyNumbers($event)"
+                formControlName="PolicyNo"
+              />
+              <span class="md-line"></span>
+            </div>
+          </div>
+          <div class="col pull-right">
+            <label>&nbsp;</label>
+            <div class="input-group d-flex flex-wrap justify-content-end">
+              <button
+                type="submit"
+                class="btn btn-primary float-right waves-effect"
+              >
+                <i class="ti-search m-0"></i>Search Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Table Section -->
+    <div class="card card-custom">
+      <div class="card-body">
+        <ngx-spinner
+          class="spinner-info"
+          bdColor="rgba(0, 0, 0, 0.8)"
+          size="medium"
+          color="#fff"
+          type="square-loader"
+          [fullScreen]="false"
+        >
+          <p style="color: white">Loading...</p>
+        </ngx-spinner>
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-sm-12">
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="type to filter"
+                class="form-control form-control-sm"
+                [(ngModel)]="searchText"
+              (ngModelChange)="filterSearchResults()"
+                name="searchText"
+              />
+              <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+            ngbTooltip="Export To Excel"
+            (click)="exportAsExcel()"
+          >
+            <i class="fa fa-file-excel"></i>
+          </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <small class="pull-right text-danger">
+              <strong>Total Records: {{ pagination.filteredSearchResults.length }}</strong>
+            </small>
+            <div
+              class="table-responsive table-container fixed-height-table mt-3"
+              style="overflow: auto"
+            >
+              <table class="table table-hover" cellpadding="0" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Patient Name</th>
+                    <th>MR No.</th>
+                    <th>FIT Coverage Status</th>
+                    <th>VisitID</th>
+                    <th>Date</th>
+                    <th>Changed By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+              class="text-center"
+              *ngIf="!reportInquiryList || reportInquiryList == ''"
+            >
+              <td colspan="7">
+                <div class="container-fluid">
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+                  <tr
+                    *ngFor="
+                      let item of pagination.paginatedSearchResults;
+                      let i = index
+                    "
+                  >
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.PatientName }}</td>
+                    <td>{{ item.MRNo }}</td>
+                    <td>{{ item.InsuranceStatus }}</td>
+                    <td>{{ item.VisitID || "-" }}</td>
+                    <td>
+                      {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                    </td>
+                    <td>{{ item.CratedBy }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+              <div class="col-md-6 col-sm-12">
+                <ngb-pagination
+                  [collectionSize]="pagination.collectionSize"
+                  [(page)]="pagination.page"
+                  [pageSize]="pagination.pageSize"
+                  [boundaryLinks]="true"
+                  [maxSize]="5"
+                  [rotate]="true"
+                  (pageChange)="refreshPagination()"
+                >
+                </ngb-pagination>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <select
+                  class="custom-select pull-right"
+                  style="width: auto"
+                  [(ngModel)]="pagination.pageSize"
+                  (ngModelChange)="refreshPagination()"
+                >
+                  <option [ngValue]="5">5 items per page</option>
+                  <option [ngValue]="10">10 items per page</option>
+                  <option [ngValue]="20">20 items per page</option>
+                  <option [ngValue]="50">50 items per page</option>
+                  <option [ngValue]="100">100 items per page</option>
+                </select>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      <ng-template #noRecord>
+        <div
+          class="no-record-message"
+          style="
+            text-align: center;
+            padding: 1rem;
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+          "
+        >
+          <strong>No Record Found</strong>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

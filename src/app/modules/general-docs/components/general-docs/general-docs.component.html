@@ -1,0 +1,59 @@
+
+<div class="documents-page">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <app-card [title]="pageTitle" class="display-relative"
+                [cardClass]="'tim-card tim-card'" [cardHeaderClass]="'card-header-narrow'">
+                
+                <div class="col-12">
+                    <app-visit-docs
+                        [inputDocs]="alreadySavedDocs"
+                        [sectionHead]="heading"
+                        [layout]="'grid'"
+                        [module]="'general-docs'"
+                        [editing]="uploadDocsPerm"
+                        (outputDocs)="getLoadedVisitDocs($event)"
+                    ></app-visit-docs>
+                </div>
+
+                <div class="col-12" *ngIf="screenPermissionsObj.upload">
+                    <button
+                        class="btn btn-primary pull-right mb-3"
+                        title="Save"
+                        mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                        [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]"
+                        (confirm)="saveDocs()"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                        confirmButtonType="primary"
+                        cancelButtonType="outline-secondary"
+                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                        [appendToBody]="true"
+                    > <i class="ti-save"></i>
+                    Save
+                    </button>
+                </div>
+
+                <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.getDocs" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+
+                <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.saveDocs" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+
+            </app-card>
+        </div>
+        
+    </div>
+
+</div>
+
+
+
+

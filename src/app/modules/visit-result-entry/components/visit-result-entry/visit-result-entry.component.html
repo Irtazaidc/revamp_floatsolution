@@ -1,0 +1,374 @@
+<div class="visit-result-entry-page">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <app-card [title]="'Lab Results Entry'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                
+                <div class="visit-result-entry-area">
+                    <!-- <hr> -->
+
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="p-2" style="border: 1px solid #eee;">
+
+                                <form class="" [formGroup]="searchVisitsForm">
+                                    <div class="form-inline">
+
+                                        <ng-select style="width: 100%;"
+                                            class=" mt-1 mr-1"
+                                            [items]="branchesList"
+                                            bindLabel="Title" 
+                                            placeholder="-select branch-"
+                                            bindValue="LocId"
+                                            formControlName="branchIds"
+                                            [multiple]="true"
+                                            [closeOnSelect]="false"
+                                            >
+                                            <!--
+                                                [ngClass]="{'invalid': searchVisitsForm.get('branchIds').errors || searchVisitsForm.get('branchIds').value < 1, 'invalid-highlighted': searchVisitsForm.get('branchIds').errors || searchVisitsForm.get('branchIds').value < 1}"
+                                                required
+                                            -->
+
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.Title}}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template ng-header-tmp>
+                                                <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary" type="button"><i class="ti-check"></i> Select all</button>
+                                                <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect all</button>
+                                            </ng-template>
+                                        </ng-select>
+
+                                        <input
+                                            #dFrom
+                                            type="text"
+                                            class="form-control mt-1 mr-1"
+                                            (click)="dFrom_date.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            name="dFrom"
+                                            ngbDatepicker
+                                            #dFrom_date="ngbDatepicker"
+                                            formControlName="fromDate"
+                                            [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                            required>
+                                            <!-- [(ngModel)]="fromDate" -->
+
+                                        <input
+                                            #dTo
+                                            type="text"
+                                            class="form-control mt-1 mr-1"
+                                            (click)="dTo_date.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            name="dTo"
+                                            ngbDatepicker
+                                            #dTo_date="ngbDatepicker"
+                                            formControlName="toDate"
+                                            [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                            required>
+                                            <!-- [(ngModel)]="toDate" -->
+
+                                        <select
+                                            class="form-control mt-1 mr-1"
+                                            formControlName="statusId"
+                                            > <!-- (change)="testStatusFilter()" -->
+                                            <option [value]="0">All Status</option>
+                                            <option *ngFor="let item of testStatusList" [value]="item.StatusId">{{item.Title}}</option>
+                                        </select>
+    
+                                        <button class="btn btn-sm btn-outline-primary mt-1" type="button" title="Fetch Record(s)" (click)="getVisitsForResultEntry()"><i class="ti-search"></i></button>
+                                    </div>
+    
+                                    <div class="">
+                                        <hr>
+                                        <input type="text" class="form-control" placeholder="type to filter" [ngModelOptions]="{standalone: true}" [(ngModel)]="pinFilterString" (keyup)="onKeyUpPinFilter($event)" />
+                                    </div>     
+                                </form>
+
+                                <!-- <label style="width: 100%;">PIN <button class="btn btn-sm btn-outline-primary pull-right" title="Fetch Record(s)" (click)="getVisitsForResultEntry()"><i class="ti-search"></i></button></label> -->
+
+                                <div style="border-top: 1px solid #eee; max-height: 350px; overflow-y: auto;" class="mt-2 pl-2">
+                                    <label><small>Total Records: <strong>{{visitsList.length}}</strong></small></label>
+                                    <ul>
+                                        <li
+                                        [ngClass]="{'bg-light': selectedVisit.VisitId == visit.VisitId}"
+                                        *ngFor="let visit of visitsList | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                        style="border-bottom: 1px solid #eee;"
+                                        >
+                                            <a
+                                            href="javascript:void(0)"
+                                            [ngClass]="{'font-weight-bold': selectedVisit.VisitId == visit.VisitId}"
+                                            (click)="visitSelectedEvent(visit)"
+                                            >{{visit.PIN}}</a>
+                                            <!-- <small class="float-right text-muted">({{visit.StatusTitle}})</small> -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col visit-results-area">
+                            <div class="p-2" style="border: 1px solid #eee;">
+                                <div class="header">
+
+                                    <div class="patient0-info-bar-container" style="position: relative;">
+                                        <app-patient-basic-info class="mb-3 bg-light" [PatientData]="patientBasicInfo"></app-patient-basic-info>
+
+                                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.patientInfoBar" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                            <p style="color: white"> Loading... </p>
+                                        </ngx-spinner>
+                                    </div>
+  
+                                    
+                                    <h5>Results  (PIN <strong class="text-primary">{{selectedVisit.PIN}}</strong>)</h5>
+                                    <hr />
+                                    
+                                </div>
+
+                                <div class="body" style="position: relative;">
+                                    <div class="table-responsive">
+                                        <table class="table test-results-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="10px"> <input type="checkbox" class="" (change)="selectAllTestResults($event)" /> </th>
+                                                    <th>Test</th>
+                                                    <th>Result</th>
+                                                    <th width="10px">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let tp of visitTestsList">
+                                                    <td> 
+                                                        <input
+                                                        type="checkbox"
+                                                        class=""
+                                                        [(ngModel)]="tp.checked"
+                                                        disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
+                                                         />
+                                                         
+                                                        </td>
+    
+                                                    <td><label class="m-0">{{tp.TestCode}} - {{tp.TestName}}</label></td>
+                                                    <td>
+                                                        <!-- <label class="m-0">{{tp.TestCode}} - {{tp.TestName}}</label> -->
+    
+                                                            <div>
+                                                                <ng-container [ngSwitch]="tp.TPID">
+                                                                    <ng-container *ngSwitchCase="2153">
+                                                                        <select
+                                                                            #res
+                                                                            style="min-width: max-content;"
+                                                                            [(ngModel)]="tp.Result" 
+                                                                            class="form-control form-control-sm"
+                                                                            (change)="resultChangedEvent(tp, $event, res.value)"
+                                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                                            required
+                                                                            disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
+                                                                            >
+                                                                            <option [value]="''">--select--</option>
+                                                                            <option *ngFor="let res of testResults_pcr" [value]="res.id">{{res.name}}</option>
+                                                                        </select>
+                                                                    </ng-container>
+                                                                    <ng-container *ngSwitchCase="2233">
+                                                                        <select
+                                                                            #res
+                                                                            style="min-width: max-content;"
+                                                                            [(ngModel)]="tp.Result" 
+                                                                            class="form-control form-control-sm"
+                                                                            (change)="resultChangedEvent(tp, $event, res.value)"
+                                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                                            required
+                                                                            disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
+                                                                            >
+                                                                            <option [value]="''">--select--</option>
+                                                                            <option *ngFor="let res of testResults_pcr" [value]="res.id">{{res.name}}</option>
+                                                                        </select>
+                                                                    </ng-container>
+                                                                    <ng-container *ngSwitchCase="2177">
+                                                                        <select
+                                                                            #res
+                                                                            style="min-width: max-content;"
+                                                                            [(ngModel)]="tp.Result" 
+                                                                            class="form-control form-control-sm"
+                                                                            (change)="resultChangedEvent(tp, $event, res.value)"
+                                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                                            required
+                                                                            disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
+                                                                            >
+                                                                            <option [value]="''">--select--</option>
+                                                                            <option *ngFor="let res of testResults" [value]="res.id">{{res.name}}</option>
+                                                                        </select>
+                                                                    </ng-container>
+                                                                    <ng-container *ngSwitchDefault>
+                                                                        <input type="text" class="form-control form-control-sm" [value]="tp.Result" />
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </div>
+                                                            
+            
+                                                    </td>
+                                                    <td>{{tp.StatusTitle}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.visitResults" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+
+                                    <!-- <div *ngFor="let tp of visitTestsList">
+                                        <div class="col">
+                                            <label style="width: 100%;">{{tp.TestCode}} - {{tp.TestName}}  <span class="float-right text-primary">({{tp.StatusTitle}})</span></label>
+                                            <div class="input-group form-inline">
+                                                
+                                                <ng-container [ngSwitch]="tp.TPID">
+                                                    <ng-container *ngSwitchCase="2153">
+                                                        <select
+                                                            #res
+                                                            [(ngModel)]="tp.Result" 
+                                                            class="form-control form-control-sm"
+                                                            (change)="resultChangedEvent(tp, $event, res.value)"
+                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                            required
+                                                            disabled="{{tp.StatusId > 8}}"
+                                                            >
+                                                            <option [value]="''">--select--</option>
+                                                            <option *ngFor="let res of testResults" [value]="res.id">{{res.name}}</option>
+                                                        </select>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchCase="2177">
+                                                        <select
+                                                            #res
+                                                            [(ngModel)]="tp.Result" 
+                                                            class="form-control form-control-sm"
+                                                            (change)="resultChangedEvent(tp, $event, res.value)"
+                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                            required
+                                                            disabled="{{tp.StatusId > 8}}"
+                                                            >
+                                                            <option [value]="''">--select--</option>
+                                                            <option *ngFor="let res of testResults_pcr" [value]="res.id">{{res.name}}</option>
+                                                        </select>
+                                                    </ng-container>
+                                                    <ng-container *ngSwitchDefault>
+                                                        <input type="text" class="form-control form-control-sm" [value]="tp.Result" />
+                                                    </ng-container>
+                                                </ng-container>
+
+                                                <input type="checkbox" class="m-2" />
+
+                                            </div>
+                                        </div>     
+                                    </div> -->
+
+                                </div>
+
+                                <div class="row">
+                                    <!-- <pre>{{visitTestsList | json}}</pre> -->
+                                    <div class="col-12" *ngIf="visitTestsList && visitTestsList.length">
+                                        <hr>
+                                        <span class="pull-right" *ngIf="screenPermissionsObj.update_results">
+                                            <ng-container *ngIf="visitTestsList[0].StatusId <= 8; then saveResultBtn else saveResultBtnDummy"></ng-container>
+                                            <ng-template #saveResultBtn>
+                                                <button
+                                                class="btn btn-primary btn-sm waves-effect text-center"
+                                                title="Save Result"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="saveVisitTestResults()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary"
+                                                cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true"
+                                                > <i class="ti-save"></i>
+                                                Save Result
+                                                </button>
+                                            </ng-template>
+                                            <ng-template #saveResultBtnDummy>
+                                                <button class="btn btn-outline-primary btn-sm btn-disabled" disabled> <i class="ti-save"></i>Save Result</button>
+                                            </ng-template>
+                                        </span>
+                                        <span class="mx-1 pull-right" *ngIf="screenPermissionsObj.final_results">
+                                            <ng-container *ngIf="visitTestsList[0].StatusId == 8; then finalResultBtn else finalResultBtnDummy"></ng-container>
+                                            <ng-template #finalResultBtn>
+                                                <button
+                                                class="btn btn-primary btn-sm waves-effect text-center"
+                                                title="Final Result"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="saveFinalResult()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary"
+                                                cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true"
+                                                > <i class="ti-save"></i>
+                                                Final
+                                                </button>
+                                            </ng-template>
+                                            <ng-template #finalResultBtnDummy>
+                                                <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i class="ti-save"></i>Final</button>
+                                            </ng-template>
+                                        </span>
+                                        <span class="mx-1 pull-right" *ngIf="screenPermissionsObj.open_report">
+                                            <ng-container *ngIf="visitTestsList[0].StatusId >= 8; then printReportBtn else printReportBtnDummy"></ng-container>
+                                            <ng-template #printReportBtn>
+                                                <!-- <button
+                                                class="btn btn-primary btn-sm waves-effect text-center"
+                                                title="Print Report"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="openReport()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary"
+                                                cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true"
+                                                > <i class="ti-save"></i>
+                                                Print Report
+                                                </button> -->
+                                                <button class="btn btn-primary btn-sm waves-effect text-center" (click)="openReport()"> <i class="ti-printer"></i>Report</button>
+
+                                            </ng-template>
+                                            <ng-template #printReportBtnDummy>
+                                                <button class="btn btn-outline-primary btn-sm btn-disabled"  disabled> <i class="ti-printer"></i>Report</button>
+                                            </ng-template>
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+           
+
+                </div>
+
+            </app-card>
+        </div>
+    </div>
+
+</div>
+

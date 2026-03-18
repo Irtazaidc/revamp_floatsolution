@@ -1,0 +1,39 @@
+.patient-basic-info-container {
+    margin: 5px;
+    padding: 5px 0;
+    border: 1px solid #eee;
+    background-color: #F3F6F9;
+
+    img.patient-img {
+        width: 90px;
+        height: 90px;
+        border: 1px solid #999;
+        padding: 7px;
+        margin-left: 6px;
+    }
+    
+}
+
+.info-area {
+  align-content: space-evenly;
+
+  label {
+      margin-bottom: 0;
+      align-self: center;
+
+      .lable-name {
+      }
+      .label-value {
+          font-size: 1rem;
+      }
+  }    
+}
+
+.tp-name{
+  padding: 5px 0px;
+  color: #fff;
+  border-radius: 4px;
+  background-image: linear-gradient(90deg, #186f9a, #2b7acc, #168a9c, #169e97);
+  margin-left: -5px;
+  margin-top: 6px;
+}

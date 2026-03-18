@@ -1,0 +1,100 @@
+<div  class="d-flex mt-1">
+    <ng-container *ngIf="empList then employeeData else EmployeeNotFoundSpace">
+    </ng-container>
+    <ng-template #employeeData>
+          <!--begin: Pic-->
+    <div class="flex-shrink-0 mr-4 mt-lg-0 mt-3">
+        <div class="symbol symbol-50 symbol-lg-100">
+            <img [src]="empUserPicture || defaultPatientPic" alt="Employee Pic" />
+            <i class="symbol-badge bg-success"></i>
+            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" style="
+                z-index: 99999;
+                position: absolute;
+                opacity: 1;
+                top: 8px;
+                left: 4px;
+                width: 95px;
+                height: 95px;" [name]="spinnerRefs.empPic" size="small" color="#fff" type="square-loader"
+              [fullScreen]="false">
+              <p style="color: white; margin-top: 48px;"> Loading... </p>
+            </ngx-spinner>
+        </div>
+    </div>
+    <!--end::Pic-->
+    <!--begin::Info-->
+    <div class="flex-grow-1">
+        <!--begin::Title-->
+        <div class="d-flex justify-content-between flex-wrap mt-1">
+            <div class="d-flex flex-wrap mr-3 align-items-center">
+                <span
+                    class="text-dark-75 text-hover-danger font-size-h5 font-weight-bolder mr-3 cursor-pointer">{{empList.EmployeeName||
+                    ''}}
+                    <span class="text-danger d-block d-sm-inline">
+                        (<span ngbTooltip="EMPID" placement="right">{{empList.EmployeeNubmer || '-'}}</span>)
+                    </span>
+                </span>
+                <!-- <a href="#">
+                <i class="flaticon2-correct text-success font-size-h5"></i>
+              </a> -->
+            </div>
+
+            <!-- <span class="text-primary mr-lg-8 mr-5 mb-lg-0 mb-2 text-end ">
+                
+                 <i class="fa fa-motorcycle" aria-hidden="true"></i>
+            </span> -->
+
+        </div>
+        <!--end::Title-->
+        <!--begin::Content-->
+        <div class="d-flex flex-wrap justify-content-between mt-1">
+            <div class="d-flex flex-column flex-grow-1 pr-8 ">
+                <div class="d-flex flex-wrap mb-2">
+                    <!-- <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">{{convertDate(DateOfBirth)}} / {{  Age || ''}}</span> -->
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger fas fa-star mr-2 font-size-lg"></i> 
+                        {{empList.Designation || ''}}, {{empList.DepartmentName || ''}}
+                    </span>
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger far fa-address-card mr-2 font-size-lg"></i> {{empList.CNIC || ''}}
+                    </span>
+                    <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-phone mr-2 font-size-lg"></i> {{empList.EmployeeContactNumber||
+                        ''}}</span>
+                    <!-- <span class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger flaticon2-user mr-2 font-size-lg"></i> {{empList.RiderStatusID == 1 ?
+                        "Online" :
+                        "Offline"}}
+                    </span> -->
+                    <span *ngIf="empList.EmployeeLocation" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger fas fa-building mr-2 font-size-lg"></i> {{empList.EmployeeLocation }}
+                    </span>
+
+                    <!-- <span *ngIf="  VisitPatientType &&   VisitPatientType!=''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="Patient Type" class="text-primary flaticon-user mr-2 font-size-lg"></i>{{  VisitPatientType}}</span>
+
+                    <span *ngIf="  VisitRefBy &&   VisitRefBy !=''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="RefBy Doctor" class="text-primary fa fa-user-md mr-2 font-size-lg"></i>{{  VisitRefBy}}</span>
+
+                    <span *ngIf="  VisitPanelName && patientData.VisitPanelName != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i ngbTooltip="Visit Panel" class="text-primary flaticon-network mr-2 font-size-lg"></i>{{  VisitPanelName}}</span> -->
+                    <span *ngIf="empList.EmployeeContactEmail != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                        <i class="text-danger fa fa-envelope mr-2 font-size-md"></i> {{empList.EmployeeContactEmail || 'NA'}}
+                    </span>
+                </div>
+                <span *ngIf="empList.PostalAddress != ''" class="text-dark-75 font-size-lg"><i ngbTooltip="Location"  class="cursor-pointer text-danger fa fa-map-marker mr-2 font-size-lg "></i> {{  empList.PostalAddress || ''}}</span>
+            </div>
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Info-->
+<!--end::Details-->
+<!-- <div class="separator separator-solid"></div> -->
+<!--begin::Items-->
+    </ng-template>
+    <ng-template #EmployeeNotFoundSpace>
+     <div class="mt-10 container d-flex align-items-center justify-content-center">
+            <h1>No Record Found</h1>
+     </div>
+    </ng-template>
+</div>
+

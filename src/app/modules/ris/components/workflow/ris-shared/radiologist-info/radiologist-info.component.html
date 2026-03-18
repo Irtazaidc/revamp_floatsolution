@@ -1,0 +1,63 @@
+<div class="col-12">
+    <div class="row radiologist-basic-info-container"> 
+        <div class="pic-area">
+            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" 
+            style="
+            position: absolute;
+            opacity: 1;
+            top: 11px;
+            left: 30px;
+            width: 81px;
+            height: 81px;"
+                [name]="spinnerRefs.drPic" size="small" color="#fff"
+                type="square-loader" [fullScreen]="false">
+                <p style="color: white; margin-top: 48px;"> Loading... </p>
+            </ngx-spinner>
+            <img class="radiologist-img" [src]="radiologistPic || defaultPatientPic" alt="Doctors Pic"/>
+        </div>
+        <div class="row col-sm info-area">
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <label>
+                    <span class="label-name">Name: </span>
+                    <br>
+                    <strong class="label-value">{{radoiologistRow.FullName}}</strong>
+                </label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <label>
+                    <span class="label-name">ID: </span>
+                    <br>
+                    <strong class="label-value">{{radoiologistRow.EmpNoWithPrefix}}</strong>
+                </label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <label>
+                    <span class="label-name">Department: </span>
+                    <br>
+                    <strong class="label-value">{{radoiologistRow.Department}}</strong>
+                </label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <label>
+                    <span class="label-name">Designation: </span>
+                    <br>
+                    <strong class="label-value">{{radoiologistRow.Designation}}</strong> 
+                </label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <label>
+                    <span class="label-name">Location: </span>
+                    <br>
+                    <strong class="label-value">{{radoiologistRow.LocationFromIorgLoc}}</strong> 
+                </label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <label>
+                    <span class="label-name">Emp Status/Guaranteed Income: </span>
+                    <br>
+                    <strong class="label-value">{{radoiologistRow.EmploymentStatus}}/{{radoiologistRow.SharingGuaranteedIncome}}</strong>
+                </label>
+            </div> 
+        </div>
+    </div>
+</div>

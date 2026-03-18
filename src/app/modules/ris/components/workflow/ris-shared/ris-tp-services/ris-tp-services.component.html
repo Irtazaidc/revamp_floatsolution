@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-12" *ngIf="RISServices.length">
+        <table class="table">
+            <tbody>
+                <tr *ngFor="let srv of RISServices">
+                    <td  style="width: 90%;" class="col-md">{{ srv.TPCode }}-{{srv.TPName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12" *ngIf="!RISServices.length">
+        <strong>No service detail found</strong>
+    </div>
+</div>

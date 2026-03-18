@@ -1,0 +1,460 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fas fa-search text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                My Share
+                <small>Generate Share Slip and Ledger</small>
+            </h3>
+        </div>
+    </div>
+    <div class="card-body pb-4">
+        <div class="row" *ngIf="(isPINGenerated && isPINAuthinticated)||!isPINGenerated">
+            <div class="col-12">
+                <form [formGroup]="searchSlipForm" class="form-horizontal" name="form" role="form">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <label class="control-label">Date From:</label>
+                            <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                                ngbDatepicker value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                                class="form-control mb-4" type="text" value=""
+                                [ngClass]="{'invalid': searchSlipForm.get('dateFrom').errors , 'invalid-highlighted': searchSlipForm.get('dateFrom').errors && isSubmitted }" />
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <label class="control-label">Date To:</label>
+                            <input (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker"
+                                ngbDatepicker formControlName="dateTo" class="form-control mb-4" name="dateTo"
+                                type="text" value=""
+                                [ngClass]="{'invalid': searchSlipForm.get('dateTo').errors , 'invalid-highlighted': searchSlipForm.get('dateTo').errors && isSubmitted }" />
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3" *ngIf="AdminAccessPermission">
+                            <label class="">Radiologist:</label>
+                            <ng-select style="width: 100%;" class="mr-1" [items]="radoiologistList" bindLabel="DocLabel"
+                                formControlName="doctorID" placeholder="-Please Select Radiologist-" [searchFn]="customSearch"
+                                [ngClass]="{'invalid': searchSlipForm.get('doctorID').errors , 'invalid-highlighted': searchSlipForm.get('doctorID').errors && isSubmitted }"
+                                bindValue="UserId">
+                                
+                                <!-- EmpId -->
+                            </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <label class="">Section:</label>
+                            <ng-select style="width: 100%;" class="mr-1" [items]="subSectionList" bindLabel="SubSectionTitle"
+                                formControlName="subSectionId" placeholder="Please select section"
+                                [ngClass]="{'invalid': searchSlipForm.get('subSectionId').errors , 'invalid-highlighted': searchSlipForm.get('subSectionId').errors && isSubmitted }"
+                                bindValue="SubSectionId">
+                            </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <div class="form-group">
+                            <label for="labDeptID">Share Type:</label>
+                            <select class="form-control" name="labDeptID" placeholder="--Select Type--" 
+                            [(ngModel)]="TypeID" [ngModelOptions]="{standalone: true}">
+                            <option value="-1">Select All</option>
+                            <option value="1">Reported By</option>
+                            <option value="2">DS By</option>              
+                            </select>
+                             </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <label class="">Report Type:</label>
+                            <div class="form-group mt-2">
+                                <mat-radio-group aria-label="Select an option" [(ngModel)]="reportType"
+                                    (ngModelChange)="onChange($event)" [ngModelOptions]="{standalone: true}">
+                                    <mat-radio-button value="1">Summary</mat-radio-button>
+                                    <mat-radio-button value="2" class="ml-2">Detail</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div class="mt-8 col-sm-12 col-md-12 col-lg-4 col-xl-2">
+                            <button (click)="searchDataList()" class="btn btn-primary" type="button"><i
+                                    aria-hidden="true" class="fa fa-search"></i>Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body ">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.searchTable" bdColor="rgba(0,0,0,0.8)"
+            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <!-- <div class="row" *ngIf="false">
+            <div class="col sm-12 col-md-12 col-lg-6 col-xl-6 offset-lg-6 offset-xl-6">
+                <div class="input-group">
+                    <input type="text" placeholder="Type to filter" class="form-control form-control-sm"
+                        [(ngModel)]="searchTextShareSummary" name="searchTextShareSummary" />
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="row" *ngIf="DoctorShareDetalList?.length">
+            <div class="col sm-12 col-md-12 col-lg-6 col-xl-6 offset-lg-6 offset-xl-6">
+                <div class="input-group">
+                    <input type="text" placeholder="Type to filter" class="form-control form-control-sm"
+                        [(ngModel)]="searchTextShareDetail" (keyup)="filterResults()" name="searchTextShareDetail" />
+                </div>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col-md-12">
+                <ngx-spinner class="spinner-warning" [name]="spinnerRefs?.searchTable" bdColor="rgba(0,0,0,0.8)"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+                </ngx-spinner>
+                <div class="container-fluid" *ngIf="ifDetail">
+                <div class="table-responsive table-container fixed-height-table table-scroll">
+                    <table class="table table-hover compact table-bordered" style="width: 100%; min-height: 100px;" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <ng-container *ngIf="groupedSections?.length; else noRecord">
+                        <ng-container *ngFor="let section of groupedSections; let sIndex = index">
+                            <!-- SECTION TITLE -->
+                           <tr class="section-row sticky-header">
+                                <td colspan="8">
+                                    <div class="section-title">
+                                    Section:
+                                    <span>{{ section.SubSectionTitle }}</span>
+                                    </div>
+                                </td>
+                                </tr>
+                            <!-- SECTION COLUMN HEADER -->
+                            <tr class="bg-secondary sticky-header" >
+                                <th>Sr#</th>
+                                <th>PIN</th>
+                                <th>Patient Name</th>
+                                <th>Test</th>
+                                <th>Price</th>
+                                <th>INIT</th>
+                                <th>DS</th>
+                                <th>Total</th>
+                            </tr>
+                            <!-- SECTION ROWS -->
+                            <tr *ngFor="let row of section.rows; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ row.PIN }}</td>
+                                <td>{{ row.PatientName }}</td>
+                                <td>{{ row.TPName }}</td>
+                                <td>{{ row.Price | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                                 <td class="section-cell">
+                                        <span class="section-name">{{ row['Reported By'] | currency:'Rs.':'symbol':'1.0-0' }}</span>
+                                        <span class="case-count">{{ (row['Reported By Date'] | date: 'dd MMM, yyyy') || '-' }}</span>
+                                </td>
+                                 <td class="section-cell">
+                                        <span class="section-name">{{ row['DS By'] | currency:'Rs.':'symbol':'1.0-0' }}</span>
+                                        <span class="case-count">{{ (row['DS By Date'] | date: 'dd MMM, yyyy') || '-' }}</span>
+                                </td>
+                                <td>{{ row.TotalShare | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                            </tr>
+                            <!-- SECTION TOTAL -->
+                            <tr class="bg-gray-200 font-weight-bold">
+                                <td colspan="4" class="text-right">
+                                Total for {{ section.SubSectionTitle }}:
+                                </td>
+                                <td></td>
+                                <td>{{ section.totalReportedBy | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                                <td>{{ section.totalDSBy | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                                <td>{{ section.totalGrandTotal | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                            </tr>
+
+
+                        </ng-container>
+                            <!-- OVERALL GRAND TOTAL -->
+                           <tr class="grand-total-row">
+                            <td colspan="4" class="text-end">
+                                <span class="grand-label">Grand Total</span>
+                            </td>
+                            <td></td>
+                            <td>{{ overallGrandTotal.reportedBy | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                            <td>{{ overallGrandTotal.dsBy | currency:'Rs.':'symbol':'1.0-0' }}</td>
+                            <td class="grand-amount">
+                                {{ overallGrandTotal.grandTotal | currency:'Rs.':'symbol':'1.0-0' }}
+                            </td>
+                            </tr>
+                         </ng-container> 
+                         </tbody>
+                         <ng-template #noRecord>
+                                    <tr class="text-center">
+                                    <td colspan="10" class="text-muted py-3">
+                                        No Record Found
+                                    </td>
+                                    </tr>
+                                </ng-template>
+                        </table>
+                </div>
+
+                 <div class="row mt-3">
+                       <div class="col-lg-6 col-md-6 col-sm-12">
+                        <fieldset class="share-summary-card">
+                            <legend class="share-summary-title">
+                            Share Summary
+                            </legend>
+
+                            <div class="table-responsive" style="max-height:250px">
+                            <table class="table compact share-summary-table">
+                                <thead>
+                                <tr class="section-row sticky-header">
+                                    <th>Section</th>
+                                    <th class="text-end">Visits</th>
+                                    <th class="text-end">Tests</th>
+                                    <th class="text-end">INIT</th>
+                                    <th class="text-end">DS</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <ng-container *ngIf="DoctorShareDetalSummaryList?.length; else noRecord">
+                                    <tr *ngFor="let data of DoctorShareDetalSummaryList">
+
+                                    <td class="section-cell">
+                                        <span class="section-name">{{ data.SubSectionTitle }}</span>
+                                        <span class="case-count">× {{ data.TotalRows }}</span>
+                                    </td>
+                                    <td >
+                                        <span class="section-name">{{ data.TotalDistinctVisits }}</span>
+                                    </td>
+                                    <td >
+                                        <span class="text-end">{{ data.TotalDistinctTests }}</span>
+                                    </td>
+                                    <td ><span class="text-end">{{ data['Reported By'] | currency:'Rs.':'symbol':'1.0-0'  }}</span></td>
+                                    <td ><span class="text-end">{{ data['DS By'] | currency:'Rs.':'symbol':'1.0-0'  }}</span></td>
+                                    <td class="text-end section-total">
+                                        {{ data.GrandTotal | currency:'Rs.':'symbol':'1.0-0' }}
+                                    </td>
+                                    </tr>
+                                </ng-container>
+
+                                <ng-template #noRecord>
+                                    <tr class="text-center">
+                                    <td colspan="6" class="text-muted py-3">
+                                        No Record Found
+                                    </td>
+                                    </tr>
+                                </ng-template>
+                                </tbody>
+                            </table>
+                            </div>
+                        </fieldset>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                        <fieldset class="share-summary-card">
+                            <legend class="share-summary-title">
+                            Share Summary By Section And Date
+                            </legend>
+
+                            <div class="table-responsive" style="max-height:250px">
+                            <table class="table compact share-summary-table">
+                                <thead>
+                                <tr class="section-row sticky-header">
+                                    <th>Section</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Visits</th>
+                                    <th class="text-end">INIT</th>
+                                    <th class="text-end">DS</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <ng-container *ngIf="DoctorShareDetalSummaryBySectionAndDate?.length; else noRecord">
+                                    <tr *ngFor="let data of DoctorShareDetalSummaryBySectionAndDate">
+
+                                    <td class="section-cell">
+                                        <span class="section-name">{{ data.SubSectionTitle }}</span>
+                                        <span class="case-count">× {{ data.TotalRows }}</span>
+                                    </td>
+                                    <td class="section-cell">
+                                        <span class="section-name">{{ data.ShareDate | date: 'dd MMM, yyyy'}}</span>
+                                    </td>
+                                    <td >
+                                        <span class="section-name">{{ data.TotalVisits }}</span>
+                                    </td>
+
+                                    <td ><span class="text-end">{{ data['Reported By'] | currency:'Rs.':'symbol':'1.0-0' }}</span></td>
+                                    <td ><span class="text-end">{{ data['DS By'] | currency:'Rs.':'symbol':'1.0-0'  }}</span></td>
+                                    <td class="text-end section-total">
+                                        {{ data.GrandTotal | currency:'Rs.':'symbol':'1.0-0' }}
+                                    </td>
+                                    </tr>
+                                </ng-container>
+
+                                <ng-template #noRecord>
+                                    <tr class="text-center">
+                                    <td colspan="6" class="text-muted py-3">
+                                        No Record Found
+                                    </td>
+                                    </tr>
+                                </ng-template>
+                                </tbody>
+                            </table>
+                            </div>
+                        </fieldset>
+                        </div>
+
+                         <div class="col-lg-6 col-md-6 col-sm-12">
+                        <fieldset class="share-summary-card">
+                            <legend class="share-summary-title">
+                            Share Summary By Section Wise Percentage
+                            </legend>
+
+                            <div class="table-responsive" style="max-height:250px">
+                            <table class="table compact share-summary-table">
+                                <thead>
+                                <tr class="section-row sticky-header">
+                                    <th>Section</th>
+                                    <th class="text-end">INIT</th>
+                                    <th class="text-end">DS</th>
+                                    <th class="text-end">INIT %</th>
+                                    <th class="text-end">DS %</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <ng-container *ngIf="DoctorShareDetalSummaryBySectionPercent?.length; else noRecord">
+                                    <tr *ngFor="let data of DoctorShareDetalSummaryBySectionPercent">
+                                    <td class="section-cell">
+                                        <span class="section-name">{{ data.SubSectionTitle }}</span></td>
+                                    <td ><span class="text-end">{{ data['Reported By'] | currency:'Rs.':'symbol':'1.0-0' }}</span></td>
+                                    <td ><span class="text-end">{{ data['DS By'] | currency:'Rs.':'symbol':'1.0-0' }}</span></td>
+                                    <td ><span class="text-end">{{ data['Reported By %']}}</span></td>
+                                    <td ><span class="text-end">{{ data['DS By %']}}</span></td>
+                                    <td class="text-end section-total">
+                                        {{ data.GrandTotal | currency:'Rs.':'symbol':'1.0-0' }}
+                                    </td>
+                                    </tr>
+                                </ng-container>
+
+                                <ng-template #noRecord>
+                                    <tr class="text-center">
+                                    <td colspan="6" class="text-muted py-3">
+                                        No Record Found
+                                    </td>
+                                    </tr>
+                                </ng-template>
+                                </tbody>
+                            </table>
+                            </div>
+                        </fieldset>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                        <fieldset class="share-summary-card">
+                            <legend class="share-summary-title">
+                            Share Summary By Date Wise Percentage
+                            </legend>
+                            <div class="table-responsive" style="max-height:250px">
+                            <table class="table share-summary-table">
+                                <thead>
+                                <tr class="section-row sticky-header">
+                                    <th>Share Date</th>
+                                    <th class="text-end">INIT</th>
+                                    <th class="text-end">DS</th>
+                                    <th class="text-end">INIT %</th>
+                                    <th class="text-end">DS %</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <ng-container *ngIf="DoctorShareDetalSummaryByDatePercent?.length; else noRecord">
+                                    <tr *ngFor="let data of DoctorShareDetalSummaryByDatePercent">
+                                    <td class="section-cell">
+                                        <span class="section-name">{{ data.ShareDate | date: 'dd MMM, yyyy' }}</span></td>
+                                    <td ><span class="text-end">{{ data['Reported By'] | currency:'Rs.':'symbol':'1.0-0' }}</span></td>
+                                    <td ><span class="text-end">{{ data['DS By'] | currency:'Rs.':'symbol':'1.0-0' }}</span></td>
+                                    <td ><span class="text-end">{{ data['Reported By %']}}</span></td>
+                                    <td ><span class="text-end">{{ data['DS By %']}}</span></td>
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noRecord>
+                                    <tr class="text-center">
+                                    <td colspan="5" class="text-muted py-3">
+                                        No Record Found
+                                    </td>
+                                    </tr>
+                                </ng-template>
+                                </tbody>
+                            </table>
+                            </div>
+                        </fieldset>
+                        </div>
+                 </div> 
+
+                </div>
+                <!-- Summary Report -->
+                <div class="table-responsive table-container fixed-height-table" *ngIf="ifSummary">
+                    <table class="table table-hover compact table-bordered" style="width: 100%; min-height: 100px;" cellpadding="0" cellspacing="0">
+                        <thead class="sticky-header">
+                            <tr>
+                            <th>Date</th>
+                            <th *ngFor="let section of uniqueSubSections">{{ section }}</th>
+                            <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!groupedDataByDate?.length" class="text-center">
+                            <td [attr.colspan]="uniqueSubSections?.length + 2">No Record Found</td>
+                            </tr>
+                            <tr *ngFor="let row of groupedDataByDate">
+                            <td>{{ row.ShareDate | date: 'dd MMM, yyyy' }}</td>
+                            <td *ngFor="let section of uniqueSubSections">
+                                <div>DS By: {{ row[section]?.dsBy || 0 }}</div>
+                                <div>Reported By: {{ row[section]?.reportedBy || 0 }}</div>
+                            </td>
+                            <td>{{ calculateRowTotal(row) }}</td>
+                            </tr>
+                            <tr class="font-weight-bold bg-dark text-white">
+                            <td>Total</td>
+                            <td *ngFor="let section of uniqueSubSections">
+                                <div>DS By: {{ calculateColumnTotal(section, 'dsBy') }}</div>
+                                <div>Reported By: {{ calculateColumnTotal(section, 'reportedBy') }}</div>
+                            </td>
+                            <td>{{ calculateGrandTotal() }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive table-container fixed-height-table" *ngIf="ifDetail">
+                    <table class="table table-hover compact table-bordered" style="width: 100%; min-height: 100px;" cellpadding="0" cellspacing="0">
+                        <thead class="sticky-header">
+                            <tr>
+                                <th>PIN</th>
+                                <th>TPCode</th>
+                                <th>Price</th>
+                                <th>DocSharePercent</th>
+                                <th>DocShareAmount</th>
+                                <th>RISShareType</th>
+                                <th>ShareDate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center" *ngIf="!DoctorShareDetalList.length">
+                                <td colspan="7">No Record Found</td>
+                            </tr>
+                            
+                            <tr *ngFor="let data of DoctorShareDetalList | filterByKey: searchTextShareDetail:['PIN','TPCode','RISShareType']; let i = index">
+                                
+                                <td>{{ data.PIN || '-' }}</td>
+                                <td>{{ data.TPCode || '-' }}</td>
+                                <td>{{ data.Price || '-' }}</td>
+                                <td>{{ data.DocSharePercent || '-' }}</td>
+                                <td>{{ data.DocShareAmount || '-' }}</td>
+                                <td>{{ data.RISShareType || '-' }}</td>
+                                <td>{{ data.ShareDate | date: 'dd MMM, yyyy hh:mm:ss a' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>                
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+</div>

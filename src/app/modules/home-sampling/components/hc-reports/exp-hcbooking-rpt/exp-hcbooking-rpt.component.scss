@@ -1,0 +1,38 @@
+.table-container {
+  max-height: 600px;
+  overflow-y: scroll;
+//   overflow-x: hidden;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        th {
+          position: sticky;
+          top: 0;
+          background-color: rgb(218, 213, 213); // Or use your theme color
+          border-bottom: 1px solid #777;
+          z-index: 2;
+        }
+      }
+    }
+  }
+}
+
+
+/* Add to your component's CSS file */
+
+th {
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 10;
+}
+
+td {
+  padding: 8px 12px !important;
+  vertical-align: middle !important;
+}

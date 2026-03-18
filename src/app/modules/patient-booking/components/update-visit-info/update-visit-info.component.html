@@ -1,0 +1,49 @@
+<div class="row d-flex justify-content-center align-items-center">
+    <div class="col-md-12" style="max-height: 400px;overflow-y: auto; ">
+        <app-patient-search (visitSelectedEvent)="getVisitNo($event)"></app-patient-search>
+    </div>
+</div>
+<div class="card card-custom mt-1" *ngIf="visitId">
+    <div class="card-body pb-0">
+        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.loadForm" bdColor="rgba(0,0,0,0.8)" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-sm-12">
+                <div class="mt-1 mb-1" style="max-height: 150px; overflow-y: auto;">
+                    <app-patient-basic-info [VisitId]="visitId"></app-patient-basic-info>
+                </div>
+            </div>
+        </div>
+        <form [formGroup]="updateForm" class="form-horizontal" name="form" role="form">
+            <div class="row form-group justify-content-center">
+                <div class="col-md-4 col-sm-12 mt-5">
+                    <label class="control-label">Ref No.:</label>
+                    <input placeholder="Enter RefNo." formControlName="RefNo" name="RefNo" class="form-control mb-4"
+                        type="text" [value]="getRefNo" maxlength="55"
+                        [ngClass]="{'invalid': updateForm.get('RefNo').errors , 'invalid-highlighted': updateForm.get('RefNo').errors && isSubmitted }" />
+                        <!-- <div class="col-md-12" *ngIf="updateForm.get('RefNo').hasError('maxlength')">
+                            <span class="text-danger">
+                                <small>Maximum length is 55</small>
+                            </span>
+                        </div> -->
+                </div>
+                <div class="mt-8 col-md-3 col-sm-12">
+                    <button class="btn btn-danger mt-5" title="Update Info" mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                        [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]" (confirm)="updateVisit()"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="danger"
+                        cancelButtonType="outline-secondary"
+                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                        [appendToBody]="true"> <i class="fa fa-save m-0"></i>
+                        Update
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

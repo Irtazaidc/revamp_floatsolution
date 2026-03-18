@@ -1,0 +1,42 @@
+<div class=" row">
+    <div class="col-md-12">
+        <div class="card card-custom gutter-t">
+            <fieldset class="fieldset-primary fieldset-border-top">
+                <legend class="font-weight-bold text-primary" style="font-size: 1.0rem">
+                    Group(s)
+                </legend>
+                <div style=" overflow-y: auto">
+                    <div class="card-body">
+                        <div style="max-height: 300px;  overflow-y: auto;">
+                            <div class="table-responsive fixed-height-table">
+                                <!-- <ng-container *ngIf="smsHistoryList !==null && smsHistoryList.length"> -->
+                                <table class="table cursor-pointer table-hover compact table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Group Title</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- <tr *ngIf="!paramList">
+                                                <td colspan="4" style="text-align: center;"><strong class="text-primary">
+                                                    No Record Found..</strong></td>
+                                            </tr> -->
+                                        <tr *ngFor="let item of groupList  let i = index">
+                                            <td>
+                                                {{item.CellNo}}
+                                            </td>
+                                            <td class="text-right">
+                                                {{item.SentOn | date:"dd MMM, yyyy, h:mm a"}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

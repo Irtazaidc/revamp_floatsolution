@@ -1,0 +1,429 @@
+<div class="card card-custom gutter-b">
+
+
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">
+                <ng-container>
+                    Booking ID: {{bookingID || bookingIDInput}} <br />
+                    Patient MRN: {{HCRequestData.OrbitMRNo || 'na'}}
+                </ng-container>
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <!-- <button class="btn btn-secondary ml-2">
+                <i class="fa fa-redo"></i>ToolBar Area
+            </button> -->
+        </div>
+    </div>
+    <div class="card-body">
+        <ng-container>
+            <div class="mt-5">
+                <fieldset class="fieldset-primary fieldset-border-top">
+                    <legend>Patient Info</legend>
+                    <form class="form form-label-right" [formGroup]="updateBookingForm">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <label>First Name</label>
+                                <div class="input-group">
+                                    <select class="form-control col-4 pl-1 pr-0" formControlName="Salutation"
+                                        #salutation [attr.disabled]="HCRequestData.OrbitMRNo">
+                                        <option [value]="''">--select--</option>
+                                        <option *ngFor="let s of salutationsList" [value]="s.SalutationTitle">
+                                            {{s.SalutationTitle}}
+                                        </option>
+                                    </select>
+
+                                    <input #fn id="pat_firstName" type="text"
+                                        class="form-control capitalize-first-char col-8 form-control-md"
+                                        placeholder="First Name" formControlName="FirstName" [required]=""
+                                        [attr.disabled]="HCRequestData.OrbitMRNo">
+                                    <span class="md-line"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Last Name </label>
+                                <input id="pat_ln" #ln type="text"
+                                    class="form-control form-control-md capitalize-first-char" placeholder="Last Name"
+                                    formControlName="LastName" [attr.disabled]="HCRequestData.OrbitMRNo">
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Phone No</label>
+                                <div class="input-group">
+                                    <select class="form-control col-4 pl-1 pr-0" formControlName="MobileOperator"
+                                        #MobileOperator [attr.disabled]="HCRequestData.OrbitMRNo" [required]="">
+                                        <option [value]="''">--select--</option>
+                                        <option *ngFor="let item of mobileOperatorList" [value]="item.id">{{item.name}}
+                                        </option>
+                                    </select>
+                                    <input id="PhoneNo" #phoneNo type="text"
+                                        class="form-control form-control-md capitalize-first-char"
+                                        placeholder="Phone No" formControlName="PhoneNo"
+                                        [attr.disabled]="HCRequestData.OrbitMRNo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3 col-lg-3">
+                                <label for="pat_gender">Gender: <span class="mandatory-asterisk">*</span></label>
+                                <div class="input-group">
+                                    <select [attr.disabled]="HCRequestData.OrbitMRNo" #gndr id="pat_gender"
+                                        class="form-control" formControlName="Gender">
+                                        <!-- [ngClass]="gndr.value && gndr.value != '0' && gndr.value != 0 && gndr.value != '0: 0' ? '' : 'invalid'"  -->
+                                        <option [value]="''">--select--</option>
+                                        <option *ngFor="let gender of gendersList" [value]="gender.GenderID">
+                                            {{gender.GenderTitle}}
+                                        </option>
+                                    </select>
+                                    <span class="md-line"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-lg-3">
+                                <label>Date of Birth:<span class="mandatory-asterisk">*</span></label>
+                                <div class="input-group">
+                                    <input #dob type="text" class="form-control" (click)="dFrom_dob.toggle()"
+                                        placeholder="dd-mm-yyyy" autocomplete="off" name="dob" ngbDatepicker
+                                        [minDate]="{year: 1900, month:1, day: 1}" #dFrom_dob="ngbDatepicker"
+                                        formControlName="DateOfBirth" [attr.disabled]="HCRequestData.OrbitMRNo">
+                                    <input [attr.disabled]="HCRequestData.OrbitMRNo" #age type="number"
+                                        class="form-control col-2 pl-1 pr-0" (change)="ageChange(age.value)"
+                                        placeholder="Age" formControlName="Age">
+                                    <select [attr.disabled]="HCRequestData.OrbitMRNo" #dmy
+                                        class="form-control col-3 px-0" formControlName="dmy"
+                                        (change)="dmyChange(dmy.value)">
+                                        <option *ngFor="let item of dmyEnum" [value]="item.id">
+                                            {{item.name}}</option>
+                                    </select>
+                                    <span class="md-line"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                <label>CNIC</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" mask='00000-0000000-0'
+                                        [showMaskTyped]="true" placeHolderCharacter="*"
+                                        [attr.disabled]="HCRequestData.OrbitMRNo" [validation]="true"
+                                        formControlName="CNIC">
+                                    <span class="md-line"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                <label>HC City</label>
+                                <div class="input-group">
+                                    <ng-select style="width: 100%;" tabindex="1" placeholder="HC City"
+                                        formControlName="hcCity" name="hcCity" [closeOnSelect]="true">
+                                        <ng-option [value]="city.HCCityID" *ngFor="let city of HCCitiesList">
+                                            {{city.Code}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-6">
+                                <label>HC Remarks</label>
+                                <textarea type="text" formControlName="HCRemarks"
+                                    class="form-control form-control-md capitalize-first-char"
+                                    name="HCRemarks"> </textarea>
+                            </div>
+                            <div class="col-lg-6">
+                                <label>Address</label>
+                                <textarea type="text" formControlName="HCPatAddrress"
+                                    class="form-control form-control-md capitalize-first-char"
+                                    name="HCPatAddrress"> </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class=""> Date & Time: </label>
+                                <input formControlName="HCDateTime"
+                                    [ngClass]="{'invalid': InvalidHCTime, 'invalid-highlighted': InvalidHCTime && InvalidHCTime}"
+                                    required #hcdatetime="ngbDatepicker" type="text" class="form-control"
+                                    (click)="hcdatetime.toggle()" autocomplete="off" name="HCDateTime" ngbDatepicker
+                                    >
+                                <!-- <input #hcdatetime type="text" class="form-control" (click)="date_fd_flightDate.toggle()"
+                                placeholder="dd-mm-yyyy" autocomplete="off" name="fd_flightDate"
+                                 ngbDatepicker #date_fd_flightDate="ngbDatepicker"
+                                formControlName="HCDateTime"> -->
+
+                            </div>
+                            <div  class="col-md-4 mt-6">
+                                <ngb-timepicker class="timepickerrrr" formControlName="HcTime" [spinners]="false" 
+                                    [ngClass]="{'InvalidHCTimeCls':InvalidHCTime, 'invalid-highlight': InvalidHCTime && InvalidHCTime}"
+                                    (change)="CheckHCTime($event)" required [meridian]="meridian">
+                                </ngb-timepicker>
+                                <span *ngIf="InvalidHCTime" style="font-size: x-small;color:red">Please
+                                    select correct
+                                    time</span>
+                            </div>
+                        </div>
+
+                    </form>
+                </fieldset>
+                <fieldset class="fieldset-primary fieldset-border-top">
+                    <legend>Test Info</legend>
+                    <div class="col-md-5" style="position: re;">
+                        <label for="tp_tests" style="width: 100%;">
+                            Tests:<span class="mandatory-asterisk">*</span>
+                            <span class="ml-3 float-right">
+                                <!-- <br> -->
+                                <small>search by:&nbsp;
+                                    <input type="radio" [(ngModel)]="searchByCodeNameRadio" value="name"
+                                        name="searchByCodeNameRadio" (click)="tpFilterType('name')"
+                                        id="radioTPByName" />
+                                    <label class="form-check-label ml-1" for="radioTPByName">
+                                        Name</label> &nbsp;&nbsp;
+                                    <input type="radio" [(ngModel)]="searchByCodeNameRadio" value="code"
+                                        name="searchByCodeNameRadio" (click)="tpFilterType('code')"
+                                        id="radioTPByCode" />
+                                    <label class="form-check-label ml-1" for="radioTPByCode">Code</label>
+                                    <input type="checkbox" *ngIf="searchByCodeNameRadio == 'code'" class="ml-1"
+                                        name="chkSearchByExactMatch" id="chkSearchByExactMatch"
+                                        [(ngModel)]="chkSearchByExactMatch">
+                                    <label for="chkSearchByExactMatch" *ngIf="searchByCodeNameRadio == 'code'"
+                                        class="form-check-label"> <small>Exact match</small></label>
+                                </small>
+                            </span>
+                        </label>
+                        <!-- <div class="input-group">
+                        <input 
+                            type="text"
+                            class="form-control"
+                            name="ngbSearchTP"
+                            [(ngModel)]="selectedTPItem"
+                            (selectItem)="selectEventngbTP($event)"
+                            [ngbTypeahead]="ngbSearchTP"
+                            placeholder="select test profile"
+                            [editable]='false'
+                            [resultFormatter]="ngbFormatterTP_output"
+                            [inputFormatter]="ngbFormatterTP_input"
+                        />
+                        <small *ngIf="searchingTP" class="form-text text-muted">searching...</small>
+                        <div class="invalid-feedback" *ngIf="searchTPFailed">Sorry, suggestions could not be loaded.</div>
+                    </div> -->
+
+                        <div class="input-group tp-list">
+                            <input id="tp_tests" type="text" class="tests-Input form-control" name="tpFieldngb"
+                                (selectItem)="selectEventngbTP($event, 'Manual')" [(ngModel)]="selectedTPItem"
+                                [ngbTypeahead]="ngbSearchTP2" placeholder="type to select test profile"
+                                [editable]='false' [resultFormatter]="ngbFormatterTP_output"
+                                [inputFormatter]="ngbFormatterTP_input" />
+                            <span class="md-line"></span>
+                            <button class="btn btn-sm btn-outline-secondary" (click)="getTestProfileList('')"
+                                title="Reload Tests/Profiles"> <i class="ti-reload"></i></button>
+                        </div>
+
+
+                        <!-- <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.testProfilesDropdown" size="medium" color="#fff"
+                            type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner> -->
+                    </div>
+
+                    <div class="col-12" *ngIf="selectedTestProfiles.length">
+                        <div class="table-responsive d-none d-md-block">
+                            <table class="table table-hover compact selected-test-profile-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Process</th>
+                                        <th>Delivery Date</th>
+                                        <th class="text-right">Price</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let tp of selectedTestProfiles; let i = index"
+                                        [ngClass]="{'package-tp-row': tp.forPkg, 'package-row': tp.TypeId == 3, 'strike-through-row': tp.allowForReg == false}">
+                                        <td>{{i+1}}</td>
+                                        <td>
+                                            <span class="tp-name" ngbTooltip="click to see parameters"
+                                                [ngbPopover]="tpParamsPopContent" [popoverTitle]="tpParamsPopTitle"
+                                                (click)="showTPParameters(tp)">
+                                                {{tp.TestProfileCode}}
+                                            </span>
+                                            <span *ngIf="!tp.IsDiscountable" class="fa fa-info-circle"
+                                                title="Non-discountable" ngbTooltip="Non-discountable"></span>
+                                            <!-- <span *ngIf="tp.TypeId ==1 || tp.TypeId == 2" [ngbTooltip]="tipContent" class="fa fa-list" (mouseover)="showTPParameters(tp)"></span> -->
+                                            <!-- <span *ngIf="tp.TypeId ==1 || tp.TypeId == 2" [ngbPopover]="tpParamsPopContent" [popoverTitle]="tpParamsPopTitle" (mouseover)="showTPParameters(tp)" class="fa fa-list"></span> -->
+                                        </td>
+                                        <td>{{tp.TestProfileName}}</td>
+                                        <td>
+                                            <select [disabled]="tp.forPkg || tp.TypeId == 3 || tp.UrgentRptTime < 0"
+                                                class="lab-process" [(ngModel)]="tp.ProcessId"
+                                                [ngModelOptions]="{standalone: true}">
+                                                <!-- <option [selected]="proc.ProcessId == undefined || proc.ProcessId == 'undefined' || proc.ProcessId == 1 || proc.ProcessId == '1'"></option> -->
+                                                <option [value]="1">
+                                                    Normal
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>{{tp.DeliveryDate ? (tp.DeliveryDate |
+                                            date:'dd-MMM-yyyy
+                                            HH:mm:ss') : ''}}</td>
+                                        <td class="text-right">
+                                            {{formatNumericValues(tp.TestProfilePrice)}}</td>
+                                        <td class="text-center"><i *ngIf="!tp.forPkg"
+                                                class="flaticon2-delete text-danger" title="Remove"
+                                                (click)="removeSelectedTestProfile(tp)"></i>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-light-info">
+                                        <td colspan="5"><strong>Total</strong></td>
+                                        <td class="text-right"><strong>{{'Rs: ' +
+                                                formatNumericValues(getTotal(getValidAddedTestsProfiles(),
+                                                'TestProfilePrice'))}}</strong></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- <ng-template #tipContent>
+                            <table class="table" style="width: fit-content;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th>Desc</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let param of tpParametersForPopover; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{param.Code}}</td>
+                                        <td>{{param.Name}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template> -->
+                        <ng-template #tpParamsPopTitle><b>Parameters</b></ng-template>
+                        <ng-template #tpParamsPopContent>
+                            <table class="table narrow-rows">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th>Desc</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let param of tpParametersForPopover; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{param.Code}}</td>
+                                        <td>{{param.Name}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+
+                        <div class="table-responsive d-block d-md-none">
+                            <table class="table table-hover compact selected-test-profile-table for-mobile">
+                                <tbody>
+                                    <tr *ngFor="let tp of selectedTestProfiles; let i = index">
+                                        <!-- <td>{{i+1}}</td> -->
+                                        <td>
+                                            <span class="r1">
+                                                <span class="font-weight-bold">{{tp.TestProfileCode}}</span>
+                                                - {{tp.TestProfileName}}
+                                                | <span
+                                                    style="visibility: hidden;">{{formatNumericValues(tp.TestProfilePrice)}}</span>
+                                                <span
+                                                    class="font-weight-bold test-price">{{formatNumericValues(tp.TestProfilePrice)}}</span>
+                                            </span>
+                                            <br>
+                                            <span class="r2">
+                                                {{tp.DeliveryDate ? (tp.DeliveryDate |
+                                                date:'dd-MMM-yyyy HH:mm') : 'NA'}}
+                                                <span class="action-btns">
+                                                    <select
+                                                        [disabled]="tp.forPkg || tp.TypeId == 3 || tp.UrgentRptTime < 0"
+                                                        class="lab-process" [(ngModel)]="tp.ProcessId"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                        <!-- <option [selected]="proc.ProcessId == undefined || proc.ProcessId == 'undefined' || proc.ProcessId == 1 || proc.ProcessId == '1'"></option> -->
+                                                        <option [value]="1">
+                                                            Normal
+                                                        </option>
+                                                    </select>
+                                                    |
+                                                    <i *ngIf="!tp.forPkg" class="ti-close text-danger" title="Remove"
+                                                        (click)="removeSelectedTestProfile(tp)"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-light">
+                                        <td colspan="2"><strong class="total-test-price-label">Total
+                                                Rs</strong>: <span
+                                                class="total-test-price"><strong>{{formatNumericValues(getTotal(getValidAddedTestsProfiles(),
+                                                    'TestProfilePrice'))}}</strong></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- <div class="bg-light p-1">
+                        <div><strong>Total Rs</strong>: <span class="float-right"><strong>{{formatNumericValues(getTotal(getValidAddedTestsProfiles(), 'TestProfilePrice'))}}</strong></span></div>
+                    </div> -->
+                        </div>
+                    </div>
+
+                </fieldset>
+                <div class="col-md-4 mt-21" style="float: right;">
+
+                    
+
+                    <button mwlConfirmationPopover class="btn btn-primary  text-center "
+                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                         [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]" (confirm)="updateBookingRequest()"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" 
+                       
+                        confirmButtonType="btn btn-sm btn-primary"
+                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                        [appendToBody]="true">
+                        Update Booking Detail
+                    </button>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <!-- <app-google-maps [MapName]="mapName"
+                            [gMapsControls]="['show-marker', 'enable-serach', 'show-cur-location', 'draggable-marker']">
+                        </app-google-maps> -->
+                    </div>
+                </div>
+
+
+            </div>
+        </ng-container>
+
+    </div>
+</div>
+
+<ng-template #updatePatientBooking>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Update Patient Booking Details </h5>
+    </div>
+    <div class="modal-body">
+
+    </div>
+    <div class="modal-footer">
+
+    </div>
+
+</ng-template>
+
+<!-- 
+<mat-card class="example-card">
+    <mat-card-content>
+        <img mat-card-image style="width: auto;"
+            src="https://media.istockphoto.com/vectors/geometric-banner-megaphone-with-coming-soon-bubble-loudspeaker-modern-vector-id1181378326?k=20&m=1181378326&s=612x612&w=0&h=FUstjwTm6ZOYSHkusiHSsPHUV7kSGDnmRF18QDy-AO8="
+            alt="Coming Soon">
+    </mat-card-content>
+</mat-card> -->

@@ -1,0 +1,1190 @@
+<div class="discount-card-sale-page">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="col-12 text-center d-none">
+                <div class="text-danger" style="font-weight: bold; font-size: 1.5rem;">
+                    <div *ngIf="MACAndPOSAlert.POSID" class="text-primary">(POSID: {{MACAndPOSAlert.POSID || ''}}) <i
+                            class="flaticon2-reload cursor-pointer" (click)="getMACAddress(loggedInUser)"></i></div>
+                    <div *ngIf="MACAndPOSAlert.MAC" class="text-danger">{{MACAndPOSAlert.MAC || ''}} <i
+                            class="flaticon2-reload cursor-pointer" (click)="getMACAddress(loggedInUser)"></i></div>
+                    <div *ngIf="MACAndPOSAlert.POS" class="text-danger">{{MACAndPOSAlert.POS || ''}} <i
+                            class="flaticon2-reload cursor-pointer" (click)="getPOSID()"></i></div>
+                </div>
+            </div>
+            <!-- <app-card [title]="pageTitle + ' - ' + selectedPatientSource_enum[selectedPatientSource]"
+                [cardClass]="'tim-card tim-card'" [cardHeaderClass]="'card-header-narrow'"> -->
+            <div class="card card-custom gutter-b">
+                <!-- <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title m-10 align-items-start flex-column">
+                        Discount Card Sale
+                    </h3>
+                    <button type="button" class="btn btn-sm btn-primary">Button</button>
+
+                </div> -->
+                <div class="card-header card-header-tabs-line">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label font-weight-bolder text-dark"> Discount Card Sale</span>
+                        <span class="text-muted mt-3 font-weight-bold font-size-sm">Discount Card Sale New Reg.</span>
+                    </h3>
+                    <div class="card-toolbar">
+                        <!-- <a href="#" class="btn btn-success font-weight-bolder font-size-sm">
+                           Card Type
+                        </a> -->
+
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <aw-wizard class="solid-lines" navBarLocation="top" [navBarLayout]="'small'">
+                        <!-- large-empty-symbols -->
+                        <aw-wizard-step stepTitle="Patient Basic information" [canExit]="isPatientBasicInfoFormValid"
+                            (stepEnter)="enterStep($event, 0)" (stepExit)="exitStep($event, 0)">
+                            <!-- [navigationSymbol]="{ symbol: '&#xf007;', fontFamily: 'FontAwesome' }" -->
+                            <ng-template awWizardStepTitle>
+                                <span class="d-none d-sm-block">Basic info</span>
+                                <span class="d-block d-sm-none">Basic Info</span>
+                            </ng-template>
+                            <div class="patient-reg-area">
+                                <!-- <hr class="wizard-splitter"> -->
+                                <!-- <div class="navi-btn left d-none d-md-flex"><i class="ti-angle-double-left"></i></div> -->
+                                <!-- <div class="navi-btn right d-none d-md-flex" awNextStep><i class="ti-angle-double-right"></i></div> -->
+
+
+                                <!-- <p>Patient Basic information</p> -->
+                                <form class="md-float-material" [formGroup]="patientBasicInfo">
+                                    <!-- (ngSubmit)="InsertUpdatePatient()" -->
+
+                                    <fieldset class="fieldset-border-top">
+                                        <legend>Patient Details</legend>
+
+                                        <!-- <app-patient-basic-info class="mb-3 bg-light" [PatientData]="patientBasicInfo.value"></app-patient-basic-info> -->
+
+                                        <div class="row">
+                                            <div class="ml-3 text-center" style="position: relative;">
+                                                <img class="patient-img"
+                                                    [src]="patientBasicInfo.value.PatientPic || defaultPatientPic"
+                                                    alt="patient image" />
+                                                <!-- src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLe5PABjXc17cjIMOibECLM7ppDwMmiDg6Dw&usqp=CAU" -->
+                                                <input type="file" #uploadPatImg accept="image/*" class="d-none"
+                                                    (change)="loadPatientProfileImage($event)" />
+                                                <br>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button
+                                                        class="btn btn-primary mt-1 btn-mm patient-img-action-btns btn-upload-pat-img"
+                                                        type="button" (click)="uploadPatImg.click()">image</button>
+                                                    <button
+                                                        class="btn btn-secondary mt-1 btn-mm patient-img-action-btns btn-camera-pat-img"
+                                                        type="button"
+                                                        (click)="openCamera('patient_pic')">camera</button>
+                                                </div>
+
+                                                <button
+                                                    class="btn btn-outline-danger btn-sm patient-img-action-btns btn-remove-pat-img"
+                                                    type="button" (click)="removePatientImage()">x</button>
+                                            </div>
+                                            <div class="col-sm">
+                                                <div class="row">
+
+                                                    <div class="col-md-6 d-none">
+                                                        <label>MRN: <small
+                                                                *ngIf="linkdedPatient && linkdedPatient.orbitMRNo">
+                                                                (Linked
+                                                                with: <strong>({{linkdedPatient.orbitMRNo}})
+                                                                    {{linkdedPatient.firstName || ''}}
+                                                                    {{linkdedPatient.lastName || ''}}) </strong>
+                                                            </small>
+                                                            <!-- <span *ngIf="patientBasicInfo.value.OrbitPatientID"> (PatientID: {{patientBasicInfo.value.OrbitPatientID}})</span> -->
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control d-none"
+                                                                [ngClass]="patientBasicInfo.get('PatientID').value ? 'bg-success text-inverse' : ''"
+                                                                formControlName="PatientID" disabled="true">
+                                                            <input type="text" class="form-control"
+                                                                [ngClass]="patientBasicInfo.get('MRNo').value ? 'bg-success font-weight-bolder text-inverse' : ''"
+                                                                formControlName="MRNo" disabled="true">
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 col-lg-4">
+                                                        <label for="pat_firstName">Name:
+                                                            <span class="mandatory-asterisk">*</span>
+                                                            <span *ngIf="patientBasicInfo.get('PatientID').value"
+                                                                class="ml-2"
+                                                                [ngClass]="patientBasicInfo.get('MRNo').value ? 'text-danger font-weight-bolder' : ''">(MRN:
+                                                                {{patientBasicInfo.get('MRNo').value}})</span>
+                                                            <!-- <span *ngIf="getParseQMgmtToken()" class="ml-2 border-primary pl-2 pr-1">
+                                                                <span>{{qTokenNo}}</span>
+                                                                <span><i class="ti-close text-danger pl-1" (click)="removeQMgmtToken()"></i></span>
+                                                            </span> -->
+                                                        </label>
+                                                        <span class="pull-right" *ngIf="getParseQMgmtToken()">
+                                                            Token:
+                                                            <span class="h6 font-weight-bold">{{qTokenNo}}</span>
+                                                        </span>
+                                                        <div class="input-group">
+                                                            <select class="form-control col-4 pl-1 pr-0"
+                                                                formControlName="Salutation" #salutation
+                                                                [ngClass]="{'invalid': salutation.value == '', 'invalid-highlighted': salutation.value == '' && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="patientBasicInfoDisabled"
+                                                                [required]="!patientBasicInfoDisabled">
+                                                                <option [value]="''">--select--</option>
+                                                                <option *ngFor="let s of salutationsList"
+                                                                    [value]="s.SalutationTitle">{{s.SalutationTitle}}
+                                                                </option>
+                                                            </select>
+
+                                                            <input #fn id="pat_firstName" type="text" maxlength="60"
+                                                                class="form-control capitalize-first-char"
+                                                                [ngClass]="{'invalid': patientBasicInfo.get('FirstName').errors, 'invalid-highlighted': patientBasicInfo.get('FirstName').errors && patientBasicInforFormSubmitted}"
+                                                                placeholder="First Name" formControlName="FirstName"
+                                                                [required]="!patientBasicInfoDisabled"
+                                                                [attr.disabled]="patientBasicInfoDisabled">
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4 col-lg-4">
+                                                        <label for="pat_ln">Last Name:</label>
+                                                        <div class="input-group">
+                                                            <input id="pat_ln" #ln type="text" maxlength="50"
+                                                                class="form-control capitalize-first-char"
+                                                                placeholder="Last Name" formControlName="LastName"
+                                                                [attr.disabled]="patientBasicInfoDisabled">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-lg-4">
+                                                        <label for="pat_gender">Gender: <span
+                                                                class="mandatory-asterisk">*</span></label>
+                                                        <div class="input-group">
+                                                            <select #gndr id="pat_gender" class="form-control"
+                                                                formControlName="Gender"
+                                                                [ngClass]="{'invalid': gndr.value == '', 'invalid-highlighted': gndr.value == '' && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="patientBasicInfoDisabled"
+                                                                [required]="!patientBasicInfoDisabled">
+                                                                <!-- [ngClass]="gndr.value && gndr.value != '0' && gndr.value != 0 && gndr.value != '0: 0' ? '' : 'invalid'"  -->
+                                                                <option [value]="''">--select--</option>
+                                                                <option *ngFor="let gender of gendersList"
+                                                                    [value]="gender.GenderID">{{gender.GenderTitle}}
+                                                                </option>
+                                                            </select>
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-12 col-lg-4">
+                                                        <label>Date of Birth:<span
+                                                                class="mandatory-asterisk">*</span></label>
+                                                        <div class="input-group">
+                                                            <!-- <input type="date" class="form-control" [max]='maxDate_dob' [ngClass]="{'invalid': patientBasicInfo.get('DateOfBirth').errors, 'invalid-highlighted': patientBasicInfo.get('DateOfBirth').errors && patientBasicInforFormSubmitted}" #dob formControlName="DateOfBirth" required> -->
+                                                            <!-- <input type="text" mask='00-00-0000' placeholder="dd/mm/yyyy" class="form-control" [max]='maxDate_dob' [ngClass]="patientBasicInfo.get('DateOfBirth').errors ? 'invalid' : ''" #dob formControlName="DateOfBirth" required> -->
+                                                            <!-- <button class="btn btn-outline-secondary btn-sm" (click)="dFrom_dob.toggle()" type="button"><i class="fa fa-calendar"></i></button> -->
+                                                            <input #dob type="text" class="form-control"
+                                                                (click)="dFrom_dob.toggle()" placeholder="dd-mm-yyyy"
+                                                                autocomplete="off" name="dob" [maxDate]="maxDate_dob_bs"
+                                                                ngbDatepicker [minDate]="{year: 1900, month:1, day: 1}"
+                                                                #dFrom_dob="ngbDatepicker" formControlName="DateOfBirth"
+                                                                [ngClass]="{'invalid': patientBasicInfo.get('DateOfBirth').errors, 'invalid-highlighted': patientBasicInfo.get('DateOfBirth').errors && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="patientBasicInfoDisabled"
+                                                                [required]="!patientBasicInfoDisabled">
+                                                            <input #age type="text" class="form-control col-2 pl-1 pr-0"
+                                                                (change)="ageChange(age.value)" placeholder="Age"
+                                                                formControlName="Age"
+                                                                [attr.disabled]="patientBasicInfoDisabled"
+                                                                [required]="!age.value"
+                                                                [ngClass]="{'invalid': !age.value, 'invalid-highlighted': !age.value && patientBasicInforFormSubmitted}">
+                                                            <!--  [ngClass]="dob.value || age.value ? '' : 'invalid'" -->
+                                                            <select #dmy class="form-control col-3 px-0"
+                                                                formControlName="dmy" (change)="dmyChange(dmy.value)"
+                                                                [attr.disabled]="patientBasicInfoDisabled">
+                                                                <option *ngFor="let item of dmyEnum" [value]="item.id">
+                                                                    {{item.name}}</option>
+                                                                <!-- <option value="1">day(s)</option>
+                                                                    <option value="2">mon(s)</option>
+                                                                    <option value="3">yr(s)</option> -->
+                                                            </select>
+
+                                                            <!-- <input class="form-control" mask="00 SSS 0000" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker">
+                                                            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button> -->
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-lg-4">
+                                                        <label for="pat_cnic">CNIC:</label>
+                                                        <div class="input-group">
+                                                            <input #cnic id="pat_cnic" type="text" class="form-control"
+                                                                mask='00000-0000000-0' [showMaskTyped]="true"
+                                                                placeHolderCharacter="*"
+                                                                [validation]="!patientBasicInfoDisabled && cnicValidationCheck"
+                                                                formControlName="CNIC"
+                                                                [ngClass]="{'invalid': patientBasicInfo.get('CNIC').errors, 'invalid-highlighted': patientBasicInfo.get('CNIC').errors && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="CardTypeId != 15 && patientBasicInfoDisabled ? true : null">
+                                                            <!-- [required]="!pp.value" -->
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                        <!-- CNIC -->
+                                                        <div *ngIf="patientBasicInfo.get('CNIC')?.hasError('required') && patientBasicInforFormSubmitted"
+                                                            class="text-danger">
+                                                            CNIC is required.
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-lg-4">
+                                                        <label for="pat_passport">Passport:</label>
+                                                        <label>&nbsp;</label>
+                                                        <div class="input-group">
+                                                            <input #pp id="pat_passport" type="text"
+                                                                class="form-control" maxlength="50"
+                                                                formControlName="PassportNo"
+                                                                [attr.disabled]="patientBasicInfoDisabled">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="section-splitter mb-2"></div> 
+                                            </div>
+                                        </div> -->
+
+                                    </fieldset>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <fieldset class="fieldset-border-top">
+                                                <legend>Contact Details</legend>
+                                                <div class="row patient-contact-details">
+
+                                                    <div class="col-lg-3">
+                                                        <!-- col-sm-6 col-md-4 col-lg-3 -->
+                                                        <label for="pat_mobile">Mobile: <span
+                                                                class="mandatory-asterisk">*</span></label>
+                                                        <div class="input-group">
+
+                                                            <select #oprtr class="form-control col-5 pl-1 pr-0"
+                                                                formControlName="MobileOperatorID"
+                                                                [required]="!!mobile.value"
+                                                                [ngClass]="{'invalid': (!oprtr.value && mobile.value), 'invalid-highlighted': !oprtr.value && mobile.value && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="patientBasicInfoDisabled">
+                                                                <!--
+                                                                [ngClass]="{'invalid': patientBasicInfo.get('MobileOperatorID').errors, 'invalid-highlighted': patientBasicInfo.get('MobileOperatorID').errors && patientBasicInforFormSubmitted}"
+                                                                -->
+                                                                <option [value]="''">--select--</option>
+                                                                <option *ngFor="let item of mobileOperatorList"
+                                                                    [value]="item.id">{{item.name}}</option>
+                                                            </select>
+
+                                                            <input #mobile id="pat_mobile" type="text"
+                                                            (blur)="MobileChange(mobile)"
+                                                                class="form-control" mask="0*"
+                                                                formControlName="MobileNO" mask='0000-0000000'
+                                                                [showMaskTyped]="true" [validation]="false"
+                                                                [required]="!phone.value"
+                                                                [ngClass]="{'invalid': patientBasicInfo.get('MobileNO').errors, 'invalid-highlighted': patientBasicInfo.get('MobileNO').errors && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="patientBasicInfoDisabled"
+                                                                (blur)="getMobileOperatorByCode(patientBasicInfo.get('MobileNO').value)">
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-3">
+                                                        <label for="pat_phone">Phone: </label>
+                                                        <div class="input-group">
+                                                            <input id="pat_phone" type="text" class="form-control"
+                                                                formControlName="PhoneNO" #phone maxlength="15"
+                                                                [required]="!oprtr.value && !mobile.value"
+                                                                [ngClass]="{'invalid': patientBasicInfo.get('PhoneNO').errors, 'invalid-highlighted': patientBasicInfo.get('PhoneNO').errors && patientBasicInforFormSubmitted}"
+                                                                [attr.disabled]="patientContactInfoDisabled">
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-lg-3">
+                                                        <label for="pat_email">Email:</label>
+                                                        <div class="input-group">
+                                                            <input id="pat_email" type="text" class="form-control"
+                                                                maxlength="50" formControlName="Emails"
+                                                                [attr.disabled]="patientContactInfoDisabled">
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-3">
+                                                        <label for="pat_address">Address:</label>
+                                                        <div class="input-group">
+                                                            <textarea id="pat_address" maxlength="200" rows="1"
+                                                                type="text" class="form-control"
+                                                                formControlName="HomeAddress"
+                                                                [attr.disabled]="patientContactInfoDisabled"></textarea>
+                                                            <span class="md-line"></span>
+                                                        </div>
+                                                        <div *ngIf="patientBasicInfo.get('HomeAddress')?.hasError('required') && patientBasicInforFormSubmitted"
+                                                            class="text-danger">
+                                                            Address is required.
+                                                        </div>
+                                                          <div *ngIf="AddressRequiredMsg"
+                                                            class="text-danger">
+                                                            Address is required.
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="section-splitter"></div>
+
+                                    <div class="row additional-info-row pt-2">
+                                        <div class="col-sm-12 text-center align-items">
+                                            <a href="javascript:void(0)" (click)="togglePatientAdditionalFields()">
+                                                <i class="flaticon2-down" [hidden]="showPatientAdditionalFields"></i>
+                                                <i class="flaticon2-up" [hidden]="!showPatientAdditionalFields"></i>
+                                                <h5 class="toggle-patient-additional-fields mx-2 pt-1">Additional
+                                                    Patient
+                                                    Information</h5> <i class="flaticon2-down"
+                                                    [hidden]="showPatientAdditionalFields"></i> <i class="flaticon2-up"
+                                                    [hidden]="!showPatientAdditionalFields"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row additional-info-row pb-2" [hidden]="!showPatientAdditionalFields">
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label for="pat_fatherName">Father Name:</label>
+                                            <div class="input-group">
+                                                <input id="pat_fatherName" type="text" class="form-control"
+                                                    maxlength="50" formControlName="FatherName"
+                                                    [attr.disabled]="patientBasicInfoDisabled">
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label for="pat_bloodGroup">Blood Group:</label>
+                                            <div class="input-group">
+                                                <select id="pat_bloodGroup" class="form-control"
+                                                    formControlName="BloodGroup"
+                                                    [attr.disabled]="patientBasicInfoDisabled">
+                                                    <option [value]="''">--select--</option>
+                                                    <option *ngFor="let item of bloodGroupList" [value]="item.id">
+                                                        {{item.title}}</option>
+                                                </select>
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label for="pat_maritalStatus">Marital Status:</label>
+                                            <div class="input-group">
+                                                <select id="pat_maritalStatus" class="form-control"
+                                                    formControlName="MaritalStatus"
+                                                    [attr.disabled]="patientBasicInfoDisabled">
+                                                    <option [value]="''">--select--</option>
+                                                    <option *ngFor="let item of maritalStatusList"
+                                                        [value]="item.StatusId">
+                                                        {{item.Title}}</option>
+                                                </select>
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label for="pat_designation">Designation:</label>
+                                            <div class="input-group">
+                                                <input id="pat_designation" type="text" class="form-control"
+                                                    formControlName="Designation" maxlength="50"
+                                                    [attr.disabled]="patientBasicInfoDisabled">
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label for="pat_country">Country:</label>
+                                            <div class="input-group">
+                                                <ng-select style="width: 100%;" id="pat_country" [items]="countriesList"
+                                                    bindLabel="Country" bindValue="CountryId"
+                                                    (change)="countrySelectedEvent()" formControlName="CountryID"
+                                                    [attr.disabled]="patientBasicInfoDisabled">
+                                                </ng-select>
+                                                <!-- <select class="form-control" formControlName="CountryID" (change)="countrySelectedEvent()">
+                                                    <option [value]="''">--select--</option>
+                                                    <option *ngFor="let item of countriesList" [value]="item.CountryId">{{item.Country}}</option>
+                                                </select> -->
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label for="pat_city">City:</label>
+                                            <div class="input-group">
+                                                <ng-select id="pat_city" style="width: 100%;" [items]="citiesList"
+                                                    bindLabel="CityName" placeholder="--select--" bindValue="CityId"
+                                                    formControlName="CityID" [attr.disabled]="patientBasicInfoDisabled">
+                                                </ng-select>
+                                                <!-- <select class="form-control" formControlName="CityID">
+                                                    <option [value]="''">--select--</option>
+                                                    <option *ngFor="let item of citiesList" [value]="item.CityID">{{item.CityName}}</option>
+                                                </select> -->
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-4 col-lg-3 d-none">
+                                            <label>Branches:</label>
+                                            <div class="input-group">
+                                                <select #loc class="form-control" formControlName="BranchID"
+                                                    [ngClass]="{'invalid': loc.value == '', 'invalid-highlighted': loc.value == '' && patientBasicInforFormSubmitted}"
+                                                    [attr.disabled]="patientBasicInfoDisabled">
+                                                    <option [value]="''">--select--</option>
+                                                    <option *ngFor="let item of branchesList" [value]="item.LocId">
+                                                        {{item.Title}}</option>
+                                                </select>
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-splitter"></div>
+
+                                    <div class="row mt-3">
+
+                                        <div class="col-sm-12 col-md-6 col-lg-3">
+                                            <label for="pat_city">Card Type</label>
+                                            <ng-select tabindex="1" (change)="discountCardChange()"
+                                                placeholder="Select Discount Card Type" #selDiscountCardType1
+                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="selDiscountCardType"
+                                                name="selDiscountCardType" [closeOnSelect]="true">
+                                                <ng-option style="width: 100%;" [value]="b.cardId"
+                                                    *ngFor="let b of cardTypeList">
+                                                    {{b.cardTitle}}
+                                                </ng-option>
+                                            </ng-select>
+                                        </div>
+
+                                        <div class="col-sm-12 col-md-6 col-lg-3">
+                                            <label for="pat_city">Discount Card:</label>
+                                            <div class="input-group">
+                                                <!-- <ng-select style="width: 100%;" [items]="discountCardsList"
+                                                        bindLabel="Title" placeholder="--select--" bindValue="CardTypeId"
+                                                        [(ngModel)]="selectedDiscountCard" [ngModelOptions]="{standalone: true}"
+                                                        [ngClass]="{'invalid': !selectedDiscountCard, 'invalid-highlighted': !selectedDiscountCard && patientBasicInforFormSubmitted}"
+                                                        >
+                                                    </ng-select> -->
+                                                <ng-select style="width: 100%;" placeholder="--Select--"
+                                                    [items]="discountCardsList" bindLabel="Title" bindValue="CardTypeId"
+                                                    (change)="discountCardChanged($event)"
+                                                    [(ngModel)]="selectedDiscountCard"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [ngClass]="{'invalid': !selectedDiscountCard, 'invalid-highlighted': !selectedDiscountCard && patientBasicInforFormSubmitted}"
+                                                    [required]="true">
+                                                    <ng-template ng-label-tmp let-item="item">
+                                                        <span>{{item.Title}}</span> <!-- | {{item.Code}} -->
+                                                    </ng-template>
+
+                                                    <ng-template ng-option-tmp let-item="item" let-index="index"
+                                                        let-search="searchTerm">
+                                                        <div>
+                                                            <span>
+                                                                <strong>{{item.Title}}</strong> <!-- | {{item.Code}} -->
+                                                            </span>
+                                                            <br>
+                                                            <span><small>Type: </small> <strong>{{item.IsFamilyAllowed ?
+                                                                    'Family': 'Individual'}}</strong></span>
+                                                            <br>
+                                                            <span><small>Discount: </small>
+                                                                <strong>{{item.DiscountInPercent}}%</strong></span>
+                                                            <br>
+                                                            <span><small>Amount: </small>
+                                                                <strong>{{item.Amount}}</strong></span>
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                                <span class="md-line"></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div *ngIf="selDiscountCardType == 2" class="col-sm-6 col-md-2 col-lg-2">
+                                            <label for="pat_city">Card Number</label>
+
+                                            <ng-select tabindex="1" placeholder="Select Discount Card Number"
+                                                #selDiscountCardType1 [(ngModel)]="cusCardno" name="cusCardno"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [ngClass]="{'invalid': !cusCardno, 'invalid-highlighted': !cusCardno && patientBasicInforFormSubmitted}"
+                                                [closeOnSelect]="true">
+                                                <ng-option style="width: 100%;" [value]="b.CardNo"
+                                                    *ngFor="let b of discountCardNumber">
+                                                    {{b.CardNo}}
+                                                </ng-option>
+                                            </ng-select>
+
+                                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.discountCards"
+                                                bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff"
+                                                type="square-loader" [fullScreen]="false">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                        </div> -->
+
+                                        <!-- 202301000006 -->
+                                         <!-- && !disableCardNumberInput -->
+                                        <div *ngIf="selDiscountCardType == 2 " class="col-sm-12 col-md-6 col-lg-3">
+                                            <label for="vis_doc">Card Number:</label> <i
+                                                class="fa fa-check-square text-primary ml-2 cursor-pointer"
+                                                aria-hidden="true" ngbTooltip="Enter Card No. and click here to verify"
+                                                (click)="verifyCardNumberClick()"></i> <small class="text-danger pl-1"
+                                                *ngIf="!isVerifiedCardNo && cusCardno && CardTypeId != 15 && patientBasicInforFormSubmitted">Card
+                                                No. <strong>{{cusCardno}}</strong> is not verified</small>
+                                            <div class="input-group" style="position: relative;">
+                                                <i *ngIf="cusCardno && isVerifiedCardNo"
+                                                    class="fa fa-check-circle text-primary iconTick"
+                                                    aria-hidden="true"></i>
+                                                <i *ngIf="cusCardno && !isVerifiedCardNo && CardTypeId !==15"
+                                                    class="fa fa-times-circle text-danger cursor-pointer iconTick"
+                                                    aria-hidden="true" (click)="clearCusCardNo()"></i>
+                                                <!-- <input style="border-radius: 0.42rem;" class="form-control"
+                                                    type="number" placeholder="Enter Card Number to verify"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    (blur)="verifyCardNumber($event)" (keypress)="validateNo($event)"
+                                                    [(ngModel)]="cusCardno"
+                                                    [ngClass]="{'invalid': (!isVerifiedCardNo || !cusCardno), 'invalid-highlighted': (!cardExpiredOn || !cusCardno) && patientBasicInforFormSubmitted}" /> -->
+
+                                                <input   style="border-radius: 0.42rem;" class="form-control"
+                                                    type="number" placeholder="Enter Card Number to verify"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    (blur)="verifyCardNumber($event)" (keypress)="validateNo($event)"
+                                                    [disabled]="disableCardNumberInput" [(ngModel)]="cusCardno"
+                                                    [ngClass]="{
+        'invalid': CardTypeId != 15 && (!isVerifiedCardNo || !cusCardno),
+        'invalid-highlighted': CardTypeId != 15 && ((!cardExpiredOn || !cusCardno) && patientBasicInforFormSubmitted)
+    }" />
+                                                <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                                    [name]="spinnerRefs.discountCards" size="small" color="#fff"
+                                                    type="square-loader" [fullScreen]="false">
+                                                    <p style="color: white"> Loading... </p>
+                                                </ngx-spinner>
+
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="selDiscountCardType == 2 && CardTypeId != 15"
+                                            class="col-sm-12 col-md-6 col-lg-3">
+                                            <label for="pat_city">Card Expiry Date</label>
+                                            <div required class="form-outline">
+                                                <input #dob type="text" class="form-control"
+                                                    (click)="expireDate.toggle()" placeholder="dd-mm-yyyy"
+                                                    [ngModelOptions]="{standalone: true}" autocomplete="off" name="dob"
+                                                    ngbDatepicker
+                                                    [ngClass]="{'invalid': !cardExpiredOn, 'invalid-highlighted': !cardExpiredOn && patientBasicInforFormSubmitted}"
+                                                    [required]="true" [minDate]="minExpDate" #expireDate="ngbDatepicker"
+                                                    [(ngModel)]="cardExpiredOn">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6"
+                                            [ngClass]="selDiscountCardType == 2 ? 'col-lg-6' : 'col-lg-3'">
+                                            <label for="pat_city">Remarks:</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" [(ngModel)]="disCardRemarks"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    placeholder="Remarks for Discount Card">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6"
+                                            [ngClass]="selDiscountCardType == 2 ? 'col-lg-6' : 'col-lg-3'">
+                                            <label for="pat_city">Address:</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" [(ngModel)]="disCardAddress"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    placeholder="Address for Discount Card">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-splitter mb-3"></div>
+
+
+                                    <div class="row m-t-5">
+
+                                        <div class="col-md-12 d-md-flex justify-content-between">
+                                            <!-- 
+                                                display: flex;
+                                                justify-content: space-between;
+                                            -->
+                                            <div class="form-inline mb-1">
+                                                <!-- <button type="button" (click)="cancelPatientInfoForm()" class="btn btn-outline-primary btn-sm waves-effect text-center m-b-20 m-r-10"><i class="ti-close p-r-10 m-0"></i>Cancel</button> -->
+                                                <button type="button" (click)="ClearSaleForm()"
+                                                    class="btn btn-light-danger waves-effect text-center mr-2 mb-1"><i
+                                                        class="ti-close"></i>Clear</button>
+                                                <button type="button" (click)="openSearchForm()"
+                                                    class="btn btn-primary waves-effect text-center mr-2 mb-1"><i
+                                                        class="ti-search"></i>Search Patient</button>
+                                                <div *ngIf="stickerText" class="sticker text-center ">
+                                                    {{ stickerText }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-inline float-right">
+                                                <!-- <button
+                                                        *ngIf="screenPermissionsObj.update_patient && patientBasicInfo.get('PatientID').value"
+                                                        class="btn btn-light-primary waves-effect mr-2"
+                                                        title="Save Patient Data" mwlConfirmationPopover
+                                                        [popoverTitle]="'Confirmation'" [popoverMessage]="'Are you sure?'"
+                                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                                        (confirm)="InsertUpdatePatient()"
+                                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                        confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                        [appendToBody]="true">
+                                                        <span *ngIf="patientBasicInfo.get('PatientID').value"><i
+                                                                class="ti-save"></i>Update Patient</span>
+                                                        <span *ngIf="!patientBasicInfo.get('PatientID').value"><i
+                                                                class="fas fa-save"></i>Add Patient</span>
+                                                    </button> -->
+                                                <!-- <button type="button" *ngIf="patientBasicInfo.get('PatientID').value && screenPermissionsObj.update_patient" (click)="InsertUpdatePatient()" class="btn btn-primary btn-sm float-right waves-effect text-center m-b-20 m-r-10" >
+                                                    <i class="fa fa-save m-0"></i><span> Update</span>
+                                                </button> -->
+
+
+                                                <!-- <button class="btn btn-sm btn-outline-primary mx-1"  (click)="openPatientVaccineDetailsPopup()">Vaccine Details</button> -->
+
+                                                <button type="button" (click)="createARYSahoolatCustomer()"
+                                                    *ngIf="(CardTypeId == 15 && !isAlreadyCustomer) && !cardMemberOnly"
+                                                    class="btn btn-outline-primary  waves-effect text-center m-b-20 m-r-10"><i
+                                                        class="ti-close p-r-10 m-0"></i>Create ARY Card Memeber</button> &nbsp; &nbsp;
+                                                <button type="button" awNextStep class="btn btn-primary waves-effect"
+                                                    (click)="nextValidation()">Next
+                                                    <i class="flaticon2-right-arrow icon-sm"></i></button>
+                                                <!-- <button type="button" awNextStep class="btn btn-outline-secondary btn-sm float-right waves-effect text-center">
+                                                    <i class="ti-angle-double-right m-0"></i>
+                                                    <i class="ti-angle-double-right" style="margin: 0;margin-left: -5px;"></i>
+                                                    <i class="ti-angle-double-right" style="margin: 0;margin-left: -5px;"></i>
+                                                </button> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+
+                        </aw-wizard-step>
+
+                        <aw-wizard-step stepTitle="Payment information" awWizardCompletionStep awEnableBackLinks
+                            (stepEnter)="enterStep($event, 2)" (stepExit)="exitStep($event, 2)">
+                            <!-- [navigationSymbol]="{ symbol: '&#xf0d6;', fontFamily: 'FontAwesome' }" -->
+                            <!-- <p>Payment information</p> -->
+                            <ng-template awWizardStepTitle>
+                                <span class="d-none d-sm-block">Payment info</span>
+                                <span class="d-block d-sm-none">Payment Info</span>
+                            </ng-template>
+                            <div class="patient-visit-payment-area">
+
+                                <app-patient-basic-info class="mb-3 bg-light d-none d-md-block px-5 py-5 mt-2"
+                                    [PatientData]="patientBasicInfo.value"></app-patient-basic-info>
+
+                                <!-- <hr class="wizard-splitter"> -->
+
+                                <!-- <div class="navi-btn left d-none d-md-flex" awPreviousStep><i class="ti-angle-double-left"></i></div> -->
+
+                                <div class="md-float-material payments-form">
+
+                                    <!--  *ngIf="btnAndViewPermissions.patRegPaymentView" -->
+                                    <div class="row">
+                                        <div class="col-md-4 border-primary">
+                                            <fieldset class="fieldset-border-top">
+                                                <legend>Discount Calculations:</legend>
+                                                <div class="col-md-12 table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Total Charges</td>
+                                                                <td class="text-right font-weight-bold">
+                                                                    {{formatNumericValues(totalAmount)}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Discount %:</td>
+                                                                <td class="text-right font-weight-bold">{{0}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Discounted Charges:</td>
+                                                                <td class="text-right font-weight-bold">
+                                                                    {{formatNumericValues(totalAmount)}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- <div class="col-md-12">
+                                                        <label>Total Charges:</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" [value]="totalAmount" disabled>
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="col-md-12">
+                                                        <label for="pay_discountPErct">Discount %:</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" value="0" disabled>
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="col-md-12">
+                                                        <label>Discounted Charges:</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" [value]="totalAmount" disabled>
+                                                        </div>
+                                                    </div> -->
+
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <fieldset class="fieldset-border-top">
+                                                <legend>Payment Modes:</legend>
+
+                                                <div class="col-md-12">
+                                                    <label>Add Payment Mode</label>
+                                                    <div class="input-group">
+                                                        <span *ngFor="let item of paymentModesList; let i = index">
+                                                            <!-- <button *ngIf="item.ModeId != 5"
+                                                                class="btn btn-mini btn-outline-success mr-1"
+                                                                (click)="selectedPaymentModeToAdd = item; addNewPaymentMethod()"
+                                                                [attr.disabled]="item.disabled">{{item.Title}}</button> -->
+
+                                                                  <button *ngIf="item.ModeId != 5 || item.ModeId > 5"
+                                                                class="btn btn-sm btn-outline-success mr-1 mt-1 d-flex align-items-center"
+                                                                (click)="selectedPaymentModeToAdd = item; addNewPaymentMethod()"
+                                                                [attr.disabled]="item.disabled" title="{{ item.Title }}">
+                                                                <i [class]="getPaymentModeIcon(item.ModeId)"></i>
+                                                                {{ item.Title }}
+                                                                </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <hr>
+                                                <!-- <pre>{{addedPaymentModes | json}}</pre> -->
+
+                                                <div class="col-md-12 pb-3" style="background-color: #f3f6f9;"
+                                                    *ngFor="let item of addedPaymentModes">
+                                                    <label class="mb-0" *ngIf="item.ModeId != 5">{{item.Title}}</label>
+                                                    <label class="mb-0" *ngIf="item.ModeId == 5">{{item.Title}}
+                                                        <small>({{selectedDiscountCard?.RewardPoints}})</small></label>
+                                                    <div class="input-group" [ngClass]="{'mb-1': item.ModeId == 2}"
+                                                        *ngIf="item.ModeId != 5">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            mask="0*" [(ngModel)]="item.amount"
+                                                            (change)="paymentModesValueUpdated(item)"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [ngClass]="{'invalid': !item.amount && (parseNumbericValues(getTotal(addedPaymentModes, 'amount') < formatNumericValues(minimumReceivableAmount)) || item.CCNo || item.InstOwner || item.CCTNo), 'invalid-highlighted': !item.amount && parseNumbericValues(getTotal(addedPaymentModes, 'amount') < formatNumericValues(minimumReceivableAmount)) && paymentInforFormSubmitted}"
+                                                            [required]="parseNumbericValues(getTotal(addedPaymentModes, 'amount') < formatNumericValues(minimumReceivableAmount)) || item.CCNo || item.InstOwner || item.CCTNo" />
+                                                        <!--
+                                                                [ngClass]="{'invalid': !item.amount, 'invalid-highlighted': !item.amount && paymentInforFormSubmitted}"
+                                                                [required]="!item.amount"
+                                                            -->
+                                                        <button class="btn btn-outline-danger btn-mini"
+                                                            (click)="removeAddedPaymentMode(item)" type="button"
+                                                            title="Remove"><i class="ti-close"></i></button>
+                                                    </div>
+                                                    <div class="row" *ngIf="item.ModeId == 2">
+                                                        <div class="col-md-4 pr-4 pr-md-0">
+                                                            <!-- <label>C.C. No:</label> -->
+                                                            <div class="input-group">
+                                                                <input type="text" placeholder="Credit Card #"
+                                                                    class="form-control form-control-sm form-control-mini"
+                                                                    name="creditCardNo" [(ngModel)]="item.CCNo"
+                                                                    [ngClass]="{'invalid': item.amount && !item.CCNo, 'invalid-highlighted': item.amount && !item.CCNo && paymentInforFormSubmitted}"
+                                                                    [required]="true">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-4 px-4 px-md-0">
+                                                            <!-- <label>Name:</label> -->
+                                                            <div class="input-group">
+                                                                <input type="text" placeholder="Name"
+                                                                    class="form-control form-control-mini mr-1"
+                                                                    name="creditCardTransactionSlipNo"
+                                                                    [(ngModel)]="item.InstOwner"
+                                                                    [ngClass]="{'invalid': item.amount && !item.InstOwner, 'invalid-highlighted': item.amount && !item.InstOwner && paymentInforFormSubmitted}"
+                                                                    [required]="true">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-4 px-4 pl-md-0">
+                                                            <!-- <label>C.C. Transaction Slip No:</label> -->
+                                                            <div class="input-group">
+                                                                <input type="text" placeholder="Invoice #"
+                                                                    class="form-control form-control-mini"
+                                                                    name="creditCardTransactionSlipNo"
+                                                                    [(ngModel)]="item.CCTNo"
+                                                                    [ngClass]="{'invalid': item.amount && !item.CCTNo, 'invalid-highlighted': item.amount && !item.CCTNo && paymentInforFormSubmitted}"
+                                                                    [required]="true">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <!-- <div class="col-md-12 mt-3">
+                                                        <label style="font-size: 1.2rem;">Balance: <strong>{{parseNumbericValues(getTotal(addedPaymentModes, 'amount'))}}</strong></label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control d-none"
+                                                                name="balance" disabled />
+                                                        </div>
+        
+                                                    </div> -->
+                                                     <div class="col-md-12 mt-3">
+                                                        <label style="font-size: 1.2rem">Balance:
+                                                        <strong>{{parseNumbericValues(totalAmount) -
+                                                            parseNumbericValues(getTotal(addedPaymentModes, "amount"))}}
+                                                            </strong></label>
+                                                        <div class="input-group">
+                                                        <input type="text" class="form-control d-none" [value]="
+                                                            parseNumbericValues(totalAmount) - parseNumbericValues(getTotal(addedPaymentModes, 'amount'))" name="balance" disabled />
+                                                        </div>
+                                                    </div>
+                                            </fieldset>
+                                        </div>
+                                        <!--
+                                            <div class="col-md-3 d-none d-md-block">
+                                                <fieldset class="fieldset-border-top">
+                                                    <legend>Change Calculator:</legend>
+        
+                                                    <div class="col-md-12">
+                                                        <label for="pay_currencyReceived">Currency Note
+                                                            Received:</label>
+                                                        <div class="input-group">
+                                                            <input id="pay_currencyReceived" type="text" class="form-control"
+                                                                prefix="Rs: " mask="99999999" [(ngModel)]="currencyNoteReceived"
+                                                                (keyup)="currencyNoteReceivedChanged()" #da />
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="col-md-12">
+                                                        <label>Change:</label>
+                                                        <div class="input-group">
+                                                            <input type="text" prefix="Rs: " class="form-control"
+                                                                [value]="currencyNoteChangeAmount" disabled />
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+        
+                                            </div>
+                                            -->
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button class="btn btn-outline-primary btn-sm ml-5" awPreviousStep
+                                                (click)="backToPatientForm()"><i class="ti-angle-double-left"></i>
+                                                Back</button>
+                                            <!-- <button class="btn btn-primary btn-sm mr-5 pull-right" (click)="saveDiscountCard()"><i class="ti-save"></i> Save</button> -->
+                                            <button class="btn btn-primary btn-md mr-5 pull-right" title="Save"
+                                                mwlConfirmationPopover [popoverTitle]="'Confirmation'"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[1]"
+                                                (confirm)="saveDiscountCard()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <span><i class="fas fa-save"></i>Save</span>
+                                            </button> 
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </aw-wizard-step>
+
+                    </aw-wizard>
+
+                </div>
+            </div>
+
+
+            <!-- </app-card> -->
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row camera-container-row" [hidden]="!activeVideoCameraStream">
+    <div class="col-sm-12">
+        <app-card [title]="'Camera'" [cardClass]="'tim-card tim-card-success'" [cardHeaderClass]="'card-header-narrow'">
+            <div class="camera-area">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-center">
+                            <video style="background-color: black;" #videoElement [width]="videoDimensions.width"
+                                [height]="videoDimensions.height"></video>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <!-- <button (click)="startCamera()" class="btn btn-sm btn-outline-success">Play</button> -->
+                                    <!-- <button (click)="pause()" class="btn btn-warning">Pause</button> -->
+                                    <!-- <button (click)="resume()" class="btn btn-info">Resume</button> -->
+                                    <button (click)="capture()" *ngIf="openCameraFromSource == 'patient_pic'"
+                                        class="btn btn-sm btn-outline-success m-r-10">Capture</button>
+                                    <button (click)="stopCamera()" class="btn btn-sm btn-outline-danger">Close</button>
+                                    <select class="form-control" [(ngModel)]="selectedCamera"
+                                        (change)="cameraChangedEvent()">
+                                        <option *ngFor="let cam of cameraDevicesList" [value]="cam.id">{{cam.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <canvas [hidden]="true" #canvas id="canvas" [width]="videoDimensions.width"
+                                [height]="videoDimensions.height"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-card>
+    </div>
+</div>
+
+
+<ng-template #searchPatientsPopup let-searchPatientsPopup>
+    <!-- <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Patients List</h4>
+      <button type="button" class="close" aria-label="Close" (click)="searchPatientsPopup.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div> -->
+    <!-- <div class="modal-body"> -->
+    <!-- <div class=""> -->
+    <app-patient-search [buttonControls]="['discountCardSaleBtn', 'discountCardsViewBtn']"></app-patient-search>
+    <!-- <app-patient-search [buttonControls]="['patientselection']" (visitSelectedEvent)="hellhell($event)"></app-patient-search> -->
+    <div class="col-12">
+        <button type="button" class="btn btn-sm btn-outline-dark pull-right m-3 mr-0"
+            (click)="searchPatientsPopup.dismiss('close button clicked')">Close</button>
+    </div>
+    <!-- </div> -->
+    <!-- </div> -->
+    <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-dark" (click)="searchPatientsPopup.dismiss('close button clicked')">Close</button>
+    </div> -->
+</ng-template>
+
+<!-- Success Modal for Card member Creation -->
+<ng-template #aryecustomersuccessPopup let-modal>
+    <div class="modal-header bg-light border-0">
+        <h5 class="modal-title text-success font-weight-bold">
+            <i class="fas fa-check-circle mr-2"></i> ARY Card Member Created
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success p-2 mb-3">
+            <strong>ARY Sahulat ARY Card Member successfully created!</strong>
+        </div>
+        <p class="mb-1">
+            The customer has been successfully registered in the <strong>ARY Sahulat Database</strong>.
+        </p>
+        <small class="text-muted">
+            You can now proceed with ARY Sahulat services or close this dialog.
+        </small>
+    </div>
+    <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="modal.dismiss('close button clicked')">
+            <i class="fas fa-times"></i> Close
+        </button>
+        <!-- <button type="button" class="btn btn-primary btn-sm" (click)="openARYSahulatPopup(); modal.dismiss('proceed')">
+      <i class="fas fa-arrow-right"></i> Proceed with ARY Sahulat
+    </button> -->
+    </div>
+</ng-template>
+<ng-template #aryEmemberleadstoCardmemberPopup let-modal>
+    <div class="modal-header bg-light border-0">
+        <h5 class="modal-title text-success font-weight-bold">
+            <i class="fas fa-check-circle mr-2"></i> Create ARY Card Member
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success p-2 mb-3 text-center">
+            <strong>This patient is an ARY E-Member!</strong>
+        </div>
+        <p class="mb-2 text-center">
+            You can create an ARY card member and proceed with payment. Please note:
+        </p>
+        <ul class="mb-3 pl-3">
+            <li>The first step is to create an ARY card member.</li>
+            <li>You must create the ARY card member before making any payment.</li>
+            <li>The card number allocated for this patient will be <b>{{cusCardno}}</b>.</li>
+            <li>Once created, you can proceed with payment for ARY Sahulat services.</li>
+            <li>You cannot proceed with payment without creating an ARY card member first.</li>
+        </ul>
+        <div class="text-center">
+            <!-- <button type="button" (click)="createARYSahoolatCustomer()"
+                *ngIf="(CardTypeId == 15 && !isAlreadyCustomer) && !cardMemberOnly"
+                class="btn btn-outline-primary btn-sm waves-effect text-center m-b-20 m-r-10">
+                <i class="ti-plus p-r-10 m-0"></i>Create ARY Card Member
+            </button> -->
+        </div>
+    </div>
+    <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="modal.dismiss('close button clicked')">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #noarycustomerleadstoCardmemberPopup let-modal>
+    <div class="modal-header bg-light border-0">
+        <h5 class="modal-title text-success font-weight-bold">
+            <i class="fas fa-check-circle mr-2"></i> Create ARY Card Member
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success p-2 mb-3 text-center">
+            <strong>No Record Found In ARY Database</strong>
+        </div>
+        <p class="mb-2 text-center">
+            You can create an ARY card member and proceed with payment. Please note:
+        </p>
+        <ul class="mb-3 pl-3">
+            <li>The first step is to create an ARY card member for this e-member.</li>
+            <li>You must create the ARY card member before making any payment.</li>
+            <li>The card number allocated for this patient will be <b>{{cusCardno}}</b>.</li>
+            <li>Once created, you can proceed with payment for ARY Sahulat services.</li>
+            <li>You cannot proceed with payment without creating an ARY card member first.</li>
+        </ul>
+        <div class="text-center">
+            <!-- <button type="button" (click)="createARYSahoolatCustomer()"
+                *ngIf="(CardTypeId == 15 && !isAlreadyCustomer) && !cardMemberOnly"
+                class="btn btn-outline-primary btn-sm waves-effect text-center m-b-20 m-r-10">
+                <i class="ti-plus p-r-10 m-0"></i>Create ARY Card Member
+            </button> -->
+        </div>
+    </div>
+    <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="modal.dismiss('close button clicked')">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #mcPatientsPopup let-mcPatientsPopup>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Patient Search Results</h4>
+    <button type="button" class="close" aria-label="Close" (click)="mcPatientsPopup.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class>
+      <ng-container *ngIf="
+          mcPatientsList.length && mcPatientsList[0].Message;
+          then defaultTemplateContainer;
+          else patientsContainer
+        ">
+      </ng-container>
+      <ng-template #defaultTemplateContainer>
+        <div class="col-12 text-center">
+          <hr />
+          <h5 class="text-danger">{{ mcPatientsList[0].Message }}</h5>
+          <hr />
+        </div>
+      </ng-template>
+      <ng-template #patientsContainer>
+        <div class="row">
+          <div class="col-md-12">
+            <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                        [(ngModel)]="searchPatientText" name="searchText" />
+          </div>
+        </div>
+        <div class="table-responsive table-container fixed-height-table">
+          <table class="table table-hover compact">
+            <thead>
+              <tr>
+                <th width="10%">MRNo</th>
+                <th width="50%">Patient Name</th>
+                <th width="15%">Mobile No</th>
+                <th width="15%">CNIC</th>
+                <th width="10%">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of mcPatientsList | filterByKey: searchPatientText:['FirstName', 'LastName','OrbitMRNo','CNIC']; let i = index" [ngClass]="{
+                   'bg-success': (patientBasicInfo.value.FirstName || '')
+                      .trim().toLowerCase() == (p.FirstName || '').trim().toLowerCase() && (patientBasicInfo.value.LastName || '')
+                      .trim().toLowerCase() == (p.LastName || '').trim().toLowerCase()}">
+                <!-- && getSalutationById(p.Salutation || p.SalutationTitle || '') == getSalutationById(patientBasicInfo.value.Salutation || '') -->
+                <td>{{ p.OrbitMRNo }}</td>
+                <td style="word-break: break-word;">
+                  {{ getSalutationById(p.Salutation || p.SalutationTitle || "") }}
+                  {{ p.FirstName || "" }} {{ p.LastName || "" }}
+                </td>
+                <!-- <td>{{ getSalutationById(p.salutation || p.salutationTitle || '')}} {{p.firstName || ''}} {{p.lastName || ''}}</td> -->
+                <td>{{ p.MobileNO }}</td>
+                <td>
+                  {{ p.CNIC }}
+                  <br />
+                  {{ patientBasicInfo.value.CNIC }}
+                </td>
+                <!-- <td>{{p.cnic}}</td> -->
+                <td>
+                  <button class="btn btn-mini btn-outline-primary m-r-5" (click)="patientSelected_MC(p)">
+                    select
+                  </button>
+                  <!-- <button class="btn btn-mini btn-outline-primary" *ngIf="!linkdedPatient || linkdedPatient.orbitPatientID != p.orbitPatientID" (click)="linkOrbitPatient(p)">link</button> -->
+                  <!-- <button class="btn btn-mini btn-outline-primary" *ngIf="linkdedPatient && linkdedPatient.orbitPatientID == p.orbitPatientID" (click)="unLinkOrbitPatient(p)">unlink</button> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-sm btn-outline-dark" (click)="mcPatientsPopup.close()">
+      Close
+    </button>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+<ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+    [fullScreen]="false">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>

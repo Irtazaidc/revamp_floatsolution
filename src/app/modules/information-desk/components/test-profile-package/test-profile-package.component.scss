@@ -1,0 +1,43 @@
+.p-mb{
+    margin-bottom: 0rem;
+}
+.fs-pl{
+    padding-left: 14px
+}
+.location-list {
+    list-style: none;
+    padding: 0;
+}
+.section-heading{
+    text-align: center;
+    background-color: #1bc5bd;
+    color: white;
+    padding: 4px 0px;
+}
+.tat-urgency{
+    color: red;
+    border: 1px solid gray;
+    padding: 1px 8px;
+}
+.bg-light {
+    background-color: #F3F6F9 !important;
+}
+.reporting-time-label{
+    background-color: #1bc5bd;
+    color: #ffffff;
+    padding: 3px 9px;
+}
+
+.divider {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .divider::before, .divider::after {
+    flex: 1;
+    content: '';
+    padding: 1px;
+    background-color: #1BC5BD;
+    margin: 5px;
+  }

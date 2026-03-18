@@ -1,0 +1,280 @@
+<div class="card card-custom">
+  <div class="card-header">
+    <div class="card-title">
+      <span class="card-icon">
+        <i class="fas fa-search text-primary"></i>
+      </span>
+      <h3 class="card-label">
+        RIS TAT Report
+        <small>Search records for radiology TAT</small>
+      </h3>
+    </div>
+  </div>
+
+  <div class="card-body pb-0">
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row container form-group justify-content-center">
+        <div class="col-md-2 col-sm-12">
+          <label class="control-label">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            value="1980-08-26"
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateFrom').errors,
+              'invalid-highlighted':
+                filterForm.get('dateFrom').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-md-2 col-sm-12">
+          <label class="control-label">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            placeholder="dd-mm-yyyy"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control mb-4"
+            name="dateTo"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateTo').errors,
+              'invalid-highlighted':
+                filterForm.get('dateTo').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-md-3 col-sm-12">
+          <label class="control-label">Branch:</label>
+          <div class="form-group">
+            <ng-select
+              id="pat_branch"
+              style="width: 100%"
+              [ngClass]="{
+                invalid: filterForm.get('locID').errors,
+                'invalid-highlighted':
+                  filterForm.get('locID').errors && isSubmitted
+              }"
+              formControlName="locID"
+              [items]="branchList"
+              bindLabel="Title"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              bindValue="LocId"
+              placeholder="--Select Branch--"
+            >
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items | slice : 0 : 2"
+                >
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                  <span class="ng-value-label"> {{ item.Title }}</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+              <ng-template ng-header-tmp>
+                <button
+                  (click)="onSelectAllBranches()"
+                  class="btn btn-mini btn-outline-primary"
+                  type="button"
+                >
+                  <i class="ti-check"></i>Select all
+                </button>
+                <button
+                  (click)="onUnselectAllBranches()"
+                  class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                  type="button"
+                >
+                  <i class="ti-close"></i>Unselect all
+                </button>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="mt-8 col-md-3 col-sm-12">
+          <div
+            (click)="getRIStatReportData()"
+            class="btn btn-primary"
+            type="button"
+          >
+            Search
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-warning"
+      [name]="spinnerRefs.delayreportTable"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-sm-12">
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="type to filter"
+            class="form-control form-control-sm"
+            [(ngModel)]="searchText"
+            (keyup)="filterResults()"
+            name="searchText"
+          />
+          <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom"
+            (click)="getRIStatReportData()"
+          >
+            <i class="ti-reload"></i>
+          </button>
+          <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+            ngbTooltip="Export To Excel"
+            (click)="exportAsExcel()"
+          >
+            <i class="fa fa-file-excel"></i>
+          </button>
+        </div>
+        <!-- <div class="input-group">
+
+
+                </div> -->
+      </div>
+    </div>
+    <div class="table-responsive table-container fixed-height-table">
+      <table
+        class="table table-hover compact table-bordered"
+        style="width: auto; min-width: 100%"
+        cellpadding="0"
+        cellspacing="0"
+      >
+        <thead class="sticky-header">
+          <tr>
+            <th>#</th>
+            <th>PIN</th>
+            <th>Patient Name</th>
+            <th>Age/Gender</th>
+            <th>Branch</th>
+            <th>Section</th>
+            <th>Test Name</th>
+            <th>Registration Date</th>
+            <th>Initiliazed By</th>
+            <th>Initilization Date</th>
+            <th>Delivery Date</th>
+            <th>Final Date</th>
+            <th>Time Taken (F-I)</th>
+            <th>TAT (D-I)</th>
+            <th>TAT</th>
+            <th>Difference (TAT-TT)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center" *ngIf="risTatDataList.length < 1">
+            <td colspan="15">No Record Found</td>
+          </tr>
+          <tr
+            *ngFor="
+              let data of pagination.paginatedSearchResults;
+               let i = index;
+            "
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ data.PinNumber || "--" }}</td>
+            <td>{{ data.PatientName || "--" }}</td>
+            <td>{{ data.AgeGender || "--" }}</td>
+            <td>{{ data.RegLocation || "--" }}</td>
+            <td>{{ data.SectionName || "--" }}</td>
+            <td>{{ data.TestName || "--" }}</td>
+            <td>
+              {{
+                (data.RegistrationDate | date : "dd MMM, yyyy, h:mm a") || "--"
+              }}
+            </td>
+            <td>{{ data.InitByLoc || "--" }}</td>
+            <td>
+              {{ (data.InitDate | date : "dd MMM, yyyy, h:mm a") || "--" }}
+            </td>
+            <td>
+              {{ (data.DeliveryDate | date : "dd MMM, yyyy, h:mm a") || "--" }}
+            </td>
+            <td>
+              {{ (data.FinalDate | date : "dd MMM, yyyy, h:mm a") || "--" }}
+            </td>
+            <td class="amount-column">{{ data.TimeTaken || "--" }}</td>
+            <td class="amount-column">{{ data.TAT || "--" }}</td>
+            <td>{{ data.TAT || "--" }}</td>
+            <td>{{ data.TimeDiff_HhMm || "--" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+      <div class="col-md-6 col-sm-12">
+        <ngb-pagination
+          [collectionSize]="pagination.collectionSize"
+          [(page)]="pagination.page"
+          [pageSize]="pagination.pageSize"
+          [boundaryLinks]="true"
+          [maxSize]="5"
+          [rotate]="true"
+          (pageChange)="refreshPagination()"
+        >
+        </ngb-pagination>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <select
+          class="custom-select pull-right"
+          style="width: auto"
+          [(ngModel)]="pagination.pageSize"
+          (ngModelChange)="refreshPagination()"
+        >
+          <option [ngValue]="5">5 items per page</option>
+          <option [ngValue]="10">10 items per page</option>
+          <option [ngValue]="20">20 items per page</option>
+          <option [ngValue]="50">50 items per page</option>
+          <option [ngValue]="100">100 items per page</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <app-doc-compare></app-doc-compare> -->

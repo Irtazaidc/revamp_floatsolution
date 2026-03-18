@@ -1,0 +1,167 @@
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle {
+    border-color: #0BB7AF !important;
+    background-color: #0BB7AF !important;
+    /* Change background color when checked */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0BB7AF !important;
+    /* Change outer circle border color when checked */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-ripple .mat-ripple-element {
+    background-color: #0BB7AF !important;
+  }
+  
+  /* Unchecked state */
+  ::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-outer-circle {
+    border-color: #0BB7AF !important;
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-ripple .mat-ripple-element {
+    background-color: #0BB7AF !important;
+  }
+  
+  ::ng-deep .mat-radio-group.mat-accent .mat-radio-button .mat-radio-label-content {
+    color: #0BB7AF !important;
+    /* Change label text color */
+  }
+
+ ////////////////////
+  
+.section-row td {
+  padding: 14px 12px;
+  background: #f8f9fa;
+}
+
+.section-title {
+  border-left: 4px solid #0d6efd;
+  padding-left: 12px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.section-title span {
+  color: #0d6efd;
+}
+
+.grand-total-row td {
+  padding: 14px 10px;
+  font-weight: 600;
+  background: #fcfcfd;
+  border-top: 3px double green;
+}
+
+.grand-label {
+  font-size: 1.05rem;
+  color: #198754; 
+}
+
+.grand-amount {
+  font-size: 1.1rem;
+  color: #198754;
+}
+
+
+/* Card container */
+.share-summary-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 10px 12px 14px;
+  background: #ffffff;
+}
+
+/* Legend */
+.share-summary-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1BC5BD;
+  padding: 0 8px;
+}
+
+/* Table */
+.share-summary-table {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.share-summary-table thead th {
+  font-weight: 600;
+  color: #6c757d;
+  border-bottom: 1px solid #dee2e6;
+  padding: 8px;
+}
+
+/* Section cell */
+.section-cell {
+  line-height: 1.2;
+}
+
+.section-name {
+  display: block;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.case-count {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Totals */
+.section-total {
+  font-weight: 700;
+  color: #198754;
+}
+
+/* Hover */
+.share-summary-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+
+.table-scroll {
+  max-height: 70vh;              /* adjust as needed */
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Sticky section title + column header */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;           /* MUST have background */
+  z-index: 5;
+}
+
+/* If you have TWO sticky rows per section */
+.section-row.sticky-header {
+  top: 0;
+  z-index: 6;
+}
+
+.bg-secondary.sticky-header {
+  top: 40px;                     /* height of section-row */
+  z-index: 5;
+}
+
+/* Sticky grand total footer */
+.grand-total-row {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  font-weight: bold;
+  z-index: 10;
+  border-top: 2px solid #333;
+}
+
+/* Optional styling */
+.grand-label {
+  font-size: 16px;
+}
+
+.grand-amount {
+  font-size: 16px;
+  font-weight: 700;
+}

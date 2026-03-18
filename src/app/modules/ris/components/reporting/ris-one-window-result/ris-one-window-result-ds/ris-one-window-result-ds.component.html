@@ -1,0 +1,227 @@
+<div class="visit-ris-result-entry-page">
+    <div class="row">
+        <div class="col-sm-12">
+            <app-card [title]="'RIS Results Entry'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="visit-ris-result-entry-area">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="p-2" style="border: 1px solid #eee;">
+                                <form class="" [formGroup]="searchVisitsForm">
+                                    <div class="form-inline">
+                                        <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="branchesList"
+                                            bindLabel="Title" placeholder="-select branch-" bindValue="LocId"
+                                            formControlName="branchIds" [multiple]="true" [closeOnSelect]="false">
+                                            <!--
+                                                [ngClass]="{'invalid': searchVisitsForm.get('branchIds').errors || searchVisitsForm.get('branchIds').value < 1, 'invalid-highlighted': searchVisitsForm.get('branchIds').errors || searchVisitsForm.get('branchIds').value < 1}"
+                                                required
+                                            -->
+
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.Title}}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template ng-header-tmp>
+                                                <button (click)="onSelectAllBranches()"
+                                                    class="btn btn-mini btn-outline-primary" type="button"><i
+                                                        class="ti-check"></i> Select all</button>
+                                                <button (click)="onUnselectAllBranches()"
+                                                    class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                                                    type="button"><i class="ti-close"></i> Unselect all</button>
+                                            </ng-template>
+                                        </ng-select>
+
+                                        <input #dFrom type="text" class="form-control mt-1 mr-1"
+                                            (click)="dFrom_date.toggle()" placeholder="dd-mm-yyyy" autocomplete="off"
+                                            name="dFrom" ngbDatepicker #dFrom_date="ngbDatepicker"
+                                            formControlName="fromDate"
+                                            [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                            required>
+                                        <!-- [(ngModel)]="fromDate" -->
+
+                                        <input #dTo type="text" class="form-control mt-1 mr-1"
+                                            (click)="dTo_date.toggle()" placeholder="dd-mm-yyyy" autocomplete="off"
+                                            name="dTo" ngbDatepicker #dTo_date="ngbDatepicker" formControlName="toDate"
+                                            [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                            required>
+                                        <!-- [(ngModel)]="toDate" -->
+
+                                        <select class="form-control mt-1 mr-1" formControlName="statusId">
+                                            <!-- (change)="testStatusFilter()" -->
+                                            <option [value]="0">All Status</option>
+                                            <option *ngFor="let item of testStatusList" [value]="item.StatusId">
+                                                {{item.Title}}</option>
+                                        </select>
+
+                                        <button class="btn btn-sm btn-outline-primary mt-1" type="button"
+                                            title="Fetch Record(s)" (click)="getVisitsForResultEntry()"><i
+                                                class="ti-search"></i> Search </button>
+                                    </div>
+
+                                    <div class="">
+                                        <hr>
+                                        <input type="text" class="form-control" placeholder="type to filter"
+                                            [ngModelOptions]="{standalone: true}" [(ngModel)]="pinFilterString"
+                                            (keyup)="onKeyUpPinFilter($event)" />
+                                    </div>
+                                </form>
+                                <!-- <label style="width: 100%;">PIN <button class="btn btn-sm btn-outline-primary pull-right" title="Fetch Record(s)" (click)="getVisitsForResultEntry()"><i class="ti-search"></i></button></label> -->
+                                <div style="border-top: 1px solid #eee; max-height: 350px; overflow-y: auto;"
+                                    class="mt-2 pl-2">
+                                    <label><small>Total Records: <strong>{{visitsList.length}}</strong></small></label>
+                                    <ul>
+                                        <!-- | filterByKey:pinFilterString:['PIN','VisitId'] -->
+                                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                        [name]="spinnerRefs.patientRecord" size="medium" color="#fff"
+                                        type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                        <li [ngClass]="{'bg-light': selectedVisit.VisitId == visit.VisitId}"
+                                            *ngFor="let visit of visitsList | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                            style="border-bottom: 1px solid #eee;">
+                                            <a href="javascript:void(0)"
+                                                [ngClass]="{'font-weight-bold': selectedVisit.VisitId == visit.VisitId}"
+                                                (click)="visitSelectedEvent(visit)">{{visit.PIN}}</a>
+                                            <small class="float-right text-muted">({{visit.StatusTitle}})</small>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col visit-results-area">
+                            <div class="p-2" style="border: 1px solid #eee;">
+                                <div class="header">
+
+                                    <div class="patient0-info-bar-container" style="position: relative;" *ngIf="selectedVisit">
+                                        <app-patient-basic-info class="mb-3 bg-light"
+                                            [PatientData]="patientBasicInfo"></app-patient-basic-info>
+
+                                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                            [name]="spinnerRefs.patientInfoBar" size="medium" color="#fff"
+                                            type="square-loader" [fullScreen]="false">
+                                            <p style="color: white"> Loading... </p>
+                                        </ngx-spinner>
+                                    </div>
+
+
+                                    <h5>Results (PIN <strong class="text-primary">{{selectedVisit.PIN}}</strong>)</h5>
+                                    <hr />
+
+                                </div>
+
+                                <div class="body" style="position: relative;">
+                                    <div class="table-responsive">
+                                        <table class="table test-results-table">
+                                            <thead>
+                                                <tr>
+                                                    <!-- -->
+                                                    <th width="10px"> <input (change)="selectAllTestResults($event)"
+                                                            type="checkbox" class="" /> </th>
+                                                    <th>Test</th>
+                                                    <th>Result</th>
+                                                    <th width="10px">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let tp of visitTestsList">
+                                                    <td>
+                                                        <input type="checkbox" class="" [(ngModel)]="tp.checked"
+                                                            disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}" />
+
+                                                    </td>
+
+                                                    <td><label class="m-0">{{tp.PCode}} - {{tp.TestName}}</label>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <label class="m-0">{{tp.TestCode}} - {{tp.TestName}}</label> -->
+                                                        <div>
+                                                            <ng-container>
+                                                                <input type="text"
+                                                                [(ngModel)]="result"
+                                                                class="form-control form-control-sm"
+                                                                [disabled]="tp.StatusId > 8"
+                                                                (keydown)="handleCreatinineKeyDown($event)"
+                                                                (paste)="onCreatininePasteSingle($event)"
+                                                                (blur)="validateCreatinineValueSingle()" />
+                                                            </ng-container>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{tp.StatusTitle}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                        [name]="spinnerRefs.visitResults" size="medium" color="#fff"
+                                        type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-12" *ngIf="visitTestsList && visitTestsList.length">
+                                        <hr>
+                                        <!-- *ngIf="screenPermissionsObj.final_results" -->
+                                        <span class="mx-1 pull-right">
+
+                                            <ng-container
+                                                *ngIf="visitTestsList[0].StatusId < 8 ; then finalResultBtn else finalResultBtnDummy"></ng-container>
+                                            <ng-template #finalResultBtn>
+                                                <!-- (confirm)="saveFinalResult()" -->
+                                                <button class="btn btn-primary btn-sm waves-effect text-center"
+                                                    title="Final Result" mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="saveFinalResult()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"> <i class="ti-save"></i>
+                                                    Final
+                                                </button>
+                                            </ng-template>
+                                            <ng-template #finalResultBtnDummy>
+                                                <button class="btn btn-outline-primary btn-sm btn-disabled" disabled><i
+                                                        class="ti-save"></i>Final</button>
+                                            </ng-template>
+                                        </span>
+                                        <!-- *ngIf="screenPermissionsObj.open_report" -->
+                                        <span class="mx-1 pull-right">
+                                            <ng-container
+                                                *ngIf="visitTestsList[0].StatusId >= 8; then printReportBtn else printReportBtnDummy"></ng-container>
+                                            <ng-template #printReportBtn>
+
+                                                <button class="btn btn-primary btn-sm waves-effect text-center"
+                                                    (click)="openReport()"> <i class="ti-printer"></i>Report</button>
+
+                                            </ng-template>
+                                            <ng-template #printReportBtnDummy>
+                                                <button class="btn btn-outline-primary btn-sm btn-disabled" disabled> <i
+                                                        class="ti-printer"></i>Report</button>
+                                            </ng-template>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>

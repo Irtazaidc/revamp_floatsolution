@@ -1,0 +1,47 @@
+:host {
+  .aside {
+    height: 100%;
+
+    .aside-menu {
+      margin: 0;
+    }
+
+    .tooltip {
+      z-index: 1000 !important;
+    }
+  }
+
+  // fixed text line break issue on minimized aside hover
+  .menu-text {
+    white-space: nowrap;
+  }
+}
+
+
+.aside-primary .aside-brand {
+  border-bottom: 1px solid #1bc5bd;
+}
+
+.btn.btn-clean:not(:disabled):not(.disabled).active, .show > .btn.btn-clean.dropdown-toggle, .show .btn.btn-clean.btn-dropdown {
+  color: #ffffff;
+  background-color: #1BC5BD;
+  border-color: transparent;
+}
+
+.btn.btn-clean:not(:disabled):not(.disabled).active i, .show > .btn.btn-clean.dropdown-toggle i, .show .btn.btn-clean.btn-dropdown i {
+  color: #ffffff;
+}
+
+.btn.btn-clean:not(:disabled):not(.disabled).active svg, .show > .btn.btn-clean.dropdown-toggle svg, .show .btn.btn-clean.btn-dropdown svg {
+  color: #ffffff;
+}
+
+.btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled), .btn.btn-clean:focus:not(.btn-text), .btn.btn-clean.focus:not(.btn-text) {
+  color: #ffffff;
+  background-color: #1BC5BD;
+  border-color: transparent;
+}
+
+.btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled) i, .btn.btn-clean:focus:not(.btn-text) i, .btn.btn-clean.focus:not(.btn-text) i {
+  color: #ffffff;
+}

@@ -1,0 +1,500 @@
+
+
+<div class="roles-page" style="min-height: 300px;">
+    <div class="row  mt-3 mb-3">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <form class="md-float-material" [formGroup]="sampleInfoForm">
+                        <div class="row mb-2" style="place-content: left;">
+                            <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                <div class="input-group mt-2">
+                                    <input type="text" #RackCode name="RackCode"  formControlName="RackNo" [(ngModel)]="RackNo" placeholder="Barcode Scan" class="form-control form-control-sm" (keydown.enter)="getSmapleInfoByRackNo($event.target.value)"/>
+                                    <button class="btn btn-primary btn-sm input-group-btn-custom" type="button" (click)="getSmapleInfoByRackNo(RackCode.value)">
+                                        <i ngbTooltip="Search Sample Info" class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                        <ng-select style="width: 100%;"
+                            class=" mt-1 mr-1"
+                            [items]="subSectionList"
+                            bindLabel="SubSectionTitle" 
+                            placeholder="All"
+                            bindValue="SubSectionId"
+                            formControlName="SectionID"
+                            #DepartmentID
+                            [multiple]="false"
+                            [closeOnSelect]="true"
+                            placeholder="-Select Section-"
+                            (change)="getSampleListByScreen($event)"
+                        >
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                    <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                </div>
+                            </ng-template>
+                        </ng-select>
+                    </div> -->
+                    <mat-card>
+                        <mat-card-content>
+                            <mat-tab-group class="demo-tab-group" style="background-color: #fff;"> 
+                                <mat-tab label="Worklist" >
+                                    <div style="min-height: 360px;">
+                                        <fieldset class="fieldset-primary fieldset-border-all pl-3 pr-3">
+                                            <legend>Search Criteria </legend>
+                                            <form class="md-float-material" [formGroup]="worklistForm">
+                                                <div class="row patient-contact-details">
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                                                        <label for="pat_phone">Section: </label>
+                                                        <div class="input-group">
+                                                            <ng-select style="width: 100%;"
+                                                                class=" mt-1 mr-1"
+                                                                [items]="subSectionList"
+                                                                bindLabel="SubSectionTitle" 
+                                                                placeholder="All"
+                                                                bindValue="SubSectionId"
+                                                                #DepartmentID
+                                                                formControlName="SectionID"
+                                                                [multiple]="false"
+                                                                [closeOnSelect]="true"
+                                                                placeholder="-Select Section-"
+                                                                >
+                                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                        <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="pat_email">Date From:</label>
+                                                        <div class="input-group">
+                                                            <input
+                                                                #dStart
+                                                                type="text"
+                                                                class="form-control form-control-sm mt-1 mr-1"
+                                                                (click)="dFrom_date.toggle()"
+                                                                placeholder="dd-mm-yyyy"
+                                                                autocomplete="off"
+                                                                name="dStart"
+                                                                ngbDatepicker
+                                                                #dFrom_date="ngbDatepicker"
+                                                                formControlName="StartDate"
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="pat_address">Date To:</label>
+                                                        <div class="input-group">
+                                                            <input
+                                                                #dTo
+                                                                type="text"
+                                                                class="form-control form-control-sm mt-1 mr-1"
+                                                                (click)="dTo_date.toggle()"
+                                                                placeholder="dd-mm-yyyy"
+                                                                autocomplete="off"
+                                                                name="dTo"
+                                                                ngbDatepicker
+                                                                #dTo_date="ngbDatepicker"
+                                                                formControlName="EndDate"
+                                                                
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="button">&nbsp;</label>
+                                                        <div class="input-group mt-2">
+                                                            <button type="submit" class="btn btn-primary btn-sm pull-right"  
+                                                            (click)="serchSample()"
+                                                            [disabled]="disabledButton"
+                                                            ><i class="ti-search"></i>Search <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 text-right">
+                                                        <label for="button">&nbsp;</label>
+                                                        <div class="input-group">
+                                                            <input type="text" placeholder="Type to search" class="form-control form-control-sm" [(ngModel)]="searchTextOutside" name="searchTextOutside" [ngModelOptions]="{standalone: true}"/>
+                                                            <button class="btn btn-primary btn-sm input-group-btn-custom" type="button">
+                                                                <i ngbTooltip="Search Sample Info" class="fa fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </fieldset>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                    <p style="color: white"> Loading... </p>
+                                                </ngx-spinner>
+                                                <ng-container
+                                                    *ngIf="!sampleList.length  then defaultTemplateContainer else sampleInfoByRackContainer">
+                                                </ng-container>
+                                                <ng-template #defaultTemplateContainer>
+                                                    <div class="col-12 text-center">
+                                                        <hr>
+                                                        <h5 class="text-primary">No Info Found</h5>
+                                                        <hr>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template #sampleInfoByRackContainer>
+                                                    <div class="table-responsive table-container d-none d-md-block fixed-height-table">
+                                                        <table class="table table-hover compact">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- <th width="10px"> <input type="checkbox" class=""
+                                                                            (change)="selectAllSamples($event)" /> </th> -->
+                                                                    <th>#</th>
+                                                                    <th>PIN No.</th>
+                                                                    <th>Sample BarCode</th>
+                                                                    <th>Rack Section</th>
+                                                                    <th>Sample Status</th>
+                                                                    <!-- <th>Rack Screen</th> -->
+                                                                    <th class="text-center">Action</th>
+                                
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let s of sampleList | filterByKey: searchTextOutside:['VisitId', 'LabId', 'SampleStatus']; let i = index">
+                                                                    <!-- <td>
+                                                                        <input type="checkbox" class="" [(ngModel)]="s.checked" />
+                                                                    </td> -->
+                                                                    <td>{{i+1}}</td>
+                                                                    <td>{{s.VisitId}}</td>
+                                                                    <td>{{s.LabId}}</td>
+                                                                    <!-- <td>{{s.RackSection}}</td> -->
+                                                                    <td>{{RackSectionName}}</td>
+                                                                    <td>
+                                                                        <!-- <label class="badge badge-inverse-success">{{s.SampleStatus}}</label> -->
+                                                                        <label 
+                                                                            [ngClass]="(s.SampleStatusID == 3 || s.SampleStatusID == 4) ? 'badge badge-inverse-primary': s.SampleStatusID==5? 'badge badge-inverse-success' : s.SampleStatusID==7? 'badge badge-inverse-danger':s.SampleStatusID==6? 'badge badge-inverse-info ':'badge badge-inverse-primary'"
+                                                                                >{{s.SampleStatus}}
+                                                                        </label>
+                                                                    </td>
+                                                                    <!-- <td>{{s.RackScreen}}</td> (click)="transferSampleToMachine(s.LabId)" -->
+                                                                    <td class="text-center"> 
+                                                                        <i *ngIf="s.SampleStatusID==3 ; else transfered" aria-hidden="true" 
+                                                                        class="fa fa-share text-danger cursor-pointer" 
+                                                                        ngbTooltip="Transfer Sample" 
+                                                                        mwlConfirmationPopover
+                                                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                                                        (confirm)="transferSampleToMachine(s.LabId)"
+                                                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                        confirmButtonType="btn btn-sm btn-primary"
+                                                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                        [appendToBody]="true"
+                                
+                                                                        ></i> 
+                                                                        <ng-template #transfered>
+                                                                            <i aria-hidden="true" class="fa fa-check text-primary cursor-pointer" ngbTooltip="{{s.SampleStatus}}"></i>
+                                                                        </ng-template>
+                                                                        
+                                                                    
+                                                                    </td>
+                                
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                
+                                                    </div>
+                                
+                                                </ng-template>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </mat-tab>
+
+                                <mat-tab label="Archived">
+                                    <div style="min-height: 360px;">
+                                        <fieldset class="fieldset-primary fieldset-border-all pl-3 pr-3">
+                                            <legend>Search Criteria </legend>
+                                            <form class="md-float-material" [formGroup]="archievedForm">
+                                                <div class="row patient-contact-details">
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                                                        <label for="pat_phone">Section: </label>
+                                                        <div class="input-group">
+                                                            <ng-select style="width: 100%;"
+                                                                class=" mt-1 mr-1"
+                                                                [items]="subSectionList"
+                                                                bindLabel="SubSectionTitle" 
+                                                                placeholder="All"
+                                                                bindValue="SubSectionId"
+                                                                #DepartmentID
+                                                                formControlName="SectionID"
+                                                                [multiple]="false"
+                                                                [closeOnSelect]="true"
+                                                                placeholder="-Select Section-"
+                                                                >
+                                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                        <span class="ng-value-label"> {{item.SubSectionTitle}}</span>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="pat_email">Date From:</label>
+                                                        <div class="input-group">
+                                                            <input
+                                                                #dStart
+                                                                type="text"
+                                                                class="form-control form-control-sm mt-1 mr-1"
+                                                                (click)="dFrom_date.toggle()"
+                                                                placeholder="dd-mm-yyyy"
+                                                                autocomplete="off"
+                                                                name="dStart"
+                                                                ngbDatepicker
+                                                                #dFrom_date="ngbDatepicker"
+                                                                formControlName="StartDate"
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="pat_address">Date To:</label>
+                                                        <div class="input-group">
+                                                            <input
+                                                                #dTo
+                                                                type="text"
+                                                                class="form-control form-control-sm mt-1 mr-1"
+                                                                (click)="dTo_date.toggle()"
+                                                                placeholder="dd-mm-yyyy"
+                                                                autocomplete="off"
+                                                                name="dTo"
+                                                                ngbDatepicker
+                                                                #dTo_date="ngbDatepicker"
+                                                                formControlName="EndDate"
+                                                                
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="pat_address">Status:</label>
+                                                        <div class="input-group">
+                                                            <select name="JobStatus" class="form-control form-control-sm" 
+                                                            formControlName="SampleStatus">
+                                                                <option value="">-Select Status-</option>
+                                                                <option value="3">Received</option>
+                                                                <option value="4">Not Received</option>           
+                                                                <option value="5">Transfered</option>                                        
+                                                                <option value="6">Completed</option> 
+                                                                <option value="7">Rack Transfered</option> 
+                                                                <option value="8">Rejected</option>                                        
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-2">
+                                                        <label for="button">&nbsp;</label>
+                                                        <div class="input-group">
+                                                            <button type="submit" class="btn btn-primary btn-sm pull-right"  
+                                                            (click)="serchArchievedSample()"
+                                                            [disabled]="disabledButton"
+                                                            ><i class="ti-search"></i>Search <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 text-right">
+                                                        <label for="button">&nbsp;</label>
+                                                        <div class="input-group">
+                                                            <input type="text" placeholder="Type to search" class="form-control form-control-sm" [(ngModel)]="searchTextOutsideArchived" name="searchTextOutsideArchived" [ngModelOptions]="{standalone: true}"/>
+                                                            <button class="btn btn-primary btn-sm input-group-btn-custom" type="button">
+                                                                <i ngbTooltip="Search Sample Info" class="fa fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </fieldset>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                    <p style="color: white"> Loading... </p>
+                                                </ngx-spinner>
+                                                <ng-container
+                                                    *ngIf="!sampleList.length  then defaultTemplateContainerWorklist else sampleInfoByRackContainerWorklist">
+                                                </ng-container>
+                                                <ng-template #defaultTemplateContainerWorklist>
+                                                    <div class="col-12 text-center">
+                                                        <hr>
+                                                        <h5 class="text-primary">No Info Found</h5>
+                                                        <hr>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template #sampleInfoByRackContainerWorklist>
+                                                    <div class="table-responsive table-container d-md-block fixed-height-table">
+                                                        <table class="table table-hover compact">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- <th width="10px"> <input type="checkbox" class=""
+                                                                            (change)="selectAllSamples($event)" /> </th> -->
+                                                                    <th>#</th>
+                                                                    <th>PIN No.</th>
+                                                                    <th>Sample BarCode</th>
+                                                                    <th>Rack Section</th>
+                                                                    <th>Sample Status</th>
+                                                                    <!-- <th>Rack Screen</th> -->
+                                                                    <!-- <th class="text-center">Action</th> -->
+                                
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let s of archievedSampleList| filterByKey: searchTextOutsideArchived:['VisitId', 'LabId', 'SampleStatus']; let i = index">
+                                                                    <!-- <td>
+                                                                        <input type="checkbox" class="" [(ngModel)]="s.checked" />
+                                                                    </td> -->
+                                                                    <td>{{i+1}}</td>
+                                                                    <td>{{s.VisitId}}</td>
+                                                                    <td>{{s.LabId}}</td>
+                                                                    <!-- <td>{{s.RackSection}}</td> -->
+                                                                    <td>{{RackSectionName}}</td>
+                                                                    <td>
+                                                                        <!-- <label class="badge badge-inverse-success">{{s.SampleStatus}}</label> -->
+                                                                        <label 
+                                                                            [ngClass]="(s.SampleStatusID == 3 || s.SampleStatusID == 4) ? 'badge badge-inverse-primary': s.SampleStatusID==5? 'badge badge-inverse-success' : s.SampleStatusID==7? 'badge badge-inverse-danger':s.SampleStatusID==6? 'badge badge-inverse-info ':'badge badge-inverse-primary'"
+                                                                                >{{s.SampleStatus}}
+                                                                        </label>
+                                                                    </td>
+                                                                    
+                                                                    
+                                                                    <!-- <td>{{s.RackScreen}}</td> (click)="transferSampleToMachine(s.LabId)" -->
+                                                                    <!-- <td class="text-center"> 
+                                                                        <i *ngIf="s.SampleStatusID==3 ; else transfered" aria-hidden="true" 
+                                                                        class="fa fa-share text-primary cursor-pointer" 
+                                                                        ngbTooltip="Transfer Sample" 
+                                                                        mwlConfirmationPopover
+                                                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                                                        (confirm)="transferSampleToMachine(s.LabId)"
+                                                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                        confirmButtonType="btn btn-sm btn-primary"
+                                                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                        [appendToBody]="true"
+                                
+                                                                        ></i> 
+                                                                        <ng-template #transfered>
+                                                                            <i aria-hidden="true" class="fa fa-arrow-circle-right text-primary cursor-pointer" ngbTooltip="{{s.SampleStatus}}"></i>
+                                                                        </ng-template>
+                                                                        
+                                                                    
+                                                                    </td> -->
+                                
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                
+                                                    </div>
+                                
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </mat-card-content>
+                    </mat-card> 
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>
+
+
+ <!------begin:: Rack's Samples Receiving--------------->
+ <ng-template #SampleReceivingInfoModal let-SampleReceivingInfoModal>
+    <!-- <div class="modal-header">
+        <mat-toolbar>
+            <mat-toolbar-row>
+                <h5 class="modal-title" id="modal-basic-title">Sample Receiving/Transfer Sample</h5>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div> -->
+    <div class="modal-header" >
+        <h5 class="modal-title" id="modal-basic-title">Sample Receiving -{{RackNoToShow}} {{RackSectionToShow}}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="SampleReceivingInfoModal.close()">
+            <span aria-hidden="true" style="display: inline;">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p style="margin-top: -15px;"><strong class="text-primary">{{SampleCount}} Samples to be received</strong></p>
+        <div class="card card-custom mt-2">
+            <div class="card-body">
+                <ng-container
+                    *ngIf="!SampleIfoInRackList.length  then defaultTemplateContainer else sampleInfoByRackContainer">
+                </ng-container>
+                <ng-template #defaultTemplateContainer>
+                    <div class="col-12 text-center">
+                        <hr>
+                        <h5 class="text-primary">No recond found</h5>
+                        <hr>
+                    </div>
+                </ng-template>
+                <ng-template #sampleInfoByRackContainer>
+                    <div class="table-responsive table-container d-none d-md-block fixed-height-table">
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <!-- <th width="10px"> <input type="checkbox" class=""
+                                        (change)="selectAllSamples($event)" checked /> </th> -->
+                                    <th>#</th>
+                                    <th>PIN No.</th>
+                                    <th>Sample BarCode</th>
+                                    <!-- <th>Rack Section</th> -->
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                    <!-- <th>Rack Screen</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let s of SampleIfoInRackList  ; let i = index">
+                                    <!-- <td>
+                                        <input type="checkbox" class="" [(ngModel)]="s.checked" />
+                                    </td> -->
+                                    <td>{{i+1}}</td>
+                                    <td>{{s.VisitId}}</td>
+                                    <td>{{s.SampleBarCode}}</td>
+                                    <!-- <td>{{s.RackSection}}</td> -->
+                                    <!-- [(ngModel)]="s.Remarks" -->
+                                    <td>
+                                        <select  class="form-control form-control-sm" [(ngModel)]="s.SampleStatusID">
+                                            <option value="3">Received</option>
+                                            <option value="4">Not Received</option>
+                                            <option value="8">Rejected</option>
+                                        </select>
+                                    </td>
+                                    <td ><textarea class="form-control" name="remarks"  [(ngModel)]="s.Remarks"  cols="30" rows="1" [ngClass]="{'invalid invalid-highlighted': (s.SampleStatusID !=3 && !s.Remarks)}" ></textarea></td>
+                                    <!-- <td>{{s.RackScreen}}</td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input *ngIf="isTLA" type="text" name="TransferRackNo" [(ngModel)]="TransferRackNo" class="form-control form-control-sm" placeholder="Enter Accessioning Rack No." style="width: 20%;">
+        <button class="btn btn-sm btn-primary" [attr.disabled]="isReleasedBtnDisabled ? true : null"  (click)="lockRackByRackBarcode()"><i aria-hidden="true" class="fa fa-angle-double-left"></i> Receive Sample</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="SampleReceivingInfoModal.close()"><i aria-hidden="true" class="fa fa-times-circle"></i>Close</button>
+    </div>
+</ng-template>
+ <!------end:: Rack's Samples Receiving--------------->
+
+
+ 

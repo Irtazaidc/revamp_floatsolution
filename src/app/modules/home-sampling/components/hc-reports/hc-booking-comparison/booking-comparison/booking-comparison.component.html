@@ -1,0 +1,190 @@
+<!-- Form Section -->
+<div class="card card-custom mb-4">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <h3 class="card-label">Booking Records</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <form
+      [formGroup]="bookingComparisonForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+      (ngSubmit)="getBookingComparison()"
+    >
+      <div class="row">
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control form-control-md"
+            type="text"
+            [ngClass]="{
+              'invalid': bookingComparisonForm.get('dateFrom').errors, 'invalid-highlighted': bookingComparisonForm.get('dateFrom').errors && isSubmitted
+
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            #dateTo="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control form-control-md"
+            type="text"
+            
+            [ngClass]="{
+              'invalid': bookingComparisonForm.get('dateTo').errors, 'invalid-highlighted': bookingComparisonForm.get('dateTo').errors && isSubmitted
+              
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">City:</label>
+          <ng-select
+            placeholder="- Select City -"
+            tabindex="1"
+            name="hcCity"
+            [closeOnSelect]="true"
+            style="width: 100%"
+            [items]="HomeCollectionCites"
+            bindLabel="Title"
+            formControlName="hcCity"
+            bindValue="CityID"
+            (change)="getCityId($event)"
+          >
+          </ng-select>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">Rider:</label>
+          <ng-select
+            name="rider"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            [items]="RidersDetailListInParam"
+            bindValue="RiderID"
+            bindLabel="RiderFullName"
+            formControlName="rider"
+            placeholder="-Select HC Staff-"
+          >
+          </ng-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button type="submit"  class="btn btn-primary"
+          [disabled]="isDisable">
+          <span *ngIf="isDisable">Search
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </span>
+
+          <span *ngIf="!isDisable">Search</span>
+      </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="card card-custom">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right text-danger">
+          <strong>Total Records: {{ bookingComparisonList.length }}</strong>
+        </small>
+        <div class="table-responsive" style="min-height: 100px">
+          <table class="table table-hover" cellpadding="0" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Rider Name</th>
+                <th class="text-center">Location</th>
+                <th class="text-center">Total Assigned Tasks</th>
+                <th class="text-center">Completed Tasks</th>
+                <th class="text-center">Cancelled Tasks</th>
+                <th class="text-center">In Progress Tasks</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="bookingComparisonList.length > 0; else noRecord">
+              <tr *ngFor="let item of bookingComparisonList; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-center">{{ item.RiderName }}</td>
+                <td class="text-center">{{ item.LocTitle }}</td>
+                <td class="text-center">{{ item.TotalHCRequests }}</td>
+                <td class="text-center">{{ item.TotalCompletedRequests }}</td>
+                <td class="text-center">{{ item.TotalCancelledRequests }}</td>
+                <td class="text-center">{{ item.TotalInProgressRequests }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noRecord>
+    <div
+      class="no-record-message"
+      style="
+        text-align: center;
+        padding: 1rem;
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        transform: translateY(-50%);
+      "
+    >
+      <strong>No Record Found</strong>
+    </div>
+  </ng-template>
+</div>
+
+<!-- BAR-CHART section -->
+ 
+<div class="card card-custom" *ngIf="bookingComparisonList.length > 0">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-sm btn-danger pull-right" (click)="exportChart('bar2')"><i class="fas fa-file-export" aria-hidden="true"></i>Export Chart</button>
+        <!-- Bar Chart -->
+        <div  class="chart-wrapper">
+            <canvas baseChart 
+            [datasets]="barChartDataTC"
+            [labels]="barChartLabelsTC"
+            [options]="barChartOptionsTC"
+            [plugins]="barChartPluginsTC"
+            [colors]="barChartColorsTC"
+            [legend]="barChartLegendTC"
+            [chartType]="barChartTypeTC"
+            id="barChartCanvas2">
+            </canvas>                  
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

@@ -1,0 +1,167 @@
+<!--begin::Sticky Toolbar-->
+<ul class="sticky-toolbar nav flex-column pl-2 pr-2 pt-3 pb-3 mt-4">
+
+  <!--begin::Item-->
+  <li
+    class="nav-item mb-2"
+    data-toggle="tooltip"
+    title="QMatic"
+    data-placement="left"
+    (click)="openQMaticPopup()"
+  >
+    <a
+      class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary cursor-pointer"
+    >
+      <i class="ti-alarm-clock"></i>
+    </a>
+  </li>
+  <!--end::Item-->
+
+
+  <!--begin::Item-->
+  <!-- <li
+    class="nav-item mb-2"
+    data-toggle="tooltip"
+    title="Layout Builder"
+    data-placement="left"
+    (click)="navigateToBuilder()"
+  >
+    <a
+      class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary cursor-pointer"
+    >
+      <i class="flaticon2-gear"></i>
+    </a>
+  </li> -->
+  <!--end::Item-->
+
+  <!--begin::Item-->
+  <!-- <li
+    class="nav-item mb-2"
+    data-toggle="tooltip"
+    title="Documentation"
+    data-placement="left"
+  >
+    <a
+      class="btn btn-sm btn-icon btn-bg-light btn-icon-warning btn-hover-warning"
+      href="https://keenthemes.com/metronic/?page=docs&section=angular-overview"
+      target="_blank"
+    >
+      <i class="flaticon2-telegram-logo"></i>
+    </a>
+  </li> -->
+  <!--end::Item-->
+</ul>
+<!--end::Sticky Toolbar-->
+
+
+
+
+
+
+
+
+<ng-template #qMaticTokenPopup let-qMaticTokenPopup>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Token Management</h4>
+    <button type="button" class="btn btn-sm btn-icon btn-bg-light btn-hover-dark cursor-pointer" aria-label="Close" (click)="qMaticTokenPopup.dismiss('Cross click')">
+      <span aria-hidden="true" class="ti-close"></span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div>
+          <div class="row">
+              <div class="col-12">
+                  <div>
+                    <div class="text-center">
+                      Token:
+                      <span class="h1">
+                        <strong class="px-2">{{qTokenNo || '____'}}</strong>
+                      </span>
+                    </div>
+                    <!-- <span class="border-primary">
+                      <strong class="pl-2">{{qTokenNo}}</strong>
+                      <i class="ti-close text-danger pl-1 cursor-pointer" (click)="removeQMgmtToken()"></i>
+                    </span> -->
+                  </div>
+                  <span>Counter No:</span>
+                  <select
+                    #qTokenCounterNoRef
+                    class="form-control form-control-sm mb-1"
+                    [(ngModel)]="selectedQTokenCounter"
+                    (change)="qTokenCounterNoChangedEvent($event)"
+                    [ngClass]="{'invalid invalid-highlighted': !qTokenCounterNoRef.value}"
+                    >
+                    <option *ngFor="let counter of countersForQTokenList" [value]="counter.id">{{counter.name}}</option>
+                  </select>
+
+              </div>
+          </div>
+
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-warning btn-sm waves-effect text-center"
+      title="Final Result"
+      mwlConfirmationPopover
+      [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+      [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+      [confirmText]="confirmationPopoverConfig.confirmText"
+      [cancelText]="confirmationPopoverConfig.cancelText"
+      [placement]="confirmationPopoverConfig.placements[0]"
+      (confirm)="callForToken()"
+      (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+      confirmButtonType="primary"
+      cancelButtonType="outline-secondary"
+      (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+      [appendToBody]="true"
+      >
+        <!-- <i class="ti-rss-alt"></i> -->
+        <i class="fa fa-volume-up" style="font-size: 18px;"></i>
+        Call for Token
+      </button>
+
+      <button
+      class="btn btn-primary btn-sm waves-effect text-center ml-2"
+      title="Final Result"
+      mwlConfirmationPopover
+      [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+      [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+      [confirmText]="confirmationPopoverConfig.confirmText"
+      [cancelText]="confirmationPopoverConfig.cancelText"
+      [placement]="confirmationPopoverConfig.placements[0]"
+      (confirm)="attendToken()"
+      (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+      confirmButtonType="primary"
+      cancelButtonType="outline-secondary"
+      (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+      [appendToBody]="true"
+      >
+        <i class="ti-check-box" style="font-size: 18px;"></i>
+        Attend Token
+      </button>
+
+      <button
+      class="btn btn-outline-danger btn-sm waves-effect text-center ml-2"
+      title="Final Result"
+      mwlConfirmationPopover
+      [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+      [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+      [confirmText]="confirmationPopoverConfig.confirmText"
+      [cancelText]="confirmationPopoverConfig.cancelText"
+      [placement]="confirmationPopoverConfig.placements[0]"
+      (confirm)="removeQMgmtToken()"
+      (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+      confirmButtonType="primary"
+      cancelButtonType="outline-secondary"
+      (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+      [appendToBody]="true"
+      >
+        <i class="ti-close"></i>
+        Discard Token
+      </button>
+      <!-- <button class="btn btn-primary btn-sm" (click)="callForToken()">Call for Token</button>
+      <button class="btn btn-primary btn-sm ml-2" (click)="attendToken()">Attend Token</button> -->
+      <!-- <button type="button" class="btn btn-sm btn-outline-dark" (click)="qMaticTokenPopup.dismiss('close button clicked')"><i class="ti-close"></i>Close</button> -->
+  </div>
+</ng-template>

@@ -1,0 +1,813 @@
+<div class="roles-page">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+      <app-card
+        [title]="'Worklist'"
+        [cardClass]="'tim-card tim-card tim-card-primary'"
+      >
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="input-group">
+                <input
+                  type="text"
+                  placeholder="Search Item"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="searchTextMachine"
+                  (ngModelChange)="applyFilter()"
+                  name="searchTextMachine"
+                />
+                <button
+                  class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                  (click)="getRISMachine(null, null, null)"
+                >
+                  <i class="ti-reload"></i>
+                </button>
+                <button
+                  type="button"
+                  (click)="clearForm()"
+                  class="btn btn-outline-danger btn-sm ml-1 pull-right"
+                  ngbTooltip="Add new machine"
+                >
+                  <i class="ti-plus"></i>New
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="table-responsive fixed-height-table"
+            *ngIf="pagination.paginatedSearchResults.length"
+          >
+            <ngx-spinner
+              class="spinner-info"
+              bdColor="rgba(0,0,0,0.8)"
+              [name]="spinnerRefs.listSection"
+              size="medium"
+              color="#fff"
+              type="square-loader"
+              [fullScreen]="false"
+            >
+              <p style="color: white">Loading...</p>
+            </ngx-spinner>
+            <table class="table table-hover compact">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Services Name</th>
+                  <th>Branch</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let item of pagination.paginatedSearchResults;
+                    let i = index
+                  "
+                  (click)="
+                    getRISMachine(item.RISMachineID, item.TestSubSectionID, i)
+                  "
+                  [ngClass]="{ 'active-rec-border-left': rowIndex == i }"
+                  class="cursor-pointer"
+                >
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.MachineName }}</td>
+                  <td>{{ item.BranchCode || "--" }}</td>
+                  <td>
+                    <span
+                      [ngClass]="{
+                        badge: true,
+                        'badge-primary': item.isOnOff,
+                        'badge-danger': !item.isOnOff
+                      }"
+                    >
+                      {{ item.isOnOff ? "On" : "Off" }}
+                    </span>
+                  </td>
+                  <td>
+                    <a
+                      (click)="getDataForTestAssociation()"
+                      class="cursor-pointer"
+                      style="font-size: 17px"
+                      ngbTooltip="Associate Test(s) with machine"
+                    >
+                      <i class="fas fa-link text-primary"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+            <div class="col-12">
+              <div
+                class="d-flex flex-wrap justify-content-between align-items-center p-2"
+              >
+                <!-- Pagination -->
+                <div class="col-12 col-md-auto mb-2 mb-md-0 p-0">
+                  <ngb-pagination
+                    [collectionSize]="pagination.collectionSize"
+                    [(page)]="pagination.page"
+                    [pageSize]="pagination.pageSize"
+                    [boundaryLinks]="true"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    (pageChange)="refreshPagination()"
+                  >
+                  </ngb-pagination>
+                </div>
+
+                <!-- Page size dropdown -->
+                <div>
+                  <select
+                    class="form-control form-control-sm"
+                    [(ngModel)]="pagination.pageSize"
+                    (ngModelChange)="refreshPagination()"
+                  >
+                    <option [ngValue]="5">5 items per page</option>
+                    <option [ngValue]="10">10 items per page</option>
+                    <option [ngValue]="20">20 items per page</option>
+                    <option [ngValue]="50">50 items per page</option>
+                    <option [ngValue]="100">100 items per page</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="!pagination.paginatedSearchResults.length">
+            <app-no-record-found></app-no-record-found>
+          </ng-container>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-7">
+      <mat-card>
+        <mat-card-content>
+          <mat-tab-group
+            [(selectedIndex)]="selectedIndex"
+            class="demo-tab-group"
+            style="background-color: #fff"
+          >
+            <mat-tab label="Services Config">
+              <app-card
+                [title]="CardTitle"
+                [cardClass]="'tim-card tim-card tim-card-primary'"
+                *matTabContent
+              >
+                <div class="card-body">
+                  <ngx-spinner
+                    class="spinner-info"
+                    bdColor="rgba(0,0,0,0.8)"
+                    [name]="spinnerRefs.machineFormSection"
+                    size="medium"
+                    color="#fff"
+                    type="square-loader"
+                    [fullScreen]="false"
+                  >
+                    <p style="color: white">Please wait...</p>
+                  </ngx-spinner>
+                  <form class="" [formGroup]="machineConfigForm">
+                    <div class="row">
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"
+                      >
+                        <div class="form-group">
+                          <label for="MachineName" class="control-label"
+                            >Machine Name</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="MachineName"
+                            [ngClass]="{
+                              invalid:
+                                machineConfigForm.get('MachineName').errors &&
+                                machineConfigForm.get('MachineName').touched,
+                              'invalid-highlighted':
+                                machineConfigForm.get('MachineName').errors
+                            }"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4"
+                      >
+                        <div class="form-group">
+                          <label for="MachineCode" class="control-label"
+                            >Machine Code</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="MachineCode"
+                            [ngClass]="{
+                              invalid:
+                                machineConfigForm.get('MachineCode').errors &&
+                                machineConfigForm.get('MachineCode').touched,
+                              'invalid-highlighted':
+                                machineConfigForm.get('MachineCode').errors
+                            }"
+                            (input)="onMachineCodeInput()"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4"
+                      >
+                        <div class="form-group">
+                          <label for="Abbreviation" class="control-label"
+                            >Abbreviation</label
+                          >
+                          <input
+                            type="text"
+                            maxlength="6"
+                            class="form-control form-control-sm"
+                            formControlName="Abbreviation"
+                            [ngClass]="{
+                              invalid:
+                                machineConfigForm.get('Abbreviation').errors &&
+                                machineConfigForm.get('Abbreviation').touched,
+                              'invalid-highlighted':
+                                machineConfigForm.get('Abbreviation').errors
+                            }"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4"
+                      >
+                        <div class="form-group">
+                          <label for="Capacity" class="control-label"
+                            >Capicity</label
+                          >
+                          <!-- [ngClass]="{'invalid': machineConfigForm.get('Capacity').errors && machineConfigForm.get('Capacity').touched, 'invalid-highlighted': machineConfigForm.get('Capacity').errors}" -->
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            formControlName="Capacity"
+                          />
+                        </div>
+                      </div>
+                      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <label for="TestSectionID" class="control-label">Section</label>
+                                            <select class="form-control form-control-sm" #TestSectionID formControlName="TestSectionID" (change)='getSubSectionByParent(TestSectionID.value)'
+                                            [ngClass]="{'invalid': machineConfigForm.get('TestSectionID').errors && machineConfigForm.get('TestSectionID').touched, 'invalid-highlighted': machineConfigForm.get('TestSectionID').errors}"
+                                            >
+                                                <option value="">--Select Section--</option>
+                                                <option  *ngFor="let item of SectionList" [value]="item.SectionId">{{item.SectionTitle}}</option>
+                                                </select>
+                                        </div>
+                                    </div> -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"
+                        style="margin-top: -4px"
+                      >
+                        <div class="form-group">
+                          <label for="TestSubSectionID" class="control-label"
+                            >Radiology Section</label
+                          >
+                          <ng-select
+                            style="width: 100%"
+                            class="mr-1"
+                            [items]="SubSectionList"
+                            bindLabel="SubSectionTitle"
+                            placeholder="-Select Radiology Section"
+                            bindValue="SubSectionId"
+                            formControlName="TestSubSectionID"
+                            [closeOnSelect]="true"
+                            [ngClass]="{
+                              invalid:
+                                machineConfigForm.get('TestSubSectionID')
+                                  .errors &&
+                                machineConfigForm.get('TestSubSectionID')
+                                  .touched,
+                              'invalid-highlighted':
+                                machineConfigForm.get('TestSubSectionID').errors
+                            }"
+                          >
+                            <ng-template
+                              ng-multi-label-tmp
+                              let-items="items"
+                              let-clear="clear"
+                            >
+                              <div
+                                class="ng-value"
+                                *ngFor="let item of items | slice : 0 : 2"
+                              >
+                                <span
+                                  class="ng-value-icon right form-control form-control-sm"
+                                  (click)="clear(item)"
+                                  aria-hidden="true"
+                                  >×</span
+                                >
+                                <span class="ng-value-label">
+                                  {{ item.SubSectionTitle }}</span
+                                >
+                              </div>
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"
+                        style="margin-top: -4px"
+                      >
+                        <div class="form-group">
+                          <label for="TestSubSectionID" class="control-label"
+                            >Location</label
+                          >
+                          <div class="input-group" style="position: relative">
+                            <!-- [ngClass]="{'invalid': machineConfigForm.get('machineBranch').errors && machineConfigForm.get('machineBranch').touched, 'invalid-highlighted': machineConfigForm.get('machineBranch').errors}" -->
+                            <ng-select
+                              style="width: 100%"
+                              class="mr-1"
+                              [items]="BranchesList"
+                              bindLabel="Title"
+                              placeholder="-Select Location-"
+                              bindValue="LocId"
+                              formControlName="machineBranch"
+                              [closeOnSelect]="true"
+                              [ngClass]="{
+                                invalid:
+                                  machineConfigForm.get('machineBranch')
+                                    .errors &&
+                                  machineConfigForm.get('machineBranch')
+                                    .touched,
+                                'invalid-highlighted':
+                                  machineConfigForm.get('machineBranch').errors
+                              }"
+                            >
+                              <ng-template
+                                ng-multi-label-tmp
+                                let-items="items"
+                                let-clear="clear"
+                              >
+                                <div
+                                  class="ng-value"
+                                  *ngFor="let item of items | slice : 0 : 2"
+                                >
+                                  <span
+                                    class="ng-value-icon right form-control form-control-sm"
+                                    (click)="clear(item)"
+                                    aria-hidden="true"
+                                    >×</span
+                                  >
+                                  <span class="ng-value-label">
+                                    {{ item.Code }}</span
+                                  >
+                                </div>
+                              </ng-template>
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"
+                        style="margin-top: -4px"
+                      >
+                        <div class="form-group">
+                          <label for="TestSubSectionID" class="control-label"
+                            >Manufacturer</label
+                          >
+                          <div class="input-group" style="position: relative">
+                            <ng-select
+                              style="width: 100%"
+                              class="mt-1 mr-1"
+                              [items]="machineManufactureList"
+                              bindLabel="ManufactureName"
+                              placeholder="-Select Manufacturer"
+                              bindValue="MachineManufactureID"
+                              formControlName="MachineManufactureID"
+                              [closeOnSelect]="true"
+                            >
+                              <ng-template
+                                ng-multi-label-tmp
+                                let-items="items"
+                                let-clear="clear"
+                              >
+                                <div
+                                  class="ng-value"
+                                  *ngFor="let item of items | slice : 0 : 2"
+                                >
+                                  <span
+                                    class="ng-value-icon right form-control form-control-sm"
+                                    (click)="clear(item)"
+                                    aria-hidden="true"
+                                    >×</span
+                                  >
+                                  <span class="ng-value-label">
+                                    {{ item.ManufactureName }}</span
+                                  >
+                                </div>
+                              </ng-template>
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4"
+                      >
+                        <div class="form-group">
+                          <label for="AETitle" class="control-label"
+                            >AE Title</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="AETitle"
+                            [ngClass]="{
+                              invalid:
+                                machineConfigForm.get('AETitle').errors &&
+                                machineConfigForm.get('AETitle').touched,
+                              'invalid-highlighted':
+                                machineConfigForm.get('AETitle').errors
+                            }"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4"
+                      >
+                        <div class="form-group">
+                          <label for="MachineModel" class="control-label"
+                            >Model</label
+                          >
+                          <!-- [ngClass]="{'invalid': machineConfigForm.get('MachineModel').errors && machineConfigForm.get('MachineModel').touched, 'invalid-highlighted': machineConfigForm.get('MachineModel').errors}"  -->
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="MachineModel"
+                          />
+                        </div>
+                      </div>
+                      <!-- Start Time -->
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3"
+                      >
+                        <div class="form-group">
+                          <label class="control-label">Start Time-24/hr</label>
+                          <ngb-timepicker
+                            #timeStartPicker
+                            formControlName="MachineStartTime"
+                            [spinners]="false"
+                            (ngModelChange)="calculateDuration()"
+                            class="mini-input-field time-picker"
+                          ></ngb-timepicker>
+                        </div>
+                      </div>
+
+                      <!-- End Time -->
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3"
+                      >
+                        <div class="form-group">
+                          <label class="control-label">End Time-24/hr</label>
+                          <ngb-timepicker
+                            #timeEndPicker
+                            class="mini-input-field time-picker ml-1"
+                            formControlName="MachineEndTime"
+                            (ngModelChange)="calculateDuration()"
+                            [spinners]="false"
+                          ></ngb-timepicker>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3"
+                      >
+                        <div class="form-group">
+                          <label class="control-label d-block"
+                            >24/h Run Time</label
+                          >
+                          <div class="form-check form-switch mt-7">
+                            <input
+                              type="checkbox"
+                              class="form-check-input"
+                              id="fullDayMachine"
+                              [checked]="isFullDayMachine"
+                              (change)="onMachineModeToggle($event)"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="fullDayMachine"
+                            >
+                              <strong>Machine runs 24 hours</strong>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3"
+                      >
+                        <div class="form-group">
+                          <label for="Duration" class="control-label"
+                            >Duration:</label
+                          >
+                          <input
+                            formControlName="Duration"
+                            type="text"
+                            class="form-control form-control-sm mt-3"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-6 col-md-6 col-lg-12 col-xl-12"
+                      >
+                        <div class="form-group">
+                          <label for="MachineDesc" class="control-label"
+                            >Machine Description</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="MachineDesc"
+                            [ngClass]="{
+                              invalid:
+                                machineConfigForm.get('MachineDesc').errors &&
+                                machineConfigForm.get('MachineDesc').touched,
+                              'invalid-highlighted':
+                                machineConfigForm.get('MachineDesc').errors
+                            }"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4"></div> -->
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-2"
+                      >
+                        <div class="form-check">
+                          <input
+                            class="form-check-input pointer"
+                            type="checkbox"
+                            value="1"
+                            formControlName="isManual"
+                          />
+                          <label
+                            class="form-check-label pointer"
+                            for="isManual"
+                          >
+                            <strong>Is Manual</strong>
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-2"
+                      >
+                        <div class="form-check">
+                          <input
+                            class="form-check-input pointer"
+                            type="checkbox"
+                            value="1"
+                            formControlName="isOperational"
+                          />
+                          <label
+                            class="form-check-label pointer"
+                            for="isOperational"
+                          >
+                            <strong>Operational</strong>
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-4"
+                      >
+                        <label for="MachineDetail">Operational Activity</label>
+                        <textarea
+                          formControlName="MachineDetail"
+                          class="form-control form-control-sm"
+                          cols="30"
+                          rows="4"
+                          [ngClass]="{
+                            invalid:
+                              machineConfigForm.get('MachineDetail').errors &&
+                              machineConfigForm.get('MachineDetail').touched,
+                            'invalid-highlighted':
+                              machineConfigForm.get('MachineDetail').errors
+                          }"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 mt-3">
+                        <button
+                          type="reset"
+                          class="btn btn-sm btn-outline-danger ml-2 pull-right"
+                        >
+                          <i class="fa fa-eraser"></i>Clear<i
+                            aria-hidden="true"
+                          ></i>
+                        </button>
+                        <button
+                          [disabled]="disabledButton"
+                          class="btn btn-sm btn-primary pull-right"
+                          title=""
+                          mwlConfirmationPopover
+                          [popoverTitle]="
+                            confirmationPopoverConfig.popoverTitle
+                          "
+                          [popoverMessage]="
+                            confirmationPopoverConfig.popoverMessage
+                          "
+                          [confirmText]="confirmationPopoverConfig.confirmText"
+                          [cancelText]="confirmationPopoverConfig.cancelText"
+                          [placement]="confirmationPopoverConfig.placements[0]"
+                          (confirm)="insertUpdateMachine()"
+                          (cancel)="
+                            confirmationPopoverConfig.confirmPopoverCancel()
+                          "
+                          confirmButtonType="btn btn-sm btn-primary"
+                          cancelButtonType="btn btn-sm btn-outline-secondary"
+                          (click)="
+                            confirmationPopoverConfig.confirmClicked = false;
+                            confirmationPopoverConfig.cancelClicked = false
+                          "
+                          [appendToBody]="true"
+                        >
+                          <i
+                            [ngClass]="
+                              RISMachineID ? 'fa fa-edit' : 'fa fa-save'
+                            "
+                          ></i
+                          >{{ ActionLabel
+                          }}<i
+                            class="spinner-border-custom"
+                            aria-hidden="true"
+                            [hidden]="isSpinner"
+                          ></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="row" *ngIf="RISMachineID">
+                    <div class="col-12">
+                      <hr />
+                      <fieldset
+                        style="padding: 0px 15px 10px"
+                        class="fieldset-primary fieldset-border-all-primary"
+                      >
+                        <legend
+                          class="font-weight-bold text-primary"
+                          style="font-size: 1.1rem"
+                        >
+                          Machine Status Management
+                        </legend>
+                        <app-machine-status-management
+                          [ParamsPayLoad]="{
+                            RISMachineID: RISMachineID,
+                            isOnOff: isOnOff,
+                            isOnOffRemarks: isOnOffRemarks
+                          }"
+                        >
+                        </app-machine-status-management>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+              </app-card>
+            </mat-tab>
+            <mat-tab label="Tests Association" [disabled]="!RISMachineID">
+              <app-card
+                [title]="
+                  'Associate test with Machine  -[   ' +
+                  MachineNameToShowOnCard +
+                  '   ]'
+                "
+                [cardClass]="'tim-card tim-card tim-card-primary'"
+                *matTabContent
+              >
+                <div class="card-body">
+                  <ngx-spinner
+                    class="spinner-info"
+                    bdColor="rgba(0,0,0,0.8)"
+                    [name]="spinnerRefs.testListSection"
+                    size="medium"
+                    color="#fff"
+                    type="square-loader"
+                    [fullScreen]="false"
+                  >
+                    <p style="color: white">Loading...</p>
+                  </ngx-spinner>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          placeholder="Search Test"
+                          class="form-control form-control-sm"
+                          [(ngModel)]="searchText"
+                          name="searchText"
+                        />
+                        <button
+                          class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                        >
+                          <i class="ti-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="table-responsive fixed-height-table">
+                    <table
+                      class="table table-hover compact"
+                      *ngIf="testList.length"
+                    >
+                      <thead>
+                        <tr>
+                          <!-- <th>#</th> -->
+                          <th width="10px">
+                            <input
+                              type="checkbox"
+                              class="cursor-pointer"
+                              (change)="selectAllTests($event)"
+                            />
+                          </th>
+                          <th>Test Name</th>
+                          <th>Test Code</th>
+                          <th style="width: 30%">Performing Time(mins)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let item of testList
+                              | filterByKey
+                                : searchText
+                                : ['TestProfileName', 'TestProfileCode'];
+                            let i = index
+                          "
+                        >
+                          <!-- <td>{{i+1}}</td> -->
+                          <td>
+                            <input
+                              type="checkbox"
+                              class="cursor-pointer"
+                              [(ngModel)]="item.checked"
+                            />
+                          </td>
+                          <td>{{ item.TestProfileName }}</td>
+                          <td>{{ item.TestProfileCode }}</td>
+                          <td style="width: 30%">
+                            <input
+                              type="text"
+                              (keypress)="validateNo($event)"
+                              [(ngModel)]="item.PerformingTime"
+                              class="form-control form-control-sm"
+                              [ngClass]="{
+                                'invalid invalid-highlighted':
+                                  item.checked && !item.PerformingTime
+                              }"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="row" *ngIf="testList.length">
+                    <div class="col-12 mt-3 custom-popover-button">
+                      <hr />
+                      <button
+                        [disabled]="disabledButtonTests"
+                        class="btn btn-sm btn-primary pull-right custom-popover-button"
+                        title=""
+                        mwlConfirmationPopover
+                        [popoverTitle]="'Confirmation Alert!'"
+                        [popoverMessage]="
+                          'Are you <strong>sure</strong> want to proceed?'
+                        "
+                        [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]"
+                        (confirm)="associateTests()"
+                        (cancel)="
+                          confirmationPopoverConfig.confirmPopoverCancel()
+                        "
+                        confirmButtonType="btn btn-sm btn-primary"
+                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="
+                          confirmationPopoverConfig.confirmClicked = false;
+                          confirmationPopoverConfig.cancelClicked = false
+                        "
+                        [appendToBody]="true"
+                      >
+                        <i [ngClass]="'fa fa-save'"></i>Save<i
+                          class="spinner-border-custom"
+                          aria-hidden="true"
+                          [hidden]="isSpinner"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="!testList.length">
+                    <app-no-record-found></app-no-record-found>
+                  </ng-container>
+                </div>
+              </app-card>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

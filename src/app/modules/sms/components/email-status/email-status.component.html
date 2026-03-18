@@ -1,0 +1,384 @@
+<!-- <div class="card card-custom mt-2 mb-2">
+  <div class="card-toolbar">
+    
+  </div>
+</div> -->
+<div class="row">
+    <div class="col-12">
+        <mat-card>
+            <mat-card-content>
+                <mat-tab-group class="demo-tab-group" animationDuration="0ms" style="background-color: #fff">
+                    <mat-tab label="Send Report(s)">
+                        <div class="row mt-1" *matTabContent>
+                            <div class="col-12">
+                                <form [formGroup]="SearchForEmailstatus" class="form-horizontal" name="form"
+                                    role="form">
+                                    <div class="row mt-4" style="place-content: center">
+                                        <div class="">
+                                            <div class="form-group" style="text-align-last: center">
+                                                <div class="input-group" style="position: relative">
+                                                    <input type="text" class="form-control" [ngClass]="{
+                                                    invalid:
+                                                    SearchForEmailstatus.get('PIN').errors &&
+                                                    SearchForEmailstatus.get('PIN').touched,
+                                                    'invalid-highlighted':
+                                                    SearchForEmailstatus.get('PIN').errors
+                                                }" formControlName="PIN" placeholder="Enter PIN NO" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <button class="btn btn-primary ml-1 pull-left"
+                                                (click)="getReportDataViaPIN()">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </button>
+                                            <button  type="reset"
+                                                class="btn btn-danger ml-1 pull-left">
+                                                <i class="fa fa-eraser" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <app-card [title]="'Email Report(s)'"
+                                            [cardClass]="'tim-card tim-card tim-card-primary'">
+                                            <div class="card-body">
+                                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                                        [name]="spinnerRefs.emailInfo" size="medium" color="#fff"
+                                                        type="square-loader" [fullScreen]="false">
+                                                        <p style="color: white"> Loading... </p>
+                                                    </ngx-spinner>
+                                                <div class="container-fluid">
+                                                    <form [formGroup]="getPatientDetailsForEmail"
+                                                        class="form-horizontal" name="form" role="form">
+                                                        <div class="container-fluid row ">
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label for="MRNO">MR.NO:</label>
+                                                                    <input type="text" class="form-control" [readonly]="true" formControlName="MRNO"  mask="A-0-00000" placeholder="D-0-00000">
+                                                                </div>  
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label for="patientName">Patient Name:</label>
+                                                                    <input formControlName="patientName" type="text"
+                                                                        class="form-control" [readonly]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label for="AgeGender">Age/Gender:</label>
+                                                                    <input formControlName="AgeGender" type="text"
+                                                                        class="form-control" [readonly]="true" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label for="Contact">Contact:</label>
+                                                                    <input formControlName="Contact" type="text"
+                                                                        mask="0000-0000000" [showMaskTyped]="true"
+                                                                        class="form-control" [readonly]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-group">
+                                                                    <label for="Email">Email:</label>
+                                                                    <input formControlName="Email" type="text"
+                                                                    class="form-control" placeholder="Email" placeholder="example@domain.com" class="form-control" [ngClass]="{'invalid': getPatientDetailsForEmail.get('Email').errors, 'invalid-highlighted': getPatientDetailsForEmail.get('Email').errors && isSubmitted}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-group">
+                                                                    <label for="CC">CC:</label>
+                                                                    <input formControlName="CC" type="text" placeholder="example@domain.com" 
+                                                                    class="form-control" [ngClass]="{'invalid': getPatientDetailsForEmail.get('CC').errors, 'invalid-highlighted': getPatientDetailsForEmail.get('CC').errors && isSubmitted}" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    <div style="max-height: 300px; min-height: 250px; overflow-y: auto">
+                                                        <div class="table-responsive mt-3">
+                                                            <!-- <ng-container *ngIf="smsHistoryList !==null && smsHistoryList.length"> -->
+                                                    <table class="table cursor-pointer table-hover compact table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col" width="5%">
+                                                                    <!-- <input type="checkbox" (change)="checkUncheckAll($event.target.checked)" [attr.disabled]="IsMasterDisable ? true : null"/> -->
+                                                                </th>
+                                                                <th width="10%">Code</th>
+                                                                <th width="50%">Test Name</th>
+                                                                <th width="20%">Process</th>
+                                                                <th width="15%">Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngIf="!emailInfoList.length">
+                                                                <td colspan="100" style="text-align: center;"><strong
+                                                                        class="text-primary">
+                                                                        No Record Found...</strong></td>
+                                                            </tr>
+                                                            <tr *ngFor="let item of emailInfoList; let i = index">
+                                                                <td>
+                                                                    <input type="checkbox" class="" (change)="toggleSelection(item)" [(ngModel)]="item.checked" [attr.disabled]="(item.Balance == 0) && (item.StatusId == 9) || (item.StatusId == 12) ? null : true"/>
+                                                                </td>
+                                                                <td>{{ item.TPCode }}</td>
+                                                                <td>{{ item.TestName }}</td>
+                                                                <td>{{ item.Process }}</td>
+                                                                <td>{{ item.Status }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                                
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </app-card>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-info pull-right mt-5" (click)="sendPatientReportViaEmail()">
+                                            <span> <i class="fa fa-envelope-open-text"></i>Email Report(s)</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-tab>
+                    <!-- Start Tab Reports Status -->
+                    <mat-tab label="Report(s) Status">
+                        <div class="row mt-1" *matTabContent>
+                            <div class="col-md-12">
+                                <div class="row ">
+                                    <div class="col-md-12 py-5">
+                                        <form [formGroup]="formForEmailstatus" class="form-horizontal" name="form"
+                                            role="form" (ngSubmit)="getSendingEmailstatus()">
+                                            <div class="row d-flex justify-content-center align-items-center">
+                                                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="dateFrom">Date From:<span
+                                                                class="mandatory-asterisk">*</span></label>
+                                                        <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker"
+                                                            placeholder="YYYY-MM-DD" autocomplete="off" ngbDatepicker
+                                                            formControlName="dateFrom" name="dateFrom"
+                                                            class="form-control" type="text" [value]=""
+                                                            [ngClass]="{'invalid': formForEmailstatus.get('dateFrom').errors , 'invalid-highlighted': formForEmailstatus.get('dateFrom').errors && isSubmitted }" [maxDate]="maxDate"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="dateTo">Date To:<span
+                                                                class="mandatory-asterisk">*</span></label>
+                                                        <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker"
+                                                            placeholder="YYYY-MM-DD" autocomplete="off" ngbDatepicker
+                                                            formControlName="dateTo" name="dateTo" class="form-control"
+                                                            type="text" [value]=""
+                                                            [ngClass]="{'invalid': formForEmailstatus.get('dateTo').errors , 'invalid-highlighted': formForEmailstatus.get('dateTo').errors && isSubmitted }" [maxDate]="maxDate"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 text-center">
+                                                    <button class="btn btn btn-primary weight-bold ">
+                                                        <span> <i class="fas fa-search"></i>Search</span>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-5 col-sm-12">
+                                        <app-card [title]="'Search Results'"
+                                            [cardClass]="'tim-card tim-card tim-card-primary'">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="input-group">
+                                                            <input type="text" placeholder="Search PIN"
+                                                                class="form-control form-control-sm"
+                                                                [(ngModel)]="searchText" name="searchText" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive fixed-height-table">
+                                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                                        [name]="spinnerRefs.visitTable" size="medium" color="#fff"
+                                                        type="square-loader" [fullScreen]="false">
+                                                        <p style="color: white"> Loading... </p>
+                                                    </ngx-spinner>
+                                                    <table
+                                                        class="table table-hover compact cursor-pointer  table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="30%">PIN</th>
+                                                                <th width="70%">Test(s)/Profile(s)</th> 
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngIf="!TestProfileList.length">
+                                                                <td colspan="2" style="text-align: center;"><strong
+                                                                        class="text-primary">
+                                                                        No Record Found...</strong></td>
+                                                            </tr>
+                                                            <tr *ngFor="let item of TestProfileList | filterByKey: searchText:['PIN', 'VisitId']; let i = index"
+                                                                (click)="getTestProfileInfo(item, i);"
+                                                                [ngClass]="{'active': i == rowIndex}">
+                                                                <td width="30%">{{item.PIN}}</td>
+                                                                <td width="70%">{{item.TestCodes || 'NA'}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </app-card>
+                                    </div>
+                                    <div class="col-lg-8 col-md-7 col-sm-12">
+                                        <app-card [title]="'Email Status'"
+                                            [cardClass]="'tim-card tim-card tim-card-primary'">
+                                            <div class="card-body">
+                                                <div>
+                                                    
+                                                <div class="container-fluid">
+                                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                                        [name]="spinnerRefs.tableList" size="medium" color="#fff"
+                                                        type="square-loader" [fullScreen]="false">
+                                                        <p style="color: white"> Fetching... </p>
+                                                    </ngx-spinner>
+                                                    <form [formGroup]="getEmailStatusList"
+                                                        class="form-horizontal" name="form" role="form">
+                                                        <div class="container-fluid row ">
+                                                            <!-- <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="Email">Email:</label>
+                                                                    <input formControlName="Email" type="text"
+                                                                        class="form-control" [readonly]="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="CC">CC:</label>
+                                                                    <input formControlName="CC" type="text"
+                                                                        class="form-control" [readonly]="true"/>
+                                                                </div>
+                                                            </div> -->
+
+                                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="patientName">Name:</label>
+                                                                    <input formControlName="patientName" type="text"
+                                                                        class="form-control" [readonly]="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="Contact">Age/Gender:</label>
+                                                                    <input formControlName="AgeGender" type="text"
+                                                                        class="form-control" [readonly]="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label for="Contact">Contact:</label>
+                                                                    <input formControlName="Contact" type="text"
+                                                                        class="form-control" [readonly]="true"/>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="table-responsive fixed-height-table">
+                                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                                        [name]="spinnerRefs.tableList" size="medium" color="#fff"
+                                                        type="square-loader" [fullScreen]="false">
+                                                        <p style="color: white"> Fetching... </p>
+                                                    </ngx-spinner>
+                                                    <table
+                                                        class="table cursor-pointer table-hover compact table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="18%">Email To</th>
+                                                                <th *ngIf="showEmailCC" width="15%">Email CC</th>
+                                                                <th width="20%">Email Subject</th>
+                                                                <th width="22%">Email Body</th>
+                                                                <th width="15%">Sent On</th>
+                                                                <th width="10%">Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            <tr *ngIf="!TestProfileStatusList.length">
+                                                                <td colspan="100" style="text-align: center;"><strong
+                                                                        class="text-primary">
+                                                                        No Record Found...</strong></td>
+                                                            </tr>
+                                                            <tr *ngFor="let item of TestProfileStatusList let i = index">
+                                                                <td>{{item.EmailTo || '-'}}</td>
+                                                                <td *ngIf="showEmailCC">{{item.EmailCC || '-'}}</td>
+                                                                <td>
+                                                                    {{ truncate(item.EMailSubject, 30) }}
+                                                                </td>
+                                                               <td>
+                                                                    <span class="cursor-pointer d-inline-flex align-items-center gap-2"
+                                                                            (click)="openEmailBodyPopup(emailBodyModal, item.EMailBody)">
+                                                                       <span ngbTooltip="Click to view">{{ getEmailPreview(item.EMailBody) }}</span> 
+                                                                        <i class="fa fa-arrow-circle-down small"></i>
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <!-- <strong>  -->
+                                                                     {{(item.SentOn | date:"dd MMM, yyyy, h:mm a") || '-' }}
+                                                                    <!-- </strong> -->
+                                                                <td>
+                                                                   <strong>  {{item.EmailSentStatus  }} </strong>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                </div>
+                                               
+                                            </div>
+                                        </app-card>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <!-- End Tab Reports Status -->
+                </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+
+
+<ng-template #emailBodyModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Email Body</h5>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss()">
+    </button>
+  </div>
+
+  <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+    <div [innerHTML]="selectedEmailBody"></div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="modal.close()">
+      Close
+    </button>
+  </div>
+</ng-template>

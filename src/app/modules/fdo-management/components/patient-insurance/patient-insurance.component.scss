@@ -1,0 +1,73 @@
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle {
+    border-color: #0BB7AF !important;
+    background-color: #0BB7AF !important;
+    /* Change background color when checked */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #0BB7AF !important;
+    /* Change outer circle border color when checked */
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-ripple .mat-ripple-element {
+    background-color: #0BB7AF !important;
+  }
+  
+  /* Unchecked state */
+  ::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-outer-circle {
+    border-color: #0BB7AF !important;
+  }
+  
+  ::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-ripple .mat-ripple-element {
+    background-color: #0BB7AF !important;
+  }
+  
+  ::ng-deep .mat-radio-group.mat-accent .mat-radio-button .mat-radio-label-content {
+    color: #0BB7AF !important;
+    /* Change label text color */
+  }
+
+
+  // .table-container {
+  //   max-height: 500px !important; /* Adjust height as needed */
+  //   overflow-x: hidden !important;
+  //   border: 1px solid #ddd !important;
+  // }
+
+  .table thead tr {
+    position: sticky !important;
+    top: 0 !important;
+    background: #dedfe0 !important;
+    z-index: 9 !important;
+  }
+  
+  // .table thead tr {
+  //   background: #dedfe0 !important; /* Light gray background */
+  //   // box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1) !important;
+  //   padding: 10px !important;
+  // }
+  .effective-date-time {
+    display: flex;
+    
+    .mini-input-field.date-picker {
+        width: 100px;
+    }
+    .mini-input-field {
+        width: 95px;
+        height: 30px;  
+        margin: auto;  
+    }
+    .mini-input-field.time-picker ::ng-deep fieldset {
+        padding: 0;
+        margin: 0;
+        .ngb-tp-input-container {
+            width: 40px;
+            height: 30px;
+            .ngb-tp-input {
+                height: 38px;
+                padding: 9px 0px;
+                width: 38px;
+            }
+        }
+    }
+}

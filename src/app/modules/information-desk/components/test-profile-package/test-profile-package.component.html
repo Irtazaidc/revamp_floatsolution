@@ -1,0 +1,248 @@
+<div class="roles-page">
+    <!-- <mat-card>
+        <mat-card-content>
+            <mat-tab-group class="demo-tab-group" style="background-color: #fff;"> 
+                <mat-tab label="Test/Profile/Package"> -->
+                    <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                        <div class="card-body" style="min-height: 320px;">
+                            <div class="row">
+                                <!-- <div class="col-md-3">
+                                    <label for="BList">Locations:</label>
+                                    <ng-select [items]="branchList" bindLabel="Title" bindValue="LocId"
+                                        (change)="branchListChanged($event)" placeholder="--select--" [(ngModel)]="selectedLocId">
+                                    </ng-select>
+                                </div> -->
+                                <div class="col-lg-3 col-md-3">
+                                    <label for="PList">Panel:</label>
+                                    <ng-select [items]="panelList" bindLabel="CodeName" bindValue="PanelId"
+                                        (change)="panelListChanged($event)" placeholder="--select--" name="panel"
+                                        [(ngModel)]="selectedPanelId">
+                                    </ng-select>
+                                </div>
+                                <div class="col-lg-5 col-md-7">
+                                    <label class="" >Tests:</label>
+                                    <div class ="form-check-inline">
+                                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode"  id="byCode1" checked>
+                                        <label for="radio1" class="form-check-label">By Code</label>
+                                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byName')" value="byName"  id="byName1">
+                                        <label for="radio2" class="form-check-label">By Name</label>
+                                    </div>
+                                    <div>
+                                        <ng-select 
+                                            [items]="testList" 
+                                            bindLabel="TestProfileName" 
+                                            bindValue="TPId"
+                                            (change)="testListChanged($event)"                          
+                                            placeholder="--select--" 
+                                            name="tests"
+                                            [searchFn]="customSearchFn"
+                                            >
+                            
+                                            <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                                <span ><strong>{{ item.TestProfileCode }} </strong>- {{ item.TestProfileName }}</span>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                
+                                </div>
+                                <div class="col-lg-2 col-md-2">
+                                    <label>&nbsp; </label>
+                                    <button (click)="showTestRateCalculator()" class="btn btn-outline-danger btn-lg-md btn-md-sm mt-lg-8 mt-md-2 pull-right" ngbTooltip="Tests Rate Calculator"><i class="fa fa-calculator"></i>Rate Calculator</button>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="TPId then testResultArea else noResultArea"></ng-container>
+                            <ng-template #testResultArea>
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.testGeneralSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                    <p style="color: white"> Please wait... </p>
+                                </ngx-spinner>
+                                <div class="row" *ngIf="(testGeneralData | json) != ({} | json)">
+                                    <div class="col-md-12 mt-3">
+                                        <!--start::Test Info-->
+                                        <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">General Info.</legend>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p class="p-mb">Code: <strong class="ml-2">{{testGeneralData['Code']}} </strong></p>
+                                                    <p class="p-mb">Type: <strong class="ml-2">{{testGeneralData['Type']}} </strong></p>
+                                                    <p class="p-mb">Sample Quantity: <strong class="ml-2">{{testGeneralData['SampleQuantity']}}</strong></p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="p-mb">Name: <strong class="ml-2">{{testGeneralData['Name']}}</strong></p>                                            
+                                                    <p class="p-mb">Section: <strong class="ml-2">{{testGeneralData['SubSection']}}</strong></p>
+                                                    <p class="p-mb">Sample Type: <strong class="ml-2">{{testGeneralData['Sample']}}</strong></p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="p-mb">Price: <strong class="ml-2">{{testGeneralData['Currency']}} {{testGeneralData['Price']}}</strong></p>
+                                                    <p class="p-mb">Test Place: <strong class="ml-2">{{testGeneralData['TestPlace']}}</strong></p>
+                                                    <!-- <button (click)="showTestRateCalculator()" class="btn btn-outline-danger btn-sm pull-right" ngbTooltip="Tests Rate Calculator"><i class="fa fa-calculator"></i>Rate Calculator</button> -->
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-md-6">
+                                            <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Protocols</legend>
+                                        <div style="max-height: 75px; min-height: 75px; overflow-y: auto">
+                                                <div class="col-md-12">
+                                                    <div [innerHTML]="testProtocol || 'No Protocols Found'"></div>
+                                                    <!-- {{testGeneralData['Protocol']||'No Protocols Found'}} -->
+                                                    <!-- <p class="p-mb">Protocol:<strong class="ml-2" class="cursor-pointer" ngbTooltip="Click to show full info" ngbPopover="{{testGeneralData['Protocol']||''}}" popoverTitle="Protocol">{{truncate(testGeneralData['Protocol'] || '',40)}}</strong></p> -->
+                                                </div>
+                                        </div>
+
+                                            </fieldset> 
+                                    </div>
+                                    <div class="col-md-6">
+                                            <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Instructions</legend>
+                                                <div style="max-height: 75px; min-height: 75px; overflow-y: auto">
+
+                                                <div class="col-md-12">
+                                                    <div [innerHTML]="testInstructuon || 'No Instructions Found'"></div>
+                                                    <!-- {{testGeneralData['Instruction']||'No Instructions Found'}} -->
+                                                    <!-- <p class="p-mb">Instruction:<strong class="ml-2" ngbTooltip="Click to show full info" ngbPopover="{{testGeneralData['Instruction']||''}}" popoverTitle="Instruction">{{truncate(testGeneralData['Instruction'] || '',40)}}</strong></p> -->
+                                                </div>
+                                            </div>    
+
+                                            </fieldset>
+                                    </div>
+                                </div>
+
+                                <div class="divider py-5 text-primary">Locations/TAT/Parameters</div>
+                                <!-- <hr data-content="Test Locations/TAT/Parameters" class="divider py-3"> -->
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!--start::Locations/TAT-->
+                                        <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Test Locations</legend>
+                                            <input type="text" class="form-control form-control-sm mb-2" placeholder="Type to filter" [(ngModel)]="FilterString" />
+                                            <div  style="max-height: 150px; min-height:150px; overflow-y: auto;">
+                                                <ul class="location-list pl-2">
+                                                    <li
+                                                        class="cursor-pointer"
+                                                        *ngFor="let location of testLoationTATData | filterByKey:FilterString:['Code']; let i = index"
+                                                        style="border-bottom: 1px solid #eee;"
+                                                        [ngClass]="{'bg-light': location.LocId == LocId}"
+                                                        (click)="getTATByTPID(location)"
+                                                    >
+                                                    <a
+                                                        [ngClass]="{'font-weight-bolder': location.LocId == LocId}"
+                                                        href="javascript:void(0)"
+                                                    
+                                                        >{{location.Code}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">TAT</legend>
+                                            <!-- <h6 class="section-heading">TAT</h6> -->
+                                            <div class="row" *ngIf="repTimeShow">
+                                                <div class="col-lg-5 col-md-12">
+                                                    <label class="badge">
+                                                        Urgent Reporting Time
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-7 col-md-12">
+                                                    <div>
+                                                        <ng-container *ngIf="locationTatUrgency['UrgentRptTime']==-1; then notAllowed else allowed"></ng-container>
+                                                        <ng-template #notAllowed>
+                                                            <label class="badge badge-inverse-danger pull-right">
+                                                               <strong>No Urgent Reporting allowed</strong> 
+                                                            </label>
+                                                        </ng-template>
+                                                        <ng-template #allowed>
+                                                            <label class="badge badge-inverse-danger pull-right">{{minutesToHours(locationTatUrgency['UrgentRptTime'])}} Hour(s)</label>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div  style="max-height: 150px; min-height:150px; overflow-y: auto;">
+                                                <table class="table table-hover compact table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Reg. Time</th>
+                                                            <th>Days</th>
+                                                            <th>Rep.Time</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let locTAT of locationTATData; let i = index">
+                                                            <td>{{locTAT.RegTime | date: 'hh:mm a'}}</td>
+                                                            <td>{{locTAT.Days}}</td>
+                                                            <td>{{locTAT.ReportTime | date: 'hh:mm a'}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+    
+                                    <div class="col-md-4">
+                                        <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Test/Parameters</legend>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <ng-container *ngIf="testParametersData.length then parametersResult else noParametersResult"> </ng-container>
+                                                    <ng-template #noParametersResult>
+                                                        <p>
+                                                            <ngb-alert [ngClass]="'text-center'" [dismissible]="false" [type]="'primary'">
+                                                              <!--<strong>Info! </strong>--> No parameter found.
+                                                            </ngb-alert>
+                                                        </p>
+                                                    </ng-template>
+                                                    <ng-template #parametersResult>
+                                                        <input type="text" class="form-control form-control-sm mb-2" placeholder="Type to filter" [(ngModel)]="FilterStringParam" />
+                                                        <div  style="max-height: 150px; min-height:150px; overflow-y: auto;">
+                                                            <ul class="location-list pl-2">
+                                                                <li
+                                                                    class="cursor-pointer"
+                                                                    *ngFor="let param of testParametersData | filterByKey:FilterStringParam:['Title','TestProfileName']; let i = index"
+                                                                    style="border-bottom: 1px solid #eee;"
+                                                                    [ngClass]="{'bg-light': i == indexValue}"
+                                                                    (click)="getParamDetail(param,i)"
+                                                                >
+                                                                <a
+                                                                    [ngClass]="{'font-weight-bolder': i == indexValue}"
+                                                                    href="javascript:void(0)" (click)="jumpToParamters(param)"
+                                                                    >{{param.Title ? param.Title:param.TestProfileName}}</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+    
+                                </div>
+                            </ng-template>
+                            <ng-template #noResultArea>
+                                <div class="col-12 text-center text-primary"> <hr> <div>Please select a test to show details</div> </div>
+                            </ng-template>
+                        </div>
+                    </app-card>
+                <!-- </mat-tab> -->
+                <!-- <mat-tab label="Tests Rate Calculator">
+                    <app-test-profile-rates></app-test-profile-rates>
+                </mat-tab>   -->
+            <!-- </mat-tab-group>
+        </mat-card-content>
+    </mat-card> -->
+</div>
+
+<!------start:: Test Rates Calculator Popup-->
+<ng-template #testRates let-testRates>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Test Rates</h5>
+      <button type="button" class="close" aria-label="Close" (click)="testRates.close()">
+        <span style="display: inline-block;" aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-test-profile-rates></app-test-profile-rates>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal" (click)="testRates.close()">
+                    <i class="fa fa-times-circle"></i> Close</button>
+      </div>
+</ng-template>

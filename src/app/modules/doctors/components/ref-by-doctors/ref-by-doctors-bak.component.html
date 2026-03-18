@@ -1,0 +1,230 @@
+<div class="ref-by-doctors-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-success'">
+
+                <div class="row">
+                    <div class="col-12">
+                        <span style="font-size: 24px;">Ref. by Doctor(s)</span>
+                        <button class="btn btn-outline-success pull-right" *ngIf="!showRefByDoctorsForm" (click)="showAddRefByDoctorForm(true)"><i class="ti-plus"></i>Add New</button>
+                        <button class="btn btn-outline-danger pull-right" *ngIf="showRefByDoctorsForm" (click)="showAddRefByDoctorForm(false)"><i class="ti-close"></i></button>
+                    </div>
+                    <div class="col-12" *ngIf="showRefByDoctorsForm">
+                        <form class="md-float-material" [formGroup]="doctorForm">
+
+                            <div class="row">
+
+                                <div class="col-md-4 d-none">
+                                    <label>Doc ID:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="RefId">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Name <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"  formControlName="RefByName"
+                                            [ngClass]="{'invalid': doctorForm.get('RefByName').errors, 'invalid-highlighted': doctorForm.get('RefByName').errors && doctorFormSubmitted}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>PMDC No </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="PMDCRegNo">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Med. Type</label>
+                                    <div class="input-group">
+                                        <select class="form-control" formControlName="MedType">
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let s of medTypes" [value]="s.id">{{s.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>City</label>
+                                    <div class="input-group">
+                                        <!-- <select class="form-control" formControlName="City">
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let s of citiesList" [value]="s.id">{{s.title}}</option>
+                                        </select> -->
+                                        <ng-select style="width: 100%;" [items]="citiesList" bindLabel="CityName"
+                                            placeholder="--select--" bindValue="CityName" formControlName="City">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Address</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="RefByAddress" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>ContactNo</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="ContactNo"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>E-Mail</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="EMail" />
+                                    </div>
+                                </div>
+                                
+    
+                                <div class="col-md-4">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group">
+                                        <button
+                                            class="btn btn-success mr-2"
+                                            title="Save"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="submitForm()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="success"
+                                            cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                        > <i class="ti-save m-0"></i>
+                                            <span *ngIf="!doctorForm.get('RefId').value">Save</span>
+                                            <span *ngIf="doctorForm.get('RefId').value">Update</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger m-l-10" (click)="resetForm()">Clear</button>
+                                    </div>
+                                </div>
+    
+                            </div>
+                
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <hr style="border-color: #3699FF;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <!-- <input type="text" placeholder="type more than 5 characters to filter" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/> -->
+                            <input type="text" placeholder="type atleast 5 characters to filter" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                            <!-- <button class="btn btn-outline-success btn-mini" (click)="filterResults()"><i class="ti-reload"></i></button> -->
+                            <button class="btn btn-outline-success btn-mini" (click)="getRefByDoctors()"><i class="ti-reload"></i></button>
+                            <button class="btn btn-outline-success btn-mini" (click)="optionalColumnsVisibility = !optionalColumnsVisibility"><span *ngIf="!optionalColumnsVisibility">show all columns</span> <span *ngIf="optionalColumnsVisibility">show less columns</span></button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <span *ngIf="searchText && searchText.length < 5">type more <strong>{{5 - searchText.length}}</strong> character(s) to search</span>
+                    </div>
+                </div>
+
+                <div class="table-responsive fixed-height-table">
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>PMDC No</th>
+                                <th>Med. Type</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Address</th>
+                                <th>City</th>
+                                <th>Contact No</th>
+                                <th class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">Email</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr 
+                                *ngFor="let item of pagination.paginatedSearchResults"
+                                [ngClass]="{'active': doctorForm.get('RefId').value == item.RefId}"
+                            >
+                                <td>{{item.RefByName}}</td>
+                                <td>{{item.PMDCRegNo}}</td>
+                                <td>{{item.MedType}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.RefByAddress}}</td>
+                                <td>{{item.City}}</td>
+                                <td>{{item.ContactNo}}</td>
+                                <td class="optional" [ngStyle]="{display: optionalColumnsVisibility ? '' : 'none'}">{{item.EMail}}</td>
+                                <td class="text-right">
+                                    <button
+                                        class="btn btn-outline-danger btn-mini"
+                                        title="Delete"
+                                        mwlConfirmationPopover
+                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                        [placement]="confirmationPopoverConfig.placements[0]"
+                                        (confirm)="delete(item)"
+                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                        confirmButtonType="danger"
+                                        cancelButtonType="outline-secondary"
+                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                        [appendToBody]="true"
+                                    >
+                                        <i class="ti-trash m-0"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-outline-success btn-mini ml-2"
+                                        title="Edit"
+                                        (click)="edit(item)"
+                                    >
+                                        <i class="ti-pencil m-0"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-12">
+                        <!-- <div class="d-flex justify-content-between p-2" *ngIf="pagination.collectionSize > pagination.pageSize"> -->
+                        <div class="d-flex justify-content-between p-2">
+                            <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                            </ngb-pagination>
+                            <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                                <option [ngValue]="5">5 items per page</option>
+                                <option [ngValue]="10">10 items per page</option>
+                                <option [ngValue]="20">20 items per page</option>
+                                <option [ngValue]="50">50 items per page</option>
+                                <option [ngValue]="100">100 items per page</option>
+                                <!-- <option [ngValue]="9999999999">All</option> -->
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+            </app-card>
+        </div>
+    </div>
+
+    
+    <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+
+</div>
+      

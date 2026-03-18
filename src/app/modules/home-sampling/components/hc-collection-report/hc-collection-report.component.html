@@ -1,0 +1,148 @@
+<div class="card card-custom mb-4">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <h3 class="card-label">Collection Report</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <form
+      [formGroup]="sampleCollectionReportForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+      (ngSubmit)="getSampleCollectionReport()"
+    >
+      <div class="row">
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateFrom"
+            class="form-control form-control-md"
+            type="text"
+            [ngClass]="{
+              invalid: sampleCollectionReportForm.get('dateFrom').errors,
+              'invalid-highlighted':
+                sampleCollectionReportForm.get('dateFrom').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            #dateTo="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control form-control-md"
+            type="text"
+            [ngClass]="{
+              invalid: sampleCollectionReportForm.get('dateTo').errors,
+              'invalid-highlighted':
+                sampleCollectionReportForm.get('dateTo').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 mb-2">
+          <label class="font-weight-bold">Rider:</label>
+          <ng-select
+            name="rider"
+            style="width: 100%"
+            [closeOnSelect]="true"
+            [items]="RidersDetailListInParam"
+            bindValue="RiderID"
+            bindLabel="RiderFullName"
+            formControlName="rider"
+            placeholder="-Select HC Staff-"
+          >
+          </ng-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button type="submit" class="btn btn-primary" [disabled]="isDisable">
+            <span *ngIf="isDisable"
+              >Search
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </span>
+
+            <span *ngIf="!isDisable">Search</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="card card-custom">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0, 0, 0, 0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right text-danger">
+          <strong>Total Records: {{ sampleCollectionList.length }}</strong>
+        </small>
+        <div class="table-responsive" style="min-height: 100px">
+          <table class="table table-hover" cellpadding="0" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Patient Name</th>
+                <th class="text-center">Patient Address</th>
+                <th class="text-center">Mobile No.</th>
+                <th class="text-center">Sample Status</th>
+                <th class="text-center">Status Remarks</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="sampleCollectionList.length > 0; else noRecord">
+              <tr *ngFor="let item of sampleCollectionList; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-center">{{item.FirstName}}</td>
+                <td class="text-center">{{item.PatientAddress}}</td>
+                <td class="text-center">{{item.MobileNO}}</td>
+                <td class="text-center">{{item.HCBookingStatus}}</td>
+                <td class="text-center">{{item.Remarks}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noRecord>
+    <div
+      class="no-record-message"
+      style="
+        text-align: center;
+        padding: 1rem;
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        transform: translateY(-50%);
+      "
+    >
+      <strong>No Record Found</strong>
+    </div>
+  </ng-template>
+</div>

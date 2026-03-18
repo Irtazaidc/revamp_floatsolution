@@ -1,0 +1,428 @@
+<div class="card card-custom">
+  <div class="card-body pb-0">
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row container form-group justify-content-center">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            value="1980-08-26"
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateFrom').errors,
+              'invalid-highlighted':
+                filterForm.get('dateFrom').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            placeholder="dd-mm-yyyy"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control mb-4"
+            name="dateTo"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateTo').errors,
+              'invalid-highlighted':
+                filterForm.get('dateTo').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Branch:</label>
+
+          <div class="form-group">
+            <ng-select
+              id="pat_branch"
+              style="width: 100%"
+              formControlName="locID"
+              [items]="branchList"
+              bindLabel="Title"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              bindValue="LocId"
+              placeholder="--Select Branch--"
+              [ngClass]="{
+                invalid: filterForm.get('locID').errors,
+                'invalid-highlighted':
+                  filterForm.get('locID').errors && isSubmitted
+              }"
+            >
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items | slice : 0 : 2"
+                >
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                  <span class="ng-value-label"> {{ item.Title }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">User:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              value=""
+              [items]="employeesList"
+              bindLabel="EmpName"
+              placeholder="-Select Status-"
+              bindValue="UserId"
+              formControlName="UserId"
+              name="UserId"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <label class="control-label">Payment Method:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              value=""
+              [items]="paymentModesList"
+              bindLabel="PaymentModeCategory"
+              placeholder="-Select Status-"
+              bindValue="PaymentModeCategoryID"
+              formControlName="ModeId"
+              name="ModeId"
+            >
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-2">
+          <label class="">Report Type:</label>
+          <div class="form-group mt-2">
+            <mat-radio-group
+              aria-label="Select an option"
+              [(ngModel)]="reportType"
+              (ngModelChange)="onChange($event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <mat-radio-button value="1">Summary</mat-radio-button>
+              <mat-radio-button value="2" class="ml-1">Detail</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="mt-7 col-xl-2 col-lg-3 col-md-4 col-sm-12">
+          <button
+            type="button"
+            (click)="searchDataList()"
+            class="btn btn-primary"
+            type="button"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-warning"
+      [name]="spinnerRefs.delayreportTable"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <!-- <div class="row justify-content-center">
+      <div class="col-md-6 col-sm-12">
+        <div class="input-group">
+          <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText"
+            name="searchText" />
+          <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="searchDataList()">
+            <i class="ti-reload"></i>
+          </button>
+        </div>
+      </div>
+    </div> -->
+    <div
+      class="table-responsive table-container fixed-height-table"
+      *ngIf="ifDetail"
+    >
+      <table class="table table-hover table-bordered w-100 align-middle">
+        <thead class="sticky-header">
+          <tr>
+            <th rowspan="2">#</th>
+            <th rowspan="2">User Name</th>
+            <th rowspan="2">PIN</th>
+            <th rowspan="2">Date</th>
+            <th rowspan="2">Total Amount</th>
+            <th rowspan="2">Cash</th>
+            <th rowspan="2">CC</th>
+            <th rowspan="2">Cheque</th>
+            <th rowspan="2">Online Payment</th>
+            <th rowspan="2">Cash Inst</th>
+            <th rowspan="2">CC Inst</th>
+            <th rowspan="2">Online Payment Inst</th>
+            <th rowspan="2">Cheque Inst</th>
+            <th rowspan="2">Demand Draft</th>
+            <th rowspan="2">Reward Points</th>
+            <th colspan="3" class="text-center">Refund</th>
+          </tr>
+          <tr>
+            <th>Cash</th>
+            <th>CC</th>
+            <th>Online</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            class="text-center"
+            *ngIf="!userCashDataList || userCashDataList == ''"
+          >
+            <td colspan="20">
+              <app-no-record-found></app-no-record-found>
+            </td>
+          </tr>
+
+          <ng-container
+            *ngFor="let group of groupedUserCashData; let i = index"
+          >
+            <!-- Group Header -->
+            <tr
+              style="
+                background-color: #f1f3f5;
+                font-weight: 600;
+                cursor: pointer;
+              "
+              (click)="toggleUser(group.userName)"
+            >
+              <td colspan="20" class="text-start">
+                <span class="me-2">
+                  {{ expandedUsers[group.userName] ? "▼" : "▶" }}
+                </span>
+                {{ group.userName }}
+                <!-- — Total: -->
+                <!-- <strong>{{ group.totals.totalAmount | number }}</strong> -->
+              </td>
+            </tr>
+
+            <!-- Group Details -->
+            <ng-container *ngIf="expandedUsers[group.userName]">
+              <tr *ngFor="let data of group.records; let j = index">
+                <td>{{ j + 1 }}</td>
+                <td>{{ data.UserName || "-" }}</td>
+                <td>{{ data.VisitId || "-" }}</td>
+                <td>
+                  {{
+                    data.RecDate ? (data.RecDate | date : "dd MMM, yyyy") : "-"
+                  }}
+                </td>
+                <td>{{ getTotal(data) || "-" }}</td>
+                <td>{{ data.Cash || "-" }}</td>
+                <td>{{ data.CC || "-" }}</td>
+                <td>{{ data.Cheque || "-" }}</td>
+                <td>{{ data.OnlinePayment || "-" }}</td>
+                <td>{{ data.CashInst || "-" }}</td>
+                <td>{{ data.CCInst || "-" }}</td>
+                <td>{{ data.ChequeInst || "-" }}</td>
+                <td>{{ data.OnlinePaymentInst || "-" }}</td>
+                <td>{{ data.DemandDraft || "-" }}</td>
+                <td>{{ data.RewardPoints || "-" }}</td>
+                <td>{{ data.RefundCash || "-" }}</td>
+                <td>{{ data.RefundCC || "-" }}</td>
+                <td>{{ data.RefundOnlinePayment || "-" }}</td>
+              </tr>
+
+              <!-- Per-User Subtotal -->
+              <tr style="background-color: #e9ecef; font-weight: 600">
+                <td colspan="4">Subtotal</td>
+                <td>{{ group.totals.totalAmount }}</td>
+                <td>{{ group.totals.totalCash }}</td>
+                <td>{{ group.totals.totalCC }}</td>
+                <td>{{ group.totals.totalCheque }}</td>
+                <td>{{ group.totals.totalOnlinePayment }}</td>
+                <td>{{ group.totals.totalCashInst }}</td>
+                <td>{{ group.totals.totalCCInst }}</td>
+                <td>{{ group.totals.totalChequeInst }}</td>
+                <td>{{ group.totals.totalOnlinePaymentInst }}</td>
+                <td>{{ group.totals.totalDD }}</td>
+                <td>{{ group.totals.totalReward }}</td>
+                <td>{{ group.totals.totalRefundCash }}</td>
+                <td>{{ group.totals.totalRefundCC }}</td>
+                <td>{{ group.totals.totalRefundOnlinePayment }}</td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="table-responsive table-container fixed-height-table"
+      *ngIf="ifSummary"
+    >
+      <strong class="text-danger"
+        >Net Collection = Regular + Installment - Refunds</strong
+      >
+      <table
+        class="table table-hover table-bordered text-center align-middle payment-summary-table"
+      >
+        <thead>
+          <tr>
+            <th rowspan="2">Name</th>
+            <th rowspan="2">Net Collection</th>
+            <th colspan="3">Regular</th>
+            <th colspan="3">Installment</th>
+            <th colspan="3">Refunds</th>
+            <!-- <th rowspan="2">Action</th> -->
+          </tr>
+          <tr>
+            <th>Cash</th>
+            <th>Credit Card</th>
+            <th>Online Payment</th>
+            <th>Cash</th>
+            <th>Credit Card</th>
+            <th>Online Payment</th>
+            <th>Cash</th>
+            <th>Credit Card</th>
+            <th>Online Payment</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-container *ngIf="groupedUserCashData?.length; else noData">
+            <ng-container *ngFor="let user of groupedUserCashData">
+              <!-- Main Group Row -->
+              <tr class="main-row">
+                <td class="text-start fw-semibold">{{ user.UserName }}</td>
+                <td class="fw-semibold">
+                  {{
+                    (user.totals.Cash || 0) +
+                      (user.totals.CreditCard || 0) +
+                      (user.totals.OnlinePayment || 0) +
+                      (user.totals.CashInst || 0) +
+                      (user.totals.CreditCardInst || 0) +
+                      (user.totals.OnlinePaymentInst || 0) -
+                      ((user.totals.CashRefund || 0) +
+                        (user.totals.CreditCardRefund || 0)) +
+                      (user.totals.OnlinePaymentRefund || 0)
+                  }}
+                </td>
+                <td>{{ user.totals.Cash || "-" }}</td>
+                <td>{{ user.totals.CreditCard || "-" }}</td>
+                <td>{{ user.totals.OnlinePayment || "-" }}</td>
+                <td>{{ user.totals.CashInst || "-" }}</td>
+                <td>{{ user.totals.CreditCardInst || "-" }}</td>
+                <td>{{ user.totals.OnlinePaymentInst || "-" }}</td>
+                <td>{{ user.totals.CashRefund || "-" }}</td>
+                <td>{{ user.totals.CreditCardRefund || "-" }}</td>
+                <td>{{ user.totals.OnlinePaymentRefund || "-" }}</td>
+                <!-- <td>
+                  <button class="btn btn-sm btn-outline-primary px-3 py-1" (click)="user.expanded = !user.expanded">
+                    {{ user.expanded ? "Hide" : "View" }} Details
+                  </button>
+                </td> -->
+              </tr>
+
+              <!-- Expanded Records -->
+              <!-- <tr *ngIf="user.expanded">
+                <td colspan="9" class="p-0">
+                  <table class="table table-sm table-bordered mb-0 text-center align-middle inner-table">
+                    <thead>
+                      <tr>
+                        <th>Total Amount</th>
+                        <th>Cash</th>
+                        <th>Credit Card</th>
+                        <th>Cash Inst</th>
+                        <th>CC Inst</th>
+                        <th>Cash Refund</th>
+                        <th>CC Refund</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let record of user.records">
+                        <td>
+                          {{
+                          (record.Cash || 0) +
+                          (record.CreditCard || 0) +
+                          (record.CashInst || 0) +
+                          (record.CreditCardInst || 0) +
+                          (record.CashRefund || 0) +
+                          (record.CreditCardRefund || 0)
+                          }}
+                        </td>
+                        <td>{{ record.Cash || "-" }}</td>
+                        <td>{{ record.CreditCard || "-" }}</td>
+                        <td>{{ record.CashInst || "-" }}</td>
+                        <td>{{ record.CreditCardInst || "-" }}</td>
+                        <td>{{ record.CashRefund || "-" }}</td>
+                        <td>{{ record.CreditCardRefund || "-" }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr> -->
+            </ng-container>
+          </ng-container>
+
+          <ng-template #noData>
+            <tr>
+              <td colspan="9" class="text-center text-muted py-3">
+                No Record Found
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+
+        <tfoot *ngIf="groupedUserCashData?.length">
+          <tr class="total-row">
+            <td>Total</td>
+            <td>{{ totalAmount }}</td>
+            <td>{{ totalRegularCash }}</td>
+            <td>{{ totalRegularCC }}</td>
+            <td>{{ totalRegularOnline }}</td>
+            <td>{{ totalCashInst }}</td>
+            <td>{{ totalCCInst }}</td>
+            <td>{{ totalROnlineInst }}</td>
+            <td>{{ totalCashRefund }}</td>
+            <td>{{ totalCreditCardRefund }}</td>
+            <td>{{ totalRefundOnline }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

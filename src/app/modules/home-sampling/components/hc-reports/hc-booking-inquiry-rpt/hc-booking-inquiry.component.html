@@ -1,0 +1,253 @@
+<app-card [title]="'HC Booking Iquiry'" [cardClass]="'tim-card tim-card tim-card-primary'"
+    [cardHeaderClass]="'card-header-narrow'">
+    <form class="container" #container class="" [formGroup]="bookingInqForm">
+
+        <div class="row mt-4" style="place-content: center;">
+            <div class="">
+                <div class="form-group" style="text-align-last: center;">
+                    <div class="input-group" style="position: relative;">
+                        <input ngbTooltip="Booking ID" #bookingid type="text" class="form-control" name="bookingid"
+                            [ngClass]="{'invalid': bookingInqForm.get('bookingid').errors && bookingInqForm.get('bookingid').touched, 'invalid-highlighted': bookingInqForm.get('bookingid').errors}"
+                            formControlName="bookingid" placeholder="Enter Booking ID">
+                    </div>
+                </div>
+            </div> &nbsp;
+            <div class="">
+                <button ngbTooltip="Search" class="btn  btn-primary  mr-1 pull-left"
+                    (click)="getHCBookingInquiryData()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                <button ngbTooltip="Clear Text" type="reset" class="btn  btn-danger  pull-left "><i class="fa fa-eraser"
+                        aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </form>
+
+    <div class="col-md-12">
+        <ng-container *ngIf="hcBookingInqList.length then bookingInquirySpace else bookingInquiryDataNotFoundSpace">
+        </ng-container>
+        <ng-template #bookingInquirySpace>
+            <div class="row">
+                <ng-container *ngIf="patientId !== null; else PatientIDNotFoundSpace">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+                        <div class="card card-custom gutter-t"
+                            style="max-height: 150px; min-height: 150px; overflow-y: auto;">
+                            <div class="card-body px-4 py-4 bg-light">
+
+                                <app-patient-basic-info [PatientId]="patientId">
+                                </app-patient-basic-info>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </ng-container>
+                <ng-template #PatientIDNotFoundSpace>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+                        <div class="card card-custom bg-light gutter-t"
+                            style="max-height: 150px; min-height: 150px; overflow-y: auto;">
+                            <div class="card-body px-4 py-5 bg-light d-flex align-items-center justify-content-center">
+                                <h1>Patient ID Not Found </h1>
+                            </div>
+                        </div>
+                    </div>
+
+                </ng-template>
+
+
+                <ng-container *ngIf="riderId !== -1; else RiderNotFoundSpace">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                        <div class="card card-custom gutter-t"
+                            style="max-height: 150px; min-height: 150px; overflow-y: auto;">
+                            <div class="card-body px-4 py-4 bg-light">
+
+                                <app-hc-rider-card [riderId]="riderId"></app-hc-rider-card>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-template #RiderNotFoundSpace>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+                        <div class="card card-custom bg-light gutter-t"
+                            style="max-height: 150px; min-height: 150px; overflow-y: auto;">
+                            <div class="card-body px-4 py-5 bg-light d-flex align-items-center justify-content-center">
+                                <h1>Not Assigned to any Rider</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                </ng-template>
+
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <!-- <div class="card card-custom gutter-t">
+                        <div class="card-body px-4 py-4"> -->
+                    <fieldset class="fieldset-border-all-primary">
+                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">
+                            Inquiry </legend>
+                        <div style="max-height: 200px; overflow-y: auto;">
+
+                            <div class="table-responsive fixed-height-table">
+                                <table class="table table-hover compact">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th>Booking ID</th> -->
+                                            <!-- <th>HC Staff Name </th> -->
+                                            <!-- <th>HC DateTime </th> -->
+                                            <th>Action DateTime</th>
+                                            <th>Action Performed by</th>
+                                            <th>HC Booking status</th>
+                                            <th>HC Remarks</th>
+                                            <!-- <th>Visit Number</th> -->
+                                            <!-- <th>Test Name</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of hcBookingInqList; let i = index">
+
+                                            <!-- <td>{{item.BookingPatientID}}</td> -->
+                                            <!-- <td>{{item.HCStaffName}}</td> -->
+                                            <!-- <td>{{item.HCDateTime | date:"dd MMM, 
+                                                yyyy,
+                                                h:mm:ss a"}}</td>-->
+                                            <td>{{item.ActionDateTime | date:"dd MMM, yyyy, h:mm:ss a"}}</td>
+                                            <td>{{item.ActionPerformedBy || 'NA'}}</td>
+                                            <td>{{item.HCBookingStatus || 'NA'}}</td>
+                                            <td>{{item.Remarks || 'NA'}}</td>
+                                            <!-- <td>{{item.PIN}}</td> -->
+                                            <!-- <td>{{item.CommaSepTPs}}</td> -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!-- </div>
+                    </div> -->
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-xl-5 col-lg-6 col-md-6 col-sm-12">
+                    <fieldset class="fieldset-border-all-primary">
+                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Booking Details
+                        </legend>
+                        <div style="min-height: 170px; max-height: 170px; overflow: hidden;">
+                            <app-hc-booking-card [bookingid]="selBookingID"></app-hc-booking-card>
+                        </div>
+                    </fieldset>
+                </div>             
+                <ng-container *ngIf="selBookingID; else registrationDataNotFoundSpace">
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                        <fieldset class="fieldset-border-all-primary">
+                            <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Registration
+                                Details
+                            </legend>
+                            <app-hc-reg-card [bookingid]="selBookingID"></app-hc-reg-card>
+                        </fieldset>
+                    </div>
+                </ng-container>
+                <ng-template #registrationDataNotFoundSpace>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                        <fieldset class="fieldset-border-all-primary">
+                            <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Registration
+                                Details
+                            </legend>
+                            <div class="table-responsive"
+                                style="min-height: 170px; max-height: 170px; overflow-y: auto;">
+                                <div
+                                    class=" min-width:100%; px-4 py-5  d-flex align-items-center justify-content-center">
+                                    <h1>No Details Found</h1>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </ng-template>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                    <fieldset class="fieldset-border-all-primary">
+                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Tubes Picture
+                        </legend>
+                        <div class="container-fluid">
+                            <div class="row">
+                                
+                                <div class="col-md-12 ">
+                                    <div class="d-flex justify-content-center" >
+                                     <ngx-spinner 
+                                     style="z-index: 99;position: absolute; opacity: 1; top: 1px;left: 12px; width: 100%; height: 140px;"
+                                     class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.updatePicture" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                         <p style="color: white"> Loading... </p>
+                                     </ngx-spinner>
+                                        <img src="{{ImageUrl!=null?ImageUrl:'assets/images/brand/no-image.png'}}" width="200px" height="140px" class="image-responsive  mb-2" style="border: 1px solid grey;">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-mini btn-success mt-2 pull-right" (click)="viewFullImage()">View Full Image</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+
+
+
+        </ng-template>
+
+        <ng-template #bookingInquiryDataNotFoundSpace>
+            <ngb-alert style="text-align:center" [dismissible]="false" [type]="'info'">
+                <strong>No Detail Found </strong>
+            </ngb-alert>
+        </ng-template>
+
+    </div>
+
+
+
+    <ng-template #showImage let-showImage>
+        <div
+          class="modal-header"
+          style="display: block !important; padding: 1rem 1.75rem;"
+        >
+          <div class="row m-0 p-0">
+            <div class="col-12">
+              <h4 >{{ImageTitle}}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="docs-area mt-2">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <div class="d-flex justify-content-center" >
+                             
+                                <img src="{{ImageUrl!=null?ImageUrl:'assets/images/brand/no-image.png'}}" width="100%" height="75%" class="image-responsive  mb-2" style="border: 1px solid grey;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer m-0 p-0">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-info"
+            data-dismiss="modal"
+            (click)="showImage.close()"
+          >
+            <i class="fa fa-times-circle"></i>Close
+          </button>
+        </div>
+      </ng-template>
+
+</app-card>

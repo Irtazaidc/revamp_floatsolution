@@ -1,0 +1,127 @@
+<div class="visit-management-page">
+    <div class="row">
+        <div class="col-sm-12 patient-search-area">
+            <app-patient-search
+            (visitSelectedEvent)="patientVisitEvent($event)"
+            [buttonControls]="['visits']"
+            [isInquiry]="true"
+            ></app-patient-search>
+        </div>
+    </div>
+    <div class="row" style="margin-top: -45px;" #visitInfoArea>
+        <div class="col-sm-12">
+            <app-card [cardClass]="'tim-card tim-card-primary'">
+                <ng-container *ngIf="selectedVisit; then visitContainer else visitNotSelectedContainer"></ng-container>
+                <ng-template #visitContainer>
+                    <div class="patient-visit-area">
+                        <div class="col-12">
+                            <ng-container *ngIf="visitTests.length; then patientRecordsContainer else defaultTemplateContainer"></ng-container>
+                            <ng-template #defaultTemplateContainer>
+                                <!-- <div class="col-12 text-center"> <hr> <div class="text-primary">No Record(s) Found.</div> </div> -->
+                                <app-no-record-found [infoMessageParam]="'No study found in final status against this visit'"></app-no-record-found>
+                            </ng-template>
+                            <ng-template #patientRecordsContainer>
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row patient-info-container">
+                                                    <div class="col-md-12" *ngIf="visitTests">
+                                                        <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Pateint Info.</legend>
+                                                            <app-patient-basic-info class="bg-light" [PatientId]="PatientID" [VisitId]="VisitID"></app-patient-basic-info>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="patient-visit-Test-info-container">
+                                                   <fieldset class="fieldset-primary fieldset-border-top">
+                                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Test Info.</legend>
+                                                      <div>
+                                                         <table class="table table-hover compact table-bordered" *ngIf="visitTests.length">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Code</th>
+                                                                    <th>Name</th>
+                                                                    <th>Status</th>
+                                                                    <th class="text-center"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="cursor-pointer"
+                                                                    *ngFor="let tp of visitTests; let i=index;"
+                                                                    [ngStyle]="{'text-decoration': tp.TestStatusId < 0 ? 'line-through' : '', 'color': tp.ProcessId == 2 ? 'red' : 'black'}"
+                                                                    >
+                                                                    <td>{{tp.Code}} </td>
+                                                                    <td>{{tp.Test}}</td>
+                                                                    <td>{{tp.TestStatus}}</td>
+                                                                    <td class="text-center">
+                                                                        <mat-checkbox class="example-margin" name="itemChecked" [(ngModel)]="tp.checked" [disabled]="false"> </mat-checkbox>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                         </table>
+                                                      </div>
+                                                   </fieldset>
+                                                </div>
+                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                                <div class="form-group">
+                                                    <label for="ResetRequestRemarks" class="control-label">Remarks:</label>
+                                                    <textarea 
+                                                    [ngClass]="{'invalid': characterCount<15 && clickSubmitBtn, 'invalid-highlighted': characterCount<15 && clickSubmitBtn}"
+                                                    class="form-control form-control-sm" name="ResetRequestRemarks" [(ngModel)]="ResetRequestRemarks" rows="4" (input)="updateCharacterCount()"></textarea>
+                                                    <small [ngClass]="{'over-limit': characterCount < maxCharacterCount}">{{ characterCount }} <span *ngIf="characterCount<=15">/15</span></small>
+                                                 </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button [disabled]="disabledButton"
+                                                    class="btn btn-sm btn-primary pull-right"
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="'Please confirm...!'"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="updateVisitTestResetStatus()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true">
+                                                    <i 
+                                                    class="fas fa-plus-circle"
+                                                    ></i>Submit <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Ramarks and Documents-->
+                                <div class="row">
+                                    <hr style="width: 100%; margin: 10px 0px;">
+                                    <div class="col-md-6 visit-docs-area">
+                                        <app-visit-docs [propVisitNo]="VisitID"  [editing]="{select: true, camera: true}" [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [isLoadByDefault]="false"></app-visit-docs>
+                                    </div>
+                                    <div class="col-md-6 visit-remarks-area">
+                                        <app-visit-remarks [propVisitNo]="VisitID" ></app-visit-remarks>
+                                    </div>
+                                    
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #visitNotSelectedContainer>
+                    <div class="col-12 text-center text-primary"> <hr> <div>Please search patient and select visit to show details</div> </div>
+                </ng-template>
+            </app-card>
+        </div>
+    </div>
+</div>
+

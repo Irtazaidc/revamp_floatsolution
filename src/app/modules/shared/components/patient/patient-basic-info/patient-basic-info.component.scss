@@ -1,0 +1,34 @@
+:host {
+    display: block;
+    font-size: 0.8rem;
+}
+
+
+.patient-basic-info-container {
+    margin: 5px;
+    padding: 5px 0;
+    border: 1px solid #eee;
+
+    img.patient-img {
+        width: 90px;
+        height: 90px;
+        border: 1px solid #999;
+        padding: 7px;
+    }
+
+    .info-area {
+        align-content: space-evenly;
+
+        label {
+            margin-bottom: 0;
+            align-self: center;
+
+            .lable-name {
+            }
+            .label-value {
+                font-size: 1rem;
+            }
+        }    
+    }
+    
+}

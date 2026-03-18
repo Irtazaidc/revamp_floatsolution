@@ -1,0 +1,58 @@
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group class="demo-tab-group" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event)"  animationDuration="0ms" style="background-color: #fff;">
+      <mat-tab label="Visit Tracking">
+        <ng-template mat-tab-label>
+          <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i>
+          Visit Tracking
+        </ng-template>
+        <app-visit-tracking  [buttonControls]="['showResults','visits', 'invoice', 'booking', 'barcode', 'attachdocs']"></app-visit-tracking>
+      </mat-tab>
+      <mat-tab *ngIf="inquiryReportPermission" label="Inquiry Report">
+        <ng-template mat-tab-label>
+          <i class="fas fa-file-signature icon-lg text-danger custom-icons mr-2"></i>
+          Inquiry Report
+        </ng-template>
+        <app-inquiry-report-inner  [buttonControls]="['showResults','visits', 'invoice', 'booking', 'barcode', 'attachdocs']"></app-inquiry-report-inner>
+      </mat-tab>
+      <mat-tab label="Test/Profile/Package">
+        <ng-template mat-tab-label>
+          <i class="flaticon2-search icon-lg text-danger mr-2 custom-icons"></i>
+          Test/Profile/Package
+        </ng-template>
+        <app-test-profile-package (sendParamID)="getParamID($event)"   ></app-test-profile-package>
+      </mat-tab>
+      <mat-tab label="Parameter">
+        <ng-template mat-tab-label>
+          <i class="flaticon2-layers icon-lg text-danger mr-2 custom-icons"></i>
+          Parameter
+        </ng-template>
+        <app-test-parameter [getParamID]="ParamID" ></app-test-parameter>
+      </mat-tab>
+      <mat-tab label="Panel">
+        <ng-template mat-tab-label>
+          <i class="flaticon2-hexagonal icon-lg text-danger mr-2 custom-icons"></i>
+          Panel
+        </ng-template>
+        <app-panel-info ></app-panel-info>
+      </mat-tab>
+      <mat-tab label="Telephone Directory">
+        <ng-template mat-tab-label>
+          <i class="flaticon2-list icon-lg text-danger custom-icons mr-2"></i>
+          Telephone Directory
+        </ng-template>
+        <app-telephone-directory ></app-telephone-directory>
+      </mat-tab>
+      <mat-tab label="Discount Card">
+        <ng-template mat-tab-label>
+          <i class="flaticon2-avatar icon-lg text-danger custom-icons mr-2"></i>
+          Discount Card
+        </ng-template>
+        <app-discount-card-details ></app-discount-card-details>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+
+
+

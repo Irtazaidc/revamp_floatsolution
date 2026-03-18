@@ -1,0 +1,57 @@
+.chart-box{
+    background:#fff;
+    border-radius:10px;
+    padding:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.chart-title{
+    font-weight:600;
+    margin-bottom:15px;
+}
+.device-card{
+  border:1px solid #eee;
+  padding:15px;
+  border-radius:10px;
+  margin:4px;
+  background:#ede7e7;
+}
+
+.device-title{
+  font-weight:600;
+  font-size:16px;
+  margin-bottom:8px;
+}
+
+.battery-bar{
+ position:relative;
+ background:#eee;
+ height:18px;
+ border-radius:6px;
+}
+
+.battery-fill{
+ background:#28a745;
+ height:100%;
+ border-radius:6px;
+}
+
+.battery-bar span{
+ position:absolute;
+ left:50%;
+ transform:translateX(-50%);
+ font-size:11px;
+}
+
+.table-container {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #343a40; /* same as thead-dark */
+  color: white;
+}

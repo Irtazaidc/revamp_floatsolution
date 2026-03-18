@@ -1,0 +1,185 @@
+
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-7">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                            <label for="branchIds">Location</label>
+                            <ng-select style="width: 100%;"
+                                class=" mt-1 mr-1"
+                                [items]="branchesList"
+                                bindLabel="Title" 
+                                placeholder="-Select Location-"
+                                bindValue="LocId"
+                                [(ngModel)]="LocID"
+                                >
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.Title}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                            <label for="departmentIds">Department</label>
+                            <ng-select style="width: 100%;"
+                                class=" mt-1 mr-1"
+                                [items]="departmentsList"
+                                bindLabel="DepartmentName" 
+                                placeholder="-Select Department-"
+                                bindValue="DepartmentId"
+                                [(ngModel)]="SubDepartmentID"
+                                >
+        
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 text-right">
+                            <label>&nbsp;</label>
+                            <div class="input-group text-right">
+                                <button style="margin-left: 16%;" type="submit" class="btn btn-primary" (click)="searchExtension()"><i class="ti-search m-0"></i>Search</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getExtension()"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Add new extension"><i class="ti-plus"></i>New</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Extension</th>
+                                    <th>Location</th>
+                                    <th>Department</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="!extensionList.length"> <td colspan="5" class="text-center"> <strong class="text-primary"> No record found</strong></td></tr>
+                                <tr class="pointer" *ngFor="let item of extensionList | filterByKey:searchText:['Title','ExtensionNo','SubDepartmentName']; let i = index" (click)="getSingleRow(item.ExtensionID)"
+                                [ngClass]="{'active': item.ExtensionID==ExtensionID}"
+                                >
+                                    <td>{{i+1}}</td>
+                                    <td>{{item.Title}}</td>
+                                    <td><strong>{{item.ExtensionNo}}</strong></td>
+                                    <td>{{item.LocationTitle}}</td>
+                                    <td>{{item.SubDepartmentName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-5">
+            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner>
+                    <form class="" [formGroup]="extensionForm">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label for="LocId">Location</label>
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="branchesList"
+                                    bindLabel="Title" 
+                                    placeholder="-Select Location-"
+                                    bindValue="LocId"
+                                    formControlName="LocId"
+                                    [ngClass]="{'invalid': extensionForm.get('LocId').errors && extensionForm.get('LocId').touched, 'invalid-highlighted': extensionForm.get('LocId').errors}"
+                                    >
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label for="DepartmentId">Department</label>
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="departmentsList"
+                                    bindLabel="DepartmentName" 
+                                    placeholder="-Select Department-"
+                                    bindValue="DepartmentId"
+                                    formControlName="DepartmentId"
+                                    [ngClass]="{'invalid': extensionForm.get('DepartmentId').errors && extensionForm.get('DepartmentId').touched, 'invalid-highlighted': extensionForm.get('DepartmentId').errors}"
+                                    >
+            
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-4">
+                                <div class="form-group">
+                                    <label for="Title" class="control-label">Extension Title</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="Title"
+                                    [ngClass]="{'invalid': extensionForm.get('Title').errors && extensionForm.get('Title').touched, 'invalid-highlighted': extensionForm.get('Title').errors}">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 mt-4">
+                                <div class="form-group">
+                                    <label for="ExtensionNo" class="control-label">Extension No.</label>
+                                    <input type="text" class="form-control form-control-sm" formControlName="ExtensionNo"
+                                    [ngClass]="{'invalid': extensionForm.get('ExtensionNo').errors && extensionForm.get('ExtensionNo').touched, 'invalid-highlighted': extensionForm.get('ExtensionNo').errors}" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button
+                                    [disabled]="disabledButton"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    title=""
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertUpdateExtension()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(ExtensionID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>{{ActionLabel}}<i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+
+        </div>
+    </div>
+</div>

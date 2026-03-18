@@ -1,0 +1,521 @@
+<!-- <app-card [cardClass]="'tim-card tim-card tim-card-primary'" [cardHeaderClass]="'card-header-narrow'"> -->
+<app-patient-search [buttonControls]="['searchVisitBtn', 'showResults', 'discountCardsViewBtn']"
+    (visistList)="GetFilterdPatientVisit($event)">
+</app-patient-search>
+
+<!-- <div style="margin-top: 16px;" class="col-12" *ngIf="isScreen == 1">
+        <div class="row">
+            <div class="col-md-6 col-lg-6 col-sm-12">
+                <ng-container *ngIf="VisitsList.length; then VisitListSpace else NoVisitFound">
+                </ng-container>
+
+                <ng-template #VisitListSpace>
+                    <div class="card border-primary">
+
+                        <app-patient-basic-info class="bg-light" [PatientId]="PatientInfo.PatientId">
+                        </app-patient-basic-info>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12" style="float: right;margin-bottom: 2px;"> -->
+<!-- <div class="">
+                                <input type="text" placeholder="Search Item" style="float: right;margin-top: 10px;"
+                                    class="col-lg-4 col-sm-12 form-control form-control-sm "
+                                    [(ngModel)]="searchInVisitList" name="searchInVisitList" />
+                            </div> -->
+<!-- </div>
+                        <div class="col-md-12 table-responsive">
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr style="font-weight: bold;">
+                                        <th scope="col">PIN</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Cell</th>
+                                        <th scope="col">Visit Date Time</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="">
+                                    
+                                    <tr (click)="GetVisitTestDetails(v, indx)" scope="row"
+                                        *ngFor="let v of paginatedSearchResults | filterByKey: searchInVisitList:['VisitId', 'PatientName', 'Cell', 'VisitDateTime'] ; let indx = index" [class.active]="indx == HighlightRow">
+                                        <td> {{v.VisitId}}</td>
+                                        <td> {{v.PatientName}}</td>
+                                        <td> {{v.Cell}}</td>
+                                        <td> {{v.VisitDateTime | dateFormat: 'DD-MM-YYYY h:mm:ss a'}}</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-between p-2" *ngIf="collectionSize > pageSize">
+                                <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size="sm"
+                                    [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                    (pageChange)="refreshPagination()">
+                                </ngb-pagination> -->
+
+<!-- <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshPagination()">
+                                <option [ngValue]="5">5 items per page</option>
+                                <option [ngValue]="10">10 items per page</option>
+                                <option [ngValue]="9999999999">All</option>
+                            </select> -->
+<!-- </div>
+                        </div>
+                    </div>
+
+                </ng-template>
+                <ng-template #NoVisitFound>
+                    <div style="font-weight: bold;text-align: center;">No Visit Found</div>
+                </ng-template>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-12" *ngIf="isTPDetailScreen">
+
+                <ng-container *ngIf="visitDetailsList.length; then PatientCardSpace  else NoVisitDetailFound">
+
+                </ng-container>
+                <ng-template #PatientCardSpace>
+
+                    <ng-container *ngIf="visitDetailsList.length; then VisitTestDetailSpace else NoTestDetailSpace">
+                    </ng-container>
+
+                    <ng-template #VisitTestDetailSpace>
+                        <div class="card border-primary">
+                            <div class="card-body text-default table-responsive">
+                                <div class="col-12">
+                                    <div class="col-lg-12" style="float: right;margin-bottom: 2px;">
+                                        <div class=""> <input type="text" placeholder="Search Item"
+                                                style="float: right;"
+                                                class="col-lg-4 col-sm-12 form-control form-control-sm "
+                                                [(ngModel)]="searchInTestDetail" name="searchInTestDetail" /></div>
+
+                                    </div>
+
+                                    <table aria-hidden="true" class="table table-hover compact">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"> <input type="checkbox"
+                                                        [attr.disabled]="IsMasterDisable ? true : null"
+                                                        [(ngModel)]="masterSelected" name="list_name" value="m1"
+                                                        (change)="checkUncheckAll()" /> -->
+<!-- <strong>Select All</strong> -->
+<!-- </th>
+                                                <th scope="col">Code</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Delivery Date</th> -->
+<!-- <th scope="col">View</th> -->
+<!-- </tr>
+                                        </thead> -->
+<!-- | filterByKey: searchText:['PROFILETESTS', 'PROFILETESTSDESC', 'STATUS'] -->
+<!-- <tbody class="col-xs-12 col-sm-12 col-md-6 col-lg-4"
+                                            *ngFor="let vd of visitDetailsList | filterByKey: searchInTestDetail:['PROFILETESTS', 'PROFILETESTSDESC', 'STATUS']">
+                                            <tr [attr.disabled]="vd.isDisabled ? true : null">
+                                                <td>
+                                                    <input [attr.disabled]="vd.isDisabled ? true : null"
+                                                        (change)="isAllSelected()" [(ngModel)]="vd.isSelected"
+                                                        type="checkbox" class="" />
+                                                </td>
+                                                <td>{{vd.PROFILETESTS}}</td>
+                                                <td>{{vd.PROFILETESTSDESC}}</td>
+                                                <td>{{vd.STATUS}}</td>
+                                                <td>{{vd.REPORTINGTIME | dateFormat: 'DD-MM-YYYY h:mm:ss a'}}</td> -->
+<!-- <td>sdkjf</td> -->
+<!-- </tr>
+                                        </tbody>
+                                    </table>
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.deliverReportsSpinnerRef" size="large" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>                
+                                </div>
+                            </div>
+                            <div class="visit-remarks-area mb-2"> -->
+<!-- <p>Visit Remarks</p> -->
+<!-- <app-visit-remarks [propVisitNo]="SelRow.VisitId" [editing]="{save: true}">
+                                </app-visit-remarks>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-4">
+
+                                        <div *ngIf="isDueBalance" class="blink_me"> -->
+<!-- {{DueBalanceAmount}} -->
+<!-- <p><strong style="color:red">Balance Due: {{DueBalanceAmount}}</strong></p>
+                                        </div> -->
+
+<!-- <div class="BatchReportsDiv">
+                                            <a target="blank" href="{{batchPrintingUrl}}">BP</a>
+                                        </div> -->
+<!-- </div> -->
+<!-- [attr.disabled]="disableViewTestRow ? true : null" -->
+<!-- <div class="col-8" style="text-align: right;"> -->
+<!-- <button title="{{deliverRptTitle}}"
+                                            [attr.disabled]="isDeliverButtonAllowed ? true  : null"
+                                            (click)="DeliverReports()" class="btn btn-primary">Deliver
+                                            Reports</button> &nbsp;&nbsp;&nbsp;&nbsp; -->
+
+<!-- <button [attr.disabled]="isDeliverButtonAllowed ? true  : null"
+                                            class="btn btn-success btn-mini pull-right" title="{{confirmationPopoverConfig.popoverTitle}}"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="DeliverReports()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="success" cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false">
+                                            Deliver Report(s)
+                                        </button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button [attr.disabled]="isDueBalance ? true  : null" (click)="ViewReport('')"
+                                            class="btn btn-success btn-mini pull-left">View Report(s)</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </ng-template>
+
+                    <ng-template #NoTestDetailSpace>
+                        Not Test Found
+                    </ng-template>
+
+
+
+
+                </ng-template>
+
+                <ng-template #NoVisitDetailFound>
+                    <div style="font-weight: bold;text-align: center;">NoT Found</div>
+                </ng-template>
+
+            </div>
+        </div>
+    </div> -->
+
+
+<!-- </app-card> -->
+
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <div class="card card-custom gutter-t">
+            <div class="card-body px-4 py-4">
+                <ng-container *ngIf="VisitsList.length; then VisitListSpace else NoVisitFound">
+                </ng-container>
+                <ng-template #VisitListSpace>
+                    <app-patient-basic-info class="bg-light" [VisitId]="selVisit">
+                    </app-patient-basic-info>
+                    <!-- [PatientId]="PatientInfo.PatientId" -->
+                    <div class="table-responsive">
+                        <table class="table table-hover compact">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.visitSectionTable" size="large" color="#fff" type="ball-atom"
+                            [fullScreen]="false">
+                          </ngx-spinner>
+                            <thead>
+                                <tr style="font-weight: bold;">
+                                    <th scope="col">PIN</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Cell</th>
+                                    <th scope="col">Visit Date Time</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="">
+                                <tr (click)="GetVisitTestDetails(v, indx)" scope="row"
+                                    *ngFor="let v of paginatedSearchResults | filterByKey: searchInVisitList:['VisitId', 'PatientName', 'Cell', 'VisitDateTime'] ; let indx = index"
+                                    [class.active]="indx == HighlightRow">
+                                    <td> {{v.VisitId}}</td>
+                                    <td> {{v.PatientName}}</td>
+                                    <td> {{v.Cell}}</td>
+                                    <td> {{v.VisitDateTime | dateFormat: 'DD-MM-YYYY h:mm:ss a'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-between p-2" *ngIf="collectionSize > pageSize">
+                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size=""
+                                [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                (pageChange)="refreshPagination()">
+                            </ngb-pagination>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #NoVisitFound>
+                    <div style="font-weight: bold;text-align: center;">No Visit Found</div>
+                </ng-template>
+            </div>
+        </div>
+        <div *ngIf="VisitsList.length" class="card card-custom gutter-t">
+            <div class="card-body px-12 py-12">
+                <ng-container *ngIf="VisitsList.length; then visitDocSpace">
+                </ng-container>
+                <ng-template #visitDocSpace>
+                    <app-visit-docs [propVisitNo]="selVisit" [editing]="{select: true, camera: true}" [layout]="'grid2'"
+                        [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs>
+                </ng-template>
+                <ng-template #NoVisitFound>
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-custom gutter-t">
+            <div class="card-body px-4 py-4">
+                <ng-container *ngIf="visitDetailsList.length; then PatientCardSpace  else NoVisitDetailFound">
+
+                </ng-container>
+                <ng-template #PatientCardSpace>
+
+                    <ng-container *ngIf="visitDetailsList.length; then VisitTestDetailSpace else NoTestDetailSpace">
+                    </ng-container>
+
+                    <ng-template #VisitTestDetailSpace>
+
+
+                        <div class="col-lg-12" style="float: right;margin-bottom: 2px;">
+                            <div class=""> <input type="text" placeholder="Search Here" style="float: right;"
+                                    class="col-lg-4 col-sm-12 form-control form-control-sm "
+                                    [(ngModel)]="searchInTestDetail" name="searchInTestDetail" /></div>
+
+                        </div>
+                        <div class="table-responsive">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.testSectionTable" size="large" color="#fff" type="ball-atom"
+                            [fullScreen]="false">
+                          </ngx-spinner>
+                            <table aria-hidden="true" class="table table-hover compact" (keydown)="onKeyDown($event)">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"> <input type="checkbox"
+                                                [attr.disabled]="IsMasterDisable ? true : null"
+                                                [(ngModel)]="masterSelected" name="list_name" value="m1"
+                                                (change)="checkUncheckAll()" />
+                                            <!--<strong>Select All</strong> -->
+                                        </th>
+                                        <th scope="col">Code</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Delivery Date</th>
+                                        <th scope="col"></th>
+                                        <!-- <th scope="col">View</th> -->
+                                    </tr>
+                                </thead>
+                                <!-- | filterByKey: searchText:['PROFILETESTS', 'PROFILETESTSDESC', 'STATUS'] -->
+                                <tbody class="col-xs-12 col-sm-12 col-md-6 col-lg-4"
+                                    *ngFor="let vd of visitDetailsList | filterByKey: searchInTestDetail:['PROFILETESTS', 'PROFILETESTSDESC', 'STATUS']; let i = index ">
+                                    <tr [attr.disabled]="vd.isDisabled ? true : null"
+                                        [class.selected]=" i === rowIndex" [ngClass]="{'parent-row': vd.isParent && vd.isPackage == 3}">
+                                        <td>
+                                            <input [attr.disabled]="vd.isDisabled ? true : null"
+                                                (change)="isAllSelected()" [(ngModel)]="vd.isSelected" type="checkbox"
+                                                class="" (change)="getRowIndex(i)" />
+                                        </td>
+                                        <td>
+                                            <!-- <i *ngIf="vd.isParent && vd.isPackage == 3" class="fas fa-angle-double-down text-primary" 
+                                            ngbTooltip="IDC Packages"></i> -->
+                                            {{vd.PROFILETESTS}}</td>
+                                        <td>{{vd.PROFILETESTSDESC}}
+                                            <!-- <i class="fa fa-brain text-info cursor-pointer pull-right" *ngIf="vd.isSmartReport && SmartReportAccessPermission"
+                                            title="Smart Report Available">
+                                            </i> -->
+                                           <span *ngIf="vd.isSmartReport && SmartReportAccessPermission"
+                                                class="smart-report-pill cursor-pointer pull-right"
+                                                ngbTooltip="Smart Report available">
+                                            S
+                                            </span>
+                                        </td>
+                                        <td>{{vd.STATUS}}</td>
+                                        <td>{{vd.REPORTINGTIME | dateFormat: 'DD-MM-YYYY h:mm:ss a'}}</td>
+                                        <td><i aria-hidden="true" class="fa fa-eye cursor-pointer" (click)="openInquiryPopoUp(vd.ACCOUNTNO,vd.PROFILETESTID)" title="View Inquiry Report"></i></td>
+                                        <!-- <td>sdkjf</td> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.deliverReportsSpinnerRef" size="large" color="#fff" type="ball-atom"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+
+                        <div class="visit-remarks-area mb-2">
+                            <app-visit-remarks [propVisitNo]="SelRow.VisitId" [editing]="{save: true}">
+                            </app-visit-remarks>
+                        </div>
+                        <div class="row">
+                            <input class="checkbox-input mt-5 ml-4" type="checkbox" [(ngModel)]="isLetterHead" name="is_letter_head" value="m1"> &nbsp;
+                            <label class="mt-5">Print With Letterhead?</label>
+                        </div> 
+                        <div class="row">
+                            <input class="checkbox-input mt-5 ml-4" type="checkbox" [(ngModel)]="isHistoryReq" name="is_previous_history" value="m1"> &nbsp;
+                            <label class="mt-5">Print With Previous History?</label>
+                        </div> 
+                        <br />
+                        <div class="card-footer px-2 d-flex justify-content-between">
+                            <div *ngIf="isDueBalance" class="blink_me">
+                                <p><strong style="color:red">Balance Due: {{DueBalanceAmount}}</strong></p>
+                            </div>
+
+                            <div class="btn-group action-group shadow-sm" role="group" aria-label="Invoice actions">
+
+                                <!-- View Invoice -->
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-danger"
+                                    (click)="viewInvoice()"
+                                    title="View Invoice">
+                                    <i class="fas fa-file-invoice me-1"></i>
+                                    Invoice
+                                </button>
+
+                                <!-- Deliver Reports -->
+                                 <button
+                                    class="btn btn-success"
+                                     [attr.disabled]="isDeliverButtonAllowed || isDueBalance ? true : null"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="DeliverReports()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="primary"
+                                    cancelButtonType="outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                       <i class="fas fa-truck me-1"></i>
+                                    Deliver Report(s)
+                                </button>
+                                <!-- View Graphical Report -->
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-primary"
+                                    [attr.disabled]="isDueBalance ? true : null"
+                                    (click)="ViewReport('', 'grf')">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Graphical Report(s)
+                                </button>
+
+                                <!-- View Simple Report -->
+                                <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    [attr.disabled]="isDueBalance ? true : null"
+                                    (click)="ViewReport('', 'simple')">
+                                    <i class="fas fa-file-alt me-1"></i>
+                                    View Report(s)
+                                </button>
+                                
+                                <!-- View Smart Report -->
+                                 <!-- *ngIf="SmartReportAccessPermission" -->
+                                <button *ngIf="SmartReportAccessPermission && isAllSmartReport"
+                                    type="button"
+                                    class="btn btn-outline-dark"
+                                    [attr.disabled]="isDueBalance ? true : null"
+                                    (click)="ViewSmartReport()">
+                                    <i class="fas fa-file-alt me-1"></i>
+                                    Smart Report(s)
+                                </button>
+
+                                </div>
+
+                        </div>
+
+                        <!-- <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-4">
+    
+                                            <div *ngIf="isDueBalance" class="blink_me">
+                                                <p><strong style="color:red">Balance Due: {{DueBalanceAmount}}</strong></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-8" style="text-align: right;">
+
+                                            
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-success" [attr.disabled]="isDeliverButtonAllowed ? true  : null"
+                                                title="{{confirmationPopoverConfig.popoverTitle}}"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="DeliverReports()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="success" cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false">Deliver Report(s)</button>
+                                                <button type="button"  class="btn btn-primary" [attr.disabled]="isDueBalance ? true  : null" (click)="ViewReport('')">View Report(s)</button>
+                                            </div>
+                                           
+    
+                                            
+                                        </div>
+                                    </div>
+    
+                                </div> -->
+                    </ng-template>
+
+                    <ng-template #NoTestDetailSpace>
+                        No Test(s) Found
+                    </ng-template>
+                </ng-template>
+
+                <ng-template #NoVisitDetailFound>
+                    <div style="font-weight: bold;text-align: center;">No Record Found</div>
+                </ng-template>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--begin:: Inquiry Report Modal--------------------------------------------->
+<ng-template #inquiryRportModal let-inquiryRportModal let-c="close" let-d="dismiss">
+    <div class="modal-header" style="padding: 0.7rem 1.75rem;">
+       <h4 class="modal-title" id="modal-basic-title">Inquiry Report</h4>
+        <!-- <button type="button" class="btn btn-outline-dark btn-sm" aria-label="Close"
+            (click)="inquiryRportModal.dismiss('Cross click')">x</button> -->
+            <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="inquiryRportModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span> 
+      <!--  <div class="row">
+            <div class="col-12">
+                 <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="moHistoryModal.close()">
+                    <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+                </button> --> 
+                <!-- <span class="cursor-pointer pull-right" aria-hidden="true">
+                    <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+                    (click)="inquiryRportModal.close()" class="close-btn mb-1 cursor-pointer">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                    </path>
+                    </svg>
+                </span> 
+            </div>
+        </div>-->
+    </div>
+    <div class="modal-body">
+        <div>
+            <app-visit-test-inquiry
+                [ParamsPayload]="{VisitID:inquiryVisitID,TPID:inquiryTPID}">
+            </app-visit-test-inquiry>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal"
+            (click)="inquiryRportModal.close()">
+            <i class="fa fa-times-circle"></i>Close</button>
+    </div>
+</ng-template>
+<!--end:: Inquiry Report Modal--------------------------------------------->

@@ -1,0 +1,459 @@
+<div class="card card-custom">
+  <div class="card-body pb-0">
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row form-group justify-content-center">
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mt-1">
+          <label class="control-label">Branch:</label>
+
+          <div class="form-group">
+            <ng-select
+              id="pat_branch"
+              style="width: 100%"
+              [ngClass]="{
+                invalid: filterForm.get('locID').errors,
+                'invalid-highlighted':
+                  filterForm.get('locID').errors && isSubmitted
+              }"
+              formControlName="locID"
+              [items]="branchList"
+              bindLabel="Title"
+              [closeOnSelect]="true"
+              bindValue="LocId"
+              placeholder="- Select Branch -"
+            >
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <label class="control-label">Department:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              class="mt-1 mr-1"
+              [items]="departmentsList"
+              bindLabel="DepartmentName"
+              placeholder="All"
+              bindValue="DepartmentId"
+              formControlName="departmentIds"
+              [multiple]="false"
+              [closeOnSelect]="true"
+              placeholder="-Select Department-"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <label class="control-label">Designation:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              class="mt-1 mr-1"
+              [items]="designaitonsList"
+              bindLabel="Designation"
+              placeholder="-Select Department-"
+              bindValue="DesignationId"
+              formControlName="Designation"
+              [multiple]="false"
+              [closeOnSelect]="true"
+            >
+            </ng-select>
+          </div>
+        </div>
+
+        <div class="mt-8 col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <button
+            type="submit"
+            (click)="getEmployeesData()"
+            [disabled]="isDisable"
+            class="btn btn-primary"
+          >
+            <span>
+              <i
+                class="spinner-border-custom"
+                aria-hidden="true"
+                *ngIf="!isSpinnerDisable"
+              ></i>
+              &nbsp;<i class="fa fa-search"></i
+            ></span>
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card card-custom mt-2">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
+        <fieldset class="fieldset-primary fieldset-border-top">
+          <legend>
+            <span class="text-dark">
+              Search Results - Total Records:
+              {{ TotalRecord }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+          </legend>
+          <div class="input-group">
+            <input
+              type="text"
+              placeholder="type to filter"
+              class="form-control form-control-sm"
+              [(ngModel)]="searchText"
+              name="searchText"
+            />
+          </div>
+          <ngx-spinner
+            class="spinner-warning"
+            [name]="spinnerRefs.dataTable"
+            bdColor="rgba(0,0,0,0.8)"
+            size="medium"
+            color="#fff"
+            type="square-loader"
+            [fullScreen]="false"
+          >
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+          <div class="table-responsive fixed-height-table">
+            <table
+              class="table table-hover compact table-bordered mb-0"
+              style="width: 100%; overflow-y: auto"
+            >
+              <thead class="thead-light">
+                <tr >
+                  <th>Sr#</th>
+                  <th>Full Name</th>
+                  <th>Location</th>
+                  <th>Department</th>
+                  <th>Designation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center" *ngIf="!employeesList?.length">
+                  <td colspan="5">No Record Found</td>
+                </tr>
+                <ng-container
+                  *ngFor="
+                    let data of employeesList
+                      | filterByKey
+                        : searchText
+                        : [
+                            'EmpName',
+                            'EmpLocation',
+                            'EmpDepartment',
+                            'EmpDesignation'
+                          ];
+                    let i = index
+                  "
+                >
+                  <tr
+                    (click)="getTableRowData(data, i)"
+                    [ngClass]="{'active': i === rowIndex}"
+                    style="cursor: pointer"
+                  >
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ data.EmpName }}</td>
+                    <td>{{ data.EmpLocation }}</td>
+                    <td>{{ data.EmpDepartment }}</td>
+                    <td>{{ data.EmpDesignation }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <div class="col-md-12">
+            <fieldset class="fieldset-primary fieldset-border-top">
+              <legend>Visit Test(s) / Profile(s)</legend>
+
+              <form
+                *ngIf="isRowSelected"
+                [formGroup]="testFilterForm"
+                class="form-horizontal"
+                name="form"
+                role="form"
+              >
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <ng-select
+                        [items]="testDropdownList"
+                        bindLabel="TestProfileName"
+                        bindValue="TPId"
+                        placeholder="--Select Test--"
+                        [closeOnSelect]="true"
+                        [multiple]="false"
+                        name="tests"
+                        formControlName="TPId"
+                      >
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-search="searchTerm"
+                          let-index="index"
+                        >
+                          <span
+                            ><strong>{{ item.TestProfileCode }} </strong>-
+                            {{ item.TestProfileName }}</span
+                          >
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                    <button
+                      type="submit"
+                      (click)="getVisitsForInvoice()"
+                      [disabled]="isDisable"
+                      class="btn btn-primary"
+                    >
+                      <span>
+                        <i
+                          class="spinner-border-custom"
+                          aria-hidden="true"
+                          *ngIf="!isSpinnerDisable"
+                        ></i>
+                        &nbsp;<i class="fa fa-search"></i
+                      ></span>
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <ngx-spinner
+                class="spinner-warning"
+                [name]="spinnerRefs.dataTable"
+                bdColor="rgba(0,0,0,0.8)"
+                size="medium"
+                color="#fff"
+                type="square-loader"
+                [fullScreen]="false"
+              >
+                <p style="color: white">Loading...</p>
+              </ngx-spinner>
+
+              <div class="table-responsive table-container fixed-height-table">
+                <table
+                  class="table table-hover compact table-bordered"
+                  style="width: 100%; overflow: hidden"
+                  cellpadding="0"
+                  cellspacing="0"
+                >
+                  <thead class="">
+                    <th>#</th>
+                    <th>PIN</th>
+                    <th>Visit Date</th>
+                    <th>Actions</th>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="
+                        patientVisitsList && patientVisitsList.length > 0;
+                        else registrationDataNotFoundSpace
+                      "
+                    >
+                      <ng-container
+                        *ngFor="
+                          let parentRow of patientVisitsList;
+                          let i = index;
+                          trackBy: trackByIndex
+                        "
+                      >
+                        <tr>
+                          <td>
+                            <button
+                              class="btn btn-sm"
+                              (click)="
+                                toggleChildRowsFromButtonGenerated(i, $event)
+                              "
+                            >
+                              <span *ngIf="showChildRows[i]"
+                                ><i
+                                  class="fas fa-angle-double-up text-primary"
+                                ></i
+                              ></span>
+                              <span *ngIf="!showChildRows[i]"
+                                ><i
+                                  class="fas fa-angle-double-down text-primary"
+                                ></i
+                              ></span>
+                            </button>
+                          </td>
+                          <td>{{ parentRow.VisitId }}</td>
+                          <td>
+                            {{
+                              parentRow.VisitDateTime
+                                | date : "dd MMM, yyyy, h:mm a"
+                            }}
+                          </td>
+                          <td>
+                            <span
+                              ><i
+                                class="ti-receipt text-primary cursor-pointer"
+                                (click)="openInvoice(parentRow.VisitId)"
+                              ></i>
+                              Inv</span
+                            >
+                            &nbsp;
+                            <span
+                              ><i
+                                class="ti-files text-primary cursor-pointer"
+                                (click)="
+                                  showVisitDocs(
+                                    parentRow.VisitId,
+                                    parentRow.PIN
+                                  )
+                                "
+                              ></i>
+                              Docs</span
+                            >
+                          </td>
+                        </tr>
+                        <tr *ngIf="showChildRows[i]">
+                          <td colspan="7">
+                            <table
+                              class="table table-bordered table-stripped table-condenced inner"
+                            >
+                              <tbody>
+                                <tr
+                                  *ngFor="
+                                    let childRow of testList;
+                                    let j = index
+                                  "
+                                  [ngClass]="{
+                                    'text-danger font-weight-bolder':
+                                      childRow.isTPCancel == 1 ||
+                                      childRow.isTPCanel === true
+                                  }"
+                                >
+                                  <ng-container>
+                                    <td >
+                                      <strong></strong
+                                      >{{ childRow.PROFILETESTSDESC }}
+                                    </td>
+                                    
+                                    <td class="text-end">
+                                      <strong></strong
+                                      >{{ childRow.STATUS || "NA" }}
+                                    </td>
+                                    <td class="text-center">
+                                      <i
+                                        aria-hidden="true"
+                                        class="fa fa-eye cursor-pointer"
+                                        (click)="
+                                          ViewReport('', 'simple', childRow)
+                                        "
+                                        title="View Report"
+                                      ></i>
+                                    </td>
+                                  </ng-container>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+
+                    <ng-template #registrationDataNotFoundSpace>
+                      <tr>
+                        <td colspan="4">
+                          <div class="text-center p-4 text-muted">
+                            <strong>No Details Found</strong>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2" *ngIf="selectedVisitID">
+  <div class="col-md-12">
+    <div class="card card-custom">
+      <div class="card-body">
+        <div class="container-fluid">
+          <ngx-spinner
+            class="spinner-warning"
+            [name]="spinnerRefs.dataTable"
+            bdColor="rgba(0,0,0,0.8)"
+            size="medium"
+            color="#fff"
+            type="square-loader"
+            [fullScreen]="false"
+          >
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+          <app-visit-remarks
+            
+            [propVisitNo]="selectedVisitID || null"
+            [editing]="{ save: true }"
+            [showRemarksPriority]="true"
+          ></app-visit-remarks>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #patientVisitDocs let-patientVisitDocs>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Visit Docs ({{ selectedVisitNo }})
+    </h4>
+    <span class="cursor-pointer pull-right" aria-hidden="true">
+      <svg
+        focusable="false"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        (click)="patientVisitDocs.close()"
+        class="close-btn mb-1 cursor-pointer"
+      >
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
+        ></path>
+      </svg>
+    </span>
+  </div>
+  <div class="modal-body" style="position: relative">
+    <div class="">
+      <div class="visit-docs-area" *ngIf="selectedVisitNo">
+        <span
+          >Visit No: <strong>{{ selectedVisitNo }}</strong></span
+        >
+        <app-visit-docs
+          [propVisitNo]="selectedVisitNo"
+          [layout]="'grid2'"
+          [layoutButtons]="['compact', 'list', 'grid', 'grid2']"
+          [editing]="{ save: true }"
+        ></app-visit-docs>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-primary"
+      (click)="patientVisitDocs.close()"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>

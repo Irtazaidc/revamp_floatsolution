@@ -1,0 +1,80 @@
+.example-chip-list {
+    width: 100%;
+}
+::ng-deep .mat-form-field-infix {
+    width: 100% !important;
+}
+::ng-deep .form-control{
+    height: calc(0.8em + 1.3rem + 2px);
+}
+
+.patient-basic-info-container {
+    margin: 5px;
+    padding: 5px 0;
+    border: 1px solid #eee;
+    background-color: #F3F6F9;
+
+    img.patient-img {
+        width: 90px;
+        height: 90px;
+        border: 1px solid #999;
+        padding: 7px;
+        margin-left: 6px;
+    }
+
+    .info-area {
+        align-content: space-evenly;
+
+        label {
+            margin-bottom: 0;
+            align-self: center;
+
+            .lable-name {
+            }
+            .label-value {
+                font-size: 1rem;
+            }
+        }    
+    }
+    
+}
+
+.spinner-absolute{
+    z-index: 99999 !important;
+    position: absolute !important;
+    opacity: 1;
+    top: 50px;left: 52px !important;
+}
+
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+
+    .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #0BB7AF;
+     }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+
+// .form-check {
+//     flex: 1 auto; /* Each checkbox takes equal space */
+//     text-align: center; /* Center align text */
+// }
+
+
+
+// ::ng-deep .mat-checkbox-inner-container {
+//     margin-right: 2px !important;
+// }

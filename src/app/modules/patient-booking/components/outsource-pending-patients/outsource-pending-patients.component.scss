@@ -1,0 +1,13 @@
+.urgent-order {
+    // background: #f8b5bc;
+    color: red;
+}
+
+ng-select>div {
+    border: none !important;
+    border-bottom: 10px solid red;
+}
+
+::ng-deep .txt-center {
+    text-align: center !important;
+}

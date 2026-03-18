@@ -1,0 +1,234 @@
+
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getDDisclaimer(null, null)"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-primary btn-sm ml-1 pull-right" ngbTooltip="Add new disclaimer"><i class="ti-plus"></i>New</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-12">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <button (click)="disclaimerFilter(1);"  class="btn btn-mini mr-3" [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th" aria-hidden="true"></i> All <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAll}}</span></button>
+                               
+                                <button (click)="disclaimerFilter(2)" class="btn btn-mini mr-3" [ngClass]="isLab? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-flask" aria-hidden="true"></i>Lab <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countLab}}</span></button>
+    
+                                <button (click)="disclaimerFilter(3)"  class="btn btn-mini " [ngClass]="isRadio ? 'btn-primary' : 'btn-outline-primary'"><i class="fas fa-tv" aria-hidden="true"></i>Radio 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countRadiology}}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table" style="overflow-x: hidden;">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.disclaimerListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%">#</th>
+                                    <th style="width: 25%">Title</th>
+                                   <!--  <th style="width: 20%">Section</th> -->
+                                    <th style="width: 70%">Disclaimer</th>
+                                    <th style="width: 3%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="disclaimerList.length; else noData">
+                                    <tr  class="pointer" *ngFor="let item of disclaimerList ; let i = index" (click)="getDDisclaimer(item.DDisclaimerID, i)"
+                                        [ngClass]="{'active-rec-border-left': rowIndex==i}" >
+                                        <td style="width: 2%" >{{i+1}}</td>
+                                        <td style="width: 25%" >{{item.DisclaimerTitle}}</td>
+                                        <!--  <td style="width: 20%" >MRI</td> -->
+                                        <td style="width: 70%">{{truncate(item.DisclaimerBody,40)}}</td>
+                                        <td style="width: 3%">
+                                            <a (click)="getDataForTestAssociation()" class="cursor-pointer" style="font-size: 17px;"  ngbTooltip="Associate Test(s) with disclaimer"> 
+                                                <i class="fas fa-link text-primary"></i>
+                                            </a>
+                                        </td>
+                                        
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noData>
+                                    <tr>
+                                        <td class="text-center" colspan="3">
+                                            <app-no-record-found></app-no-record-found>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.addUpdateSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                <div class="form-group">
+                                    <label for="DisclaimerTitle" class="control-label">Disclaimer Title:</label>
+                                    <input type="text" class="form-control form-control-sm" name="DisclaimerTitle" [(ngModel)]="DisclaimerTitle"
+                                        [ngClass]="{'invalid': (!DisclaimerTitle || DisclaimerTitle==''), 'invalid-highlighted': (!DisclaimerTitle || DisclaimerTitle=='') && actionButtonClicked}"
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                <div class="form-group">
+                                    <label for="DisclaimerBodyHTML" class="control-label">Disclaimer:</label>
+                                    <ckeditor [config]="config" [required]="true" debounce="500" [(ngModel)]="DisclaimerBodyHTML"  [ngModelOptions]="{standalone: true}" class="custom-ckeditor">
+                                    </ckeditor>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button
+                                    [disabled]="disabledButton"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertDDisclaimer()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(TPDisclaimerID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>{{ActionLabel}} <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                </button>
+                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Sections ({{subSectionList.length}})</legend>
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.sectionListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchTextSection" [ngModelOptions]="{standalone: true}" name="searchTextForSection"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-hover cursor-pointer compact table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%"> <input type="checkbox" class="cursor-pointer"
+                                                        (change)="selectAllTestsSection($event.target.checked);" /> </th>
+                                                    <th style="width: 65%;">Section</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- <pre>
+                                                {{subSectionList|json}}
+                                                </pre> -->
+                                                <tr *ngIf="!subSectionList.length">
+                                                    <td class="text-center" colspan="2"><strong class="text-info">No section found</strong></td>
+                                                </tr>
+                                                <tr *ngFor="let sec of subSectionList | filterByKey:searchTextSection:['SubSectionCode'];let i=index;">
+                                                    <td> <input class="cursor-pointer" type="checkbox"  [(ngModel)]="sec.checked" [ngModelOptions]="{standalone: true}"  (change)="getTestProfileBySectionIDs()" /></td>
+                                                    <td>{{sec.SubSectionCode || sec.SubSectionShortName}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 ">
+                                <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Tests ({{testProfileList.length}})</legend>
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.testListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchTextTest" [ngModelOptions]="{standalone: true}" name="searchTextTest"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                                        <table class="table table-hover cursor-pointer compact table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;"> <input class="cursor-pointer" type="checkbox"
+                                                        (change)="selectAllTests($event.target.checked)" /> </th>
+                                                    <th style="width: 95%;">Test</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container *ngIf="testProfileList.length; else noTest">
+                                                    <tr *ngFor="let sec of testProfileList | filterByKey:searchTextTest:['TPName'];let i=index;">
+                                                        <td style="width: 5%;"> <input type="checkbox" class="cursor-pointer" [(ngModel)]="sec.checked" [ngModelOptions]="{standalone: true}" /></td>
+                                                        <td style="width: 95%;">{{sec.TPName}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                                <ng-template #noTest>
+                                                    <tr>
+                                                        <td style="width: 100%;"class="text-center" colspan="2">
+                                                            <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="'No test found'"></app-no-record-found>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button
+                                    [disabled]="disabledButtonAssociation"
+                                    class="btn btn-sm btn-primary pull-right"
+                                    mwlConfirmationPopover
+                                    [popoverTitle]="'Please confirm...!'"
+                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="insertTPDisclaimer()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i 
+                                    [ngClass]="(TPDisclaimerID)?'fa fa-edit':'fa fa-save'"
+                                    ></i>Save <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerAssociation" ></i>
+                                </button>
+                                
+                            </div>
+                        </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>

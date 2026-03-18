@@ -1,0 +1,170 @@
+tr td {
+  // padding-top: 1em;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+::ng-deep .popover {
+  left: -66px !important;
+}
+
+::ng-deep .popover-body {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.tp-name {
+  background: linear-gradient(to right, #1BC5BD 0%, #330867 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stop-watch {
+  font-family: 'Source Code Pro', monospace;
+  text-align: center;
+  font-size: 3em;
+  padding: 30px;
+}
+
+.control {
+  width: 300px;
+  padding: 5px;
+  margin-top: 15px;
+  font-size: 36px;
+  font-weight: bold;
+  border: 2px solid #f44336;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.control:hover {
+  background: #f44336;
+  color: aliceblue;
+}
+
+.timeer-label {
+  // background-color: #efd093;
+  // padding: 4px 65px;
+  // border-radius: 4px;
+  letter-spacing: 6px;
+}
+
+.timeer-div {
+  margin-top: -16px;
+  margin-bottom: 6px;
+}
+
+.timer-inner {
+  background-color: #efd093;
+  width: 166px;
+  height: 25px;
+  border-radius: 3px;
+  padding-top: 4px;
+  text-align: center;
+}
+
+// .modality-dropdown{
+//   margin-top: -14px;
+// }
+@media screen and (min-width: 768px) {
+  .modality-dropdown {
+    margin-top: -14px;
+  }
+}
+
+::ng-deep .sweet-alert-confirm-btn-info {
+  color: #FFFFFF !important;
+  background-color: #3699FF !important;
+  border-color: #3699FF !important;
+}
+
+::ng-deep .sweet-alert-confirm-btn-salmon,
+.btn-salmon {
+  color: #FFFFFF !important;
+  background-color: #FA8072 !important;
+  border-color: #FA8072 !important;
+}
+
+::ng-deep .sweet-alert-confirm-btn-danger,
+.btn-danger {
+  color: #ffffff !important;
+  background-color: #F64E60 !important;
+  border-color: #F64E60 !important;
+}
+
+::ng-deep .sweet-alert-text-area:focus {
+  border: 1px solid #1bc5bd;
+  outline: none !important;
+  box-shadow: inset 0 0px 0px rgba(0, 0, 0, .06), 0 0 0 0px rgba(100, 150, 200, .5) !important;
+}
+
+::ng-deep .close {
+  opacity: 0.9 !important;
+}
+
+::ng-deep input[type="radio"] {
+  cursor: pointer !important;
+}
+
+.login-header {
+  // background-color: #f44336;
+  background-color: #20afa7;
+  color: #fbf5f5;
+  padding: 8px;
+  margin-top: -25px;
+}
+
+.current-status {
+  background-color: #1bc5bd;
+  color: white !important;
+  padding: 2px 5px;
+  border-radius: 0px;
+}
+
+.service-name {
+  width: 100%;
+  background-color: #e4e4e4;
+  padding: 3px 11px;
+  border-radius: 3px;
+  background-image: linear-gradient(90deg, #186f9a, #2b7acc, #168a9c, #169e97);
+  color: #fff;
+}
+
+::ng-deep .custom-popover {
+  max-width: 800px;
+  /* Set the desired width */
+  width: auto !important;
+  /* Use !important to override default styles if needed */
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+      background-color: #F64E60 !important;
+  }
+
+  .mat-checkbox-background,
+  .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+      background-color: #F64E60;
+  }
+
+  .mat-checkbox-frame,
+  .mat-checkbox-checkmark {
+      border-color: #F64E60;
+  }
+
+  .mat-checkbox-checkmark-path {
+      fill: #F64E60;
+  }
+}
+
+/* Unchecked state */
+::ng-deep .mat-checkbox.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+      background-color: #F64E60 !important;
+  }
+
+  .mat-checkbox-frame {
+      border-color: #F64E60;
+  }
+}

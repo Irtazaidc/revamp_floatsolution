@@ -1,0 +1,88 @@
+::ng-deep .modal-content {
+    background-color: white;
+    border: 2px solid #1bc5bd;
+}
+
+hr.dash-primary {
+    border-top: 1px dashed #1bc5bd;
+}
+
+.border-bottom-dash-primary {
+    border-bottom: 1px dashed #1bc5bd;
+}
+
+.border-bottom-dash-gray {
+    border-bottom: 1px dashed #b5b9c7;
+}
+
+
+.invalid {
+    border-left: 2px solid #ff0000;
+}
+
+.modal-footer-custom {
+    /* display: flex; */
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #EBEDF3;
+    border-bottom-right-radius: 0.42rem;
+    border-bottom-left-radius: 0.42rem;
+}
+
+::ng-deep .modal-md {
+    position: relative;
+    top: 30%;
+}
+
+.icon:hover {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* Apply the shadow effect on hover */
+}
+
+.icon-selected {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    /* Apply the shadow effect on hover */
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+
+    .mat-checkbox-background,
+    .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #0BB7AF;
+    }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+}
+
+::ng-deep .modal-header {
+    padding: 0rem 1.0rem 0rem 1.75rem !important;
+}
+
+
+::ng-deep .custom-popover {
+    max-width: 800px;
+    /* Set the desired width */
+    width: auto !important;
+    /* Use !important to override default styles if needed */
+}
+
+
+
+tr td {
+    // padding-top: 1em;
+    padding-top: 2px;
+    padding-bottom: 1px;
+}
+
+::ng-deep .invalid {
+    border-left: none !important;
+}

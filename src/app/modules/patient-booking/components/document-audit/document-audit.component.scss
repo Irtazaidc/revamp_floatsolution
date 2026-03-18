@@ -1,0 +1,36 @@
+::ng-deep ngb-typeahead-window.dropdown-menu{
+    max-height: 300px;
+    min-width: 300px;
+    border-bottom: 1px solid #1dc7a9;
+    overflow-x: hidden;
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: 0.15em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+.spinner-border-sm {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-width: 0.1em;
+}
+
+.t-green{
+    color: rgb(18, 193, 18) !important;
+}
+.t-red{
+    color: red !important;
+}
+
+@keyframes spinner-border {
+    100% {
+        transform: rotate(360deg);
+    }
+}

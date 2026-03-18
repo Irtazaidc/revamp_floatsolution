@@ -1,0 +1,58 @@
+<div class="doctors-and-mappings-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-success'">
+
+                <div class="row">
+                   
+                    <div class="col-12">
+
+                        <mat-tab-group mat-stretch-tabs="true" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
+                
+                            <mat-tab label="Ref. by Doc.">
+                                <!-- <h1>Ref. by Doc.</h1> -->
+                                <div *ngIf="selectedTabIndex == 0">
+                                    <div class="col-12 mt-5">
+                                        <app-ref-by-doctors></app-ref-by-doctors>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="B2B Doc.">
+                                <!-- <h1>B2B Doc</h1> -->
+                                <div *ngIf="selectedTabIndex == 1">
+                                    <div class="col-12 mt-5">
+                                        <app-b2b-doctors></app-b2b-doctors>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            
+                            <mat-tab label="Doctors Mapping">
+                                <!-- <h1>Doctors Mapping</h1> -->
+                                <div *ngIf="selectedTabIndex == 2">
+                                    <div class="col-12 mt-5">
+                                        <app-ref-by-b2b-doctors-mapping></app-ref-by-b2b-doctors-mapping>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                        </mat-tab-group>
+                
+                    </div>
+
+                </div>
+
+            </app-card>
+        </div>
+    </div>
+
+    
+    <!-- <ngx-spinner class="spinner-success" bdColor="rgba(0,0,0,0.8)" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner> -->
+
+
+</div>
+      

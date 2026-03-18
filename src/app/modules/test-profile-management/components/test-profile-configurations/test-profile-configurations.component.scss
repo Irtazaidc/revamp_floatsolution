@@ -1,0 +1,230 @@
+// input.ng-invalid{
+//     border-left: 5px solid red;
+
+// }
+
+// input.ng-valid{
+//     border-left: 5px solid rgb(1, 185, 47);
+
+// }
+
+// input.ng-valid .form-control{
+//     border: 1px solid red;
+// }
+
+// .mandatory-field {
+//     color: #f00;
+//     padding-left: 3px;
+// }
+
+.spinner-border-custom {
+    margin-bottom: 1px;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: 0.15em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: spinner-border .75s linear infinite;
+    animation: spinner-border .75s linear infinite;
+}
+
+img {
+    vertical-align: middle;
+    border-style: none;
+    width: 90px;
+    height: 120px;
+    margin-top: 5px;
+}
+
+::ng-deep .ng-option-selected{
+    border-right: 2px solid #fb748f;
+    background: linear-gradient(60deg, #bcdefb, #bcdefb);
+
+}
+
+
+.form-control:focus {
+    border: 1px solid #373aec;
+}
+
+
+.ng-select-control:focus{
+    background: linear-gradient(60deg, #4680ff, #4680ff);
+}
+
+// ::ng-deep .ng-star-inserted{
+//     background: linear-gradient(60deg, #4680ff, #4680ff);
+// }
+// // .ng-option-selected
+// {
+//     background: linear-gradient(60deg, #4680ff, #4680ff);
+// }
+
+#navigation ul.nav ul li:hover{
+    background: #df4848;
+}
+
+.ng-select-opened{
+    background: #df4848;
+    border-bottom: solid 1px #df4848;
+    border-top: solid 1px #df4848;
+}
+
+// ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-input>input {
+//     background: none transparent;
+//     border: 0;
+//     box-shadow: none;
+//     box-sizing: content-box;
+//     cursor: default;
+//     outline: none;
+//     padding: 0;
+//     width: 100%;
+//     border-bottom: solid 2px #fc6180;
+// }
+.icon-close {
+    position: absolute;
+    left: 93px;
+    cursor: pointer;
+    color: #000000;
+    margin-top: 5px;
+
+}
+
+
+// ::ng-deep .element.style {
+//     height: 386px;
+//     width: 512px;
+// }
+
+select :disabled{
+    color: #df523d;
+}
+.td-a-color{
+    color: #3F4254;
+}
+
+::ng-deep .accordion .card-header {
+    background-color: #F3F6F9 !important;
+}
+::ng-deep .accordion .card {
+    margin-bottom: 4px;
+}
+::ng-deep .btn-link {
+    color: #3F4254 !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+}
+::ng-deep .popover-title{
+    color: #dc3545;
+}
+
+.column-bg-hover:hover {
+    background-color: #eeeee8;
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    cursor: move;
+  
+    .handle {
+      margin-right: 5px;
+    }
+  }
+  
+  /* Animate items as they're being sorted. */
+  .cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .cdk-drag-preview {  
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    padding: 4px;  
+  }
+  .cdk-drag-placeholder	{
+    opacity: 0;
+  }
+  
+  .col-xs {
+    width: 2%;  
+  }
+  
+  .col-sm {
+    width: 10%;  
+  }
+  
+  .col-md {
+    width: 30%;  
+  }
+.text-bar {
+    color: #86878a !important;
+}
+.text-bar-heading {
+    color: #3F4254 !important;
+}
+::ng-deep .mat-tab-body-content {
+    height: 100%;
+    overflow: hidden !important;
+}
+::ng-deep .mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+}
+::ng-deep .mat-tab-label{
+    border-right: 1px solid #e5e5e5;
+  }
+  ::ng-deep .mat-tab-label-active{
+    background-color: #1BC5BD;
+    color: #ffffff;
+  }
+  
+  ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: #1BC5BD;
+  }
+  tr td {
+    // padding-top: 1em;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  ::ng-deep .drag-handle .tooltip{
+    width: 200px !important;
+  }
+
+// ::ng-deep .ckeditor-tp .cke {
+//   width: 7.8in !important;
+//   max-width: 7.8in !important;
+//   height: 3in !important;
+//   max-height: 3in !important;
+// }
+
+// .ckeditor-tp .cke {
+//     width: 7.8in !important;
+//     max-width: 7.8in !important;
+//     height: 3in !important;
+//     max-height: 3in !important;
+// }
+// ::ng-deep .ckeditor-tp .cke_contents {
+//   height: 2in !important;
+//   max-height: 2in !important;
+// }
+
+// .ckeditor-tp .cke_contents {
+//   height: 2in !important;
+//   max-height: 2in !important;
+// }
+
+
+// ::ng-deep .cke {
+//   max-width: 6.5in !important;
+//   // max-height: 3.5in !important;
+// }
+::ng-deep .cke_contents {
+  height: 5.5in !important
+}
+
+::ng-deep .cke_contents{
+  height: 3.3in !important
+}

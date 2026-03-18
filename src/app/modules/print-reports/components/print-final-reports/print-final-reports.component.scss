@@ -1,0 +1,69 @@
+.blink_me {
+    animation: blinker 1s linear infinite;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .table tr.active td {  
+    background-color:#1bc5bd !important;  
+    color: white;  
+  } 
+
+  .selected {
+    border-left: 2px solid #1bc5bd;
+    
+  }
+.table-container {
+    max-height: 400px; /* Set table height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background: white; /* Ensure the header has a background */
+    z-index: 10; /* Keeps the header above other elements */
+}
+
+.parent-row {
+  // background-color: #aaefec; 
+  font-weight: 600;
+}
+
+.action-group {
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+    padding: 0.45rem 0.9rem;
+
+    i {
+      font-size: 0.9rem;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+
+.smart-report-pill {
+  display: inline-block;
+  padding: 1px 4px;
+  background-color: #3699FF;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 20%;
+  margin-left: 5px;
+}

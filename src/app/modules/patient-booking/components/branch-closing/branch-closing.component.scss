@@ -1,0 +1,18 @@
+.view-details-btn {
+  color: darkslateblue;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.view-details-btn:hover {
+  color: darkslateblue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.card.card-custom > .card-body {
+    padding: 1rem 2.25rem !important;
+}

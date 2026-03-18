@@ -1,0 +1,173 @@
+<div class="roles-page">
+    <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" >
+        <div class="card-body" style="min-height: 320px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="" >Parameters:</label>
+                    <div class ="form-check-inline">
+                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode"  id="byCode1" checked>
+                        <label for="radio1" class="form-check-label">By Code</label>
+                        <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byName')" value="byName"  id="byName1">
+                        <label for="radio2" class="form-check-label">By Name</label>
+                    </div>
+                    <div>
+                        <ng-select 
+                            [items]="paramList" 
+                            bindLabel="PName" 
+                            bindValue="PId"
+                            (change)="paramListChanged($event)"                          
+                            placeholder="--select--" 
+                            name="tests"
+                            [searchFn]="customSearchFn"
+                            >
+            
+                            <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                <span ><strong>{{ item.PCode }} </strong>- {{ item.PName }}</span>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+
+                </div>
+            </div>
+            <ng-container *ngIf="PId then testResultArea else noResultArea"></ng-container>
+            <ng-template #testResultArea>
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.testGeneralSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Please wait... </p>
+            </ngx-spinner>
+                <div class="row" *ngIf="(paramGeneralData | json) != ({} | json)">
+                    <div class="col-md-6">
+                        <!--start::Test Info-->
+                        <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">General Info.</legend>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="p-mb">Code: <strong class="ml-2">{{paramGeneralData['Code']}} </strong></p>
+                                    <p class="p-mb">Type: <strong class="ml-2">{{paramGeneralData['ParamType']}} </strong></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="p-mb">Name: <strong class="ml-2">{{paramGeneralData['Title']}}</strong></p>
+                                    <p class="p-mb">Unit: <strong class="ml-2">{{paramGeneralData['Unit']}}</strong></p>
+                                </div>
+                                
+                                <!-- <div class="col-md-4">
+
+                                    <h6 class="text-center">Panic Range</h6>
+                                    <p class="p-mb">Type: <strong class="ml-2">{{paramGeneralData['PanicType']}}</strong></p>
+                                    <div class="row">
+                                        <div class="col-6">
+                                    <p class="p-mb">Min Val: <strong class="ml-2">{{paramGeneralData['PanicRangeMin']}}</strong></p>
+                                        </div>
+                                        <div class="col-6">
+                                    <p class="p-mb">Max Val: <strong class="ml-2">{{paramGeneralData['PanicRangeMax']}}</strong></p>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-12">
+                                    <p class="p-mb">Comments:
+
+                                        <strong class="ml-2">
+                                            {{paramGeneralData['Comments'] || ''}}
+                                        </strong>
+                                        <!-- <strong class="ml-2" ngbTooltip="Click to show full info"
+                                         ngbPopover="{{paramGeneralData['Comments']||''}}" popoverTitle="Comments">
+                                         {{truncate(paramGeneralData['Comments'] || '',40)}}
+                                        </strong> -->
+                                    </p>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <!--start::Test Info-->
+                        <fieldset class="fieldset-border-all-primary fs-pl" style="background-color: #F3F6F9 !important;">
+                            <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Panic Range.</legend>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <p class="p-mb">Type: <strong class="ml-2">{{paramGeneralData['PanicType']}}</strong></p>
+                                    <div class="row">
+                                        
+                                        <div class="col-6">
+                                    <p class="p-mb">Min Val: <strong class="ml-2">{{paramGeneralData['PanicRangeMin']}}</strong></p>
+                                        </div>
+                                        <div class="col-6">
+                                    <p class="p-mb">Max Val: <strong class="ml-2">{{paramGeneralData['PanicRangeMax']}}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-12">
+                                    <p class="p-mb">Comments:<strong class="ml-2" ngbTooltip="Click to show full info"
+                                         ngbPopover="{{paramGeneralData['Comments']||''}}" popoverTitle="Comments">
+                                         {{paramGeneralData['Comments'] || ''}}
+                                         {{truncate(paramGeneralData['Comments'] || '',40)}}
+                                        </strong></p>
+                                </div> -->
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Reference Ranges</legend>
+                            <div  style="max-height: 170px; overflow-y: auto;">
+                                <table class="table table-hover compact table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Gender</th>
+                                            <th>Min Age</th>
+                                            <th>Max Age</th>
+                                            <th>Reference Range</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="!paramReferenceRanges.length">
+                                            <td colspan="4" style="text-align: center;"><strong class="text-primary"> No refrence range(s) found...</strong></td>
+                                        </tr>
+                                        <tr *ngFor="let range of paramReferenceRanges; let i = index">
+                                            <td>{{(range.GenderId | uppercase) == 'M' ? 'Male': (range.GenderId | uppercase)=='F'? 'Female' :'Both'}}</td>
+                                            <td>{{getFormatedStringFromDays(range.MinAge)}}</td>
+                                            <td>{{getFormatedStringFromDays(range.MaxAge)}}</td>
+                                            <td>{{range.ReferenceRange||'--'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-md-8">
+                        <fieldset class="fieldset-border-all-primary"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Associated Tests</legend>
+                            <div  style="max-height: 170px; overflow-y: auto;">
+                                <table class="table table-hover compact table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th>Test</th>
+                                            <th>Modified By</th>
+                                            <th>Modified On</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="!paramTestsList.length">
+                                            <td colspan="5" style="text-align: center;"><strong class="text-primary"> No associated test(s) found...</strong></td>
+                                        </tr>
+                                        <tr *ngFor="let test of paramTestsList; let i = index">
+                                            <td>{{test.Code}}</td>
+                                            <td>{{test.Name}}</td>
+                                            <td>{{test.Test}}</td>
+                                            <td>{{test.ModifiedBy}}</td>
+                                            <td>{{test.ModifiedOn | date:'dd-MMM-yyyy hh:mm a'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #noResultArea>
+                <div class="col-12 text-center text-primary"> <hr> <div>Please select a parameter to show details</div> </div>
+            </ng-template>
+        </div>
+    </app-card>
+</div>

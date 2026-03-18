@@ -1,0 +1,492 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+        <div class="card card-custom mt-2">
+            <div class="card-header" style="
+            margin-top: -18px;
+            margin-bottom: 0px;
+            min-height: 57px;">
+                <div class="card-title" style="margin-bottom: -10px;">
+                    <span class="card-icon">
+                        <i class="fa fa-list text-primary"></i>
+                    </span>
+                    <h3 class="card-label mt-1">
+                        Consolidated Bills List
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- <div class="row" style="margin-top: -24px;">
+                    <div class="col-12"><i aria-hidden="true"
+                            class="fa fa-plus pull-right text-primary cursor-pointer mb-2"
+                            ngbTooltip="Generate New Bill" (click)="newBill();"></i>
+                    </div>
+                </div> -->
+                <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                            <input (click)="startDate1.toggle()" #startDate1="ngbDatepicker" placeholder="dd-mm-yyyy"
+                                autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="startDate"
+                                class="form-control form-control-sm" type="text" value=""
+                                [ngClass]="{'invalid': inValidDateRangeBill, 'invalid-highlighted': inValidDateRangeBill}" />
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                            <input #endDate1="ngbDatepicker" (click)="endDate1.toggle()" placeholder="dd-mm-yyyy"
+                                autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="endDate"
+                                class="form-control form-control-sm" type="text" value=""
+                                [ngClass]="{'invalid': inValidDateRangeBill, 'invalid-highlighted': inValidDateRangeBill}" />
+                        </div>
+                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="input-group">
+                                <ng-select 
+                                    id="tp_panel" style="width: 100%;" 
+                                    #panel 
+                                    [items]="panelsList"
+                                    bindLabel="Code" 
+                                    bindValue="PanelId"
+                                    placeholder="--Select Panel--" 
+                                    name="panel"
+                                    formControlName="PanelId"
+                                    >
+                                </ng-select>
+                            </div>
+                            <ngx-spinner class="spinner-warning" 
+                                bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.panelsDropdown" size="medium" color="#fff"
+                                type="square-loader" 
+                                [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                        </div> -->
+                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <ng-select style="width: 100%;" 
+                                [items]="panelBillStatusList" 
+                                tabindex="1" 
+                                placeholder="--Select Status--"
+                                formControlName="PanelBillStatusID"
+                                bindLabel="Title" 
+                                bindValue="StatusId" 
+                                >
+                            </ng-select>
+                        </div> -->
+                        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <input name="MRN" placeholder="Enter MRN"  mask="A-0-00000"  (input)="onMachineCodeInput()"
+                            (keydown.enter)="getPanelBill(null,null);"
+                            formControlName="PatientMRN" type="text" class="form-control mt-1"/>
+                        </div> -->
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                            <button type="button" (click)="getPanelConsolidatedBill();"
+                                [disabled]="disabledButtonSearchConsolidatedBill"
+                                class="btn btn-primary btn-block"><span> <i class="spinner-border-custom"
+                                        aria-hidden="true" [hidden]="isSpinnerSearchConsolidatedBill"></i> &nbsp;<i
+                                        class="fa fa-search"></i></span></button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.listSectionConsolidatedBill" size="medium" color="#fff"
+                            type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <ng-container *ngIf="panelConsolidatedBills.length; else noBillData">
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search Item"
+                                            class="form-control form-control-sm" [(ngModel)]="searchTextGeneratedBill"
+                                            name="searchTextGeneratedBill" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table">
+                                            <thead style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                <th style="width: 1%; padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                    scope="col">#</th>
+                                                <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                    Bill No.</th>
+                                                <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                    Status</th>
+                                                <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                    class="text-right">
+                                                    Bill Amount</th>
+                                                <!-- <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;"></th> -->
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let row of panelConsolidatedBills | filterByKey: searchTextGeneratedBill:['PanelConsolidatedBillNo']; let i = index">
+                                                    <tr class="cursor-pointer"
+                                                        style="padding-top: 8px;padding-bottom: 3px"
+                                                        ngbTooltip="Consolidated bill detail"
+                                                        (click)="getConsolidatedBillDetail(i,row)"
+                                                        [ngClass]="{'active-rec-border-left': i==rowIndex}">
+                                                        <td style="width: 1%;padding-top: 8px;padding-bottom: 3px">
+                                                            {{i+1}}</td>
+                                                        <td style="padding-top: 8px;padding-bottom: 3px">
+                                                            {{row.PanelConsolidatedBillNo}}
+                                                            <!-- <label
+                                                                *ngIf="!row.isFinal"
+                                                                class="badge-border-white text-white cursor-pointer badge pull-right"
+                                                                [ngClass]="row.isTPCancel == 1 ? 'badge-danger' : 'badge-warning'"
+                                                            >Drafted</label>
+                                                            <label *ngIf="row.isFinal" class="badge-border-white cursor-pointer badge badge-primary pull-right">Finalized</label> -->
+                                                        </td>
+                                                        <td style="padding-top: 8px;padding-bottom: 3px">{{row.BillNo}}
+                                                            <label *ngIf="!row.isFinal"
+                                                                class="badge-border-white text-white cursor-pointer badge pull-right"
+                                                                [ngClass]="row.isTPCancel == 1 ? 'badge-danger' : 'badge-warning'">Drafted</label>
+                                                            <label *ngIf="row.isFinal"
+                                                                class="badge-border-white cursor-pointer badge badge-primary pull-right">Finalized</label>
+                                                        </td>
+                                                        <td style="padding-top: 8px;padding-bottom: 3px"
+                                                            class="text-right">
+                                                            {{row.PanelConsolidatedAmount|number:'1.0-0'}}
+                                                        </td>
+                                                        <!-- <td style="padding-top: 8px;padding-bottom: 3px">
+                                                            <i aria-hidden="true" class="fa fa-print cursor-pointer mt-1" style="color: #878787;"></i>
+                                                        </td> -->
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #noBillData>
+                            <div class="no-panel-bill mt-2">
+                                <app-no-record-found [pyClassParam]="'py-5'"
+                                    [infoMessageParam]="noDataMessageBill"></app-no-record-found>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+        <div class="card card-custom mt-2">
+            <div class="card-header" style="
+            margin-top: -18px;
+            margin-bottom: 0px;
+            min-height: 57px;">
+                <div class="card-title" style="margin-bottom: -10px;">
+                    <span class="card-icon">
+                        <i class="fa fa-list text-primary"></i>
+                    </span>
+                    <h3 class="card-label mt-1">
+                        Worklist
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="_formWorklist" class="form-horizontal" name="form" role="form">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-2">
+                            <input (click)="startDate.toggle()" #startDate="ngbDatepicker" placeholder="dd-mm-yyyy"
+                                autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="startDate"
+                                class="form-control form-control-sm" type="text" value=""
+                                [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}" />
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-2">
+                            <input #endData="ngbDatepicker" (click)="endData.toggle()" placeholder="dd-mm-yyyy"
+                                autocomplete="off" ngbDatepicker value="1980-08-26" formControlName="endDate"
+                                class="form-control form-control-sm" type="text" value=""
+                                [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}" />
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3">
+                            <div class="input-group">
+                                <ng-select id="tp_panel" style="width: 100%;" #panel [items]="panelsList"
+                                    bindLabel="Code" bindValue="PanelId" placeholder="--Select Panel--" name="panel"
+                                    formControlName="PanelId">
+                                </ng-select>
+                            </div>
+                            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.panelsDropdown" size="medium" color="#fff" type="square-loader"
+                                [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                        </div>
+
+
+                        <!-- <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                            <ng-select style="width: 100%;" 
+                                [items]="panelBillStatusList" 
+                                tabindex="1" 
+                                placeholder="--Select Status--"
+                                formControlName="PanelBillStatusID"
+                                bindLabel="Title" 
+                                bindValue="StatusId" 
+                                >
+                            </ng-select>
+                        </div> -->
+                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                            <button type="button" (click)="newBill();" class="btn btn-primary pull-right ml-2"><span>
+                                    &nbsp;<i class="fa fa-plus"></i></span> New</button>
+
+                            <button type="button" (click)="getPanelBillForConsolidation();"
+                                [disabled]="disabledButtonSearchBill" class="btn btn-primary pull-right"><span> &nbsp;<i
+                                        class="fa fa-search"></i></span> Search <i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinnerSearchBill"></i></button>
+
+                        </div>
+                    </div>
+                </form>
+                <!-- begin:: list of bills to be part of consolidated bill -->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"
+                        *ngIf="!showConsolidatedBillDetail && newBillPress">
+                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.listSectionBill" size="medium" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <ng-container *ngIf="panelBills.length; else noBillData">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+                                    <span *ngIf="panelBills.length" class="text-warning"><strong> <span
+                                                class="text-warning">Total Records: {{panelBills.length}} </span>
+                                            <span class="text-dark"> | </span> <span class="text-warning">Selected
+                                                Records: {{ selectedCount }} </span>
+                                            <span class="text-dark"> | </span> <span class="text-warning">Total Amt :
+                                                {{totalSumFormatted}} </span>
+                                        </strong></span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search Item"
+                                            class="form-control form-control-sm" [(ngModel)]="searchTextBill"
+                                            name="searchTextBill" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table">
+                                            <thead style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                <th style="width: 1%; padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                    scope="col">#</th>
+                                                <th style="width: 1%; padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                    scope="col"></th>
+                                                <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                    Bill No.</th>
+                                                <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                    class="text-right">Net
+                                                    Amount</th>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let row of panelBills | filterByKey: searchTextBill:['BillNo']; let i = index">
+                                                    <tr class="cursor-pointer"
+                                                        style="padding-top: 8px;padding-bottom: 3px">
+                                                        <td style="width: 1%;padding-top: 8px;padding-bottom: 3px">
+                                                            {{i+1}}</td>
+                                                        <td style="width: 1%;padding-top: 8px;padding-bottom: 3px">
+                                                            <mat-checkbox *ngIf="true" [(ngModel)]="row.checked"
+                                                                (change)="onCheckboxChange()"
+                                                                [disabled]="row.PanelConsolidatedBillID !== null && row.PanelConsolidatedBillID !== undefined"
+                                                                [ngbTooltip]="row.PanelConsolidatedBillID ? 'This bill is already part of a consolidated bill' : ''"
+                                                                class="example-margin mr-2"> <span></span>
+                                                            </mat-checkbox>
+                                                        </td>
+                                                        <td style="padding-top: 8px;padding-bottom: 3px">
+                                                            {{row.BillNo}}
+                                                        </td>
+                                                        <td style="padding-top: 8px;padding-bottom: 3px"
+                                                            class="text-right">
+                                                            {{row.NetAmount}}
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <hr>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Remarks</label>
+                                                <textarea class="form-control form-control-sm"
+                                                    placeholder="Enter Remarks" name="Remarks" rows="1"
+                                                    [(ngModel)]="Remarks"></textarea>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Bill Type</label>
+                                                <select class="form-control form-control-sm" name="labDeptID"
+                                                    placeholder="Select Bill Type" [(ngModel)]="billType"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                    <option value="1">OPD</option>
+                                                    <option value="2">IPD</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <!-- end:: list of bills to be part of consolidated bill -->
+
+                    <!-- begin:: already generated consolidated bill detail  -->
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="!newBillPress">
+                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                            [name]="spinnerRefs.listSectionBill" size="medium" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <ng-container *ngIf="panelConsolidatedBillsDetail.length; else noBillDataDetail">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search Item"
+                                            class="form-control form-control-sm"
+                                            [(ngModel)]="searchTextGeneratedBillDetail"
+                                            name="searchTextGeneratedBillDetail" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="table-responsive" style="max-height: 418px; overflow-y: auto;">
+                                        <table class="table">
+                                            <thead style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                <tr>
+                                                    <th style="width: 1%; padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                        scope="col">#</th>
+                                                    <th style="width: 1%; padding-top: 0.5rem; padding-bottom: 0.5rem;"
+                                                        scope="col"></th>
+                                                    <th scope="col"
+                                                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">Bill No.
+                                                    </th>
+                                                    <th scope="col" class="text-right"
+                                                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">Net Amount
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let row of panelConsolidatedBillsDetail | filterByKey: searchTextGeneratedBillDetail:['BillNo']; let i = index">
+                                                    <tr class="cursor-pointer"
+                                                        style="padding-top: 8px; padding-bottom: 3px">
+                                                        <td style="width: 1%; padding-top: 8px; padding-bottom: 3px">
+                                                            {{i+1}}</td>
+                                                        <td style="width: 1%; padding-top: 8px; padding-bottom: 3px">
+                                                            <mat-checkbox  [(ngModel)]="row.checked"
+                                                                (change)="onCheckboxChangeExisting()"
+                                                                [disabled]="isFinal"
+                                                                [ngbTooltip]="row.PanelConsolidatedBillID ? 'This bill is already part of a consolidated bill' : ''"
+                                                                class="example-margin mr-2">
+                                                                <span></span>
+                                                            </mat-checkbox>
+                                                        </td>
+                                                        <td style="padding-top: 8px; padding-bottom: 3px">{{row.BillNo}}
+                                                        </td>
+                                                        <td style="padding-top: 8px; padding-bottom: 3px"
+                                                            class="text-right">{{row.NetAmount}}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="sticky-total">
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right"><strong>Total Amount:</strong></td>
+                                                    <td class="text-right"><strong>{{totalNetAmount |
+                                                            number:'1.0-0'}}</strong></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <div class="col-12">
+                                    <hr>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="Remarks">Remarks:</label>
+                                                <textarea class="form-control form-control-sm" name="Remarks" rows="1"
+                                                    [(ngModel)]="consolidatedRemarks"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Bill Type</label>
+                                                <select class="form-control form-control-sm" name="labDeptID"
+                                                    placeholder="Select Bill Type" [(ngModel)]="billType"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [disabled]="panelConsolidatedBillID">
+                                                    <option value="1">OPD</option>
+                                                    <option value="2">IPD</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #noBillDataDetail>
+                            <div class="no-panel-bill">
+                                <app-no-record-found [pyClassParam]="'py-5'"
+                                    [infoMessageParam]="noDataMessageBill"></app-no-record-found>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <!-- end:: already generated consolidated bill detail  -->
+
+                    <div class="col-12" *ngIf="panelConsolidatedBillsDetail.length || panelBills.length">
+                        <button type="button" (click)="printConsolidatedReport()"
+                            *ngIf="isExisting && panelConsolidatedBillsDetail.length && isFinal"
+                            class="btn btn-sm btn-dark pull-right ml-2">
+                            <i aria-hidden="true" class="ti-printer"></i> Print Report
+                        </button>
+                        <button type="button" [disabled]="disabledButtonFinalize"
+                            *ngIf="!isFinal && (panelConsolidatedBillsDetail.length || panelBills.length)"
+                            class="btn btn-sm btn-danger pull-right ml-2" mwlConfirmationPopover
+                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="'Are you sure you want to finalize consolidated bill?'"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]" (confirm)="saveConsolidatedBill(1)"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true">
+                            <i class="ti-check-box"></i> Finalized <i class="spinner-border-custom" aria-hidden="true"
+                                [hidden]="isSpinnerFinalize"></i>
+                        </button>
+                        <button type="button" [disabled]="disabledButtonDraft"
+                            *ngIf="(panelBills.length || panelConsolidatedBillsDetail.length && !isFinal)"
+                            class="btn btn-sm btn-primary pull-right" mwlConfirmationPopover
+                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]" (confirm)="saveConsolidatedBill(0)"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="btn btn-sm btn-primary"
+                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true">
+                            <i class="ti-save"></i> Save Draft <i class="spinner-border-custom" aria-hidden="true"
+                                [hidden]="isSpinnerDraft"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,283 @@
+<div class="roles-page">
+  <div class="row">
+    <!-- Radiology Machines Section -->
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'">
+            <div class="row">
+              <!-- Location Field -->
+              <div class="col-12 col-md-6 col-lg-4" [formGroup]="machineConfigForm">
+                <label for="TestSubSectionID" class="control-label">Location</label>
+                <ng-select
+                  style="width: 100%"
+                  class="mr-1"
+                  [items]="BranchesList"
+                  bindLabel="Title"
+                  placeholder="-Select Location-"
+                  bindValue="LocId"
+                  formControlName="machineBranch"
+                  [closeOnSelect]="true"
+                  (change)="onBranchChange($event)"
+                  [ngClass]="{
+                    invalid: machineConfigForm.get('machineBranch').errors && machineConfigForm.get('machineBranch').touched,
+                    'invalid-highlighted': machineConfigForm.get('machineBranch').errors
+                  }"
+                ></ng-select>
+              </div>
+    
+              <!-- Section Field -->
+              <div class="col-12 col-md-6 col-lg-4">
+                <label for="subSectionIDs" class="control-label">Section</label>
+                <ng-select
+                  style="width: 100%"
+                  class="mr-1"
+                  [items]="subSectionList"
+                  bindLabel="SubSectionTitle"
+                  placeholder="-Select Section-"
+                  bindValue="TestSubSectionID"
+                  [closeOnSelect]="true"
+                  [multiple]="false"
+                  formControlName="subSectionIDs"
+                  (change)="onSectionChange($event)"
+                ></ng-select>
+              </div>
+    
+              <!-- Status Field -->
+              <div class="col-12 col-md-6 col-lg-4" [formGroup]="machineConfigForm">
+                <label for="Status" class="control-label">Status</label>
+                <select
+                  #select="ngModel"
+                  id="select"
+                  [(ngModel)]="selectedStatus"
+                  [ngModelOptions]="{ standalone: true }"
+                  name="Status"
+                  placeholder="-Select Status-"
+                  class="form-control"
+                  (change)="onStatusChange($event)"
+                >
+                  <option value="">Both</option>
+                  <option value="1">On</option>
+                  <option value="0">Off</option>
+                </select>
+              </div>
+            </div>
+    
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      placeholder="Search Item"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="searchText"
+                      name="searchTextMachine"
+                    />
+                    <button
+                      class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                      (click)="getRISMachine()"
+                    >
+                      <i class="ti-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Table with pagination -->
+              <div class="table-responsive fixed-height-table" *ngIf="pagination.paginatedSearchResults.length > 0; else noRecord"
+                style="overflow-x: hidden;">
+                <ngx-spinner
+                  class="spinner-info"
+                  bdColor="rgba(0,0,0,0.8)"
+                  [name]="spinnerRefs.listSection"
+                  size="medium"
+                  color="#fff"
+                  type="square-loader"
+                  [fullScreen]="false"
+                >
+                  <p style="color: white">Loading...</p>
+                </ngx-spinner>
+                <table class="table table-hover compact table-bordered table-sm mt-4" style="table-layout: fixed; width: 100%;">
+                  <thead>
+                    <tr>
+                      <th width="3%">#</th>
+                      <th width="10%">Machine Name</th>
+                      <th width="5%">Location</th>
+                      <th width="10%">Operational Time</th>
+                      <th width="4%">Status</th>
+                      <th width="33%">Machine Services</th>
+                      <th width="32%">Remarks</th>
+                      <th width="3%">Log</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let item of pagination.paginatedSearchResults | filterByKey : searchText : ['MachineName', 'BranchCode', 'isOnOff']; let i = index"
+                      [ngClass]="{'active-rec-border-left': rowIndex == i}"
+                      class="cursor-pointer"
+                    >
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ item.MachineName }}</td>
+                      <td>{{ item.BranchCode || '-' }}</td>
+                      <td>{{ formatTimeRange(item.MachineStartTime, item.MachineEndTime) }}</td>
+                      <td>
+                        <span [ngClass]="{'badge': true, 'badge-primary': item.isOnOff, 'badge-danger': !item.isOnOff}">
+                          {{ item.isOnOff ? 'On' : 'Off' }}
+                        </span>
+                      </td>
+                      <!-- <td>{{ item.MachineDetail || '-' }}</td> -->
+                      <td class="text-centered"><span [innerHTML]="getFormattedDetail(item.MachineDetail) || '-' "></span></td>
+                      <td class="text-centered">{{ item.isOnOffRemarks || '-' }}</td>
+                      <td>
+                        <i class="fa fa-info-circle text-primary"
+                          ngbTooltip="View Log"
+                           style="cursor: pointer;"
+                           (click)="getMachineRowLog(item); $event.stopPropagation()"></i>
+                      </td>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </app-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <ng-template #noRecord>
+    <div class="no-record-message">
+      <app-no-record-found></app-no-record-found>
+    </div>
+  </ng-template>
+</div>
+
+
+
+
+
+
+<!------begin:: RIS Machine Log Popup---------------------------------->
+<ng-template #machineLogModal let-machineLogModal let-c="close" let-d="dismiss">
+  <div class="col-md-12">
+    <app-card [title]="'Machine Log'" [cardClass]="'tim-card tim-card tim-card-primary'">
+      <div class="card-body">
+        <div class="table-responsive fixed-height-table">
+          <ngx-spinner
+            class="spinner-info"
+            bdColor="rgba(0,0,0,0.8)"
+            [name]="spinnerRefs.listSection"
+            size="medium"
+            color="#fff"
+            type="square-loader"
+            [fullScreen]="false"
+          >
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+          <table class="table table-hover compact table-bordered table-sm">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Changed By</th>
+                <th>Changed On</th>
+                <th>Status Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of MachineLogList; let i = index">
+                <td>
+                  <span [ngClass]="{'badge': true, 'badge-primary': item.isOnOff, 'badge-danger': !item.isOnOff}">
+                    {{ item.isOnOff ? "On" : "Off" }}
+                  </span>
+                </td>
+                <td>{{ item.CreatedByEmp || "--" }}</td>
+                <td>{{ item.CreatedOn ? (item.CreatedOn | date: "dd-MM-yyyy hh:mm a") : "--" }}</td>
+                <td>{{ item.isOnOffRemarks || "--" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+       
+  
+        <ng-container *ngIf="!MachineLogList.length">
+          <app-no-record-found [infoMessageParam]="noRecMsg"></app-no-record-found>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-auto"
+          (click)="machineLogModal.close()"
+        >
+          <i class="fa fa-times-circle"></i> Cancel
+        </button>
+      </div>
+    </app-card>
+  </div>
+</ng-template>
+
+<!------end:: RIS Machine Log Popup------------------------------------>
+
+<!------begin:: LAB Machine Log Popup---------------------------------->
+<ng-template #labMachineLogModal let-labMachineLogModal let-c="close" let-d="dismiss">
+  <div class="col-md-12">
+    <app-card [title]="'Lab Machine Log'" [cardClass]="'tim-card tim-card tim-card-primary'">
+      <div class="card-body">
+        <div class="table-responsive fixed-height-table">
+          <ngx-spinner
+            class="spinner-info"
+            bdColor="rgba(0,0,0,0.8)"
+            [name]="spinnerRefs.listSection"
+            size="medium"
+            color="#fff"
+            type="square-loader"
+            [fullScreen]="false"
+          >
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+          <table class="table table-hover compact table-bordered table-sm">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Changed By</th>
+                <th>Changed On</th>
+                <th>Status Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of MachineLogList; let i = index">
+                <td>
+                  <span [ngClass]="{'badge': true, 'badge-primary': item.isOnOff, 'badge-danger': !item.isOnOff}">
+                    {{ item.isOnOff ? "On" : "Off" }}
+                  </span>
+                </td>
+                <td>{{ item.CreatedByEmp || "--" }}</td>
+                <td>{{ item.CreatedOn ? (item.CreatedOn | date: "dd-MM-yyyy hh:mm a") : "--" }}</td>
+                <td>{{ item.isOnOffRemarks || "--" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+       
+  
+        <ng-container *ngIf="!MachineLogList.length">
+          <app-no-record-found [infoMessageParam]="noRecMsg"></app-no-record-found>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-auto"
+          (click)="labMachineLogModal.close()"
+        >
+          <i class="fa fa-times-circle"></i> Cancel
+        </button>
+      </div>
+    </app-card>
+  </div>
+</ng-template>
+
+<!------end:: LAB Machine Log Popup------------------------------------>

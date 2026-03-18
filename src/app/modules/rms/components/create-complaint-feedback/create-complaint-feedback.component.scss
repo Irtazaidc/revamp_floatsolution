@@ -1,0 +1,30 @@
+// ::ng-deep .ng-dropdown-panel{
+//     height: 120px;
+//   }
+//   ::ng-deep .ng-dropdown-panel-items{
+//     height: 101px !important;
+//   }
+  .swal2-title {
+    font-size: 24px;
+    color: #ff0000;
+  }
+  
+  .swal2-close {
+    color: #ffffff;
+    font-size: 20px;
+  }
+  
+  .custom-title {
+    // font-weight: bold;
+    color: #00ff00;
+    font-size: 28px;
+  }
+  .copy-text-button {
+    position: absolute;
+    right: 8px;
+    top: 7px;
+    cursor: pointer;
+  }
+  .copy-text-button i:hover {
+      color: #1bc5bd;
+  }

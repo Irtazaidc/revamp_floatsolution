@@ -1,0 +1,137 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <app-card [title]="'FAQs Management'" [cardClass]="'tim-card tim-card tim-card-danger'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                            <div class="p-2" style="border: 1px solid #eee; ">
+                                <form [formGroup]="formSearchFAQ" (ngSubmit)="searchFAQ()">
+                                    <div class="row"> 
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <ng-select style="width: 100%;"
+                                                    class=" mt-1 mr-1"
+                                                    [items]="faqCategoryList"
+                                                    bindLabel="FAQCategory" 
+                                                    placeholder="All"
+                                                    bindValue="FAQCategoryID"
+                                                    formControlName="faqCategoryId"
+                                                    [multiple]="false"
+                                                    [closeOnSelect]="true"
+                                                    placeholder="-Select Category-"
+                                                    >
+            
+                                                </ng-select>
+                                            </div>
+                                        </div>                                                                        
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <button type="button" (click)="clearForms()" class="btn btn-outline-danger btn-sm ml-1 pull-right" ngbTooltip="Post New Job"><i class="ti-plus"></i>New</button>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm pull-right"><i class="ti-search"></i>Search</button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="table-responsive fixed-height-table">
+                                    <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.faqSearchSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <table class="table table-hover compact">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Category</th>
+                                                <th>Question</th>
+                                                <!-- <th>Answer</th> -->
+                                                <!-- <th class="text-right">Action</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" *ngIf="!faqList.length"> 
+                                                    <div class="alert alert-danger text-center" role="alert">
+                                                        {{LoadingFAQMessage}} <i class="fa fa-danger" aria-hidden="true"></i>
+                                                  </div>
+                                                </td>
+                                            </tr>
+                                            <tr [ngClass]="{'active-rec-border-left': rowIndex==i}" class="cursor-pointer" *ngFor = "let sFaq of faqList let i = index" (click)="getFAQByID(sFaq.FAQID,i)">
+                                                <td>{{i+1}}</td>
+                                                <td>{{sFaq.FAQCategory}}</td>                                                
+                                                <td>{{truncate(sFaq.Question,40)}}</td>
+                                                <!-- <td><span  [innerHTML]="sFaq.Answer"></span></td> -->
+                                                <!-- <td class="text-right">
+                                                    <a (click)="getFAQByID(sFaq.FAQID)" class="cursor-pointer" style="font-size: 17px;"  ngbTooltip="View Detail"> 
+                                                        <i class="fa fa-eye text-danger"></i>
+                                                    </a>
+                                                </td> -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                            <div class="p-2" style="border: 1px solid #eee; ">
+                                <form  class="container" #container class="JobRequestForm" [formGroup]="faqListForm" (ngSubmit)="addUpdateJobRequest()"> <!--[formGroup]="notificationConfigForm" (ngSubmit)="addUpdateNotification()"-->
+                                    <ngx-spinner class="spinner-danger" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.faqFormSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Please wait... </p>
+                                    </ngx-spinner>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                            <div class="form-group">
+                                                <label for="FAQCategory" class="control-label">FAQ Category:</label>
+                                                <select name="FAQCategoryID" formControlName="FAQCategoryID" class="form-control" 
+                                                [ngClass]="{'invalid': faqListForm.get('FAQCategoryID').errors && faqListForm.get('FAQCategoryID').touched, 'invalid-highlighted': faqListForm.get('FAQCategoryID').errors}"
+                                                >
+                                                    <option value="">-Select Category-</option>
+                                                    <option *ngFor="let faqCat of faqCategoryList" value="{{faqCat.FAQCategoryID}}">{{faqCat.FAQCategory}}</option>
+                                                </select>
+                                            </div>
+                                        </div>                                                                                                                       
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-12 col-xl-12">
+                                            <div class="form-group">
+                                                <label for="Question" class="control-label">Question:</label>
+                                                <textarea formControlName="Question"  name="Question" class="form-control"  rows="3"
+                                                    [ngClass]="{'invalid': faqListForm.get('Question').errors && faqListForm.get('Question').touched, 'invalid-highlighted': faqListForm.get('Question').errors}"
+                                                ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-12 col-xl-12">
+                                            <div class="form-group">
+                                                <label for="Answer" class="control-label">Answer:</label>
+
+
+                                                <!-- <textarea formControlName="Answer"  name="Answer" class="form-control"  rows="3" 
+                                                    [ngClass]="{'invalid': faqListForm.get('Answer').errors && faqListForm.get('Answer').touched, 'invalid-highlighted': faqListForm.get('Answer').errors}"
+                                                ></textarea> -->
+                                                <div class="ckeditor-faq">
+                                                    <ckeditor formControlName="Answer" name="Answer" 
+                                                        [(ngModel)]="Answer">
+                                                    </ckeditor>
+                                                </div>
+                                                 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 mt-3">
+                                            <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForms()"><i class="fa fa-eraser" ></i>Clear<i aria-hidden="true"></i></button>
+                                            <button [disabled]="disabledButton" type="submit" class="btn btn-sm btn-primary pull-right ml-2"><i class="fa fa-save"></i>{{ActionLabel}}<i aria-hidden="true"></i><i class="spinner-border-custom" aria-hidden="true"
+                                                [hidden]="isSpinner"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>

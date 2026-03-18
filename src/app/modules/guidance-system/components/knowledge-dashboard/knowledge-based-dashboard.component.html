@@ -1,0 +1,1700 @@
+<mat-card>
+  <mat-card-content>
+        <!-- Ticker Container -->
+
+<div class="ticker-wrapper mb-5" *ngIf="TickerList?.length">
+  <div class="ticker-content">
+    <div class="ticker-item" *ngFor="let ticker of TickerList" (click)="openTickerDetails(ticker)">
+      <strong>{{ ticker.TickerDetail }}</strong>
+      <span class="ticker-separator">|</span>
+    </div>
+  </div>
+</div>
+
+
+    <mat-tab-group
+      class="demo-tab-group"
+      animationDuration="0ms"
+      style="background-color: #fff"
+    >
+
+      <!-- Test/Profile/Package -->
+      <mat-tab label="Test Information">
+        <ng-template mat-tab-label>
+          <i class="flaticon2-search icon-lg text-danger custom-icons mr-2"></i>
+          Test Information
+        </ng-template>
+        <div class="container-fluid" *matTabContent>
+          <div class="row">
+            <div class="col-md-6 mt-2 mb-3">
+              <label class="">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="locationWiseChecked"
+                  (change)="onCheckboxChange($event.target.checked)"
+                />
+                Location wise
+              </label>
+            </div>
+            <!-- <div class="col-md-6 mt-2 pull right">
+              <button
+                type="button"
+                class="btn btn-sm btn-success pull-right ml-2"
+                (click)="advancedSearch()"
+                ngbTooltip="Advanced Search"
+              >
+                <i class="ti-search"></i>Advanced
+              </button>
+              <button
+                (click)="ShowMapView(selectedBranchData)"
+                *ngIf="locationWiseChecked"
+                type="button"
+                class="btn btn-sm cursor-pointer pull-right ml-2"
+              >
+                <i class="fas fa-map-marker-alt mapicon"></i>
+              </button>
+
+              <button
+                (click)="telephoneExtensionProcess()"
+                type="button"
+                class="btn btn-sm btn-outline-primary pull-right ml-2"
+              >
+                <i class="fa fa-phone"></i>Extensions
+              </button>
+              <button
+                (click)="showTestRateCalculator()"
+                class="btn btn-sm btn-outline-danger pull-right ml-2"
+              >
+                <i class="fa fa-calculator"></i>Rate Calculator
+              </button>
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-12 col-xl-4">
+              <form
+                [formGroup]="testProfileListForm"
+                class="form-horizontal"
+                name="form"
+                role="form"
+              >
+                <div class="row">
+                  <div
+                    class="col-sm-12 col-md-12 col-lg-12 col-xl-6"
+                    *ngIf="advancedSearchEnabled"
+                    [@fadeInOutTranslate]
+                  >
+                    <label
+                      >Category:<span class="mandatory-field"> </span>
+                    </label>
+                    <ng-select
+                      style="width: 100%"
+                      formControlName="BodyPartId"
+                      [items]="BodyParts"
+                      [multiple]="false"
+                      placeholder="Please Select"
+                      bindLabel="BodyPartTitle"
+                      bindValue="IBodyPartsID"
+                      [closeOnSelect]="true"
+                      name="BodyPartTitle"
+                    >
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-item$="item$"
+                        let-index="index"
+                      >
+                        <input
+                          id="item-{{ index }}"
+                          [ngModelOptions]="{ standalone: true }"
+                          type="checkbox"
+                          [ngModel]="item$.selected"
+                        />
+                        {{ item.BodyPartTitle }}
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                  <div
+                    class="col-sm-12 col-md-12 col-lg-12 col-xl-6"
+                    *ngIf="advancedSearchEnabled"
+                    [@fadeInOutTranslate]
+                  >
+                    <label
+                      >Diseases:<span class="mandatory-field"> </span>
+                    </label>
+                    <ng-select
+                      style="width: 100%"
+                      formControlName="DiseaseId"
+                      [items]="DiseaseTitleList"
+                      [multiple]="false"
+                      placeholder="Please Select"
+                      bindLabel="DiseaseTitle"
+                      bindValue="IDiseasesID"
+                      [closeOnSelect]="true"
+                      name="DiseaseTitle"
+                    >
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-item$="item$"
+                        let-index="index"
+                      >
+                        <input
+                          id="item-{{ index }}"
+                          [ngModelOptions]="{ standalone: true }"
+                          type="checkbox"
+                          [ngModel]="item$.selected"
+                        />
+                        {{ item.DiseaseTitle }}
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="row mt-1">
+                  <div
+                    class="col-sm-12 col-md-12 col-lg-12 col-xl-6"
+                    *ngIf="advancedSearchEnabled"
+                    [@fadeInOutTranslate]
+                  >
+                    <label>Symptoms:</label>
+                    <ng-select
+                      style="width: 100%"
+                      formControlName="SymptomId"
+                      [items]="sysmtomsList"
+                      [multiple]="false"
+                      placeholder="Please Select"
+                      bindLabel="SymptomTitle"
+                      bindValue="ISymptomID"
+                      [closeOnSelect]="true"
+                      name="SymptomTitle"
+                    >
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-item$="item$"
+                        let-index="index"
+                      >
+                        <input
+                          id="item-{{ index }}"
+                          [ngModelOptions]="{ standalone: true }"
+                          type="checkbox"
+                          [ngModel]="item$.selected"
+                        />
+                        {{ item.SymptomTitle }}
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                  <div
+                    class="col-sm-12 col-md-12 col-lg-12 col-xl-6"
+                    *ngIf="advancedSearchEnabled"
+                    [@fadeInOutTranslate]
+                  >
+                    <label>Gender:</label>
+                    <ng-select
+                      [items]="gendersList"
+                      formControlName="Gender"
+                      bindLabel="GenderTitle"
+                      bindValue="GenderID"
+                      placeholder="Please Select"
+                      name="panel"
+                    >
+                    </ng-select>
+                  </div>
+
+                  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
+                    <label>Department:</label>
+                    <select
+                      class="form-control"
+                      placeholder="-Select Department-"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="labDeptID"
+                      (ngModelChange)="getSubSection()"
+                    >
+                      <option [ngValue]="-1">Select All</option>
+                      <option [ngValue]="1">Lab</option>
+                      <option [ngValue]="2">Imaging</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">
+                    <label>Subsection:</label>
+                    <ng-select
+                      style="width: 100%"
+                      value=""
+                      [items]="subSectionList"
+                      bindLabel="SubSectionTitle"
+                      placeholder="-Select Sub Section-"
+                      bindValue="SubSectionId"
+                      formControlName="SubSectionId"
+                    >
+                    </ng-select>
+                  </div>
+                  <div
+                    class="col-sm-12 col-md-12 col-lg-12 col-xl-6 mt-1"
+                    *ngIf="locationWiseChecked"
+                  >
+                    <label>Location:</label>
+                    <ng-select
+                      id="pat_branch"
+                      style="width: 100%"
+                      [items]="branchList"
+                      bindLabel="Title"
+                      [multiple]="false"
+                      [closeOnSelect]="true"
+                      bindValue="LocId"
+                      placeholder="--Select Branch--"
+                      formControlName="LocId"
+                      (change)="getLocationList()"
+                      [ngClass]="{
+                        invalid: testProfileListForm.get('LocId').errors,
+                        'invalid-highlighted':
+                          testProfileListForm.get('LocId').errors && isSubmitted
+                      }"
+                    >
+                    </ng-select>
+                  </div>
+
+                  <div
+                    class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-1"
+                  >
+                    <button
+                      type="button"
+                      (click)="getListByDisease()"
+                      class="btn btn-primary btn-block mt-2 w-100"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <div class="input-group">
+                <input
+                  type="text"
+                  placeholder="type to filter"
+                  class="form-control form-control-sm mt-2"
+                  [(ngModel)]="searchText"
+                  name="searchText"
+                  (ngModelChange)="onSearchTextChanged()"
+                />
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-12">
+                    <div
+                      class="table-responsive table-container fixed-height-table"
+                      style="width: 100%; overflow-x: hidden"
+                    >
+                      <!-- Table to display tests -->
+                      <table class="table table-bordered mt-4">
+                        <thead>
+                          <tr>
+                            <th>Test Code</th>
+                            <th>Test Name</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            class="text-center"
+                            *ngIf="
+                              paginationForTestProfile.paginatedSearchResults
+                                .length === 0
+                            "
+                          >
+                            <td colspan="3">
+                              <div class="container-fluid">
+                                <app-no-record-found></app-no-record-found>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr
+                            *ngFor="
+                              let test of paginationForTestProfile.paginatedSearchResults
+                            "
+                            (click)="testListChanged(test)"
+                          >
+                            <td>{{ test.TPCode }}</td>
+                            <td>{{ test.TPName }}</td>
+                            <td>
+                              <label>
+                                <i
+                                  class="fa fa-info-circle cursor-pointer"
+                                  ngbTooltip="View Detail"
+                                ></i>
+                              </label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                      *ngIf="
+                        paginationForTestProfile.paginatedSearchResults.length
+                      "
+                      class="d-flex justify-content-between p-2"
+                    >
+                      <ngb-pagination
+                        [collectionSize]="
+                          paginationForTestProfile.collectionSize
+                        "
+                        [(page)]="paginationForTestProfile.page"
+                        [pageSize]="paginationForTestProfile.pageSize"
+                        [boundaryLinks]="true"
+                        [maxSize]="5"
+                        [rotate]="true"
+                        (pageChange)="refreshPaginationForTestProfile()"
+                      ></ngb-pagination>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12 col-xl-8">
+              <ng-container
+                *ngIf="TPId; then testResultArea; else noResultArea"
+              ></ng-container>
+              <ng-template #testResultArea>
+                <ngx-spinner
+                  class="spinner-info"
+                  bdColor="rgba(0,0,0,0.8)"
+                  [name]="spinnerRefs.testGeneralSection"
+                  size="medium"
+                  color="#fff"
+                  type="square-loader"
+                  [fullScreen]="false"
+                >
+                  <p style="color: white">Please wait...</p>
+                </ngx-spinner>
+                <div
+                  class="row"
+                  *ngIf="(testGeneralData | json) != ({} | json)"
+                >
+                  <div class="col-md-12 mt-3">
+                    <!--start::Test Info-->
+                    <fieldset
+                      class="fieldset-border-all-primary fs-pl"
+                      style="background-color: #f3f6f9 !important"
+                    >
+                      <legend
+                        class="font-weight-bold text-primary"
+                        style="font-size: 1.1rem"
+                      >
+                        General Info.
+                      </legend>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <p class="p-mb">
+                            Code:
+                            <strong class="ml-2"
+                              >{{ testGeneralData["Code"] }}
+                            </strong>
+                          </p>
+                          <p class="p-mb">
+                            Type:
+                            <strong class="ml-2"
+                              >{{ testGeneralData["Type"] }}
+                            </strong>
+                          </p>
+                          <p class="p-mb">
+                            Sample Quantity:
+                            <strong class="ml-2">{{
+                              testGeneralData["SampleQuantity"]
+                            }}</strong>
+                          </p>
+                        </div>
+                        <div class="col-md-4">
+                          <p class="p-mb">
+                            Name:
+                            <strong class="ml-2">{{
+                              testGeneralData["Name"]
+                            }}</strong>
+                          </p>
+                          <p class="p-mb">
+                            Section:
+                            <strong class="ml-2">{{
+                              testGeneralData["SubSection"]
+                            }}</strong>
+                          </p>
+                          <p class="p-mb">
+                            Sample Type:
+                            <strong class="ml-2">{{
+                              testGeneralData["Sample"]
+                            }}</strong>
+                          </p>
+                        </div>
+                        <div class="col-md-4">
+                          <p class="p-mb">
+                            Price:
+                            <strong class="ml-2"
+                              >{{ testGeneralData["Currency"] }}
+                              {{ testGeneralData["Price"] }}</strong
+                            >
+                          </p>
+                          <p class="p-mb">
+                            Test Place:
+                            <strong class="ml-2">{{
+                              testGeneralData["TestPlace"]
+                            }}</strong>
+                          </p>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-md-6">
+                    <fieldset
+                      class="fieldset-border-all-primary fs-pl"
+                      style="background-color: #f3f6f9 !important"
+                    >
+                      <legend
+                        class="font-weight-bold text-primary"
+                        style="font-size: 1.1rem"
+                      >
+                        Protocols
+                      </legend>
+                      <div
+                        style="
+                          max-height: 75px;
+                          min-height: 75px;
+                          overflow-y: auto;
+                        "
+                      >
+                        <div class="col-md-12">
+                          <div
+                            [innerHTML]="testProtocol || 'No Protocols Found'"
+                          ></div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-md-6">
+                    <fieldset
+                      class="fieldset-border-all-primary fs-pl"
+                      style="background-color: #f3f6f9 !important"
+                    >
+                      <legend
+                        class="font-weight-bold text-primary"
+                        style="font-size: 1.1rem"
+                      >
+                        Instructions
+                      </legend>
+                      <div
+                        style="
+                          max-height: 75px;
+                          min-height: 75px;
+                          overflow-y: auto;
+                        "
+                      >
+                        <div class="col-md-12">
+                          <div
+                            [innerHTML]="
+                              testInstructuon || 'No Instructions Found'
+                            "
+                          ></div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+
+                <div class="divider py-5 text-primary">
+                  Locations/TAT/Parameters
+                </div>
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12 col-lg-12 col-xl-4">
+                      <!--start::Locations/TAT-->
+                      <fieldset class="fieldset-border-all-primary">
+                        <legend
+                          class="font-weight-bold text-primary"
+                          style="font-size: 1.1rem"
+                        >
+                          Test Locations
+                        </legend>
+                        <input
+                          type="text"
+                          class="form-control form-control-sm mb-2"
+                          placeholder="Type to filter"
+                          [(ngModel)]="FilterString"
+                        />
+                        <div
+                          class="table-responsive table-container fixed-height-table"
+                          style="
+                            max-height: 150px;
+                            min-height: 150px;
+                            overflow-y: auto;
+                          "
+                        >
+                          <table
+                            class="table table-hover compact table-bordered"
+                            cellpadding="0"
+                            cellspacing="0"
+                          >
+                            <thead>
+                              <tr>
+                                <th>Location</th>
+                                <th>Machines</th>
+                                <th>Doctors</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                *ngFor="
+                                  let location of testLoationTATData
+                                    | filterByKey : FilterString : ['Code'];
+                                  let i = index
+                                "
+                                [ngClass]="{
+                                  'bg-light': location.LocId == LocId
+                                }"
+                                (click)="getTATByTPID(location)"
+                                style="cursor: pointer"
+                              >
+                                <td>
+                                  <a
+                                    [ngClass]="{
+                                      'font-weight-bolder':
+                                        location.LocId == LocId
+                                    }"
+                                    href="javascript:void(0)"
+                                  >
+                                    {{ location.Code }}
+                                  </a>
+                                </td>
+                                <td>
+                                  <i
+                                    class="fa fa-server pl-2 mr-4"
+                                    (click)="
+                                      machinesStatusProcess(location.LocId)
+                                    "
+                                  ></i>
+                                </td>
+                                <td>
+                                  <i
+                                    class="fa fa-user-circle pr-2"
+                                    (click)="
+                                      radiologistAvailabilityProcess(
+                                        location.LocId
+                                      )
+                                    "
+                                  ></i>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-5">
+                      <fieldset class="fieldset-border-all-primary">
+                        <legend
+                          class="font-weight-bold text-primary"
+                          style="font-size: 1.1rem"
+                        >
+                          TAT
+                        </legend>
+                        <div class="row" *ngIf="repTimeShow">
+                          <div
+                            class="col-lg-12 col-md-12"
+                            style="word-break: break-word"
+                          >
+                            <div>
+                              <ng-container
+                                *ngIf="
+                                  locationTatUrgency['UrgentRptTime'] == -1;
+                                  then notAllowed;
+                                  else allowed
+                                "
+                              ></ng-container>
+                              <ng-template #notAllowed>
+                                <label
+                                  class="badge badge-inverse-danger pull-right"
+                                  ngbTooltip="Urgent Reporting Time"
+                                >
+                                  <strong>No Urgent Reporting allowed</strong>
+                                </label>
+                              </ng-template>
+                              <ng-template #allowed>
+                                <label
+                                  class="badge badge-inverse-danger pull-right"
+                                  ngbTooltip="Urgent Reporting Time"
+                                  >{{
+                                    minutesToHours(
+                                      locationTatUrgency["UrgentRptTime"]
+                                    )
+                                  }}
+                                  Hour(s)</label
+                                >
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          style="
+                            max-height: 150px;
+                            min-height: 150px;
+                            overflow-y: auto;
+                          "
+                        >
+                          <table
+                            class="table table-hover compact table-bordered"
+                          >
+                            <thead>
+                              <tr>
+                                <th>Reg. Time</th>
+                                <th>Days</th>
+                                <th>Rep.Time</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                *ngFor="
+                                  let locTAT of locationTATData;
+                                  let i = index
+                                "
+                              >
+                                <td>{{ locTAT.RegTime | date : "hh:mm a" }}</td>
+                                <td>{{ locTAT.Days }}</td>
+                                <td>
+                                  {{ locTAT.ReportTime | date : "hh:mm a" }}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </fieldset>
+                    </div>
+
+                    <div class="col-md-12 col-lg-6 col-xl-3">
+                      <fieldset class="fieldset-border-all-primary">
+                        <legend
+                          class="font-weight-bold text-primary"
+                          style="font-size: 1.1rem"
+                        >
+                          Test/Parameters
+                        </legend>
+
+                        <div class="row">
+                          <div class="col-md-12">
+                            <ng-container
+                              *ngIf="
+                                testParametersData.length;
+                                then parametersResult;
+                                else noParametersResult
+                              "
+                            >
+                            </ng-container>
+                            <ng-template #noParametersResult>
+                              <p>
+                                <ngb-alert
+                                  [ngClass]="'text-center'"
+                                  [dismissible]="false"
+                                  [type]="'primary'"
+                                >
+                                  No parameter found.
+                                </ngb-alert>
+                              </p>
+                            </ng-template>
+                            <ng-template #parametersResult>
+                              <input
+                                type="text"
+                                class="form-control form-control-sm mb-2"
+                                placeholder="Type to filter"
+                                [(ngModel)]="FilterStringParam"
+                              />
+                              <div
+                                style="
+                                  max-height: 150px;
+                                  min-height: 150px;
+                                  overflow-y: auto;
+                                "
+                              >
+                                <ul class="location-list pl-2">
+                                  <li
+                                    class="cursor-pointer"
+                                    *ngFor="
+                                      let param of testParametersData
+                                        | filterByKey
+                                          : FilterStringParam
+                                          : ['Title', 'TestProfileName'];
+                                      let i = index
+                                    "
+                                    style="border-bottom: 1px solid #eee"
+                                    [ngClass]="{ 'bg-light': i == indexValue }"
+                                    (click)="getParamDetail(param, i)"
+                                  >
+                                    <a
+                                      [ngClass]="{
+                                        'font-weight-bolder': i == indexValue
+                                      }"
+                                      href="javascript:void(0)"
+                                      (click)="jumpToParamters(param)"
+                                      >{{
+                                        param.Title
+                                          ? param.Title
+                                          : param.TestProfileName
+                                      }}</a
+                                    >
+                                  </li>
+                                </ul>
+                              </div>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #noResultArea>
+                <div class="col-12 text-center text-primary">
+                  <hr />
+                  <div>Please select a test to show details</div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+          <!-- <div *ngIf="locationWiseChecked" class="card card-custom branch-location-container ">
+            <div class="card-body mt-1">
+               <div class="container">
+              <p><strong>Address:</strong> {{ gMapInfoToDisplay?.address }}</p>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="panel panel-default">
+                    <div class="panel-body">
+                      <app-google-maps
+                        [MapName]='map'
+                        [gMapsControls]="[
+                          'show-marker',
+                          'allow-multiple-markers'
+                        ]"
+                        [gMapInfoToDisplay]="gMapInfoToDisplay"
+                        [gMultipleMarlers]="gMultipleMarlers"
+                      ></app-google-maps>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div> -->
+        </div>
+      </mat-tab>
+
+      <!-- Inquiry Report -->
+      <mat-tab *ngIf="inquiryReportPermission" label="Inquiry Report">
+        <ng-template mat-tab-label>
+          <i
+            class="fas fa-file-signature icon-lg text-danger custom-icons mr-2"
+          ></i>
+          Inquiry Report
+        </ng-template>
+        <div class="container-fluid" *matTabContent>
+          <div class="row">
+            <div class="col-md-12 mt-2 pull right">
+              <button
+                (click)="panelProcess()"
+                type="button"
+                class="btn btn-sm btn-outline-primary pull-right ml-2"
+              >
+                <i class="flaticon2-hexagonal"></i>Panel
+              </button>
+              <button
+                (click)="discountCardProcess()"
+                type="button"
+                class="btn btn-sm btn-outline-primary pull-right ml-2"
+              >
+                <i class="flaticon2-avatar"></i>Discount Card
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12 mb-3">
+            <app-inquiry-report-inner
+              [buttonControls]="[
+                'showResults',
+                'visits',
+                'invoice',
+                'booking',
+                'barcode',
+                'attachdocs'
+              ]"
+            >
+            </app-inquiry-report-inner>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Services -->
+      <mat-tab *ngIf="servicesPermission" label="Services">
+        <ng-template mat-tab-label>
+          <i class="fa fa-server icon-lg text-danger custom-icons mr-2"></i>
+          Services
+        </ng-template>
+        <div class="row">
+          <div class="col-md-6"></div>
+        <div class="col-md-6 mt-2 pull right">
+              <button
+                (click)="ShowMapView(selectedBranchData)"
+                *ngIf="locationWiseChecked"
+                type="button"
+                class="btn btn-sm cursor-pointer pull-right ml-2"
+              >
+                <i class="fas fa-map-marker-alt mapicon"></i>
+              </button>
+
+              <!-- <button
+                (click)="telephoneExtensionProcess()"
+                type="button"
+                class="btn btn-sm btn-outline-primary pull-right ml-2"
+              >
+                <i class="fa fa-phone"></i>Extensions
+              </button> -->
+              <button
+                (click)="showTestRateCalculator()"
+                class="btn btn-sm btn-outline-danger pull-right ml-2"
+              >
+                <i class="fa fa-calculator"></i>Rate Calculator
+              </button>
+              <button
+                class="btn btn-sm btn-outline-info pull-right ml-2"
+                ngbTooltip="View Attached Documents"
+                type="button"
+                (click)="viewDocsProcess()"
+              >
+                <i class="fa fa-folder-open"></i> View Docs
+              </button>
+            </div>
+        </div>
+      <app-branch-services-log></app-branch-services-log>
+      </mat-tab>
+
+      <!-- Machines Status -->
+      <mat-tab *ngIf="machinestPermission" label="Machines">
+        <ng-template mat-tab-label>
+          <i class="fa fa-server icon-lg text-danger custom-icons mr-2"></i>
+          Machines
+        </ng-template>
+        <app-machine-status-log></app-machine-status-log>
+      </mat-tab>
+
+      <!-- Doctors -->
+      <mat-tab *ngIf="doctorsPermission" label="Doctors">
+        <ng-template mat-tab-label>
+          <i
+            class="fa fa-user-circle icon-lg text-danger custom-icons mr-2"
+          ></i>
+          Doctors
+        </ng-template>
+        <app-radiologist-availability></app-radiologist-availability>
+      </mat-tab>
+
+      <!-- Promotion Tab -->
+      <!-- <mat-tab label="Promotion Ads">
+        <ng-template mat-tab-label>
+          <i class="fas fa-ad icon-lg text-danger custom-icons mr-2"></i>
+          Promotion Ads
+        </ng-template>
+
+        <div class="container-fluid px-0 overflow-hidden" *matTabContent>
+          <div class="card card-custom">
+            <div class="card-body pb-4">
+              <form
+                [formGroup]="promotionAddForm"
+                class="form-horizontal"
+                name="form"
+                role="form"
+                (ngSubmit)="getPromotionAdd()"
+              >
+                <div class="row form-group justify-content-center">
+                  <div class="col-md-3">
+                    <label class="control-label">Date From:</label>
+                    <input
+                      (click)="dateFrom.toggle()"
+                      #dateFrom="ngbDatepicker"
+                      placeholder="dd-mm-yyyy"
+                      ngbDatepicker
+                      value="1980-08-26"
+                      formControlName="dateFrom"
+                      name="dateFrom"
+                      class="form-control mb-4"
+                      type="text"
+                      value=""
+                      [ngClass]="{
+                        invalid: promotionAddForm.get('dateFrom').errors,
+                        'invalid-highlighted':
+                          promotionAddForm.get('dateFrom').errors && isSubmitted
+                      }"
+                      [maxDate]="maxDate"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="control-label">Date To:</label>
+                    <input
+                      (click)="dateTo.toggle()"
+                      placeholder="dd-mm-yyyy"
+                      #dateTo="ngbDatepicker"
+                      ngbDatepicker
+                      formControlName="dateTo"
+                      class="form-control mb-4"
+                      name="dateTo"
+                      type="text"
+                      value=""
+                      [ngClass]="{
+                        invalid: promotionAddForm.get('dateTo').errors,
+                        'invalid-highlighted':
+                          promotionAddForm.get('dateTo').errors && isSubmitted
+                      }"
+                      [maxDate]="maxDate"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="statusID" class="control-label">Status:</label>
+                    <select
+                      class="form-control"
+                      placeholder="-Select Department-"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="ForActive"
+                      [disabled]="reportType === '3'"
+                    >
+                      <option [ngValue]="-1">All Statuses</option>
+                      <option [ngValue]="1">🟢 Active</option>
+                      <option [ngValue]="0">🔴 Inactive</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 mt-8">
+                    <button
+                      class="btn btn-primary btn-md px-4 w-100"
+                      type="submit"
+                      [disabled]="disabledButton"
+                    >
+                      <ngx-spinner
+                        *ngIf="isSpinner"
+                        size="sm"
+                        bdColor="rgba(0,0,0,0.8)"
+                        color="#fff"
+                        type="square-loader"
+                        [fullScreen]="false"
+                      >
+                      </ngx-spinner>
+                      <i class="fa fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="card card-custom">
+            <div class="card-body">
+              <ngx-spinner
+                class="spinner-info"
+                bdColor="rgba(0, 0, 0, 0.8)"
+                size="medium"
+                color="#fff"
+                type="square-loader"
+                [fullScreen]="false"
+              >
+                <p style="color: white">Loading...</p>
+              </ngx-spinner>
+              <div class="row">
+                <div class="col-md-12">
+                  <small class="pull-right text-danger">
+                  </small>
+                  <div class="table-responsive" style="min-height: 330px">
+                    <table
+                      class="table table-hover"
+                      cellpadding="0"
+                      cellspacing="0"
+                    >
+                      <thead>
+                        <tr>
+                          <th class="text-center">#</th>
+                          <th class="text-center">Activation Date/Time</th>
+                          <th class="text-center">End Date/Time</th>
+                          <th class="text-center">Advertisement</th>
+                          <th class="text-center">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody
+                        *ngIf="
+                          advertisementList && advertisementList.length > 0;
+                          else noRecord
+                        "
+                      >
+                        <tr
+                          *ngFor="let item of advertisementList; let i = index"
+                        >
+                          <td class="text-center">{{ i + 1 }}</td>
+                          <td class="text-center">
+                            {{ item.StartDateTime | date : "MMM d, y h:mm a" }}
+                          </td>
+                          <td class="text-center">
+                            {{ item.EndDateTime | date : "MMM d, y h:mm a" }}
+                          </td>
+                          <td class="text-center">
+                            <img
+                              [src]="
+                                'data:image/jpeg;base64,' + item.PromotionImage
+                              "
+                              width="100"
+                              height="100"
+                              style="cursor: pointer"
+                              (click)="openModal(item.PromotionImage)"
+                            />
+                          </td>
+                          <td class="text-center">
+                            {{
+                              item.isActive
+                                ? "Active"
+                                : item.isActive === false
+                                ? "Inactive"
+                                : "-"
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div
+                      class="custom-modal"
+                      *ngIf="showModal"
+                      (click)="closeModal()"
+                    >
+                      <div
+                        class="custom-modal-content"
+                        (click)="$event.stopPropagation()"
+                      >
+                        <img
+                          [src]="'data:image/jpeg;base64,' + selectedImage"
+                          alt="Expanded"
+                        />
+                        <button class="close-btn" (click)="closeModal()">
+                          ✖
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <ng-template #noRecord>
+              <div
+                class="no-record-message"
+                style="
+                  text-align: center;
+                  padding: 1rem;
+                  position: absolute;
+                  width: 100%;
+                  top: 50%;
+                  transform: translateY(-50%);
+                "
+              >
+                <strong>No Record Found</strong>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </mat-tab> -->
+
+      <!-- Radiologist Availability PopUp -->
+
+      <ng-template
+        #radiologistAvailabilityModal
+        let-radiologistAvailabilityModal
+        let-c="close"
+        let-d="dismiss"
+      >
+        <div class="modal-body d-flex flex-wrap justify-content-center">
+          <app-radiologist-availability
+            [doctorslocationId]="doctorslocationId"
+          ></app-radiologist-availability>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm ms-auto"
+            (click)="radiologistAvailabilityModal.close()"
+          >
+            <i class="fa fa-times-circle"></i> Cancel
+          </button>
+        </div>
+      </ng-template>
+
+      <!-- Machines statuses PopUp -->
+      <ng-template
+        #machinesModal
+        let-machinesModal
+        let-c="close"
+        let-d="dismiss"
+      >
+        <div class="container-fluid">
+          <div class="modal-body m-0 p-0" style="width: 100%">
+            <app-machine-status-log
+              [locationId]="locationid"
+              [subsectionId]="subsectionId"
+            ></app-machine-status-log>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm ms-auto"
+              (click)="machinesModal.close()"
+            >
+              <i class="fa fa-times-circle"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Telephone Extensions PopUp -->
+      <ng-template
+        #telephoneExtensionModal
+        let-telephoneExtensionModal
+        let-c="close"
+        let-d="dismiss"
+      >
+        <div class="container-fluid">
+          <div class="modal-body m-0 p-0" style="width: 100%">
+            <app-telephone-directory></app-telephone-directory>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm ms-auto"
+              (click)="telephoneExtensionModal.close()"
+            >
+              <i class="fa fa-times-circle"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Panel PopUp -->
+      <ng-template #panelModal let-panelModal let-c="close" let-d="dismiss">
+        <div class="container-fluid">
+          <div class="modal-body m-0 p-0" style="width: 100%">
+            <app-panel-info></app-panel-info>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm ms-auto"
+              (click)="panelModal.close()"
+            >
+              <i class="fa fa-times-circle"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Discount Card PopUp -->
+      <ng-template
+        #discountCardModal
+        let-discountCardModal
+        let-c="close"
+        let-d="dismiss"
+      >
+        <div class="container-fluid">
+          <div class="modal-body m-0 p-0" style="width: 100%">
+            <app-discount-card-details></app-discount-card-details>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm ms-auto"
+              (click)="discountCardModal.close()"
+            >
+              <i class="fa fa-times-circle"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Map View PopUp -->
+      <ng-template #mapViewModal let-mapViewModal let-c="close" let-d="dismiss">
+        <div class="container-fluid">
+          <div class="modal-body m-0 p-0" style="width: 100%">
+            <div class="container py-3">
+              <p><strong>Address:</strong> {{ branchAddress }}</p>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="panel panel-default">
+                    <div class="panel-body">
+                      <div *ngIf="branchLatitude && branchLongitude; else noLocation">
+                          <iframe
+                          *ngIf="mapUrl; else noLocation"
+                          width="100%"
+                          height="400"
+                          style="border:0;"
+                          [src]="mapUrl"
+                          allowfullscreen
+                          loading="lazy"
+                        ></iframe>
+                      </div>
+                      <ng-template #noLocation>
+                        <p class="text-danger">Location coordinates not available.</p>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm ms-auto"
+              (click)="mapViewModal.close()"
+            >
+              <i class="fa fa-times-circle"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+      <!------start:: Test Rates Calculator Popup-->
+      <ng-template #testRates let-testRates>
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-basic-title">Test Rates</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="testRates.close()"
+          >
+            <span style="display: inline-block" aria-hidden="true"
+              >&times;</span
+            >
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-test-profile-rates></app-test-profile-rates>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-info"
+            data-dismiss="modal"
+            (click)="testRates.close()"
+          >
+            <i class="fa fa-times-circle"></i> Close
+          </button>
+        </div>
+      </ng-template>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #noRecord>
+  <div
+    class="no-record-message"
+    style="
+      text-align: center;
+      padding: 1rem;
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    "
+  >
+    <strong>No Record Found</strong>
+  </div>
+</ng-template>
+
+<!-- Ticker Popup  -->
+<ng-template #tickerModal let-tickerModal>
+  <div class="modal-header">
+    <h2 class="modal-title">{{ selectedTicker?.TickerTitle }}</h2>
+  </div>
+  <div class="modal-body">
+    <p><strong>Details:</strong> {{ selectedTicker?.TickerDetail }}</p>
+    <p><strong>Category:</strong> {{ selectedTicker?.CategoryName }}</p>
+    <!-- <p><strong>Start Date:</strong> {{ selectedTicker?.StartDate | date:'yyyy-MM-dd' }}</p> -->
+    <!-- <p>
+  <strong>End Date:</strong>
+  {{ selectedTicker?.EndDate ? (selectedTicker.EndDate | date:'yyyy-MM-dd') : 'Non-Expiry' }}
+</p> -->
+  </div>
+  <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            data-dismiss="modal"
+            (click)="tickerModal.close()"
+          >
+            <i class="fa fa-times-circle"></i> Close
+          </button>
+        </div>
+</ng-template>
+
+
+
+<ng-template #viewDocsModal let-modal>
+  <div class="modal-header bg-light">
+    <h5 class="modal-title fw-bold">
+      <i class="fa fa-folder-open text-primary me-2"></i>
+      Attached Files
+    </h5>
+
+    <!-- Search Bar -->
+    <div class="search-container ms-auto me-3" style="width: 250px">
+      <div class="input-group input-group-sm">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search documents..."
+          [(ngModel)]="searchText"
+          (input)="searchDocuments()"
+        />
+        <span class="input-group-text">
+          <i class="fa fa-search"></i>
+        </span>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close()"
+    ></button>
+  </div>
+
+  <div class="modal-body-document" style="max-height: 70vh; overflow-y: auto">
+    <!-- Loading/Empty State -->
+    <div *ngIf="documentsList.length === 0" class="text-center py-5">
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        *ngIf="!documentsList"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p
+        *ngIf="documentsList && documentsList.length === 0"
+        class="text-muted mt-3"
+      >
+        <i class="fa fa-file-alt fa-2x mb-2"></i><br />
+        No documents found
+      </p>
+    </div>
+
+    <!-- Documents List -->
+    <div
+      class="accordion-document"
+      id="documentsAccordion"
+      *ngIf="groupedDocuments.length > 0"
+    >
+      <div
+        class="accordion-item1 border-0 mb-3"
+        *ngFor="let category of groupedDocuments"
+      >
+        <!-- Category Header -->
+        <div class="accordion-header">
+          <button
+            class="accordion-button {{
+              category.open ? '' : 'collapsed'
+            }} shadow-none rounded"
+            type="button"
+            (click)="toggleCategory(category)"
+            style="background-color: #f8f9fa"
+          >
+            <div
+              class="d-flex justify-content-between align-items-center w-100"
+            >
+              <div class="d-flex align-items-center">
+                <i class="fa fa-folder text-warning me-3 fs-5 mr-2"></i>
+                <div>
+                  <h6 class="mb-0 fw-bold">{{ category.categoryName }}</h6>
+                  <small class="text-muted ml-2"
+                    >{{ category.documents.length }} items</small
+                  >
+                </div>
+              </div>
+              <span class="badge bg-primary rounded-pill px-3 py-2 ml-2">
+                {{ category.documents.length }}
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Category Content -->
+        <div class="accordion-collapse collapse" [class.show]="category.open">
+          <div class="accordion-body pt-3 px-3">
+            <div class="row g-3">
+              <div
+                class="col-6 col-md-4 col-lg-3"
+                *ngFor="let doc of category.documents"
+              >
+                <!-- Document Card -->
+                <div
+                  class="document-card border rounded-3 h-100 d-flex flex-column bg-white shadow-sm"
+                  [class.cursor-pointer]="true"
+                  (click)="openPreviewModal(doc)"
+                  title="Click to preview"
+                >
+                  <!-- Document Preview -->
+                  <div
+                    class="document-preview flex-grow-1 d-flex align-items-center justify-content-center p-3 bg-light rounded-top"
+                    style="min-height: 150px"
+                  >
+                    <!-- Show file icon based on type -->
+                    <div class="text-center w-100">
+                      <i
+                        class="fa {{
+                          getDocumentIcon(doc.DocumentExtension)
+                        }} fa-4x {{
+                          getDocumentIconColor(doc.DocumentExtension)
+                        }}"
+                      ></i>
+                      <div class="mt-2">
+                        <span
+                          class="badge {{
+                            getFileBadgeClass(doc.DocumentExtension)
+                          }}"
+                        >
+                          {{
+                            (
+                              doc.DocumentExtension ||
+                              getFileExtension(doc.DocumentFileName)
+                            )?.toUpperCase() || "FILE"
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Document Info -->
+                  <div class="document-info p-3 border-top">
+                    <!-- Document Title -->
+                    <h6
+                      class="document-title text-truncate mb-2 fw-semibold"
+                      [title]="doc.DocumentTitle"
+                    >
+                      {{
+                        doc.DocumentTitle ||
+                          doc.DocumentFileName ||
+                          "Untitled Document"
+                      }}
+                    </h6>
+
+                    <!-- File Meta -->
+                    <div
+                      class="document-meta d-flex justify-content-between align-items-center small text-muted"
+                    >
+                      <span>
+                        <i
+                          class="fa {{
+                            getDocumentIcon(doc.DocumentExtension)
+                          }} me-1 {{
+                            getDocumentIconColor(doc.DocumentExtension)
+                          }}"
+                        ></i>
+                        {{
+                          (
+                            doc.DocumentExtension ||
+                            getFileExtension(doc.DocumentFileName)
+                          )?.toUpperCase() || "FILE"
+                        }}
+                      </span>
+                      <span *ngIf="doc.FileSize">{{
+                        formatFileSize(doc.FileSize)
+                      }}</span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div
+                      class="document-actions d-flex justify-content-between mt-3 pt-2 border-top"
+                    >
+                      <button
+                        class="btn btn-sm btn-outline-primary"
+                        (click)="downloadDoc(doc); $event.stopPropagation()"
+                        title="Download"
+                      >
+                        <i class="fa fa-download"></i>
+                      </button>
+                      <button *ngIf="AdminAccessPermissionForDeleteButton"
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="deleteDocument(doc); $event.stopPropagation()"
+                        title="Delete"
+                        
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                       <!-- <button
+                      class="btn btn-sm btn-outline-danger mt-3"
+                      type="button"
+                      [disabled]="disabledButton"
+                      mwlConfirmationPopover
+                      [popoverTitle]="'Please Confirm...!'"
+                      [popoverMessage]="'Are you sure you want to delete?'"
+                      [confirmText]="confirmationPopoverConfig.confirmText"
+                      [cancelText]="confirmationPopoverConfig.cancelText"
+                      [placement]="confirmationPopoverConfig.placements[0]"
+                      (confirm)="deleteDocument(doc); $event.stopPropagation()"
+                      (cancel)="
+                        confirmationPopoverConfig.confirmPopoverCancel()
+                      "
+                      confirmButtonType="btn btn-sm btn-primary"
+                      cancelButtonType="btn btn-sm btn-outline-secondary"
+                      (click)="
+                        confirmationPopoverConfig.confirmClicked = false;
+                        confirmationPopoverConfig.cancelClicked = false
+                      "
+                      [appendToBody]="true"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer bg-light">
+    <div class="d-flex justify-content-between w-100">
+      <div>
+        <span class="text-muted small">
+          <i class="fa fa-info-circle me-1"></i>
+          {{ documentsList.length }} total documents
+        </span>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary me-2"
+          (click)="modal.close()"
+        >
+          <i class="fa fa-times-circle me-1"></i> Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-primary ml-2"
+          (click)="loadDocuments()"
+        >
+          <i class="fa fa-refresh me-1"></i> Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+</ng-template>
+
+<!-- ================= PREVIEW MODAL ================= -->
+<div
+  class="modal fade show"
+  *ngIf="showPreviewModal"
+  style="display: block; background: rgba(0,0,0,.6); z-index: 1055"
+>
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">
+          <i
+            class="fa {{
+              getDocumentIcon(selectedImg?.originalDoc?.DocumentExtension)
+            }} me-2 {{
+              getDocumentIconColor(selectedImg?.originalDoc?.DocumentExtension)
+            }}"
+          ></i>
+          {{ selectedImg?.fileName }}
+        </h5>
+        <button class="btn-close" (click)="closePreviewModal()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-0" style="height: 75vh">
+
+        <!-- ================= PDF ================= -->
+        <ng-container
+          *ngIf="isPdfFile(selectedImg?.originalDoc?.DocumentExtension || selectedImg?.fileName)"
+        >
+          <iframe
+            [src]="selectedImg?.sanitizedData"
+            class="w-100 h-100 border-0"
+            type="application/pdf"
+          ></iframe>
+        </ng-container>
+
+        <!-- ================= IMAGE ================= -->
+        <ng-container
+          *ngIf="
+            !isPdfFile(selectedImg?.originalDoc?.DocumentExtension || selectedImg?.fileName) &&
+            selectedImg?.fileType?.startsWith('image/')
+          "
+        >
+          <!-- Toolbar -->
+          <div class="bg-light border-bottom p-2 d-flex justify-content-end">
+            <button class="btn btn-sm btn-outline-secondary me-2" (click)="rotateImage()">
+              <i class="fa fa-redo"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary me-2" (click)="zoomIn()">
+              <i class="fa fa-search-plus"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary me-2" (click)="zoomOut()">
+              <i class="fa fa-search-minus"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="downloadDoc(selectedImg?.originalDoc)">
+              <i class="fa fa-download"></i>
+            </button>
+          </div>
+
+          <!-- Image Viewer -->
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="height: calc(100% - 45px); background: #f8f9fa; overflow: auto"
+            (wheel)="onMouseWheel($event)"
+          >
+            <img
+              [src]="selectedImg?.sanitizedData"
+              [style.transform]="'rotate(' + imageRotation + 'deg) scale(' + imageScale + ')'"
+              style="max-width: 90%; max-height: 90%; transition: transform 0.2s"
+              draggable="false"
+            />
+          </div>
+        </ng-container>
+
+        <!-- ================= UNSUPPORTED ================= -->
+        <ng-container
+          *ngIf="
+            !isPdfFile(selectedImg?.originalDoc?.DocumentExtension || selectedImg?.fileName) &&
+            !selectedImg?.fileType?.startsWith('image/')
+          "
+        >
+          <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+            <i
+              class="fa {{
+                getDocumentIcon(selectedImg?.originalDoc?.DocumentExtension)
+              }} fa-5x mb-3 {{
+                getDocumentIconColor(selectedImg?.originalDoc?.DocumentExtension)
+              }}"
+            ></i>
+            <p class="mb-3">Preview not available</p>
+            <button class="btn btn-primary" (click)="downloadDoc(selectedImg?.originalDoc)">
+              Download
+            </button>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closePreviewModal()">Close</button>
+        <button class="btn btn-primary" (click)="downloadDoc(selectedImg?.originalDoc)">
+          <i class="fa fa-download me-1"></i> Download
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

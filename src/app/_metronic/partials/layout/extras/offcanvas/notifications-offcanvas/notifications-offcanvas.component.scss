@@ -1,0 +1,23 @@
+.content-data {
+    background: #fff !important;
+    width: 100%; /* Default to full width */
+    max-width: 300px; /* Maintain the max width */
+    // max-height: 300px; /* Maintain the max width */
+    min-width: 300px; /* Maintain the max width */
+    padding: 6px 6px !important;
+    // overflow: scroll;
+    // margin: 10px -30px !important; /* Center it */
+
+}
+
+@media (max-width: 768px) {
+    // .content-data {
+    //     width: 90%  !important; /* Adjust width for smaller screens */
+    //     max-width: 380px; /* Maintain the max width */
+    //     min-width: 200px;
+    //     margin: 10px -30px !important;
+    // }
+    // .offcanvas{
+    //     width: 90% !important;
+    // }
+}

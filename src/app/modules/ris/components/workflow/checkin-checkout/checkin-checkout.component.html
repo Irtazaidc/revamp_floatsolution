@@ -1,0 +1,689 @@
+<!-- <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="form-group">
+                <label for="Product" class="control-label">Product Item</label>
+                <ng-select style="width: 100%;"
+                class="mr-1"
+                [items]="itemsList"
+                bindLabel="ProductName" 
+                placeholder="--Select Question--"
+                bindValue="ProductID"
+                (change)="addSelectedQuestion($event)"
+                >
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        <span class="ng-value-label"> {{item.Question}}</span>
+                    </div>
+                </ng-template>
+            </ng-select>
+            </div>
+        </div>
+    </div> -->
+<div class="row" style="margin-top: -18px;">
+    <ng-template #popContentSrv>
+        <app-ris-tp-services [VisitId]="VisitId"></app-ris-tp-services>
+    </ng-template>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"> <!--!isShowVitalsCard-->
+        <!--tp-name-->
+        <div class="row">
+            <div class="col-8">
+                <h4 class="ml-2 mb-1 text-primary" style="margin-bottom: -11px;"><strong
+                        [ngClass]="{'text-danger': ProcessIDParent == 2, 'blink-red font-weight-bolder': ProcessIDParent == 3}">{{TPName}}</strong>
+                    <i class="fas fa-hand-holding-medical text-danger cursor-pointer ml-4 mt-2" aria-hidden="true"
+                        ngbTooltip="Click to show services detail" [ngbPopover]="popContentSrv"
+                        [popoverTitle]="'Services Detail'" [popoverClass]="'custom-popover'"></i></h4>
+            </div>
+            <div class="col-4">
+                <span class="dicom-checkin"><app-dicom-button
+                        [btnPayload]="{TPID:TPID,VisitID:VisitId, styleClass:'btn btn-sm btn-danger pull-right mr-2',iconClass:'fas fa-x-ray', btnText:'DICOM'}"></app-dicom-button></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <span *ngIf="isMetal">
+                    <i aria-hidden="true" class="fa fa-exclamation-triangle  blink-red"></i>
+                    <strong class="text-danger ml-2" style="font-size: 14px;">This patient has metal implants.
+                    </strong></span>
+                <span *ngIf="!isMetal">
+                    <mat-checkbox [checked]="isMetalChecked" (click)="openConfirmationPopover($event)"
+                        mwlConfirmationPopover [popoverTitle]="confirmMetalPopup.popoverTitle"
+                        [popoverMessage]="confirmMetalPopup.popoverMessage"
+                        [confirmText]="confirmMetalPopup.confirmText" [cancelText]="confirmMetalPopup.cancelText"
+                        [placement]="confirmMetalPopup.placements[2]" (confirm)="confirmSelection()"
+                        (cancel)="cancelSelection()" confirmButtonType="btn btn-sm btn-primary"
+                        cancelButtonType="btn btn-sm btn-outline-secondary" [appendToBody]="true">
+                    </mat-checkbox>
+                    <strong class="ml-2" style="font-size: 15px;">Check If Metal components detected in patient's
+                        body</strong>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 text-right">
+                <strong class="mt-2 mr-2"><span>Current Status | </span> <span class="current-status"> {{ StatusId >= 7
+                        ? TestStatus : WorkflowStatus }}</span></strong>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="row">
+            <div class="col-12">
+                <fieldset class="fieldset-primary fieldset-border-all-primary">
+                    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Inventory Info</legend>
+                    <app-visit-tp-inventory
+                        [ParamsPayLoad]="{VisitID:VisitId,TPID:TPID,StatusID:7,RISStatusID:null,VerifiedUserID:VerifiedUserID}"></app-visit-tp-inventory>
+                </fieldset>
+            </div>
+            <div class="col-12">
+                <fieldset class="fieldset-primary fieldset-border-all-primary">
+                    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Checklist</legend>
+                    <ng-container *ngIf="techChecklist.length; else noChecklistData">
+                        <div class="row">
+                            <div class="col-12">
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                    [name]="spinnerRefs.checklistSection" size="medium" color="#fff"
+                                    type="square-loader" [fullScreen]="false">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 1%;">#</th>
+                                                <th style="width: 60%;" scope="col" class="col-md">Checklist Items</th>
+                                                <!-- <th style="width: 10%;" scope="col" class="col-md">Action</th> -->
+                                                <th style="width: 12%;"><input type="checkbox" class="cursor-pointer"
+                                                        (change)="selectAllChecklist($event)"
+                                                        [disabled]="isFieldDisabled" style="margin-left: -3px" /> Action
+                                                </th>
+                                                <th style="width: 27%;" scope="col" class="col-md">Remarks</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let chkItem of techChecklist; let i = index">
+
+                                                <td style="width: 1%;">{{i+1}}</td>
+                                                <td style="width: 60%;" class="col-md">{{ chkItem.Question }}</td>
+                                                <td style="width: 12%;" class="col-md">
+                                                    <span class="ml-4"><input class="form-check-input pointer"
+                                                            type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                            [checked]="chkItem.checked" [(ngModel)]="chkItem.checked"
+                                                            [disabled]="isFieldDisabled">
+                                                        <ng-container *ngIf="chkItem.checked; else chkNo">
+                                                            <strong>Yes</strong>
+                                                        </ng-container>
+                                                        <ng-template #chkNo>
+                                                            <strong>No</strong>
+                                                        </ng-template></span>
+                                                </td>
+                                                <td style="width: 27%;" class="col-md">
+                                                    <input type="text" [(ngModel)]="chkItem.Remarks"
+                                                        class="form-control form-control-sm"
+                                                        [disabled]="isFieldDisabled"
+                                                        [ngClass]="{'invalid': !chkItem.Remarks && !chkItem.checked, 'invalid-highlighted': !chkItem.Remarks && !chkItem.checked && checkSubmit}">
+                                                </td>
+
+                                            </tr>
+                                            <tr *ngIf="!techChecklist.length">
+                                                <td colspan="4" class="text-center">
+                                                    <p class="text-success">
+                                                        <strong>Info! </strong> No record found...
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button
+                                    *ngIf="techChecklist.length && RISStatusID!=4 && RISStatusID!=5 && RISStatusID!=6 && RISStatusID!=8 && RISStatusID!=9"
+                                    type="button" [disabled]="disabledButtonInventory"
+                                    class="btn btn-sm btn-primary pull-right mr-2" mwlConfirmationPopover
+                                    [popoverTitle]="'Please Confirm...!'"
+                                    [popoverMessage]="'Are you sure want to save checklist?'"
+                                    [confirmText]="confirmationPopoverConfigInventory.confirmText"
+                                    [cancelText]="confirmationPopoverConfigInventory.cancelText"
+                                    [placement]="confirmationPopoverConfigInventory.placements[0]"
+                                    (confirm)="insertTechnicianQAnswer()"
+                                    (cancel)="confirmationPopoverConfigInventory.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfigInventory.confirmClicked = false; confirmationPopoverConfigInventory.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-save"></i>Save Checklist<i class="spinner-border-custom"
+                                        aria-hidden="true" [hidden]="isSpinnerInventory"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noChecklistData>
+                        <div class="container">
+                            <app-no-record-found [pyClassParam]="'py-5'"
+                                [infoMessageParam]="'No checklist item found'"></app-no-record-found>
+                        </div>
+                    </ng-template>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <fieldset class="fieldset-primary fieldset-border-all-primary">
+            <legend class="font-weight-bold text-primary cursor-pointer" style="font-size: 1.1rem;"
+                (click)="toggleServiceSection()">
+                Services (Films/Contrasts)
+                <i *ngIf="!showServiceSection" class="fa fa-angle-double-down text-primary cursor-pointer"
+                    aria-hidden="true"></i>
+                <i *ngIf="showServiceSection" class="fa fa-angle-double-up text-primary cursor-pointer"
+                    aria-hidden="true"></i>
+            </legend>
+
+            <div [hidden]="!showServiceSection">
+                <ng-container *ngIf="RISServices && RISServices.length > 0; else noServiceData">
+                    <div class="row">
+                        <div class="col-12">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.RISServicesSection" size="medium" color="#fff" type="square-loader"
+                                [fullScreen]="false">
+                                <p style="color: white">Loading...</p>
+                            </ngx-spinner>
+
+                            <div *ngFor="let profile of RISServices">
+                                <p class="service-name">
+                                    <input type="checkbox" class="cursor-pointer mr-2" [(ngModel)]="profile.checked"
+                                        [ngModelOptions]="{standalone: true}" [disabled]="true"
+                                        (change)="toggleChildCheckboxes(profile)" />
+                                    <strong>{{profile.TPCode}} - {{profile.TPName}}</strong>
+                                    <i aria-hidden="true" class="fa fa-qrcode cursor-pointer text-white pull-right"
+                                        style="margin-top: 2px;" ngbTooltip="Print Label" mwlConfirmationPopover
+                                        [popoverTitle]="'Please Confirm...!'"
+                                        [popoverMessage]="'Are your <strong>sure</strong> want to print?'"
+                                        [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                                        [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                                        [placement]="confirmationPopoverConfigCheckout.placements[0]"
+                                        (confirm)="printRadioLableLineItem(profile.TPID)"
+                                        (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                                        confirmButtonType="btn btn-sm btn-primary"
+                                        cancelButtonType="btn btn-sm btn-outline-secondary"
+                                        (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                                        [appendToBody]="true"></i>
+                                </p>
+
+                                <!--  If service has inventory -->
+                                <ng-container
+                                    *ngIf="profile.services && profile.services.length > 0; else noInventoryForThisService">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 4%;"></th>
+                                                <th style="width: 40%;">Item Name</th>
+                                                <th style="width: 10%;">Max Qty</th>
+                                                <th style="width: 12%;">Consumed</th>
+                                                <th style="width: 12%;">Damaged</th>
+                                                <th style="width: 22%;">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let service of profile.services; let i = index">
+                                                <td style="width: 4%;">
+                                                    <input type="checkbox" class="cursor-pointer"
+                                                        [(ngModel)]="service.checked"
+                                                        [ngModelOptions]="{standalone: true}" [disabled]="true" />
+                                                </td>
+                                                <td style="width: 40%;">{{ service.StoreItem }}</td>
+                                                <td style="width: 10%;">
+                                                    <label class="badge badge-primary ml-2">{{ service.Quantity
+                                                        }}</label>
+                                                </td>
+                                                <td style="width: 12%;">
+                                                    <input [disabled]="isFieldDisabled" type="number"
+                                                        [(ngModel)]="service.ConsumedQuantity"
+                                                        class="form-control form-control-sm" min="1"
+                                                        oninput="this.value = !!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                                        [ngClass]="{
+                            'invalid': (!service.ConsumedQuantity && !service.DamagedQuantity) && service.checked,
+                            'invalid-highlighted': (service.checked && buttonserviceInventoryClicked && (!service.ConsumedQuantity && !service.DamagedQuantity))
+                          }">
+                                                </td>
+                                                <td style="width: 12%;">
+                                                    <input [disabled]="isFieldDisabled" type="number"
+                                                        [(ngModel)]="service.DamagedQuantity"
+                                                        class="form-control form-control-sm" min="1"
+                                                        oninput="this.value = !!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                                        [ngClass]="{
+                            'invalid': (!service.ConsumedQuantity && !service.DamagedQuantity) && service.checked,
+                            'invalid-highlighted': (service.checked && buttonserviceInventoryClicked && (!service.ConsumedQuantity && !service.DamagedQuantity))
+                          }">
+                                                </td>
+                                                <td style="width: 22%;">
+                                                    <input [disabled]="isFieldDisabled" type="text"
+                                                        [(ngModel)]="service.Remarks"
+                                                        class="form-control form-control-sm" [ngClass]="{
+                            'invalid': !service.Remarks && ((service.DamagedQuantity) || (service.ConsumedQuantity + (service.DamagedQuantity || 0) > service.Quantity)) && service.checked,
+                            'invalid-highlighted': (service.checked && buttonserviceInventoryClicked && !service.Remarks && ((service.DamagedQuantity) || (service.ConsumedQuantity + (service.DamagedQuantity || 0) > service.Quantity)))
+                          }">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </ng-container>
+
+                                <!-- ✅ Show if no inventory for that service -->
+                                <ng-template #noInventoryForThisService>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="no-rec mb-1" style="padding: 0px 13px;">
+                                                <app-no-record-found [pyClassParam]="'py-5'"
+                                                    [infoMessageParam]="'No Inventory associated with this service'">
+                                                </app-no-record-found>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+
+                        <!-- ✅ Process button -->
+                        <div class="col-12" *ngIf="RISServices.length">
+                            <button type="button" [disabled]="disabledButtonServices || isFieldDisabled"
+                                class="btn btn-sm btn-primary pull-right mr-2" mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverConfigInventory.popoverTitle"
+                                [popoverMessage]="confirmationPopoverConfigInventory.popoverMessage"
+                                [confirmText]="confirmationPopoverConfigInventory.confirmText"
+                                [cancelText]="confirmationPopoverConfigInventory.cancelText"
+                                [placement]="confirmationPopoverConfigInventory.placements[0]"
+                                (confirm)="insertUpdateVisitTPServiceInventory()"
+                                (cancel)="confirmationPopoverConfigInventory.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-primary"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverConfigInventory.confirmClicked = false; confirmationPopoverConfigInventory.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i class="fa fa-check-square"></i> Process Service
+                                <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerServices"></i>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- ✅ No service data -->
+                <ng-template #noServiceData>
+                    <div class="container">
+                        <app-no-record-found [pyClassParam]="'py-5'"
+                            [infoMessageParam]="'No unprocessed service available in this visit'">
+                        </app-no-record-found>
+                    </div>
+                </ng-template>
+            </div>
+        </fieldset>
+    </div>
+
+
+</div>
+
+
+<fieldset class="fieldset-primary fieldset-border-top">
+    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Technician Info</legend>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <div class="form-group">
+                <label for="PatientInstruction" class="control-label">Patient Instructions</label>
+                <textarea cols="" rows="" class="form-control form-control-sm"
+                    readonly>{{PatientInstruction}}</textarea>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <div class="form-group">
+                <ng-template #popContent>
+                    <ng-container *ngIf="objJson !==null && objJson.length">
+                        <div *ngFor="let h of objJson; let i = index">
+                            <span *ngIf="h.technicianHitory || h.technicianHitory!=''" class="text-primary">
+                                {{h.unserName}} | {{h.savedOn}} </span>
+                            <p *ngIf="h.technicianHitory || h.technicianHitory!=''"
+                                style="border-bottom: 1px dashed #cccdd3;">{{h.technicianHitory}}</p>
+                        </div>
+
+                    </ng-container>
+                    <ng-container *ngIf="objJson===null || !objJson.length">
+                        <p style="border-bottom: 1px dashed #cccdd3; text-align: center;"><strong
+                                class="text-primary">No history found</strong></p>
+                    </ng-container>
+
+                    <!-- <p *ngIf="!objJson.length" style="border-bottom: 1px dashed #cccdd3;"><strong class="text-primary">No history found</strong></p> -->
+                </ng-template>
+                <label for="TechnicianHistory" class="control-label">Technician History <strong
+                        *ngIf="isTechHistoryRequred" class="text-danger">*</strong></label>
+                <i class="fa fa-file text-danger cursor-pointer ml-2" aria-hidden="true"
+                    ngbTooltip="Tech previous history" [ngbPopover]="popContent"
+                    [popoverTitle]="'Tech previous history'"></i>
+                    <mat-checkbox [disabled]="isFieldDisabled" class="ml-2 text-danger pull-right" name="isMedicalExamine"
+                        [(ngModel)]="isMedicalExamine" (change)="onChangeIsEmergencyCheckbox($event)">
+                        <strong class="text-danger" ngbTooltip="Study for Medical Fitness">Study for Medical Fitness</strong>
+                    </mat-checkbox>
+                <textarea [(ngModel)]="TechnicianHistory" cols="" rows="" class="form-control form-control-sm"
+                    [disabled]="isFieldDisabled"
+                    [ngClass]="{'invalid': isTechHistoryRequred && TechnicianHistory=='', 'invalid-highlighted': buttonClicked && techHistoryValidityCheck && TechnicianHistory=='' }"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"></div> -->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <span *ngIf="PendCheckInRemarksToShow && RISStatusID==7"><strong> <span class="text-warning">Pend Remarks:
+                    </span></strong> <span>{{PendCheckInRemarksToShow}}</span></span>
+            <br>
+            <span *ngIf="PendCheckInBy && RISStatusID==7" class="text-primary">Pended by:
+                <strong>{{PendCheckInBy}}</strong></span>
+            <div class="alert alert-custom alert-light-danger" role="alert" *ngIf="RISStatusID==3">
+                <div class="alert-icon"><span
+                        class="svg-icon svg-icon-danger svg-icon-xl"><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Tools/Compass.svg--><svg
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                            height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                    d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z"
+                                    fill="#000000" opacity="0.3"></path>
+                                <path
+                                    d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z"
+                                    fill="#000000" fill-rule="nonzero"></path>
+                            </g>
+                        </svg><!--end::Svg Icon--></span>
+                </div>
+                <div class="alert-text">
+                    <!-- For this test/study, prior MO history is mandatory but has not been recorded for this patient. Therefore, you are unable to proceed with this procedure.","MO Hisoty Required! -->
+                    <!-- For the MRI Brain examination, it is essential to have the M.O's history, which has not been documented for this patient. Consequently, you are unable to proceed with this procedure at this time. -->
+                    <!-- For the <strong>{{TPCode}} - {{TPName}}</strong>  examination, there is no recorded M.O. history for this patient. Prior MO history is mandatory, and since it has not been recorded, you are unable to proceed with this procedure at this time. -->
+                    <!-- <span class="font-weight-bolder">Please <strong class="text-uppercase">checkout</strong> this study because next step is waiting for it !</span> -->
+                    <span class="font-weight-bolder blink-red">Attention: Please complete the test <strong
+                            class="text-uppercase">checkout</strong> promptly. The next step in the workflow is waiting
+                        for your action.</span><br>
+                    <span class="" style="font-size: 18px; font-family: monospace;">توجہ: براہ کرم جلدی سے ٹیسٹ کا چیک
+                        آؤٹ مکمل کریں۔ ورک فلو کا اگلا مرحلہ اس کا انتظار کر رہا ہے۔ شکریہ</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+            <div class="row">
+                <!--
+                old without readiologists
+                 col-xs-6 col-sm-6 col-md-4 col-lg-6 col-xl-4
+                 col-xs-6 col-sm-6 col-md-3 col-lg-6 col-xl-3
+                 col-xs-12 col-sm-12 col-md-5 col-lg-12 col-xl-5
+                new with radiologists
+                 col-xs-6 col-sm-6 col-md-4 col-lg-6 col-xl-4
+                 col-xs-6 col-sm-6 col-md-4 col-lg-6 col-xl-4
+                 col-xs-12 col-sm-6 col-md-4 col-lg-12 col-xl-4
+                 col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12
+                -->
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-6 col-xl-4">
+                    <div class="timeer-div">
+                        <div class="timer-inner">
+                            <strong class="timeer-label text-danger"> <span *ngIf="hh!=0">{{format(hh)}}:</span>
+                                {{format(mm)}}:{{format(ss)}}</strong>
+                        </div>
+                    </div>
+                    <button [disabled]="isRunning || isStartStopTimeSaved || RISStatusID==4 || RISStatusID==5"
+                        type="button" (click)="startTimer()" class="btn btn-sm btn-outline-danger mr-2">
+                        <i class="fa fa-play-circle"></i> START</button>
+                    <button [disabled]="!isRunning || isStopped || RISStatusID==4 || RISStatusID==4" type="button"
+                        (click)="stopTimer()" class="btn btn-sm btn-outline-danger ml-5 mr-2">
+                        <i class="fa fa-stop-circle"></i> STOP</button>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-6 col-xl-4">
+                    <div class="modality-dropdown">
+                        <div class="form-group">
+                            <!-- [ngClass]="{'invalid': MachineModalityID == '', 'invalid-highlighted': MachineModalityID == '' && techHistoryModalityCheck}" -->
+                            <label for="MachineID" class="control-label">Modality</label>
+                            <select name="ModalityID" class="form-control form-control-sm"
+                                [(ngModel)]="MachineModalityID" style="height: 37px;"
+                                [disabled]="isDisabledMachineModalityDropdown"
+                                [ngClass]="{'invalid': !MachineModalityID || MachineModalityID == '', 'invalid-highlighted': techHistoryModalityCheck && (!MachineModalityID || MachineModalityID == '')}">
+                                <option value="">--Select Modality--</option>
+                                <option *ngFor="let item of modalities" [value]="item.MachineModalityID">
+                                    {{item.MachineTitle}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-12 col-xl-4">
+                    <div class="modality-dropdown">
+                        <div class="form-group">
+                            <label for="RadiologistID" class="control-label"
+                                style="margin-bottom: 0px; margin-bottom: -4px;">Reporting Doctor
+                                <mat-checkbox class="ml-2 text-danger" name="isEmergencyAssign"
+                                    [(ngModel)]="isEmergencyAssign" (change)="onChangeIsEmergencyCheckbox($event)">
+                                    <strong class="text-danger">Emergency Assign?</strong>
+                                </mat-checkbox>
+                            </label>
+                            <ng-select placeholder="Select Doctor" [(ngModel)]="RadiologistID"
+                                [disabled]="isFieldDisabled || isDocFieldDisable" [closeOnSelect]="true">
+                                <ng-option style="width: 100%;" [value]="dr.EmpId" *ngFor="let dr of radoiologistList">
+                                    {{dr.FullName}}
+                                </ng-option>
+                            </ng-select>
+                            <!-- <ng-select [(ngModel)]="selectedCar">
+                                <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+                             </ng-select> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <!-- <div class="stop-watch">
+                        <div class="display">{{format(mm)}}:{{format(ss)}}</div>
+                        <button class="control" 
+                          (click)="clickHandler()">
+                          {{isRunning ? 'Stop' : 'Start'}}
+                        </button>
+                      </div>  -->
+                    <!-- <label *ngIf="RISStatusID==5 || RISStatusID==6" class="badge badge-primary pull-right cursor-pointer" ngbTooltip="This study has already been Initialized" placement="left">Initialized</label>
+                      <label *ngIf="RISStatusID==8 || RISStatusID==9" class="badge badge-primary pull-right cursor-pointer" ngbTooltip="This study is in Queue" placement="left">In Queue mgt</label> -->
+                    <!-- <button type="button" *ngIf="RISStatusID==3" [disabled]="disabledButtonCheckoutInitial"
+                        class="btn btn-sm btn-danger pull-right mr-2" mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfigCheckout.popoverTitle"
+                        [popoverMessage]="'Are you <strong>Sure</strong> want to checkout with Initial?'"
+                        [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                        [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                        [placement]="confirmationPopoverConfigCheckout.placements[0]" 
+                        (confirm)="techCheckout(2,5)"
+                        (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                        confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                        [appendToBody]="true">
+                        <i class="ti-check-box"></i> Check Out with Initial <i class="spinner-border-custom" aria-hidden="true"
+                            [hidden]="isSpinnerCheckoutInitial"></i>
+                    </button> -->
+                    <button type="button" *ngIf="RISStatusID==3" [disabled]="disabledButtonCheckout"
+                        class="btn btn-sm btn-danger pull-right mr-2" ngbTooltip="Checkout with your Credentials"
+                        (click)="openLoginForm(2,5)">
+                        <i class="ti-unlock"></i> Checkout <i class="spinner-border-custom" aria-hidden="true"
+                            [hidden]="isSpinnerCheckout"></i>
+                    </button>
+
+                    <button type="button" *ngIf="RISStatusID==3" [disabled]="disabledButtonCheckout"
+                        class="btn btn-sm btn-danger pull-right mr-2" mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfigCheckout.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfigCheckout.popoverMessage"
+                        [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                        [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                        [placement]="confirmationPopoverConfigCheckout.placements[0]" (confirm)="techCheckout(2,5)"
+                        (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                        confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                        [appendToBody]="true" ngbTooltip="Checkout with your fingerprint">
+                        <i class="fas fa-fingerprint"></i> Checkout <i class="spinner-border-custom" aria-hidden="true"
+                            [hidden]="isSpinnerCheckout"></i>
+                    </button>
+
+                    <!-- techCheckout(2,7) -->
+
+                    <!-- <button type="button" *ngIf="RISStatusID==4" [disabled]="disabledButtonInitial"
+                        class="btn btn-sm btn-danger pull-right mr-2" mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfigCheckout.popoverTitle"
+                        [popoverMessage]="'Are you <strong>Sure</strong> want to make Initial?'"
+                        [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                        [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                        [placement]="confirmationPopoverConfigCheckout.placements[0]" 
+                        (confirm)="techCheckout(2,6)"
+                        (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                        confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                        [appendToBody]="true">
+                        <i class="ti-check-box"></i> Initial <i class="spinner-border-custom" aria-hidden="true"
+                            [hidden]="isSpinnerInitial"></i>
+                    </button> -->
+
+                    <button
+                        *ngIf="RISStatusID!=4 && RISStatusID!=5 && RISStatusID!=6 && RISStatusID!=8 && RISStatusID!=9"
+                        type="button" [disabled]="disabledButtonCheckin" class="btn btn-sm btn-success pull-right mr-2"
+                        mwlConfirmationPopover [popoverTitle]="confirmationPopoverConfigCheckin.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfigCheckin.popoverMessage"
+                        [confirmText]="confirmationPopoverConfigCheckin.confirmText"
+                        [cancelText]="confirmationPopoverConfigCheckin.cancelText"
+                        [placement]="confirmationPopoverConfigCheckin.placements[0]" (confirm)="techCheckIn()"
+                        (cancel)="confirmationPopoverConfigCheckin.confirmPopoverCancel()"
+                        confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfigCheckin.confirmClicked = false; confirmationPopoverConfigCheckin.cancelClicked = false"
+                        [appendToBody]="true">
+                        <i class="fa fa-check-square"></i>
+                        <ng-container *ngIf="RISStatusID==3; else updateProcess">
+                            <span> Update Process </span>
+                        </ng-container>
+                        <ng-template #updateProcess>
+                            <span> Check In</span>
+                        </ng-template>
+                        <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerCheckin"></i>
+                    </button>
+
+                    <button *ngIf="RISStatusID ==3 || RISStatusID ==4" type="button" [disabled]="disabledButtonPend"
+                        class="btn btn-sm btn-salmon text-white pull-right mr-2" mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfigCheckout.popoverTitle"
+                        [popoverMessage]="'Are you <strong>Sure</strong> want to pend?'"
+                        [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                        [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                        [placement]="confirmationPopoverConfigCheckout.placements[0]" (confirm)="confirmPend()"
+                        (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                        confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                        [appendToBody]="true">
+                        <i class="ti-back-left text-white"></i> Pend <i class="spinner-border-custom" aria-hidden="true"
+                            [hidden]="isSpinnerPend"></i>
+                    </button>
+                    <button *ngIf="RISStatusID ==1 || RISStatusID ==2 || RISStatusID ==3 || RISStatusID ==7"
+                        ngbTooltip="Mark test as Urgent OR Critical"
+                        class="btn btn-sm btn-outline-danger pull-right mr-2"
+                        [ngClass]="{'btn-outline-warning': ProcessIDParent == 2, 'btn-outline-danger': (ProcessIDParent == 1 || ProcessIDParent == 3)}"
+                        (click)="markSensitivity()">
+                        <i class="ti-flag-alt cursor-pointer"></i>Mark Sensitivity<i class="spinner-border-custom"
+                            aria-hidden="true" [hidden]="isSpinner"></i>
+                    </button>
+
+
+                    <!-- <div >
+                        <strong> <span class="text-warning">Pend Remarks: </span></strong> <span>{{PendCheckInRemarksToShow}}</span>
+                    </div> -->
+                    <button type="button" *ngIf="RISStatusID>=3" [disabled]="disabledButtonPrintLabel"
+                        ngbTooltip="Print Radio Label" class="btn btn-sm btn-primary pull-right mr-2"
+                        mwlConfirmationPopover [popoverTitle]="'Please Confirm...!'"
+                        [popoverMessage]="'Are your <strong>sure</strong> want to print?'"
+                        [confirmText]="confirmationPopoverConfigCheckout.confirmText"
+                        [cancelText]="confirmationPopoverConfigCheckout.cancelText"
+                        [placement]="confirmationPopoverConfigCheckout.placements[0]" (confirm)="printRadioLable()"
+                        (cancel)="confirmationPopoverConfigCheckout.confirmPopoverCancel()"
+                        confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                        (click)="confirmationPopoverConfigCheckout.confirmClicked = false; confirmationPopoverConfigCheckout.cancelClicked = false"
+                        [appendToBody]="true">
+                        <i class="fa fa-qrcode cursor-pointer"></i> Print Label <i class="spinner-border-custom"
+                            aria-hidden="true" [hidden]="isSpinnerPrintLabel"></i>
+                    </button>
+                    <div *ngIf="RISStatusID==3 || RISStatusID==4" class="form-check pull-right mt-2 mr-2"
+                        style="display: inline;">
+                        <input class="form-check-input pointer" type="checkbox" [checked]="true" value="1"
+                            [(ngModel)]="printRadioLabels">
+                        <label class="form-check-label pointer" for="anyChild">
+                            <strong>Print Radio Labels</strong>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</fieldset>
+
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="visit-docs-area mt-8">
+            <app-visit-docs [propVisitNo]="VisitId" [editing]="{save:true,select: true, camera: true}"
+                [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']"></app-visit-docs>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="visit-remarks-area  mt-8">
+            <app-visit-remarks [propVisitNo]="VisitId" [editing]="{save: true}"
+                [moduleName]="'Tech Form'"></app-visit-remarks>
+        </div>
+    </div>
+</div>
+
+<!------begin:: User Verification Popup---------------------------------->
+<ng-template #userVerificationModal let-userVerificationModal let-c="close" let-d="dismiss">
+    <form class="pt-4" [formGroup]="userVerificationForm">
+        <div class="modal-body">
+            <div class="row login-header">
+                <div class="col-12 text-center pt-1">
+                    <h4>Enter Your Credentials</h4>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="uname">Username</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fa fa-user text-primary"></span>
+                        </span>
+                    </div>
+                    <input type="text" placeholder="Enter username" formControlName="techUsername"
+                        [ngClass]="{'invalid': userVerificationForm.get('techUsername').errors && userVerificationForm.get('techUsername').touched, 'invalid-highlighted': userVerificationForm.get('techUsername').errors}"
+                        class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="psw">Password</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-lock text-primary"></i>
+                        </span>
+                    </div>
+                    <!-- <input type="password" placeholder="Enter Password" formControlName="techPassword"
+                    [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                        class="form-control"> -->
+
+                    <input [type]="(showPassword && !isInputFocused) ? 'text' : 'password'" placeholder="Enter Password"
+                        formControlName="techPassword"
+                        [ngClass]="{'invalid': userVerificationForm.get('techPassword').errors && userVerificationForm.get('techPassword').touched, 'invalid-highlighted': userVerificationForm.get('techPassword').errors}"
+                        class="form-control" (focus)="isInputFocused = true" (blur)="isInputFocused = false" />
+                    <i class="fa fa-eye-slash fa-eye text-primary"
+                        style="position: absolute; right: 3px; top: 19px; cursor: pointer;z-index: 9999;"
+                        (mouseenter)="showPassword = true" (mouseleave)="showPassword = false"></i>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal"
+                (click)="userVerificationModal.close()">
+                <i class="fa fa-times-circle"></i>Cancel</button>
+            <button type="submit" class="btn btn-sm btn-outline-primary" (click)="verifyUser()"
+                [disabled]="disabledButtonVerify">
+                <i class="fa fa-check-circle"></i>Verify <i class="spinner-border-custom" aria-hidden="true"
+                    [hidden]="isSpinnerVerify"></i></button>
+        </div>
+    </form>
+</ng-template>
+<!------end:: User Verification Popup------------------------------------>

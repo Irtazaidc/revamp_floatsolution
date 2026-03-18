@@ -1,0 +1,90 @@
+<div class="products-page">
+    <div class="row">
+        <div class="col-md-12"> 
+            <app-card [title]="'News and Events'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-arrow-left"></i>Back to listing</button> -->
+                        <a *ngIf="NewsAndEventsIDEnc" [routerLink]="['../../news-events-listing']">
+                            <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-arrow-left"></i>Back to listing</button>
+                        </a>
+                        <a *ngIf="!NewsAndEventsIDEnc" [routerLink]="['../news-events-listing']">
+                            <button class="btn btn-outline-primary btn-mini pull-right" ><i class="fa fa-arrow-left"></i>Back to listing</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr style="border-color: #4680ff;">
+                    </div>
+                        <div class="">
+                            <form #frmPromotion="ngForm" class="form-horizontal" name="form" role="form"
+                            (ngSubmit)="frmPromotion.form.valid && addUpdateNewsAndEvents(frmPromotion.value);"
+                           >
+                            <div class="card-body">
+                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                    <p style="color: white"> Loading... </p>
+                                </ngx-spinner>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="form-group">
+                                                    <label for="title" class="control-label">News / Event Title</label>
+                                                    <input #title="ngModel" 
+                                                        [ngClass]="{ 'is-invalid': frmPromotion.submitted && title.invalid }"
+                                                        [(ngModel)]="NewsAndEventsTitle" class="form-control" name="NewsAndEventsTitle" >
+                                                        <!-- <span *ngIf="title.invalid && title.touched" class="error">Title is required</span> -->
+                                                </div>
+                                            </div>                        
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="form-group">
+                                                    <label for="url" class="control-label">URL</label>
+                                                    <input  [ngClass]="{ 'is-invalid': frmPromotion.submitted && url.invalid }"
+                                                        #url="ngModel" [(ngModel)]="NewsAndEventsLink" class="form-control"
+                                                        value="{{NewsAndEventsRow.length ? NewsAndEventsRow[0].NewsAndEventsLink : ''}}"
+                                                        name="NewsAndEventsLink" type="text" />
+                                                        <span  class="text-success">Example:https://www.google.com/</span>
+                                                        
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="form-group">
+                                                    <label>Item list order</label>
+                                                    <input 
+                                                        #order="ngModel"  [(ngModel)]="DisplayOrder" class="form-control"
+                                                        value="{{NewsAndEventsRow.length ? NewsAndEventsRow[0].DisplayOrder : 1}}"
+                                                        name="DisplayOrder" type="number" min="1" (keyup)="stopZero(order.value)" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                <div class="form-group">
+                                                    <label for="Image">Image</label> <!--loadNewsEventImage($event)-->
+                                                    <input type="file" name="Image" class="form-control-file" #Image (change)="loadNewsEventImage($event)" accept="image/png,image/jpg,image/jpeg" required />
+                                                  </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                <div class="form-group">
+                                                    <img src="{{ImageUrl!=null?ImageUrl: (NewsAndEventsRow.length ? NewsAndEventsRow[0].NewsAndEventsPic : (ImageUrl==null)?'assets/images/brand/no-image.png':ImageUrl )}}" width="245" height="130" class="image-responsive  mb-2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                </div>
+                                <div class="row">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary ml-3"><i class="fa fa-save"></i> Save<i aria-hidden="true"></i></button>
+                                    <button type="reset" class="btn btn-sm btn-outline-danger ml-2"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>

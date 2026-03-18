@@ -1,0 +1,51 @@
+.input-group-btn-custom{
+    border-radius:  0rem 0.28rem 0.28rem 0rem;
+ }
+ ::ng-deep .popover-title{
+    color: #dc3545;
+}
+
+.custom-popover-button ::ng-deep popover {
+    left: -49px !important;
+  }
+  ::ng-deep .popover {
+    left: -33px;
+  }
+ 
+
+  .radio-inline {
+    display: inline-block;
+    margin-right: 10px; /* Optional: spacing between the radio buttons */
+}
+
+.radio-small {
+    width: 12px;
+    height: 12px; /* Adjust the size of the radio button */
+    margin-right: 5px; /* Optional: space between the radio button and the label */
+}
+
+.custom-popover-button {
+  position: absolute;
+  right: 23px; /* Position it from the right */
+  bottom: -33px; /* Position it from the bottom */
+  z-index: 1000; /* Bring it to the front */
+}
+    
+////////////////////////////////////////
+
+
+
+.table th, .table td {
+  padding: 8px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  // border: 1px solid #ddd !important;
+}
+
+
+// .sticky-header th {
+//   position: sticky !important;
+//   top: 0 !important;
+//   background-color: #f1f1f1 !important;
+//   z-index: 1;
+// }

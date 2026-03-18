@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+      <h5 class="card-title">
+        Name: {{ complaintDetailsList.FullName ? complaintDetailsList.FullName :
+        "Not Available"
+        }}
+      </h5>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <p class="card-text"><b>Created On:</b> {{
+            complaintDetailsList.RequestCreatedOn |
+            date:'dd-MMM-yyyy HH:mm' }}</p>
+          <p class="card-text"><b>PIN/MRN:</b> {{ complaintDetailsList.VisitId ?
+            complaintDetailsList.VisitId : "NA" }} / {{ complaintDetailsList.MRNO
+            ?
+            complaintDetailsList.MRNO : "NA" }}</p>
+          <p class="card-text"><b>Contact:</b> {{ complaintDetailsList.CellNo ?
+            complaintDetailsList.CellNo : "NA" }}</p>
+          <p class="card-text"><b>Reported Error:</b> {{
+            complaintDetailsList.ReportedError ?
+            complaintDetailsList.ReportedError : "NA" }}</p>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <p class="card-text"><b>Status:</b> {{ complaintDetailsList.CMSStatus ?
+            complaintDetailsList.CMSStatus : "NA" }}</p>
+          <p class="card-text"><b>Test Done:</b> {{ complaintDetailsList.TPID ?
+            complaintDetailsList.TPID : "NA" }}</p>
+          <p class="card-text"><b>Email:</b> {{ complaintDetailsList.Email ?
+            complaintDetailsList.Email : "NA" }}</p>
+          <p class="card-text"><b>Request Assigned To:</b> {{
+            complaintDetailsList.ReqAssignedToName ?
+            complaintDetailsList.ReqAssignedToName : "NA"
+            }}</p>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-3">
+          <p class="card-text"><b>Message:</b> {{
+            complaintDetailsList.RequestMessage ?
+            complaintDetailsList.RequestMessage : "NA" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,210 @@
+<div class="container-fluid">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">
+        📊 Radiology Statistics Report
+        <small>View Radiology Stats</small>
+      </h3>
+    </div>
+  </div>
+
+  <!-- Search Card -->
+  <div class="card card-custom">
+    <div class="card-body pb-0">
+      <form [formGroup]="statsForm" class="form-horizontal">
+        <div class="row container form-group justify-content-center">
+          <!-- Date From -->
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+            <label class="control-label">Date From:</label>
+            <input
+              (click)="dateFrom.toggle()"
+              #dateFrom="ngbDatepicker"
+              placeholder="dd-mm-yyyy"
+              ngbDatepicker
+              formControlName="dateFrom"
+              class="form-control mb-4"
+              type="text"
+              [ngClass]="{
+                invalid: statsForm.get('dateFrom').errors,
+                'invalid-highlighted':
+                  statsForm.get('dateFrom').errors && isSubmitted
+              }"
+              [maxDate]="maxDate"
+            />
+          </div>
+
+          <!-- Date To -->
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+            <label class="control-label">Date To:</label>
+            <input
+              (click)="dateTo.toggle()"
+              #dateTo="ngbDatepicker"
+              placeholder="dd-mm-yyyy"
+              ngbDatepicker
+              formControlName="dateTo"
+              class="form-control mb-4"
+              type="text"
+              [ngClass]="{
+                invalid: statsForm.get('dateTo').errors,
+                'invalid-highlighted':
+                  statsForm.get('dateTo').errors && isSubmitted
+              }"
+              [maxDate]="maxDate"
+            />
+          </div>
+
+          <!-- Branch -->
+          <div class="col-xl-2 col-lg-4 col-md-6 col-sm-12">
+            <label class="control-label">Branch:</label>
+
+            <div class="form-group">
+              <ng-select
+                id="pat_branch"
+                style="width: 100%"
+                [ngClass]="{
+                  invalid: statsForm.get('locID').errors,
+                  'invalid-highlighted':
+                    statsForm.get('locID').errors && isSubmitted
+                }"
+                formControlName="locID"
+                [items]="branchList"
+                bindLabel="Title"
+                [closeOnSelect]="true"
+                bindValue="LocId"
+                placeholder="--Select Branch--"
+              >
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- Search Button -->
+          <div class="mt-7 col-xl-2 col-lg-4 col-md-2 col-sm-12">
+            <div
+              (click)="getRadiologyStatsData()"
+              class="btn btn-primary"
+              type="button"
+            >
+              Search
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="card">
+    <div class="card-body">
+      <ngx-spinner
+        class="spinner-warning"
+        [name]="spinnerRefs.dataTable"
+        bdColor="rgba(0,0,0,0.8)"
+        size="medium"
+        color="#fff"
+        type="square-loader"
+        [fullScreen]="false"
+      >
+        <p style="color: white">Loading...</p>
+      </ngx-spinner>
+      <div class="row my-3 text-center">
+        <div class="col-md-3">
+          <div class="card bg-primary text-white p-3 rounded">
+            <h5>Total Reported</h5>
+            <h3>{{ totalReported }}</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-success text-white p-3 rounded">
+            <h5>Total Assigned</h5>
+            <h3>{{ totalAssigned }}</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-warning text-white p-3 rounded">
+            <h5>Total Unassigned</h5>
+            <h3>{{ totalUnassigned }}</h3>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-danger text-white p-3 rounded">
+            <h5>Total Pending</h5>
+            <h3>{{ totalPending }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive table-container">
+        <table
+          class="table table-hover compact table-bordered"
+          style="width: 100%; height: 100%; overflow-x: hidden"
+          cellpadding="0"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Study Name</th>
+              <th>Total Reported</th>
+              <th>Total Assigned</th>
+              <th>Total Unassigned</th>
+              <th>Total Pending</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="text-center"
+              *ngIf="!radiologyStatsList || radiologyStatsList.length === 0"
+            >
+              <td colspan="13">
+                <div class="container-fluid">
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+            <tr *ngFor="let data of radiologyStatsList; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ data.TPTitle || "-" }}</td>
+              <td>{{ data.Reported || "-" }}</td>
+              <td>{{ data.Assigned || "-" }}</td>
+              <td>{{ data.Unassigned || "-" }}</td>
+              <td>
+                {{
+                  data["Checkin Pending"] != null
+                    ? data["Checkin Pending"]
+                    : "-"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h4 class="mb-3 mt-6"><b>Study Type Distribution</b></h4>
+
+      <!-- Bar chart -->
+      <div class="row mb-6">
+        <div class="col-md-6">
+          <canvas
+            baseChart
+            [datasets]="chartOptionsForBar"
+            [labels]="barChartLabels"
+            [options]="chartOptions"
+            [legend]="true"
+            [type]="'horizontalBar'"
+          >
+          </canvas>
+        </div>
+        <div class="col-md-6">
+          <canvas
+            baseChart
+            [datasets]="pieChartData"
+            [labels]="pieChartLabels"
+            [options]="chartOptionsForPie"
+            [legend]="true"
+            [type]="'doughnut'"
+          >
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,607 @@
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+        <div class="card card-custom mt-2">
+            <div class="card-header" style="
+            margin-top: -18px;
+            margin-bottom: 0px;
+            min-height: 57px;">  
+                <div class="card-title" style="margin-bottom: -10px;">
+                    <span class="card-icon">
+                        <i class="fa fa-list text-primary"></i>
+                    </span>
+                    <h3 class="card-label mt-1">
+                        Worklist
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row" style="margin-top: -24px;">
+                    <div class="col-12"><i aria-hidden="true" class="fa fa-plus pull-right text-primary cursor-pointer mb-2" ngbTooltip="Generate New Bill" (click)="newBill();"></i>
+                    </div>
+                </div>
+                <form [formGroup]="_formWorklist" class="form-horizontal" name="form" role="form">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                            <!-- <label for="DateFrom" class="control-label">Date  From:</label> -->
+                            <input  (click)="startDate.toggle()" 
+                                #startDate="ngbDatepicker" 
+                                placeholder="dd-mm-yyyy"
+                                autocomplete="off" 
+                                ngbDatepicker 
+                                value="1980-08-26"
+                                formControlName="startDate" 
+                                class="form-control form-control-sm" 
+                                type="text" 
+                                value=""
+                                [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                                />
+                        </div>
+        
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-2">
+                            <!-- <label for="DateTo" class="control-label">Date To:</label> -->
+                            <input  
+                                #endData="ngbDatepicker" 
+                                (click)="endData.toggle()" 
+                                placeholder="dd-mm-yyyy" 
+                                autocomplete="off"
+                                ngbDatepicker 
+                                value="1980-08-26" 
+                                formControlName="endDate"
+                                class="form-control form-control-sm" 
+                                type="text" 
+                                value=""
+                                [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                                />
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <!-- <label for="DateTo" class="control-label">Panel:</label> -->
+                            <div class="input-group">
+                                <ng-select 
+                                    id="tp_panel" style="width: 100%;" 
+                                    #panel 
+                                    [items]="panelsList"
+                                    bindLabel="Code" 
+                                    bindValue="PanelId"
+                                    placeholder="--Select Panel--" 
+                                    name="panel"
+                                    formControlName="PanelId"
+                                    >
+                                </ng-select>
+                            </div>
+                            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.panelsDropdown" size="medium" color="#fff"
+                                type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <!-- (change)="panelChanged($event)" -->
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <!-- <label for="BranchID" class="control-label">Status:</label> -->
+                            <ng-select style="width: 100%;" 
+                                [items]="panelBillStatusList" 
+                                tabindex="1" 
+                                placeholder="--Select Status--"
+                                formControlName="PanelBillStatusID"
+                                bindLabel="Title" 
+                                bindValue="StatusId" 
+                                >
+                            </ng-select>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                            <button type="button" (click)="getPanelBill(null,null);" [disabled]="disabledButtonSearchBill" class="btn btn-primary btn-block"><span> <i class="spinner-border-custom" aria-hidden="true"
+                                [hidden]="isSpinnerSearchBill"></i> &nbsp;<i class="fa fa-search"></i></span> Search Bill</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSectionBill"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <ng-container *ngIf="panelBills.length; else noBillData">
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchTextBill" name="searchTextBill"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                            <table class="table">
+                                                <thead style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                                                    <th style="width: 1%; padding-top: 0.5rem; padding-bottom: 0.5rem;" scope="col">#</th>
+                                                    <th scope="col" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">Title</th>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngFor="let row of panelBills | filterByKey: searchTextBill:['RegNo']; let i = index">
+                                                        <tr class="cursor-pointer" style="padding-top: 8px;padding-bottom: 3px" (click)="getPanelBill(row,i)"
+                                                        [ngClass]="{'active-rec-border-left': i==rowIndex}"
+                                                        >
+                                                            <td style="width: 1%;padding-top: 8px;padding-bottom: 3px">{{i+1}}</td>
+                                                            <td style="padding-top: 8px;padding-bottom: 3px">{{row.BillNo}}
+                                                                <label *ngIf="!row.isFinal" class="badge-border-white text-white cursor-pointer badge badge-warning pull-right">Drafted</label>
+                                                                <label *ngIf="row.isFinal" class="badge-border-white cursor-pointer badge badge-primary pull-right">Finalized</label>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #noBillData>
+                                <div class="no-panel-bill">
+                                    <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="noDataMessageBill"></app-no-record-found>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9 col-xl-9">
+        <div class="card card-custom mt-2">
+            <div class="card-header" style="
+            margin-top: -18px;
+            margin-bottom: 0px;
+            min-height: 57px;
+        ">
+                <div class="card-title" style="margin-bottom: -10px;">
+                    <span class="card-icon">
+                        <i class="fas fa-calculator text-primary"></i>
+                    </span>
+                    <h3 class="card-label mt-1">
+                        Manage Panel Bills
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row"  *ngIf="isNew">
+                    <div class="col-12">
+                        <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                    <label for="DateFrom" class="control-label">Date  From:</label>
+                                    <input  (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                                        autocomplete="off" ngbDatepicker value="1980-08-26" name="dateFrom"
+                                        name="dateFrom" formControlName="dateFrom" class="form-control form-control-sm" type="text" value=""
+                                        [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                                        />
+                                </div>
+                
+                                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                    <label for="DateTo" class="control-label">Date To:</label>
+                                    <input  #dateTo="ngbDatepicker" (click)="dateTo.toggle()" placeholder="dd-mm-yyyy" autocomplete="off"
+                                        ngbDatepicker value="1980-08-26" name="dateTo" formControlName="dateTo"
+                                        class="form-control form-control-sm" type="text" value=""
+                                        [ngClass]="{'invalid': inValidDateRange, 'invalid-highlighted': inValidDateRange}"
+                                        />
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                    <label for="DateTo" class="control-label">Panel:</label>
+                                    <div class="input-group">
+                                        <ng-select
+                                            id="tp_panel" style="width: 100%;" #panel [items]="panelsList"
+                                            bindLabel="CodeName" bindValue="PanelId"
+                                            placeholder="--Select Panel--" name="panel"
+                                            formControlName="PanelId"
+                                            >
+                                        </ng-select>
+                                    </div>
+                                    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)"
+                                        [name]="spinnerRefs.panelsDropdown" size="medium" color="#fff"
+                                        type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <!-- (change)="panelChanged($event)" -->
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                    <label for="BranchID" class="control-label">Branch:</label>
+                                    <ng-select style="width: 100%;" 
+                                        [items]="branchList" 
+                                        tabindex="1" 
+                                        placeholder="--Select Branch--"
+                                        formControlName="BranchID"
+                                        bindLabel="Title" 
+                                        bindValue="LocId"
+                                        >
+                                    </ng-select>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 col-xl-1 mt-7">
+                                    <button type="button" (click)="getPanelVisitsForBilling();" [disabled]="disabledButtonSearch" class="btn btn-primary"><span> <i class="spinner-border-custom" aria-hidden="true"
+                                        [hidden]="isSpinnerSearch"></i> &nbsp;<i [hidden]="!isSpinnerSearch" class="fa fa-search"></i></span></button>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <ng-container *ngIf="isNew">
+                            <ng-container *ngIf="panelVisitsData.length; else noRequestData">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span ngbTooltip="This patient has some Unverified visits(Lab Services). for bill generation its must to be verified" class="mr-3"><i aria-hidden="true" class="fas fa-square text-danger"></i><small class="text-danger"><strong> Unverified Visit</strong></small></span>
+                                        <span  ngbTooltip="Verified Visits" class="mr-3"><i aria-hidden="true" class="fas fa-square text-primary"></i><small class="text-primary"><strong> Verified</strong></small></span>
+                                        <span  ngbTooltip="Add-On Services"><i aria-hidden="true" class="fas fa-square text-warning"></i><small class="text-warning"><strong> Services</strong></small></span>
+                                        <span *ngIf="panelVisitsData.length" class="text-warning pull-right"><strong> <span class="text-warning">Total Records: {{panelVisitsData.length}} </span>  <span class="text-dark">|</span>  <span class="text-warning">Selected Records: {{ selectedCount }}</span> </strong></span>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="table-container">
+                                            <table class="table">
+                                                <thead>
+                                                    <th style="width: 1%;" scope="col">#</th>
+                                                    <th >
+                                                        <!-- <mat-checkbox class="example-margin" name="chkMain"  (change)="selectAllMainAndchildRows($event);onCheckboxChange()"> <span></span> </mat-checkbox> -->
+                                                    </th>
+                                                    <th scope="col">MRN</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Family No</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th style="width: 11%;" scope="col">Extra Service/s</th>
+                                                </thead>
+                                                
+                                                <tbody>
+                                                    <ng-container *ngFor="let parentRow of panelVisitsData | filterByKey: searchText:['Name','RegNo','RefNo']; let i = index">
+                                                        <tr class="cursor-pointer"  [ngClass]="{'active-rec-border-left': i==rowIndexBillDetail}">
+                                                            <td style="width: 1%;">{{i+1}}</td>
+                                                            <td>
+                                                                <mat-checkbox *ngIf="parentRow.isValid" class="example-margin mr-2" name="chkParent" [disabled]="flexCheckDisabled && selectedCount>=20 && !parentRow.checked"  [(ngModel)]="parentRow.checked"  (change)="selectAllChildRows(i, $event);onCheckboxChange()"> <span></span> </mat-checkbox>
+                                                                <span class="mr-2" *ngIf="!parentRow.isValid" (click)="showUnverifiedVisitMessage()"><i aria-hidden="true" class="far fa-square" style="font-size: 18px; padding-top: 1px; color: #635f5f;"></i></span>
+                                                                <button class="btn btn-sm" (click)="toggleChildRowsFromButton(i, $event)">
+                                                                    <span *ngIf="!showChildRows[i]"><i class="fas fa-angle-double-down text-primary"></i></span>
+                                                                    <span *ngIf="showChildRows[i]"><i class="fas fa-angle-double-up text-primary"></i></span>
+                                                                </button>
+                                                            </td>
+                                                            <td>{{parentRow.RegNo}}</td>
+                                                            <td>{{parentRow.Name}}</td>
+                                                            <td>{{parentRow.RefNo||'NA'}}</td>
+                                                            <td>{{parentRow.TotalAmt}}</td>
+                                                            <td  style="width: 11%;" >
+                                                                <span><i class="fa fa-plus text-primary cursor-pointer" (click)="openPanelAddOnServicesModal(i,parentRow)" ngbTooltip="Add Service/s"></i></span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngIf="showChildRows[i]">
+                                                            <td colspan="7">
+                                                                <table class="table table-bordered table-stripped table-condenced inner">
+                                                                    <tbody>
+                                                                        <tr *ngFor="let childRow of parentRow.invData; ; let j = index" [ngClass]="{'text-danger': childRow.VisitId && !childRow.PatientVisitStatus}">
+                                                                            <td style="width: 4%; border: 1px solid #fff !important;" [style.border-right]="getBorderRight(childRow.VisitId, childRow.PatientVisitStatus)"></td>
+                                                                            <td style="text-align: center;" [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)">
+                                                                                <mat-checkbox class="example-margin mr-2" name="chkInner"  [disabled]="true" [(ngModel)]="childRow.checked"> <span></span> </mat-checkbox>
+                                                                            </td>
+                                                                            <ng-container *ngIf="childRow.VisitId;  else addOnServices">
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)"><strong>PIN: </strong>{{ childRow.AccNo }}</td>
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)"><strong>Receipt No: </strong>{{ childRow.ReceiptNo }}</td>
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)"><strong>Visit Date: </strong>{{ childRow.VisitDate }}</td>
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)"><strong>Location: </strong>{{ childRow.LocCode }}</td>
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)"><strong>Ref By: </strong>{{ childRow.RegBy }}</td>
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)"><strong>Net Amt: </strong>{{ childRow.NetAmount }}</td>
+                                                                                <td [style.border]="getBorder(childRow.VisitId, childRow.PatientVisitStatus)" style="text-align: right;">
+                                                                                    <span><i class="ti-receipt text-primary cursor-pointer"(click)="openInvoice(childRow.VisitId)"></i> Inv</span> &nbsp;  <span><i class="ti-files text-primary cursor-pointer" (click)="showVisitDocs(childRow.VisitId, childRow.AccNo)"></i> Docs</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-template #addOnServices>
+                                                                                <td style="border: 1px solid #ffb000 !important;" colspan="5"><strong>Service Name: </strong>{{ childRow.ServiceName }}</td>
+                                                                                <td style="border: 1px solid #ffb000 !important;"><strong>Net Amount: </strong>{{ childRow.NetAmount }}</td>
+                                                                                <td style="border: 1px solid #ffb000 !important" class="text-center">
+                                                                                    <span><i class="ti-close text-danger cursor-pointer"(click)="removeItem(i,j)" ngbTooltip="Remove Item"></i></span> 
+                                                                                </td>
+                                                                            </ng-template>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th><span class="text-dark">Total Amount:</span></th>
+                                                        <th> <span class="text-dark">{{ totalSum }}</span></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr>
+                                    <div class="col-1 mt-2">
+                                        <label for="AdditionalRemarks" class="control-label">Remarks:</label>
+                                    </div>
+                                    <div class="col-8 mt-2">
+                                        <div class="form-group">
+                                            <textarea class="form-control form-control-sm" name="Remarks" rows="1"  [(ngModel)]="Remarks"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 mt-2">
+                                        <button [disabled]="disabledButton"
+                                            class="btn btn-sm btn-primary py-2 pull-right"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="'Please confirm...!'"
+                                            [popoverMessage]="'Are you <strong>sure</strong> want to finalized the bill?'"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="insertPanelBill(1)"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-primary"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true">
+                                            <i 
+                                            class="fas fa-check-square"
+                                            ></i>Finalized <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                        </button>
+                                        <button *ngIf="!isFinal" [disabled]="disabledButtonDraft"
+                                            class="btn btn-sm btn-warning py-2 pull-right mr-2"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="'Please confirm...!'"
+                                            [popoverMessage]="'Are you <strong>sure</strong> save bill as draft?'"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="insertPanelBill(0)"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-primary"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true">
+                                            <i 
+                                            class="fas fa-edit"
+                                            ></i>Draft <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerDraft" ></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #noRequestData>
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
+                                        <p class="text-primary" style="margin-top: -20px;">
+                                            <strong>Info! </strong> {{noDataMessage}}...
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found> -->
+                            </ng-template>
+                        </ng-container>
+
+                        <ng-container *ngIf="!isNew">
+                            <ng-container *ngIf="generatedPanelVisitsData.length; else noGeneratedRequestData">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span *ngIf="generatedPanelVisitsData.length" class="text-warning pull-right"><strong> <span class="text-warning">Total Records: {{generatedPanelVisitsData.length}} </span>  </strong><span class="text-dark"> | </span> Bill Satatus: <span class="bill-status"><strong>{{BillStatus}}</strong></span></span>
+                                    </div>
+                                    <!-- <div class="col-4">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-12">
+                                        <div class="table-container">
+                                            <table class="table">
+                                                <thead>
+                                                    <th style="width: 1%;" scope="col">#</th>
+                                                    <th >
+                                                        <!-- <mat-checkbox class="example-margin" name="chkMain"  (change)="selectAllMainAndchildRows($event);onCheckboxChange()"> <span></span> </mat-checkbox> -->
+                                                    </th>
+                                                    <th scope="col">MRN</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Family No</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Action</th>
+                                                </thead>
+                                                
+                                                <tbody>
+                                                    <ng-container *ngFor="let parentRow of generatedPanelVisitsData | filterByKey: searchText:['Name','RegNo','RefNo']; let i = index">
+                                                        <tr class="cursor-pointer" style="background-color: #d5d5d5;">
+                                                            <td style="width: 1%;">{{i+1}}</td>
+                                                            <td>
+                                                                <mat-checkbox class="example-margin mr-2" name="chkInner"  [disabled]="true" [checked]="true"> <span></span> </mat-checkbox>
+                                                                
+                                                            </td>
+                                                            <td>{{parentRow.RegNo}}</td>
+                                                            <td>{{parentRow.Name}}</td>
+                                                            <td>{{parentRow.RefNo||'NA'}}</td>
+                                                            <td>{{parentRow.TotalAmt}}</td>
+                                                            <td class="text-right">
+                                                                <span ngbTooltip="Patient wise summary report">
+                                                                    <i class="fa fa-print text-gray cursor-pointer mt-1"(click)="printPanleBillPatientWiseReport(parentRow)"></i> 
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7">
+                                                                <table class="table table-bordered inner">
+                                                                    <tbody>
+                                                                        <tr *ngFor="let childRow of parentRow.invData; ; let j = index">
+                                                                            <td style="width: 4%; border: 1px solid #fff !important;" [style.border-right]="getBorderRight(childRow.VisitID, childRow.PatientVisitStatus)"></td>
+                                                                            <td style="text-align: center;" [style.border]="getBorder(childRow.VisitID, childRow.PatientVisitStatus)">
+                                                                                <mat-checkbox class="example-margin mr-2" name="chkInner"  [disabled]="true" [checked]="true"> <span></span> </mat-checkbox>
+                                                                            </td>
+                                                                            <ng-container *ngIf="childRow.VisitID;  else addOnServices">
+                                                                                <td><strong>PIN: </strong>{{ childRow.AccNo }}</td>
+                                                                                <td><strong>Receipt No: </strong>{{ childRow.ReceiptNo }}</td>
+                                                                                <td><strong>Visit Date: </strong>{{ childRow.VisitDate }}</td>
+                                                                                <td><strong>Location: </strong>{{ childRow.LocCode }}</td>
+                                                                                <td><strong>Ref By: </strong>{{ childRow.RegBy }}</td>
+                                                                                <td><strong>Net Amt: </strong>{{ childRow.NetAmount }}</td>
+                                                                                <td style="text-align: right;">
+                                                                                    <span><i class="ti-receipt text-primary cursor-pointer"(click)="openInvoice(childRow.VisitID)"></i> Inv</span> &nbsp;  <span><i class="ti-files text-primary cursor-pointer" (click)="showVisitDocs(childRow.VisitID, childRow.AccNo)"></i> Docs</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-template #addOnServices>
+                                                                                <td style="border: 1px solid #ffb000 !important;" colspan="5"><strong>Service Name: </strong>{{ childRow.ServiceName }}</td>
+                                                                                <td style="border: 1px solid #ffb000 !important;"><strong>Net Amount: </strong>{{ childRow.NetAmount }}</td>
+                                                                                <td style="border: 1px solid #ffb000 !important" class="text-center">
+                                                                                    <!-- <span><i class="ti-close text-danger cursor-pointer"(click)="removeItem(i,j)"></i></span>  -->
+                                                                                </td>
+                                                                            </ng-template>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th><span class="text-dark">Total Amount:</span></th>
+                                                        <th> <span class="text-dark">{{ BillNetAmout }}</span></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr>
+                                    <div class="col-1 mt-2">
+                                        <label for="Remarks" class="control-label">Remarks:</label>
+                                    </div>
+                                    <div class="col-8 mt-2">
+                                        <div class="form-group">
+                                            <textarea class="form-control form-control-sm" name="Remarks" rows="1"  [(ngModel)]="Remarks"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 mt-2">
+                                        <button (click)="newBill();"
+                                            class="btn btn-sm btn-primary pull-right">
+                                            <i class="fas fa-plus"
+                                            ></i>New
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-dark pull-right mr-2" (click)="printPanleBillsummaryReport()"><i class="fa fa-print"></i> Print </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #noGeneratedRequestData>
+                                <!-- <app-no-record-found [infoMessageParam]="noDataMessage"></app-no-record-found> -->
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
+                                        <p class="text-primary" style="margin-top: -20px;">
+                                            <strong>Info! </strong> {{noDataMessageGeneratedBill}}...
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #patientVisitDocs let-patientVisitDocs>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Visit Docs ({{selectedVisitNo}})</h4>
+        <!-- <button type="button" class="close" aria-label="Close" (click)="patientVisitDocs.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button> -->
+        <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="patientVisitDocs.close()">
+            <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+        </button> -->
+        <span class="cursor-pointer pull-right" aria-hidden="true">
+            <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+            (click)="patientVisitDocs.close()" class="close-btn mb-1 cursor-pointer">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+            </path>
+            </svg>
+        </span>
+    </div>
+    <div class="modal-body" style="position: relative;">
+        <div class="">
+            <div class="visit-docs-area" *ngIf="selectedVisitID">
+                <span>Visit No: <strong>{{selectedVisitNo}}</strong></span>
+                <app-visit-docs [propVisitNo]="selectedVisitID" [layout]="'grid2'"
+                    [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [editing]="{save: true}"></app-visit-docs>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-primary"
+            (click)="patientVisitDocs.close()">Close</button>
+    </div>
+</ng-template>
+
+<!------begin:: Panel AddOn PopUp Modal---------------------------------->
+<ng-template #panelAddOnServicesModal let-panelAddOnServicesModal  let-c="close" let-d="dismiss">
+    <div class="modal-header" style="padding: 8px 1.75rem !important;">
+        <h4 class="modal-title" id="modal-basic-title">Add Extra Services</h4>
+        <!-- <button type="button" class="close" aria-label="Close" (click)="patientVisitDocs.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button> -->
+        <!-- <button type="button" class="close mb-2 cursor-pointer" aria-label="Close" (click)="patientVisitDocs.close()">
+            <span class="cursor-pointer" aria-hidden="true" style="display: inline-block; color:grey;">&times;</span>
+        </button> -->
+        <span class="cursor-pointer pull-right" aria-hidden="true">
+            <svg focusable="false" width="24" height="24" viewBox="0 0 24 24"
+            (click)="panelAddOnServicesModal.close()" class="close-btn mb-1 cursor-pointer">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+            </path>
+            </svg>
+        </span>
+    </div>
+      <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-bordered narrow-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 2%;">#</th>
+                                <th style="width: 3%;">
+                                    <mat-checkbox class="example-margin mr-2 cursor-pointer" name="extraSrvHead" (change)="selectAllServices($event);"> <span class="mt-1"></span> </mat-checkbox>
+                                </th>
+                                <th style="width: 80%;">Service Name</th>
+                                <th style="width: 15%;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of panelAddOnServices; let i = index">
+                                <td style="width: 2%;">{{i+1}}</td>
+                                <td style="width: 3%;"><mat-checkbox class="example-margin mr-2 cursor-pointer" name="extraSrv" [(ngModel)]="item.checked"> <span class="mt-1"></span> </mat-checkbox></td>
+                                <td style="width: 80%;">{{item.PanelAddOnService}}</td>
+                                <td style="width: 15%;">
+                                    <input type="text" (keypress)="validateNo($event)" [(ngModel)]="item.Price" name="srvPrice" class="form-control form-control-sm" placeholder="Price"
+                                    [ngClass]="{'invalid': !item.Price && item.checked, 'invalid-highlighted': !item.Price && item.checked && isSubmitted}"
+                                    >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+      </div>
+      <div class="modal-footer" style="padding: 9px 1.5rem !important">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-dismiss="modal" (click)="panelAddOnServicesModal.close()">
+              <i class="fa fa-times-circle"></i>Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary" (click)="addItems()"  [disabled]="disabledButtonSrv">
+                <i class="fa fa-check-circle"></i>Add Services <i class="spinner-border-custom" aria-hidden="true"
+                  [hidden]="isSpinnerSrv"></i></button>
+      </div>
+</ng-template>
+<!------end:: Panel AddOn PopUp Modal------------------------------------>

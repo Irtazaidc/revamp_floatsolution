@@ -1,0 +1,40 @@
+
+
+.floating-menu {
+	border-radius: 100px;
+	z-index: 999;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	left: 0;
+	position: fixed;
+	display: inline-block;
+	top: 25%;
+	width: 35px;
+	background-color: #ffb64d;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+.floating-menu .items {
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+	width: 35px;
+}
+
+.floating-menu .items li.item a {
+	display: block;
+	padding: 5px 10px;
+	color: #000;
+	border-radius: 50px;
+	position: relative;
+	-webkit-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+
+.floating-menu .items li.item a:hover {
+	background: rgba(244, 244, 244, .3)
+}
+

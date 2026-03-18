@@ -1,0 +1,138 @@
+<div class="hc-config-page" style="position: relative;">
+    <div class="row">
+        <div class="col-md-6">
+            <app-card [title]="'Hc Configuration'" [cardClass]="'tim-card tim-card tim-card-primary'"
+                [cardHeaderClass]="'card-header-narrow'">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" (click)="clearForms()" style="height: 35px;"
+                            class="btn btn-danger btn-sm pull-right col-2" ngbTooltip="Add New CIty"><i
+                                class="ti-plus"></i>New
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-2">
+                    <ng-container *ngIf="gcCitiesList.length then hcCityDetail else hcCityNotFound">
+
+                    </ng-container>
+                    <ng-template #hcCityDetail>
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.hccityCofigDetailSection" size="medium" color="#fff"
+                                type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 m-2" style="float: right;">
+                                <input type="text" placeholder="Search Here" 
+                                    class="form-control form-control-sm " [(ngModel)]="searchInHCCity"
+                                    name="searchInHCCity" />
+                            </div>
+                            <table class="col-lg-12 col-md-12 col-sm-12 table table-hover compact">
+                                <thead>
+                                    <tr>
+                                        <th>City Code</th>
+                                        <th>City Title</th>
+                                        <th>City Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" *ngIf="!gcCitiesList.length">
+                                            <div class="alert alert-primary text-center" role="alert">
+                                                No record available <i class="fa fa-exclamation-triangle text-light"
+                                                    aria-hidden="true"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr (click)="getSelHCCityDetails(item)" style="cursor:pointer;"
+                                        *ngFor="let item of gcCitiesList | filterByKey: searchInHCCity:['Code', 'Title', 'Description'] ">
+                                        <td>{{item.Code}}</td>
+                                        <td>{{item.Title}}</td>
+                                        <td>{{item.Description}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #hcCityNotFound>
+                        <ngb-alert style="text-align:center" [dismissible]="false" [type]="'info'">
+                            <strong>No City Found </strong>
+                        </ngb-alert>
+                    </ng-template>
+
+                </div>
+
+
+            </app-card>
+        </div>
+        <div class="col-md-6">
+            <app-card [title]="cardTitle" [cardClass]="'tim-card tim-card tim-card-primary'"
+                [cardHeaderClass]="'card-header-narrow'">
+                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.hccityCofigFormSection"
+                    size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                    <p style="color: white"> Please wait... </p>
+                </ngx-spinner>
+                <form class="container" #container class="" [formGroup]="hcCityConfigForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cityCode" class="control-label">City Code</label>
+                                <div class="input-group" style="position: relative;">
+                                    <input #cityCode type="text" class="form-control" name="cityCode"
+                                        formControlName="cityCode"
+                                        [ngClass]="{'invalid': hcCityConfigForm.get('cityCode').errors && hcCityConfigForm.get('cityCode').touched, 'invalid-highlighted': hcCityConfigForm.get('cityCode').errors}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cityTitle" class="control-label">City Title</label>
+                                <div class="input-group" style="position: relative;">
+                                    <input #cityTitle type="text" class="form-control" name="cityTitle"
+                                        [ngClass]="{'invalid': hcCityConfigForm.get('cityTitle').errors && hcCityConfigForm.get('cityTitle').touched, 'invalid-highlighted': hcCityConfigForm.get('cityTitle').errors}"
+                                        formControlName="cityTitle" placeholder="Enter City Title">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cityDescription" class="control-label">City Description</label>
+                                <input
+                                    [ngClass]="{'invalid': hcCityConfigForm.get('cityDescription').errors && hcCityConfigForm.get('cityDescription').touched, 'invalid-highlighted': hcCityConfigForm.get('cityDescription').errors}"
+                                    #cityDescription type="text" class="form-control" name="cityDescription"
+                                    formControlName="cityDescription" placeholder="Enter City Description">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12 mt-10">
+
+                            <button class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
+                                ngbTooltip="Create HC City" mwlConfirmationPopover [popoverTitle]="'Create HC City'"
+                                [popoverMessage]="'Are you sure?'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                [placement]="confirmationPopoverConfig.placements[0]" (confirm)="InsertUpdateHCCity()"
+                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                [appendToBody]="true"> <i class="fa fa-save"></i><i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                {{actionLabel}}
+                            </button>
+                            <button type="reset" class="btn btn-sm btn-danger mr-2  pull-right"><i
+                                    class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button> &nbsp;
+
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+    </div>
+</div>

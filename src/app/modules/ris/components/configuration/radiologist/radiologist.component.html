@@ -1,0 +1,463 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm"
+                                    [(ngModel)]="searchText" name="searchText" [ngModelOptions]="{standalone: true}" />
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom"><i
+                                        class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <!-- <th>Question Group Type</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr (click)="getRadiologistInfoDetail(item.EmpId)" class="pointer"
+                                [class.disabled]="isTableLocked"
+                                    *ngFor="let item of radoiologistList | filterByKey:searchText:['EmpNoWithPrefix','FullName']; let i = index"
+                                    [ngClass]="{'active': item.EmpId==EmpIDActiveClass}">
+                                    <td>{{i+1}}</td>
+                                    <!-- <td><span ngbTooltip="{{item.FullName||''}}">{{item.EmpNoWithPrefix}}- {{item.FullName}}</span></td> -->
+                                    <td><span
+                                            ngbTooltip="{{item.EmpNoWithPrefix}}-{{item.FullName}}">{{truncate(item.EmpNoWithPrefix+'
+                                            '+item.FullName || '',50)}} </span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Please wait... </p>
+                    </ngx-spinner> -->
+                    <form class="" style="min-height: 500px;">
+                        <div *ngIf="true" class="row patient-basic-info-container"> <!--*ngIf="0"-->
+                            <div class="pic-area">
+                                <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" style="
+                                z-index: 99999;
+                                position: absolute;
+                                opacity: 1;
+                                top: 83px;
+                                left: 49px;
+                                width: 80px;
+                                height: 74px;" [name]="spinnerRefs.drPic" size="small" color="#fff"
+                                    type="square-loader" [fullScreen]="false">
+                                    <p style="color: white; margin-top: 48px;"> Loading... </p>
+                                </ngx-spinner>
+                                <img class="patient-img" [src]="radiologistPic || defaultPatientPic"
+                                    alt="Doctors Pic" />
+                            </div>
+                            <div class="row col-sm info-area">
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                        <span class="label-name">Name: </span>
+                                        <br>
+                                        <strong class="label-value">{{radoiologistRow.FullName}}</strong>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                        <span class="label-name">ID: </span>
+                                        <br>
+                                        <strong class="label-value">{{radoiologistRow.EmpNoWithPrefix}}</strong>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                        <span class="label-name">Department: </span>
+                                        <br>
+                                        <strong class="label-value">{{radoiologistRow.Department}}</strong>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                        <span class="label-name">Designation: </span>
+                                        <br>
+                                        <strong class="label-value">{{radoiologistRow.Designation}}</strong>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                        <span class="label-name">Location: </span>
+                                        <br>
+                                        <strong class="label-value">{{radoiologistRow.LocationFromIorgLoc}}</strong>
+                                    </label>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                        <span class="label-name">Emp Status/Guaranteed Income: </span>
+                                        <br>
+                                        <strong
+                                            class="label-value">{{radoiologistRow.EmploymentStatus}}/{{radoiologistRow.SharingGuaranteedIncome}}</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection"
+                                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Please wait... </p>
+                            </ngx-spinner>
+                            <!--start::Section Info-->
+                            <div class="col-md-6">
+                                <div class="patient-visit-Test-info-container">
+                                    <fieldset class="fieldset-border-all-primary">
+                                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">
+                                            Sections ({{radiologiestSections.length}})</legend>
+                                        <!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.drSections" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                            <p style="color: white"> Please wait... </p>
+                                        </ngx-spinner> -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Search Item"
+                                                        class="form-control form-control-sm"
+                                                        [(ngModel)]="searchTextSection"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        name="searchTextForSection" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                                            <table class="table table-hover cursor-pointer compact table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <!-- <th style="width: 5%;">#</th> -->
+                                                        <th width="5%" *ngIf="hideToggle"> <input type="checkbox"
+                                                                class=""
+                                                                (change)="selectAllTestsSection($event.target.checked)" />
+                                                        </th>
+                                                        <th width="65%">Section</th>
+                                                        <th width="15%">Min</th>
+                                                        <th width="15%">Max</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="!radiologiestSectionsList.length">
+                                                        <td class="text-center" colspan="4"><strong class="text-info">No
+                                                                section found</strong></td>
+                                                    </tr>
+                                                    <ng-container
+                                                        *ngFor="let sec of radiologiestSectionsList | filterByKey:searchTextSection:['Section', 'SubSectionTitle']; let i=index;">
+                                                        <tr>
+                                                            <!-- <td>{{i+1}}</td> -->
+                                                            <td *ngIf="hideToggle">
+                                                                <input type="checkbox" class=""
+                                                                    (change)="onSelectedSectionChange(sec)"
+                                                                    [(ngModel)]="sec.checked"
+                                                                    [ngModelOptions]="{standalone: true}" />
+                                                            </td>
+                                                            <td>{{sec.Section || sec.SubSectionTitle}}</td>
+                                                            <td><input type="text" [(ngModel)]="sec.Min"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    (keypress)="validateNo($event)"
+                                                                    (blur)="onValueChange(sec, 'Min')"
+                                                                    value="{{sec.Min?sec.Min:0}}"
+                                                                    [ngClass]="{ 'invalid': !sec.Min && sec.checked,'invalid-highlighted': !sec.Min && sec.checked }"
+                                                                    class="form-control form-control-sm"></td>
+                                                            <td><input type="text" [(ngModel)]="sec.Max"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    (keypress)="validateNo($event)"
+                                                                    (blur)="onValueChange(sec, 'Max')"
+                                                                    value="{{sec.Max?sec.Max:0}}"
+                                                                    [ngClass]="{ 'invalid': !sec.Max && sec.checked,'invalid-highlighted': !sec.Max && sec.checked }"
+                                                                    class="form-control form-control-sm"></td>
+                                                        </tr>
+                                                        <tr style="border-bottom: 2px solid #c4c4c4 !important" *ngIf="hideToggle">
+                                                            <td colspan="100">
+                                                                <div class="d-flex justify-content-between" >
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox" 
+                                                                            class="form-check-input cursor-pointer"
+                                                                            name="Init"
+                                                                            (change)="OnChangeChecks(sec,'isInit')"
+                                                                            [(ngModel)]="sec.isInit"
+                                                                            [ngModelOptions]="{standalone: true}" />
+                                                                        <label class="form-check-label font-weight-bolder">Init</label>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input cursor-pointer"
+                                                                            name="DS"
+                                                                            (change)="OnChangeChecks(sec,'isDS')"
+                                                                            [(ngModel)]="sec.isDS"
+                                                                            [ngModelOptions]="{standalone: true}" />
+                                                                        <label class="form-check-label font-weight-bolder">DS</label>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input cursor-pointer"
+                                                                            name="SecondOpinion"
+                                                                            (change)="OnChangeChecks(sec,'isSecondOpinion')"
+                                                                            [(ngModel)]="sec.isSecondOpinion"
+                                                                            [ngModelOptions]="{standalone: true}" />
+                                                                        <label class="form-check-label font-weight-bolder">Second Opinion</label>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox"
+                                                                            class="form-check-input cursor-pointer"
+                                                                            name="PeerReview"
+                                                                            (change)="OnChangeChecks(sec,'isPeerReview')"
+                                                                            [(ngModel)]="sec.isPeerReview"
+                                                                            [ngModelOptions]="{standalone: true}" />
+                                                                        <label class="form-check-label font-weight-bolder">Peer Review</label>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <!--start::Test Info-->
+                            <div class="col-md-6">
+                                <div class="patient-visit-Test-info-container">
+                                    <fieldset class="fieldset-border-all-primary">
+                                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Tests
+                                            ({{radoiologistListTestsSelected.length}})</legend>
+                                        <!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.drTests" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                            <p style="color: white"> Please wait... </p>
+                                        </ngx-spinner> -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Search Item"
+                                                        class="form-control form-control-sm"
+                                                        [(ngModel)]="searchTextTest"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        name="searchTextForTest" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                                            <table class="table table-hover cursor-pointer compact table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <!-- <th>#</th> -->
+                                                        <th width="10px" *ngIf="hideToggle">
+                                                            <input type="checkbox" class=""
+                                                                (change)="selectAllTestsSelected($event.target.checked)" />
+                                                        <th>Test Code</th>
+                                                        <th>
+                                                             <span>{{ hideToggle ? 'Test Action' : 'Test Name' }}</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngIf="!radiologiestTestsList.length">
+                                                        <td class="text-center" colspan="3"><strong class="text-info">No
+                                                                test found</strong></td>
+                                                    </tr>
+                                                    <tr
+                                                        *ngFor="let t of radiologiestTestsList  | filterByKey:searchTextTest:['TestProfileName', 'TestProfileCode','TPCode']; let i=index;">
+                                                        <!-- <td>{{i+1}}</td> -->
+                                                        <td *ngIf="hideToggle">
+                                                            <input type="checkbox" (change)="onSelectedTestsChange(t)"
+                                                                class="" [(ngModel)]="t.checked"
+                                                                [ngModelOptions]="{standalone: true}" />
+                                                        </td>
+                                                        <td>
+                                                            <span ngbTooltip="{{t.TestProfileName}}">{{t.TPCode ||
+                                                                t.TestProfileCode}}</span>
+                                                        </td>
+                                                        <td class="d-flex justify-content-between">
+
+                                                            <span *ngIf="!hideToggle">{{t.TPName}}</span>
+                                                            <!-- 
+                                                            <mat-checkbox class="example-margin mr-2"
+                                                                name="isTechRemarks" [(ngModel)]="t.Init">
+                                                                <span>Init</span> 
+                                                            </mat-checkbox>
+                                                        
+                                                            <mat-checkbox class="example-margin mr-2"
+                                                                name="isTechRemarks" [(ngModel)]="t.DS">
+                                                                <span>DS</span> 
+                                                            </mat-checkbox>
+                                                        
+                                                            <mat-checkbox class="example-margin mr-2"
+                                                                name="isTechRemarks" [(ngModel)]="t.SecondOpinion">
+                                                                <span>2nd Opin</span> 
+                                                            </mat-checkbox>
+                                                        
+                                                            <mat-checkbox class="example-margin"
+                                                                name="isTechRemarks" [(ngModel)]="t.PeerReview">
+                                                                <span>Peer Review</span> 
+                                                            </mat-checkbox> 
+                                                            -->
+                                                            <div class="d-flex justify-content-between" *ngIf="hideToggle">
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="Init" [(ngModel)]="t.isInit" 
+                                                                    [ngModelOptions]="{standalone: true}" class="cursor-pointer form-check-input" />
+                                                                <label class="form-check-label font-weight-bolder mr-1">Init</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="DS" [(ngModel)]="t.isDS" 
+                                                                    [ngModelOptions]="{standalone: true}" class="cursor-pointer form-check-input" />
+                                                                <label class="form-check-label font-weight-bolder mr-1">DS</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="SecondOpinion" 
+                                                                    [(ngModel)]="t.isSecondOpinion" [ngModelOptions]="{standalone: true}"
+                                                                    class="cursor-pointer form-check-input" />
+                                                                <label class="form-check-label font-weight-bolder mr-1">Second Opinion</label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="PeerReview" 
+                                                                    [(ngModel)]="t.isPeerReview" [ngModelOptions]="{standalone: true}"
+                                                                    class="cursor-pointer form-check-input" />
+                                                                <label class="form-check-label font-weight-bolder mr-1">Peer Review</label>
+                                                            </div>
+                                                            </div>
+                                                        </td>                                                        
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group mt-3">
+                                            <button *ngIf="showHideCancelBtn" 
+                                                class="btn btn-sm btn-info ml-2 pull-right" title="cancel"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[1]"
+                                                (confirm)="cancel()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i class="fa fa-times m-0"></i>Cancel
+                                            </button>
+                                            <button *ngIf="showHideEditBtn" (click)="getSubSection()" type="button"
+                                                class="btn btn-sm btn-outline-danger ml-2 pull-right pull-right">
+                                                <i class="ti-pencil m-0" aria-hidden="true"></i>Edit
+                                            </button>
+                                            <button *ngIf="showHideCancelBtn"
+                                              class="btn btn-sm btn-primary pull-right" title="Save" type="button"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="saveRadiologistWorklist()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i class="fa fa-save" aria-hidden="true"></i>Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div *ngIf="radoiologistListRefBy.length">
+                                    <strong class="text-primary">RefBy Doctors:</strong>
+                                    <ol>
+                                        <li *ngFor="let refBy of radoiologistListRefBy">{{refBy.Name}} 
+
+                                            <i class="fa fa-times text-danger cursor-pointer"  ngbTooltip="Remove RefBy" 
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="'Please confirm!'"
+                                            [popoverMessage]="'Are you <strong>sure?</strong> want to remove RefBy doctor(s)'"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="removeRefByRadiologistMapping(refBy)"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true">
+                                            <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+                                        </i>
+                                        </li>
+                                    </ol>
+                                </div>
+                                <ng-container>
+                                    <span *ngIf="radoiologistListRefBy.length && !isAdd" class="ml-30">
+                                      <span class="text-danger cursor-pointer" (click)="sowHideRefByDropdownSection(1)"><i aria-hidden="true" class="fa fa-plus text-danger"></i> Add more</span>
+                                    </span>
+                                    <span *ngIf="!radoiologistListRefBy.length && !isAdd">
+                                      <span class="text-danger cursor-pointer" (click)="sowHideRefByDropdownSection(1)"><i aria-hidden="true" class="fa fa-plus text-danger"></i> Add RefBy Doctor</span>
+                                    </span>
+
+                                    <div *ngIf="isAdd">
+                                        <ng-select #refByDoctorSelect id="refBy-doctor" style="width: 100%;"  [ngModelOptions]="{standalone: true}"
+                                            [items]="refByDoctors" bindLabel="Name"
+                                            [(ngModel)]="selectedRefByDoctors"
+                                            [multiple]="true" 
+                                            [ngClass]="{ 'invalid': !selectedRefByDoctors, 'invalid-highlighted': !selectedRefByDoctors && isSubmitted }"
+                                            [closeOnSelect]="false" 
+                                            bindValue="RefId"
+                                            [virtualScroll]="true" 
+                                            placeholder="--Select RefBy Doctor--">
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.Name}}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                        <button (click)="sowHideRefByDropdownSection(2)" type="button"
+                                            class="btn btn-sm btn-outline-danger ml-2 mt-3 pull-right">
+                                            <i class="ti-close m-0" aria-hidden="true"></i> Close
+                                        </button>
+                                        <button class="btn btn-sm btn-primary pull-right mt-3" title="Save" type="button"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="'Please confirm!'"
+                                                [popoverMessage]="'Are you <strong>sure</strong> want to add RefBy doctor(s)'"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="insertUpdateRefByRadiologistMapping()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary" cancelButtonType="outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>Add
+                                        </button>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+
+        </div>
+    </div>
+</div>

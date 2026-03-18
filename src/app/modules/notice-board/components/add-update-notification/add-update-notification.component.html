@@ -1,0 +1,239 @@
+<div class="roles-page">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+            <app-card [title]="'Notifications List'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <!-- <div class="row">
+                        <div class="col-12">
+                            <hr style="border-color: #4680ff;">
+                        </div>
+                    </div> -->
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="GetNotifications()"><i class="ti-reload"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Code</th>
+                                    <th>Priority</th>
+                                    <!-- <th class="text-right">Action</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr [ngClass]="{'active-rec-border-left': rowIndex==i}" class="cursor-pointer" *ngFor="let item of paginatedSearchResults | filterByKey: searchText:['NoticeCode', 'NoticeTitle']; let i = index" (click)="getNotificationDetailByID(item.NoticeId,i)">
+                                    <td>{{i+1}}</td>
+                                    <td>{{item.NoticeCode}} <label *ngIf="item.PendNotice==1" class="badge badge-inverse-danger">Pend</label></td>
+                                    <td>
+                                        <label [ngClass]="(item.Name|lowercase) == 'normal' ? 'badge badge-success': ((item.Name|lowercase)=='high'? 'badge badge-danger' : ((item.Name|lowercase)=='low'? 'badge badge-warning':((item.Name|lowercase)=='medium'? 'badge badge-primary':'badge badge-info')))">{{item.Name}}</label>
+                                    </td>
+                                    <!-- <td class="text-right">
+                                        <a (click)="getNotificationDetailByID(item.NoticeId)" class="cursor-pointer" style="font-size: 17px;"  ngbTooltip="View Detail"> 
+                                            <i class="fa fa-eye text-info"></i>
+                                        </a>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-between p-2" *ngIf="collectionSize > pageSize">
+                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size="sm" [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                            </ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-7">
+            <app-card [title]="'Configure Notification'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <form class="" [formGroup]="notificationConfigForm" (ngSubmit)="addUpdateNotification()">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="NotificationCode" class="control-label">Notification Code</label>
+                                    <input type="text" class="form-control" name="NotificationCode" formControlName="NotificationCode"
+                                    [ngClass]="{'invalid': notificationConfigForm.get('NotificationCode').errors && notificationConfigForm.get('NotificationCode').touched, 'invalid-highlighted': notificationConfigForm.get('NotificationCode').errors}">
+                                    <small class="text-danger"
+                                    *ngIf="notificationConfigForm.controls['NotificationCode'].touched && notificationConfigForm.controls['NotificationCode'].hasError('maxlength')"
+                                    >Provide maximum 15 characters</small>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="NotificationTitle" class="control-label">Notification Title</label>
+                                    <input type="text" class="form-control" name="NotificationTitle" formControlName="NotificationTitle"
+                                    [ngClass]="{'invalid': notificationConfigForm.get('NotificationTitle').errors && notificationConfigForm.get('NotificationTitle').touched, 'invalid-highlighted': notificationConfigForm.get('NotificationTitle').errors}" >
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="NotifyType" class="control-label">Notification Type</label>
+                                    <select class="form-control" id="NotifyType" name="NotifyType" formControlName="NotifyType">
+                                        <option  *ngFor="let item of NotifyTypeList" [value]="item.TypeId">{{item.Name}}</option>
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="PriorityLevel" class="control-label">Priority Level</label>
+                                    <select class="form-control" id="PriorityLevel" name="PriorityLevel" formControlName="PriorityLevel">
+                                        <option *ngFor="let item of PriorityLevels" [value]="item.PriorLevelId">{{item.Name}}</option>
+                                        </select>
+                                </div>
+                            </div>
+                            
+
+
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="startDate" class="control-label">Start - Visible Date</label>
+                                    <input
+                                    #dStart
+                                    type="text"
+                                    class="form-control mt-1 mr-1"
+                                    (click)="dFrom_date.toggle()"
+                                    placeholder="dd-mm-yyyy"
+                                    autocomplete="off"
+                                    name="dStart"
+                                    ngbDatepicker
+                                    #dFrom_date="ngbDatepicker"
+                                    formControlName="startDate"
+                                    [ngClass]="{'invalid': !dStart.value, 'invalid-highlighted': !dStart.value}"
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="endDate" class="control-label">End - Visible Date</label>
+                                    <input
+                                    #dTo
+                                    type="text"
+                                    class="form-control mt-1 mr-1"
+                                    (click)="dTo_date.toggle()"
+                                    placeholder="dd-mm-yyyy"
+                                    autocomplete="off"
+                                    name="dTo"
+                                    ngbDatepicker
+                                    #dTo_date="ngbDatepicker"
+                                    formControlName="endDate"
+                                    [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <div class="form-group">
+                                    <label for="NotifiedBy" class="control-label">Notified By</label>
+                                    <!-- <input class="form-control" name="NotifiedBy" formControlName="NotifiedBy" > -->
+                                    <div class="input-group">
+                                        <ng-select style="width: 100%;"  
+                                            [items]="employeesList" 
+                                            tabindex="1" 
+                                            placeholder="-Select Person-"
+                                            formControlName="NotifiedBy"
+                                            bindLabel="FullName" 
+                                            bindValue="UserId" 
+                                            >
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label for="branchIds">Locations</label>
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="branchesList"
+                                    bindLabel="Title" 
+                                    placeholder="-Select Branch-"
+                                    bindValue="LocId"
+                                    formControlName="branchIds"
+                                    [multiple]="true"
+                                    [closeOnSelect]="false"
+                                    [ngClass]="{'invalid': notificationConfigForm.get('branchIds').errors && notificationConfigForm.get('branchIds').touched, 'invalid-highlighted': notificationConfigForm.get('branchIds').errors}"
+                                    required="true"
+                                    >
+
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                        </div>
+                                        <div class="ng-value" *ngIf="items.length > 2">
+                                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template ng-header-tmp>
+                                        <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary" type="button"><i class="ti-check"></i> Select all</button>
+                                        <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect all</button>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <label for="departmentIds">Departments</label>
+                                <ng-select style="width: 100%;"
+                                    class=" mt-1 mr-1"
+                                    [items]="departmentsList"
+                                    bindLabel="DepartmentName" 
+                                    placeholder="-Select Department-"
+                                    bindValue="DepartmentId"
+                                    formControlName="departmentIds"
+                                    [multiple]="true"
+                                    [closeOnSelect]="false"
+                                    [ngClass]="{'invalid': notificationConfigForm.get('departmentIds').errors && notificationConfigForm.get('departmentIds').touched, 'invalid-highlighted': notificationConfigForm.get('departmentIds').errors}"
+                                    required="true"
+                                    >
+
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            <span class="ng-value-label"> {{item.DepartmentName}}</span>
+                                        </div>
+                                        <div class="ng-value" *ngIf="items.length > 2">
+                                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template ng-header-tmp>
+                                        <button (click)="selectAllDepartments()" class="btn btn-mini btn-outline-primary" type="button"><i class="ti-check"></i> Select all</button>
+                                        <button (click)="unSelectAllDepartments()" class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect all</button>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                                <label for="NotificationDetail">Notification Detail</label>
+                                <textarea formControlName="NotificationDetail"  name="NotificationDetail" class="form-control" cols="30" rows="10" [ngClass]="{'invalid': notificationConfigForm.get('NotificationDetail').errors && notificationConfigForm.get('NotificationDetail').touched, 'invalid-highlighted': notificationConfigForm.get('NotificationDetail').errors}"></textarea>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input pointer" type="checkbox" id="PendNotification" value="1" name="PendNotification" formControlName="PendNotification">
+                                    <label class="form-check-label text-danger pointer" for="PendNotification">
+                                        <strong>Pend Notification</strong> 
+                                    </label>
+                                    </div>
+                            </div>
+                        </div>
+                        <!-- <div class="row visit-attachments"> -->
+                            <div class="docs-area mt-2">
+                                <app-visit-docs [inputDocs]="ld" [allowRemove]="true" [forFilterComp] = "1" [sectionHead]="'Notification'" (outputDocs)="getLoadedDocs($event)" ></app-visit-docs>
+                            </div>
+                        <!-- </div> -->
+                        <div class="row">
+                            <div class="col-12 mt-3">
+                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                <button [disabled]="notificationConfigForm.invalid || !CanUpdate" type="submit" class="btn btn-sm btn-primary pull-right" ><i class="fa fa-save"></i> Save<i aria-hidden="true"></i></button>
+                                <small *ngIf="notificationConfigForm.invalid && !NotificationID" class="text-danger pull-right mr-2 mt-3">To save the form please fill the required information</small>
+                                <small *ngIf="!CanUpdate" class="text-danger pull-right mr-2 mt-3">Can't edit this Notification because its ending date has expired!</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </app-card>
+        </div>
+    </div>
+</div>

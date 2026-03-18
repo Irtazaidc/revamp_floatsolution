@@ -1,0 +1,30 @@
+:host {
+    width: 100%;
+    display: block;
+}
+
+
+
+.visit-remarks-container {
+    ul {
+        max-height: 100px;
+        overflow: auto;
+        padding: 5px;
+        border: 1px solid #eee;
+
+        li {
+            border-top: 1px solid #eee;
+            padding-bottom: 7px;
+            background-color: #f8f9fa;
+            margin-bottom: 2px;
+
+            .remarks-by {
+                color: #7a7a7a;
+            }
+
+            .remarks-contents {
+                white-space: pre-wrap;
+            }
+        }
+    }
+}

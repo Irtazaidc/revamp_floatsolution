@@ -1,0 +1,2219 @@
+<div class="row">
+  <div class="col-xl-3 col-lg-5 col-md-12 col-sm-12">
+    <div class="card card-custom mt-2 mb-2">
+      <div class="card-toolbar">
+        <div class="container mt-5 mb-5">
+          <div class="row mt-8 mb-8">
+            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.TotalRequestCount" bdColor="rgba(0,0,0,0.8)"
+              size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+              <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="col-12 mb-4">
+              <h2 class="cms-tag">CMS Stats</h2>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+              <div class="box mb-6" style="border-left: 10px solid orange;">
+                <span class="hc-stats">
+                  <p>Total</p>
+                  <h1>{{TotalCount? TotalCount: '00'}}</h1>
+                </span>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+              <div class="box mb-6" style="border-left: 10px solid green;">
+                <span class="hc-stats">
+                  <p>Closed</p>
+                  <h1>{{CloseCount ? CloseCount:'00'}}</h1>
+                </span>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+              <div class="box mt-4" style="border-left: 10px solid blue;">
+                <span class="hc-stats">
+                  <p>In-Progress</p>
+                  <h1>{{HoldCount ? HoldCount :'00'}}</h1>
+                </span>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+              <div class="box mt-4" style="border-left: 10px solid red;">
+                <span class="hc-stats">
+                  <p>Rejected</p>
+                  <h1>{{countList.CancelledRequests?countList.CancelledRequests:'00'}}</h1>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="row mt-2 mb-5">
+          <div class="col-12">
+            <form [formGroup]="filterForm" class="form-horizontal" name="form" role="form"
+              (ngSubmit)="getCMSrequestDeatil()">
+              <div class="container-fluid">
+                <div class="row mt-2">
+                  <div class="col-12">
+                    <h2 class="cms-tag">CMS Search</h2>
+                  </div>
+                  <div class="col-12">
+                    <button type="button" class="btn btn-mini btn-success pull-right" (click)="advancedSearch()"
+                      ngbTooltip="Advanced Search"><i class="fa fa-plus-circle text-center"></i></button>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <div class="row input-group mt-1">
+                      <label for="byReqNo" class="col-5 col-form-label">Request No:</label> 
+                      <div class="col-7">
+                        <input class="form-control" placeholder="CMS-C-YYMM-####" type="text" [value]=""
+                          formControlName="reqNumber" (click)="patchRequestNo()"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12" *ngIf="advancedSearchEnabled">
+                    <div class="row input-group mt-1">
+                      <label for="byReqId" class="col-5 col-form-label" >Request ID:</label> 
+                      <div class="col-7">
+                        <input class="form-control" placeholder="Enter Request ID" type="text" [value]=""
+                          formControlName="reqId" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 ">
+                    <div class="row input-group mt-1">
+                      <label for="dateFrom" class="col-5 col-form-label">Date From:</label>
+                      <div class="col-7">
+                        <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="YYYY-MM-DD"
+                          autocomplete="off" ngbDatepicker formControlName="dateFrom" name="dateFrom"
+                          class="form-control" type="text" [value]="" [maxDate]="maxDate"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="row input-group mt-1">
+                      <label for="dateTo" class="col-5 col-form-label">Date To:</label>
+                      <div class="col-7">
+                        <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="YYYY-MM-DD"
+                          autocomplete="off" ngbDatepicker formControlName="dateTo" name="dateTo" class="form-control"
+                          type="text" [value]="" [maxDate]="maxDate"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="row input-group mt-1">
+                      <label for="dateTo" class="col-5 col-form-label">Branch:</label>
+                      <div class="col-7">
+                         <ng-select
+                id="pat_branch"
+                style="width: 100%"
+                [ngClass]="{
+                  invalid: filterForm.get('locationid').errors,
+                  'invalid-highlighted':
+                    filterForm.get('locationid').errors && isSubmitted
+                }"
+                formControlName="locationid"
+                [items]="branchList"
+                bindLabel="Title"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                bindValue="LocId"
+                placeholder="--Select Branch--"
+              >
+                <ng-template
+                  ng-multi-label-tmp
+                  let-items="items"
+                  let-clear="clear"
+                >
+                  <div
+                    class="ng-value"
+                    *ngFor="let item of items | slice : 0 : 2"
+                  >
+                    <span
+                      class="ng-value-icon right"
+                      (click)="clear(item)"
+                      aria-hidden="true"
+                      >×</span
+                    >
+                    <span class="ng-value-label"> {{ item.Title }}</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label"
+                      >{{ items.length - 2 }} more...</span
+                    >
+                  </div>
+                </ng-template>
+                <ng-template ng-header-tmp>
+                  <button
+                    (click)="onSelectAllBranches()"
+                    class="btn btn-mini btn-outline-primary"
+                    type="button"
+                  >
+                    <i class="ti-check"></i>Select all
+                  </button>
+                  <button
+                    (click)="onUnselectAllBranches()"
+                    class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                    type="button"
+                  >
+                    <i class="ti-close"></i>Unselect all
+                  </button>
+                </ng-template>
+              </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="col-12" *ngIf="advancedSearchEnabled">
+                    <div class="row form-group">
+                      <label for="byEmail" class="col-4 col-form-label">By Email</label>
+                      <div class="col-8">
+                        <input class="form-control" type="email" [value]="" formControlName="byEmail" />
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="col-12" *ngIf="advancedSearchEnabled">
+                    <div class="row input-group mt-1">
+                      <label for="byContact" class="col-5 col-form-label">Calling CLI:</label>
+                      <div class="col-7">
+                        <input class="form-control" type="text" [value]="" formControlName="byContact"
+                        placeholder="Enter Contact No" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12" *ngIf="advancedSearchEnabled">
+                    <div class="row input-group mt-1">
+                      <label for="byContact" class="col-5 col-form-label">Reg Contact:</label>
+                      <div class="col-7">
+                        <input class="form-control" type="text" [value]="" formControlName="byPatientContact"
+                        mask='0000-0000000' [showMaskTyped]="true" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12" *ngIf="advancedSearchEnabled">
+                    <div class="row input-group mt-1">
+                      <label for="byPIN" class="col-5 col-form-label">PIN:</label>
+                      <div class="col-7">
+                        <input class="form-control" placeholder="XXXX-XX-XXXXXX" type="text" [value]=""
+                          formControlName="byPIN" (keypress)="validateNo($event)"  [ngClass]="{
+                            invalid:
+                            filterForm.get('byPIN').errors &&
+                            filterForm.get('byPIN').touched,
+                            'invalid-highlighted': filterForm.get('byPIN').errors}"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 d-flex justify-content-center">
+                    <button class="btn btn-primary text-center" style="padding-left: 30%; padding-right:30%">
+                        <i class="fa fa-search"></i>Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- <hr />
+
+        <div for="Bubble Chart" class="row mt-2 mb-2 d-flex justify-content-center align-items-center"
+          *ngIf="SectionToShowMyCMS.showGraph">
+          <div class="chart-wrapper">
+            <canvas id="myChart" width="300" height="300"></canvas>
+          </div>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-9 col-lg-7 col-md-12 col-sm-12">
+    <div class="card card-custom mt-2 mb-2">
+      <div class="card-toolbar">
+        <div class="row">
+          <div class="col-12">
+            <mat-card>
+              <div class="row">
+                <div class="col-xl-4">
+                  <div class="d-flex flex-column flex-grow-1 my-lg-0 pt-1">
+                    <span  >
+                      <h2 class="mt-1 cms-tag">CMS Worklist</h2> </span>
+                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                    <div class="row mt-2 justify-content-md-end">
+                      <!-- <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12"></div> -->
+                      <!-- <span class="reload">
+                        <i class="flaticon2-reload text-primary" (click)="getCMSrequestDeatil()"></i>
+                      </span> -->
+                      <!-- <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                          <div class="positioning input-group mr-2" style="margin-left: auto;">
+                              <ng-select style="width: 90%;" class="mt-1 mr-1" [items]="cmsStatusList"
+                                bindLabel="CMSStatus" placeholder="--Filter By Status--"
+                                bindValue="CMSStatusID" [(ngModel)]="changeStatus" (change)="onStatusChange(changeStatus)">
+                              </ng-select>
+                          </div>
+                      </div> -->
+                      <div class="text-right pull-right">
+                        <span  tabindex="1" class="badge badge-primary  cursor-pointer" 
+                        [ngStyle]="getStatusStyles(1)" [ngClass]="{'lable-active': active==1}"
+                            (click)="onStatusChange(1)" > Registered
+                            <span class="badge badge-light badge-light-custom">
+                            {{RegCount || 0}}
+                            </span>
+                        </span>
+                        <span  tabindex="2" class="badge badge-primary cursor-pointer ml-1" 
+                        [ngStyle]="getStatusStyles(2)" [ngClass]="{'lable-active': active==2}"
+                            (click)="onStatusChange(2)">Assigned
+                            <span class="badge badge-light badge-light-custom">
+                              {{AssignCount || 0}}
+                            </span>
+                        </span>
+                            <!-- <span *ngIf="screenIdentity=='mo-worklist'" tabindex="2" class="badge badge-warning cursor-pointer" [ngClass]="{'lable-active': active==9}"
+                            (click)="getActive(9,2,1,'bg-primary','MO');><i aria-hidden="true" class="ti-check text-white"></i> MO Done<span class="badge badge-light badge-light-custom">{{this.countMOWorklist}}</span></span> -->
+                         <span tabindex="3" class="badge badge-success cursor-pointer ml-1"
+                         [ngStyle]="getStatusStyles(3)" [ngClass]="{'lable-active': active==3}"
+                            (click)="onStatusChange(3)">
+                             Resolved <span class="badge badge-light badge-light-custom">
+                              {{ResolvedCount || 0}}
+                             </span></span>
+                        <span tabindex="4" class="badge bg-salmon cursor-pointer ml-1" 
+                        [ngStyle]="getStatusStyles(4)" [ngClass]="{'lable-active': active==4}"
+                            (click)="onStatusChange(4)">
+                            Closed <span class="badge badge-light badge-light-custom">
+                              {{CloseCount || 0}}
+                            </span></span>
+                        <span tabindex="5" class="badge bg-tomato cursor-pointer ml-1"
+                        [ngStyle]="getStatusStyles(5)" [ngClass]="{'lable-active': active==5}"
+                        (click)="onStatusChange(5)">
+                         On Hold <span class="badge badge-light badge-light-custom">
+                          {{HoldCount || 0}}
+                         </span></span>
+                        <span tabindex="6" class="badge badge-warning cursor-pointer  ml-1"
+                        [ngStyle]="getStatusStyles(6)" [ngClass]="{'lable-active': active==6}"
+                        (click)="onStatusChange(6)"> Re Opened 
+                        <span class="badge badge-light badge-light-custom">{{reOpenedCount || 0}}</span></span>
+
+                        <span tabindex="7" class="badge bg-purple cursor-pointer text-white ml-1" 
+                        [ngClass]="{'lable-active': active==0}"
+                            style="color: #fff;" (click)="onStatusChange(false)"> All 
+                                <span class="badge badge-light badge-light-custom">{{TotalCount || 0}}</span>
+                              </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <mat-card-content>
+                    <mat-tab-group class="demo-tab-group" animationDuration="0ms" style="background-color: #fff;">
+                      <!-- <mat-tab label="All HC Requests">
+                      </mat-tab> -->
+                      <mat-tab label="Complaint(s)">
+                        <div class="container all-complaint mt-1" *matTabContent>
+                          <ngx-spinner class="spinner-warning" [name]="spinnerRefs.recentComplaintRequesTable"
+                            bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                          </ngx-spinner>
+                          <div class="table-responsive">
+                            <table class="table compact table-hover">
+                              <thead>
+                                <tr style="background-color: honeydew;">
+                                <!-- <th width="5%">ReqId</th> -->
+                                  <th width="10%">Request No</th>
+                                  <th width="20%">Full Name</th>
+                                  <th width="11%">PIN</th>
+                                  <th width="15%">Contact | Branch</th>
+                                  <th width="17%">Created On</th>
+                                  <th width="17%">Last ModifyBy</th>
+                                  <th width="10%">Status</th>
+                                <!-- <th>Action</th> -->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <!-- <ng-container *ngIf="filteredComplaintList!==null then recResult else noRec">
+                                </ng-container> -->
+                                <!-- <ng-template #noRec> -->
+                                <tr *ngIf="!pagination.paginatedSearchResults.length">
+                                  <td colspan="100" style="text-align: center;"><strong class="text-primary">
+                                      No Record Found...</strong></td>
+                                </tr>
+                                <!-- </ng-template> -->
+
+                                <!-- <ng-template #recResult> -->
+                                <tr class="pointer"
+                                  *ngFor="let item of pagination.paginatedSearchResults; let i = index;"
+                                  (dblclick)="openPatientSearchPopUp(); selectComplaint(item)"
+                                  [ngClass]="{'active-rec-border-left': item.CMSRequestID==getCMSrequestID,'text-danger': item.RequestPriority == 2, 'blink-red font-weight-bolder':(item.RequestPriority == 3), 'text-dark':(item.CMSStatusID==3 || item.CMSStatusID==4)}">
+                                  <!-- <td>{{item.CMSRequestID}}</td> -->
+                                  <td><strong>{{item.CMSRequestNo?item.CMSRequestNo:'NA'}}</strong></td>
+                                  <td>{{item.FullName}}</td>
+                                  <!-- <td> <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                   {{ truncate(item.CMSStatusRemarks, 15) }}</span></td> -->
+                                   <td>
+                                    <p class="m-0">{{item.VisitID?item.VisitID:'NA'}}</p>
+                                  </td>
+                                  <td>
+                                    <p class="m-0">{{item.CellNo?item.CellNo:'NA'}} | {{item.VisitedBranch?item.VisitedBranch:'NA'}}</p>
+                                  </td>
+                                  <td><strong>{{item.RequestCreatedOn | date:"dd MMM, yyyy, h:mm a" }}</strong></td>
+                                  <td>{{item.CreatedByEmployeeName?item.CreatedByEmployeeName: 'NA' }}</td>
+                                  <td>
+                                    <span [ngStyle]="getStatusStyles(item.CMSStatusID)" class="badge ">
+                                      {{item.CMSStatus}}
+                                    </span>
+                                    <!-- <div class="center-aligned" >
+                                      <p>{{item.CMSStatus}}</p>
+                                    </div> -->
+                                  </td>
+                                </tr>
+                                <!-- </ng-template> -->
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <div id="printableContent" class="printableContent container show-patient-search">
+                            <ng-template #showComplaintDataOnclick let-showComplaintDataOnclick>
+                              <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+                                <div class="row">
+                                  <!-- <div class="col-xl-11 col-lg-11 col-md-6 col-sm-12">
+                                    <button type="button" class="pull-right btn btn-sm btn-outline-secondary no-print"
+                                      (click)="printComplaint('printableContent')" ngbTooltip="Print Document">
+                                      <i class="fa fa-print"></i>Print
+                                    </button>
+                                  </div> -->
+                                  <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+                                    <p class="m-0">
+                                      <b>REQ#:{{ complaintDetailsList.CMSRequestNo}}</b>
+                                      <i class="fas fa-arrow-alt-circle-right text-primary cursor-pointer ml-1"
+                                        aria-hidden="true" ngbTooltip="Navigate to CMS Inquiry"
+                                        (click)="navigateToCmsInquiryPage()"></i>
+                                    </p>
+                                  </div>
+                                  <div class="col-xl-10 col-lg-10 col-md-6 col-sm-6">
+                                    <i class="fas fa-window-close text-danger cursor-pointer mr-1 float-right"
+                                      aria-label="Close" (click)="showComplaintDataOnclick.close(); reset()">
+                                      <!-- <span class="cursor-pointer" aria-hidden="true"
+                                        style="display: inline-block; color:grey;">&times;</span> -->
+                                    </i>
+                                  </div>
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 content-wrapper">
+                                    <h5 class="text-center m-0 cursor-pointer" 
+                                    *ngIf="complaintDetailsList.RequestSubject" ngbTooltip="Subject">
+                                      <b></b> {{ complaintDetailsList.RequestSubject ?
+                                      complaintDetailsList.RequestSubject : "NA" }}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-body">
+                                <div class="card-body">
+                                  <div class="row">
+                                    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
+                                      <div class="card">
+                                        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.recentComplaintRequesDetails" bdColor="rgba(0,0,0,0.8)"
+                                          size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                          <p style="color: white"> Loading... </p>
+                                        </ngx-spinner>
+                                    
+                                        <div class="card-body">
+                                          <p class="card-title" *ngIf="complaintDetailsList.ComplainantName || complaintDetailsList.FullName">
+                                            <b>Patient Name: </b>{{ complaintDetailsList.FullName ? complaintDetailsList.FullName : "NA"}}
+                                             <span class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                                               - <b>Complainant Name: </b> {{ complaintDetailsList.ComplainantName ? complaintDetailsList.ComplainantName : "NA"}}
+                                             </span>
+                                           </p>
+                                          <!-- <h5 class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                                            Complainant Name: 
+                                          </h5> -->
+                                          <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="patientId || getVisitID">
+                                              <div class="mt-1 mb-1" style="max-height: 150px; overflow-y: auto;">
+                                                <app-patient-basic-info [PatientId]="patientId" [VisitId]="getVisitID"></app-patient-basic-info>
+                                              </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                              <p class="card-text"><b>Created On:</b> {{
+                                                complaintDetailsList.RequestCreatedOn | date:"dd MMM, yyyy, h:mm a" }}</p>
+                                              <p *ngIf="complaintDetailsList.VisitId && !getVisitID" class="card-text">
+                                                <b>PIN:</b> {{ complaintDetailsList.VisitId ? complaintDetailsList.VisitId : "NA" }}
+                                              </p>
+                                              <p *ngIf="complaintDetailsList.CellNo || complaintDetailsList.PatientCLI" 
+                                               class="card-text"><b>Contact:</b> 
+                                                <span class="cursor-pointer" *ngIf="complaintDetailsList.CellNo" 
+                                                ngbTooltip="Calling CLI/Cell No">
+                                                  {{complaintDetailsList.CellNo ? complaintDetailsList.CellNo : "NA" }}
+                                                </span>
+                                                <span class="cursor-pointer" *ngIf="complaintDetailsList.PatientCLI" 
+                                                ngbTooltip="Patient Registered Contact">
+                                                  - {{complaintDetailsList.PatientCLI ? complaintDetailsList.PatientCLI : "NA" }}
+                                                </span>
+                                              </p>
+                                              <p *ngIf="complaintDetailsList.Email" class="card-text">
+                                                <b>Email:</b> {{complaintDetailsList.Email ? complaintDetailsList.Email : "NA" }}</p>
+                                                <p class="card-text"><strong>Complain Medium/Source:</strong> {{complaintDetailsList.RequestSourceName || "na"}}</p>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                              <p *ngIf="complaintDetailsList.VisitedBranchName" class="card-text">
+                                                <b>Visited Branch:</b> {{
+                                                complaintDetailsList.VisitedBranchName ? 
+                                                complaintDetailsList.VisitedBranchName : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.TPCode" class="card-text"><b>Test Done:</b> {{
+                                                complaintDetailsList.TPCode ? complaintDetailsList.TPCode : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.ReportedError" class="card-text"><b>Reported Error:</b> {{
+                                                complaintDetailsList.ReportedError ? complaintDetailsList.ReportedError : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.ReqAssignedToName" class="card-text"><b>Request Assigned To:</b> {{
+                                                complaintDetailsList.ReqAssignedToName ? complaintDetailsList.ReqAssignedToName : "NA" }}</p>
+                                              <p class="card-text"><strong>Is Callback Required?:</strong> {{complaintDetailsList.IsCallBackRequired ? 'YES' : 'NO'}}</p>
+                                            </div>
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 content-wrapper">
+                                              <p class="card-text"><strong>Complaint Description:</strong> {{
+                                                complaintDetailsList.RequestMessage ? complaintDetailsList.RequestMessage : "NA" }}</p>
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                      <app-cms-contactback-tracking
+                                        (formValuesChange)="getsubmitContactBackFormValue($event)"
+                                        [paramInputSelector]="{CMSRequestID:getCMSrequestID,CMSstatusID:StatusID}"></app-cms-contactback-tracking>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr />
+                                <div class="container row mt-2" >
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <form [formGroup]="getRemarksStatusForm">
+                                      <div class="row">
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label for="cmsCategoryID" class="control-label">CMS Category:<span
+                                                class="mandatory-asterisk">*</span></label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="cmsCategoryList"
+                                              bindLabel="CMSCategory" placeholder="-Select CMS Category-"
+                                              bindValue="CMSCategoryID" formControlName="cmsCategoryID" 
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('cmsCategoryID').errors, 'invalid-highlighted': getRemarksStatusForm.get('cmsCategoryID').errors && isSubmitted}"
+                                              (change)="getCMSsubCategoryData(); onChangeOfCategorizedTest() ">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items ">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label"> {{item.CMSCategory}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" *ngIf="cmsSubCategoryList">
+                                          <div class="form-group">
+                                            <!-- (change)="onChangeOfCategorizedTest($event)" -->
+                                            <label for="cmsSubCategory" class="control-label">CMS SUB Category:<span
+                                                class="mandatory-asterisk">*</span></label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                              [items]="cmsSubCategoryList" bindLabel="Code"
+                                              placeholder="-Select CMS Category-" bindValue="CMSSubCategoryID"
+                                              formControlName="cmsSubCategoryID"
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('cmsSubCategoryID').errors, 'invalid-highlighted': getRemarksStatusForm.get('cmsSubCategoryID').errors && isSubmitted}">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items ">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label"> {{item.Code}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div *ngIf="testCategorization==2 || testCategorization==3"
+                                          class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <!-- *ngIf="showCityAreaSelector" -->
+                                          <div class="form-group">
+                                            <label class="">Tests:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1"
+                                              placeholder="-Select Tests-" [items]="testList" bindLabel="TestCompleteName"
+                                              bindValue="TPId" formControlName="TpID" (change)="getLabSectionID()">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                    <span>{{item.TestCompleteName }}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label for="labDeptID">Department:</label>
+                                            <select class="form-control" name="labDeptID" [disabled]="labDeptDisable"
+                                              placeholder="--Select Department--" [(ngModel)]="labDeptID"
+                                              [ngModelOptions]="{standalone: true}" (ngModelChange)="getSubSection()">
+                                              <option value="-1">-Select All-</option>
+                                              <option value="1">Lab</option>
+                                              <option value="2">Radiology</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label class="control-label">Section:</label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList"
+                                              bindLabel="SubSectionTitle" placeholder="-Select Section-"
+                                              bindValue="SubSectionId" formControlName="cmsSectionID">
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="BranchId" class="control-label">Assigned To Branch:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1"
+                                              placeholder="-Select Branch-" [items]="branchList" bindLabel="Title"
+                                              bindValue="LocId" formControlName="assignedBranchID" 
+                                              (change)="getEmployeesData(); disableDepartment($event)">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label">{{item.Title}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="DepartmentId" class="control-label">Assigned To
+                                              Department:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1" [items]="departmentsList"
+                                              bindLabel="DepartmentName" placeholder="-Select Department-"
+                                              bindValue="DepartmentId" formControlName="assignedDepartmentId"
+                                              (change)="getEmployeesData(); disableBranch($event)">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label">{{item.DepartmentName}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label>Assigned To Person:</label>
+                                            <ng-select #ngSelect [items]="employeesList" class=" mt-1 mr-1" bindLabel="EmpName"
+                                              bindValue="UserId" name="EmployeeData" formControlName="assignedEmpName"
+                                              placeholder="-- Select Employee --" [multiple]="true"
+                                              [closeOnSelect]="false" (change)="onAssignedEmpNameChange($event)">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.EmpName }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.EmpName }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label>Responsible Person:</label>
+                                            <ng-select [items]="employeesList" class=" mt-1 mr-1" bindLabel="EmpName"
+                                              bindValue="UserId" name="EmployeeData"
+                                              formControlName="responsibleEmpName" placeholder="-- Select Employee --"
+                                              [multiple]="true" [closeOnSelect]="false">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.EmpName }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.EmpName }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="measuresTakenList" class="control-label">Measures Taken:</label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                              placeholder="-Select Action Taken-" [items]="measuresTakenList"
+                                              bindLabel="Action" bindValue="ActionTakenID"
+                                              formControlName="measuresTaken" [multiple]="true" [closeOnSelect]="false">
+                                              <!-- (change)="getAreasByDepartmentID($event)" -->
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.Action }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.Action }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>CMS Findings/Remarks:<span class="mandatory-asterisk">*</span></label>
+                                            <!-- <input formControlName="getRemarks" type="text" class="form-control"
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('getRemarks').errors, 'invalid-highlighted': getRemarksStatusForm.get('getRemarks').errors && isSubmitted}" /> -->
+                                              <textarea  
+                                                id="message" rows="2" formControlName="getRemarks" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('getRemarks').errors, 'invalid-highlighted': getRemarksStatusForm.get('getRemarks').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                       
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Root Cause:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="RootCause" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('RootCause').errors, 'invalid-highlighted': getRemarksStatusForm.get('RootCause').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Corrective Measures:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="DirectCaseMeasure" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('DirectCaseMeasure').errors, 'invalid-highlighted': getRemarksStatusForm.get('DirectCaseMeasure').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Preventive Measures:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="PreventiveMeasure" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('PreventiveMeasure').errors, 'invalid-highlighted': getRemarksStatusForm.get('PreventiveMeasure').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" [ngClass]="{'col-xl-3 col-lg-3 col-md-12 col-sm-12': StatusID==4}">
+                                          <div class="form-group mt-9" style="display: inline-flex;">
+                                            <mat-chip-list *ngFor="let item of filteredItems">
+                                              <mat-chip color="primary" selected="true" class="ml-2 cursor-pointer"
+                                                mwlConfirmationPopover [popoverTitle]="'Set CMS Request Status'"
+                                                [popoverMessage]="'Are you sure to proceed?'"
+                                                [disabled]="selectedChip && selectedChip !== item"
+                                                *ngIf="!selectedAssignedEmpName || item.CMSStatusID === 2"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                [ngStyle]="getStatusStyles(item.CMSStatusID)"
+                                                (confirm)="setCMSRequestStatus(item.CMSStatusID)"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary btn-sm"
+                                                cancelButtonType="outline-secondary btn-sm"
+                                                (click)="selectChip(item); confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                {{ item.CMSStatus }}
+                                              </mat-chip>
+                                            </mat-chip-list>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                                <div class="row"  [ngClass]="{'d-none': StatusID==4}">
+                                  <div class="col-12">
+                                    <div class="docs-area mt-2">
+                                      <app-visit-docs [forFilterComp]="filtercomp" [module]="screenIdentity"  [allowRemove]="allowRemove" [CMSrequestID]="getCMSrequestID"
+                                          [editing]="{insert:true,select: true, camera: true}" [sectionHead]="'Attach'"
+                                          (outputDocs)="getLoadedDocs($event)"></app-visit-docs>   
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row mt-2 d-flex justify-content-center align-items-center" >
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <fieldset class="fieldset-border-all-primary">
+                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                                        Inquiry Report
+                                      </legend>
+                                      <div style="max-height: 200px; overflow-y: auto">
+                                        <div class="table-responsive">
+                                          <table class="table table-hover cursor-pointer compact">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col" width="2%">#</th>
+                                              <th scope="col" width="8%">Status</th>
+                                              <th scope="col" width="10%">Created by</th>
+                                              <th scope="col" width="10%">Created On</th>
+                                              <th scope="col" width="17%">CMS Findings/Remarks</th>
+                                               <th scope="col" width="18%">Root Cause</th>
+                                                <th scope="col" width="18%">Corrective Measures</th>
+                                                <th scope="col" width="17%">Preventive Measures</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr *ngFor="let item of cmsInquiryList; let i = index">
+                                              <td>{{i+1}}</td>
+                                              <td>{{ item.CMSStatus }}</td>
+                                              <td>
+                                                {{ item.CreatedBy1?item.CreatedBy1:"NA" }}
+                                            
+                                              </td>
+                                              <td>
+                                                {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                                              </td>
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.CMSStatusRemarks? item.CMSStatusRemarks:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                              
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.RootCause? item.RootCause:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.DirectCaseMeasure? item.DirectCaseMeasure:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.PreventiveMeasure? item.PreventiveMeasure:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <!-- </div>
+                                              </div> -->
+                                  </div> 
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="contactBackHistory.length > 0">
+                                    <!-- <div class="card card-custom gutter-t">
+                                                  <div class="card-body px-4 py-4"> -->
+                                    <fieldset class="fieldset-border-all-primary">
+                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                                        CallBack Details
+                                      </legend>
+                                      <div style="max-height: 200px; overflow-y: auto">
+                                        <!-- <ng-container *ngIf="contactBackHistory !==null && contactBackHistory.length"> -->
+                                        <div class="table-responsive">
+                                          <table class="table cursor-pointer table-hover compact">
+                                            <thead>
+                                              <tr>
+                                                <th scope="col" width="4%">#</th>
+                                                <th scope="col" width="13%">Status</th>
+                                                <th scope="col" width="15%">CreatedBy</th>
+                                                <th scope="col" width="13%">CreatedOn</th>
+                                                <th scope="col" width="13%">Call Back Time</th>
+                                                <th scope="col" width="42%">Findings</th>
+                                                <!-- <th>Remarks</th> -->
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let item of contactBackHistory; let i = index">
+                                                <td>{{ i+1 }}</td>
+                                                <td>{{ item.CMSContactBackStatusTitle }}</td>
+                                                <td>{{ item.CreatedBy?item.CreatedBy:"NA" }}</td>
+                                                <td>
+                                                  {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  {{ item.ContactBackFindings?item.ContactBackFindings:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.ContactBackFindings }}">
+                                                    {{ truncate(item.ContactBackFindings, 150) }}</span> -->
+                                                </td>
+                                                <!-- <td>
+                                                  <span placement="left" ngbTooltip="{{ item.ContactBackRemarks }}">
+                                                    {{ truncate(item.ContactBackRemarks, 15) }}</span>
+                                                </td> -->
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        <!-- </ng-container> -->
+                                        <!-- <ng-container *ngIf="contactBackHistory===null || !contactBackHistory.length">
+                                            <p style="border-bottom: 1px dashed #cccdd3; text-align: center;"><strong class="text-primary">No
+                                                history found</strong></p>
+                                          </ng-container> -->
+                                      </div>
+                                    </fieldset>
+                                    <!-- </div>
+                                              </div> -->
+                                  </div>
+                                  <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="StatusID==4">
+                                    <div class="docs-area mt-2">
+                                      <app-visit-docs [forFilterComp]="filtercomp" [module]="screenIdentity"  [allowRemove]="allowRemove" [CMSrequestID]="getCMSrequestID"
+                                          [editing]="{insert:true,select: true, camera: true}" [sectionHead]="'Attach'"
+                                          (outputDocs)="getLoadedDocs($event)"></app-visit-docs>  
+                                    </div>
+                                  </div> -->
+                                  <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"> -->
+                                    <ng-template #openEmployeeCard let-openEmployeeCard>
+                                      <div class="modal-body">
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                            <div class="card card-custom gutter-t" style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                                              <div class="card-body px-4 py-4 bg-light">
+                                                <app-cms-employee-card [UserID]="employeeID"></app-cms-employee-card>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                          (click)="openEmployeeCard.close()">
+                                          <i class="fa fa-times-circle"></i>Close
+                                        </button>
+                                      </div>
+                                    </ng-template>
+                                  <!-- </div> -->
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                  (click)="showComplaintDataOnclick.close(); reset()">
+                                  <i class="fa fa-times-circle"></i>Close
+                                </button>
+                              </div>
+                            </ng-template>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="d-flex justify-content-between p-2">
+                                <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page"
+                                  [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                  (pageChange)="refreshPagination()">
+                                </ngb-pagination>
+                                <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize"
+                                  (ngModelChange)="refreshPagination()">
+                                  <option [ngValue]="5">5 items per page</option>
+                                  <option [ngValue]="10">10 items per page</option>
+                                  <option [ngValue]="20">20 items per page</option>
+                                  <option [ngValue]="50">50 items per page</option>
+                                  <option [ngValue]="100">100 items per page</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                          <div class="container ">
+
+                            <div class="col-12">
+                              <button class="btn btn-primary " style="float: right;"
+                                (click)="openCreateCmsRequestFormPopUp()">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>Create New Request
+                              </button>
+                            </div>
+                            <ng-template #createCmsRequestForm let-createCmsRequestForm>
+                              <div class="modal-body">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <app-cc-complaint-handling></app-cc-complaint-handling>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                  (click)="createCmsRequestForm.close(); refreshData()">
+                                  <i class="fa fa-times-circle"></i>Close
+                                </button>
+                              </div>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab label="Feedback(s)">
+                        <div class="container all-complaint mt-1" *matTabContent>
+                          <ngx-spinner class="spinner-warning" [name]="spinnerRefs.recentComplaintRequesTable"
+                            bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                          </ngx-spinner>
+                          <div class="table-responsive">
+                            <table class="table table-hover compact">
+                              <thead>
+                                <tr style="background-color: honeydew;">
+                                  <!-- <th width="5%">ReqId</th> -->
+                                  <th width="10%">Request No</th>
+                                  <th width="20%">Full Name</th>
+                                  <th width="11%">PIN</th>
+                                  <th width="15%">Contact | Branch</th>
+                                  <th width="17%">Created On</th>
+                                  <th width="17%">Last ModifyBy</th>
+                                  <th width="10%">Status</th>
+                                  <!-- <th>Action</th> -->
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngIf="!paginationforFb.paginatedSearchResultsForFb.length">
+                                  <td colspan="6" style="text-align: center;"><strong class="text-primary">
+                                      No Record Found...</strong></td>
+                                </tr>
+                                <tr class="pointer"
+                                  *ngFor="let item of paginationforFb.paginatedSearchResultsForFb; let i = index;"
+                                  (dblclick)="openPatientSearchPopUp(); selectComplaint(item)"
+                                  [ngClass]="{'active-rec-border-left': item.CMSRequestID==getCMSrequestID,'text-danger': item.RequestPriority == 2, 'blink-red font-weight-bolder':(item.RequestPriority == 3), 'text-dark':(item.CMSStatusID==3 || item.CMSStatusID==4)}">
+                                  <!-- <td>{{item.CMSRequestID}}</td> -->
+                                  <td><strong>{{item.CMSRequestNo?item.CMSRequestNo:'NA'}}</strong></td>
+                                  <td>{{item.FullName}}</td>
+                                  <td>
+                                    <p class="m-0">{{item.VisitID?item.VisitID:'NA'}}</p>
+                                  </td>
+                                  <td>
+                                    <p class="m-0">{{item.CellNo || 'NA'}} | {{item.VisitedBranch?item.VisitedBranch:'NA'}}</p>
+                                  </td>
+                                  <td><strong>{{item.RequestCreatedOn | date:"dd MMM, yyyy, h:mm a" }}</strong></td>
+                                  <td>{{item.CreatedByEmployeeName?item.CreatedByEmployeeName: 'NA' }}</td>
+                                  <td>
+                                    <span [ngStyle]="getStatusStyles(item.CMSStatusID)" class="badge ">
+                                      {{item.CMSStatus}}
+                                    </span>
+                                    <!-- <div class="center-aligned" [ngStyle]="getStatusStyles(item.CMSStatusID)"> 
+                                      <p>{{item.CMSStatus}}</p>
+                                    </div> -->
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div id="printableContent" class="printableContent container show-patient-search">
+                            <ng-template #showComplaintDataOnclick let-showComplaintDataOnclick>
+                              <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+                                <div class="row">
+                                  <!-- <div class="col-xl-11 col-lg-11 col-md-6 col-sm-12">
+                                    <button type="button" class="pull-right btn btn-sm btn-outline-secondary no-print"
+                                      (click)="printComplaint('printableContent')" ngbTooltip="Print Document">
+                                      <i class="fa fa-print"></i>Print
+                                    </button>
+                                  </div> -->
+                                  <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+                                    <p class="m-0">
+                                      <b>REQ#:{{ complaintDetailsList.CMSRequestNo}}</b>
+                                      <i class="fas fa-arrow-alt-circle-right text-primary cursor-pointer ml-1"
+                                        aria-hidden="true" ngbTooltip="Navigate to CMS Inquiry"
+                                        (click)="navigateToCmsInquiryPage()"></i>
+                                    </p>
+                                  </div>
+                                  <div class="col-xl-10 col-lg-10 col-md-6 col-sm-6">
+                                    <i class="fas fa-window-close text-danger cursor-pointer mr-1 float-right"
+                                      aria-label="Close" (click)="showComplaintDataOnclick.close(); reset()">
+                                      <!-- <span class="cursor-pointer" aria-hidden="true"
+                                        style="display: inline-block; color:grey;">&times;</span> -->
+                                    </i>
+                                  </div>
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 content-wrapper">
+                                    <h5 class="text-center m-0 cursor-pointer" *ngIf="complaintDetailsList.RequestSubject" ngbTooltip="Subject">
+                                      <b></b> {{ complaintDetailsList.RequestSubject ?
+                                      complaintDetailsList.RequestSubject : "NA" }}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-body">
+                                <div class="card-body">
+                                  <div class="row">
+                                    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
+                                      <div class="card">
+                                        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.recentComplaintRequesDetails" bdColor="rgba(0,0,0,0.8)"
+                                          size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                          <p style="color: white"> Loading... </p>
+                                        </ngx-spinner>
+                                    
+                                        <div class="card-body">
+                                          <p class="card-title" *ngIf="complaintDetailsList.ComplainantName || complaintDetailsList.FullName">
+                                           <b>Patient Name: </b>{{ complaintDetailsList.FullName ? complaintDetailsList.FullName : "NA"}}
+                                            <span class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                                              - <b>Complainant Name: </b> {{ complaintDetailsList.ComplainantName ? complaintDetailsList.ComplainantName : "NA"}}
+                                            </span>
+                                          </p>
+                                          <!-- <h5 class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                                            Complainant Name: 
+                                          </h5> -->
+                                          <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="patientId || getVisitID">
+                                              <div class="mt-1 mb-1" style="max-height: 150px; overflow-y: auto;">
+                                                <app-patient-basic-info [PatientId]="patientId" [VisitId]="getVisitID"></app-patient-basic-info>
+                                              </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                              <p class="card-text"><b>Created On:</b> {{
+                                                complaintDetailsList.RequestCreatedOn | date:"dd MMM, yyyy, h:mm a" }}</p>
+                                              <p *ngIf="complaintDetailsList.VisitId && !getVisitID" class="card-text">
+                                                <b>PIN:</b> {{ complaintDetailsList.VisitId ? complaintDetailsList.VisitId : "NA" }}
+                                              </p>
+                                              <p *ngIf="complaintDetailsList.CellNo || complaintDetailsList.PatientCLI" 
+                                               class="card-text"><b>Contact:</b> 
+                                                <span class="cursor-pointer" *ngIf="complaintDetailsList.CellNo" 
+                                                ngbTooltip="Calling CLI/Cell No">
+                                                  {{complaintDetailsList.CellNo ? complaintDetailsList.CellNo : "NA" }}
+                                                </span>
+                                                <span class="cursor-pointer" *ngIf="complaintDetailsList.PatientCLI" 
+                                                ngbTooltip="Patient Registered Contact">
+                                                  - {{complaintDetailsList.PatientCLI ? complaintDetailsList.PatientCLI : "NA" }}
+                                                </span>
+                                              </p>
+                                              <p *ngIf="complaintDetailsList.Email" class="card-text"><b>Email:</b> {{
+                                                complaintDetailsList.Email ? complaintDetailsList.Email : "NA" }}</p>
+                                              
+                                                <p class="card-text"><strong>Complain Medium/Source:</strong> {{complaintDetailsList.RequestSourceName || "na"}}</p>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                              <p *ngIf="complaintDetailsList.VisitedBranchName" class="card-text">
+                                                <b>Visited Branch:</b> {{
+                                                complaintDetailsList.VisitedBranchName ? 
+                                                complaintDetailsList.VisitedBranchName : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.TPCode" class="card-text"><b>Test Done:</b> {{
+                                                complaintDetailsList.TPCode ? complaintDetailsList.TPCode : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.ReportedError" class="card-text"><b>Reported Error:</b> {{
+                                                complaintDetailsList.ReportedError ? complaintDetailsList.ReportedError : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.ReqAssignedToName" class="card-text"><b>Request Assigned To:</b> {{
+                                                complaintDetailsList.ReqAssignedToName ? complaintDetailsList.ReqAssignedToName : "NA" }}</p>
+                                              <p class="card-text"><strong>Is Callback Required?:</strong> {{complaintDetailsList.IsCallBackRequired ? 'YES' : 'NO'}}</p>
+                                            </div>
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 content-wrapper">
+                                              <p class="card-text"><strong>Complaint Description:</strong> {{
+                                                complaintDetailsList.RequestMessage ? complaintDetailsList.RequestMessage : "NA" }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                      <app-cms-contactback-tracking
+                                        (formValuesChange)="getsubmitContactBackFormValue($event)"
+                                        [paramInputSelector]="{CMSRequestID:getCMSrequestID,CMSstatusID:StatusID}"></app-cms-contactback-tracking>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr />
+                                <div class="container row mt-2" >
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <form [formGroup]="getRemarksStatusForm">
+                                      <div class="row">
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label for="cmsCategoryID" class="control-label">CMS Category:<span
+                                                class="mandatory-asterisk">*</span></label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="cmsCategoryList"
+                                              bindLabel="CMSCategory" placeholder="-Select CMS Category-"
+                                              bindValue="CMSCategoryID" formControlName="cmsCategoryID" 
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('cmsCategoryID').errors, 'invalid-highlighted': getRemarksStatusForm.get('cmsCategoryID').errors && isSubmitted}"
+                                              (change)="getCMSsubCategoryData(); onChangeOfCategorizedTest() ">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items ">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label"> {{item.CMSCategory}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" *ngIf="cmsSubCategoryList">
+                                          <div class="form-group">
+                                            <!-- (change)="onChangeOfCategorizedTest($event)" -->
+                                            <label for="cmsSubCategory" class="control-label">CMS SUB Category:<span
+                                                class="mandatory-asterisk">*</span></label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                              [items]="cmsSubCategoryList" bindLabel="Code"
+                                              placeholder="-Select CMS Category-" bindValue="CMSSubCategoryID"
+                                              formControlName="cmsSubCategoryID"
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('cmsSubCategoryID').errors, 'invalid-highlighted': getRemarksStatusForm.get('cmsSubCategoryID').errors && isSubmitted}">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items ">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label"> {{item.Code}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div *ngIf="testCategorization==2 || testCategorization==3"
+                                          class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <!-- *ngIf="showCityAreaSelector" -->
+                                          <div class="form-group">
+                                            <label class="">Tests:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1"
+                                              placeholder="-Select Tests-" [items]="testList" bindLabel="TestCompleteName"
+                                              bindValue="TPId" formControlName="TpID" (change)="getLabSectionID()">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                    <span>{{item.TestCompleteName }}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label for="labDeptID">Department:</label>
+                                            <select class="form-control" name="labDeptID" [disabled]="labDeptDisable"
+                                              placeholder="--Select Department--" [(ngModel)]="labDeptID"
+                                              [ngModelOptions]="{standalone: true}" (ngModelChange)="getSubSection()">
+                                              <option value="-1">-Select All-</option>
+                                              <option value="1">Lab</option>
+                                              <option value="2">Radiology</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label class="control-label">Section:</label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList"
+                                              bindLabel="SubSectionTitle" placeholder="-Select Section-"
+                                              bindValue="SubSectionId" formControlName="cmsSectionID">
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="BranchId" class="control-label">Assigned To Branch:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1"
+                                              placeholder="-Select Branch-" [items]="branchList" bindLabel="Title"
+                                              bindValue="LocId" formControlName="assignedBranchID" 
+                                              (change)="getEmployeesData(); disableDepartment($event)">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label">{{item.Title}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="DepartmentId" class="control-label">Assigned To
+                                              Department:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1" [items]="departmentsList"
+                                              bindLabel="DepartmentName" placeholder="-Select Department-"
+                                              bindValue="DepartmentId" formControlName="assignedDepartmentId"
+                                              (change)="getEmployeesData(); disableBranch($event)">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label">{{item.DepartmentName}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label>Assigned To Person:</label>
+                                            <ng-select [items]="employeesList" class=" mt-1 mr-1" bindLabel="EmpName"
+                                              bindValue="UserId" name="EmployeeData" formControlName="assignedEmpName"
+                                              placeholder="-- Select Employee --" [multiple]="true"
+                                              [closeOnSelect]="false" (change)="onAssignedEmpNameChange($event)">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.EmpName }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.EmpName }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label>Responsible Person:</label>
+                                            <ng-select [items]="employeesList" class=" mt-1 mr-1" bindLabel="EmpName"
+                                              bindValue="UserId" name="EmployeeData"
+                                              formControlName="responsibleEmpName" placeholder="-- Select Employee --"
+                                              [multiple]="true" [closeOnSelect]="false">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.EmpName }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.EmpName }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="measuresTakenList" class="control-label">Measures Taken:</label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                              placeholder="-Select Action Taken-" [items]="measuresTakenList"
+                                              bindLabel="Action" bindValue="ActionTakenID"
+                                              formControlName="measuresTaken" [multiple]="true" [closeOnSelect]="false">
+                                              <!-- (change)="getAreasByDepartmentID($event)" -->
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.Action }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.Action }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>CMS Findings/Remarks:<span class="mandatory-asterisk">*</span></label>
+                                            <!-- <input formControlName="getRemarks" type="text" class="form-control"
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('getRemarks').errors, 'invalid-highlighted': getRemarksStatusForm.get('getRemarks').errors && isSubmitted}" /> -->
+                                              <textarea  
+                                                id="message" rows="2" formControlName="getRemarks" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('getRemarks').errors, 'invalid-highlighted': getRemarksStatusForm.get('getRemarks').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                   <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Root Cause:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="RootCause" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('RootCause').errors, 'invalid-highlighted': getRemarksStatusForm.get('RootCause').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Corrective Measures:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="DirectCaseMeasure" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('DirectCaseMeasure').errors, 'invalid-highlighted': getRemarksStatusForm.get('DirectCaseMeasure').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Preventive Measures:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="PreventiveMeasure" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('PreventiveMeasure').errors, 'invalid-highlighted': getRemarksStatusForm.get('PreventiveMeasure').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" [ngClass]="{'col-xl-3 col-lg-3 col-md-12 col-sm-12': StatusID==4}">
+                                          <div class="form-group mt-9" style="display: inline-flex;">
+                                            <mat-chip-list *ngFor="let item of filteredItems">
+                                              <mat-chip color="primary" selected="true" class="ml-2 cursor-pointer"
+                                                mwlConfirmationPopover [popoverTitle]="'Set CMS Request Status'"
+                                                [popoverMessage]="'Are you sure to proceed?'"
+                                                [disabled]="selectedChip && selectedChip !== item"
+                                                *ngIf="!selectedAssignedEmpName || item.CMSStatusID === 2"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                [ngStyle]="getStatusStyles(item.CMSStatusID)"
+                                                (confirm)="setCMSRequestStatus(item.CMSStatusID)"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary btn-sm"
+                                                cancelButtonType="outline-secondary btn-sm"
+                                                (click)="selectChip(item); confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                {{ item.CMSStatus }}
+                                              </mat-chip>
+                                            </mat-chip-list>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                                <div class="row" [ngClass]="{'d-none': StatusID==4}">
+                                  <div class="col-12">
+                                    <div class="docs-area mt-2">
+                                      <app-visit-docs [forFilterComp]="filtercomp" [module]="screenIdentity"  [allowRemove]="allowRemove" [CMSrequestID]="getCMSrequestID"
+                                          [editing]="{insert:true,select: true, camera: true}" [sectionHead]="'Attach'"
+                                          (outputDocs)="getLoadedDocs($event)"></app-visit-docs>   
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row mt-2 d-flex justify-content-center align-items-center" >
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <fieldset class="fieldset-border-all-primary">
+                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                                        Inquiry Report
+                                      </legend>
+                                      <div style="max-height: 200px; overflow-y: auto">
+                                        <div class="table-responsive">
+                                          <table class="table table-hover cursor-pointer compact">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col" width="2%">#</th>
+                                              <th scope="col" width="8%">Status</th>
+                                              <th scope="col" width="10%">Created by</th>
+                                              <th scope="col" width="10%">Created On</th>
+                                              <th scope="col" width="17%">CMS Findings/Remarks</th>
+                                             <th scope="col" width="18%">Root Cause</th>
+                                                <th scope="col" width="18%">Corrective Measures</th>
+                                                <th scope="col" width="17%">Preventive Measures</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr *ngFor="let item of cmsInquiryList; let i = index">
+                                              <td>{{i+1}}</td>
+                                              <td>{{ item.CMSStatus }}</td>
+                                              <td>
+                                                {{ item.CreatedBy1?item.CreatedBy1:"NA" }}
+                                                
+                                              </td>
+                                              <td>
+                                                {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                                              </td>
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.CMSStatusRemarks? item.CMSStatusRemarks:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                              
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.RootCause? item.RootCause:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.DirectCaseMeasure? item.DirectCaseMeasure:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                              <td>
+                                                <!-- {{item.CMSStatusRemarks}} -->
+                                                {{ item.PreventiveMeasure? item.PreventiveMeasure:'NA' }}
+                                                <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                    {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <!-- </div>
+                                              </div> -->
+                                  </div> 
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="contactBackHistory.length > 0">
+                                    <!-- <div class="card card-custom gutter-t">
+                                                  <div class="card-body px-4 py-4"> -->
+                                    <fieldset class="fieldset-border-all-primary">
+                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                                        CallBack Details
+                                      </legend>
+                                      <div style="max-height: 200px; overflow-y: auto">
+                                        <!-- <ng-container *ngIf="contactBackHistory !==null && contactBackHistory.length"> -->
+                                        <div class="table-responsive">
+                                          <table class="table cursor-pointer table-hover compact">
+                                            <thead>
+                                              <tr>
+                                                <th scope="col" width="4%">#</th>
+                                                <th scope="col" width="13%">Status</th>
+                                                <th scope="col" width="15%">CreatedBy</th>
+                                                <th scope="col" width="13%">CreatedOn</th>
+                                                <th scope="col" width="13%">Call Back Time</th>
+                                                <th scope="col" width="42%">Findings</th>
+                                                <!-- <th>Remarks</th> -->
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let item of contactBackHistory; let i = index">
+                                                <td>{{ i+1 }}</td>
+                                                <td>{{ item.CMSContactBackStatusTitle }}</td>
+                                                <td>{{ item.CreatedBy?item.CreatedBy:"NA" }}</td>
+                                                <td>
+                                                  {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  {{ item.ContactBackFindings?item.ContactBackFindings:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.ContactBackFindings }}">
+                                                    {{ truncate(item.ContactBackFindings, 150) }}</span> -->
+                                                </td>
+                                                <!-- <td>
+                                                  <span placement="left" ngbTooltip="{{ item.ContactBackRemarks }}">
+                                                    {{ truncate(item.ContactBackRemarks, 15) }}</span>
+                                                </td> -->
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        <!-- </ng-container> -->
+                                        <!-- <ng-container *ngIf="contactBackHistory===null || !contactBackHistory.length">
+                                            <p style="border-bottom: 1px dashed #cccdd3; text-align: center;"><strong class="text-primary">No
+                                                history found</strong></p>
+                                          </ng-container> -->
+                                      </div>
+                                    </fieldset>
+                                    <!-- </div>
+                                              </div> -->
+                                  </div>
+                                  <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"> -->
+                                    <ng-template #openEmployeeCard let-openEmployeeCard>
+                                      <div class="modal-body">
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                            <div class="card card-custom gutter-t" style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                                              <div class="card-body px-4 py-4 bg-light">
+                                                <app-cms-employee-card [UserID]="employeeID"></app-cms-employee-card>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                          (click)="openEmployeeCard.close()">
+                                          <i class="fa fa-times-circle"></i>Close
+                                        </button>
+                                      </div>
+                                    </ng-template>
+                                  <!-- </div> -->
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                  (click)="showComplaintDataOnclick.close(); reset()">
+                                  <i class="fa fa-times-circle"></i>Close
+                                </button>
+                              </div>
+                            </ng-template>
+                          </div>
+
+
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="d-flex justify-content-between p-2">
+                                <ngb-pagination [collectionSize]="paginationforFb.collectionSize"
+                                  [(page)]="paginationforFb.page" [pageSize]="paginationforFb.pageSize"
+                                  [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                  (pageChange)="refreshPagination()">
+                                </ngb-pagination>
+                                <select class="custom-select" style="width: auto" [(ngModel)]="paginationforFb.pageSize"
+                                  (ngModelChange)="refreshPagination()">
+                                  <option [ngValue]="5">5 items per page</option>
+                                  <option [ngValue]="10">10 items per page</option>
+                                  <option [ngValue]="20">20 items per page</option>
+                                  <option [ngValue]="50">50 items per page</option>
+                                  <option [ngValue]="100">100 items per page</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                          <div class="container ">
+
+                            <div class="col-12">
+                              <button class="btn btn-primary " style="float: right;"
+                                (click)="openCreateCmsRequestFormPopUp()">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>Create New Request
+                              </button>
+                            </div>
+                            <ng-template #createCmsRequestForm let-createCmsRequestForm>
+                              <div class="modal-body">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <app-cc-complaint-handling></app-cc-complaint-handling>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                  (click)="createCmsRequestForm.close(); refreshData()">
+                                  <i class="fa fa-times-circle"></i>Close
+                                </button>
+                              </div>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <mat-tab label="Request(s)">
+                        <div class="container all-complaint mt-1" *matTabContent>
+                          <ngx-spinner class="spinner-warning" [name]="spinnerRefs.recentComplaintRequesTable"
+                            bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader"
+                            [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                          </ngx-spinner>
+                          <div class="table-responsive">
+                            <table class="table table-hover compact">
+                              <thead>
+                                <tr style="background-color: honeydew;">
+                                  <!-- <th width="5%">ReqId</th> -->
+                                  <th width="10%">Request No</th>
+                                  <th width="20%">Full Name</th>
+                                  <th width="11%">PIN</th>
+                                  <th width="15%">Contact | Branch</th>
+                                  <th width="17%">Created On</th>
+                                  <th width="17%">Last ModifyBy</th>
+                                  <th width="10%">Status</th>
+                                  <!-- <th>Action</th> -->
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngIf="!paginationforReq.filteredSearchResults.length">
+                                  <td colspan="6" style="text-align: center;"><strong class="text-primary">
+                                      No Record Found...</strong></td>
+                                </tr>
+                                <tr class="pointer"
+                                  *ngFor="let item of paginationforReq.filteredSearchResults; let i = index;"
+                                  (dblclick)="openPatientSearchPopUp(); selectComplaint(item)"
+                                  [ngClass]="{'active-rec-border-left': item.CMSRequestID==getCMSrequestID,'text-danger': item.RequestPriority == 2, 'blink-red font-weight-bolder':(item.RequestPriority == 3), 'text-dark':(item.CMSStatusID==3 || item.CMSStatusID==4)}">
+                                  <!-- <td>{{item.CMSRequestID}}</td> -->
+                                  <td><strong>{{item.CMSRequestNo?item.CMSRequestNo:'NA'}}</strong></td>
+                                  <td>{{item.FullName}}</td>
+                                  <td>
+                                    <p class="m-0">{{item.VisitID?item.VisitID:'NA'}}</p>
+                                  </td>
+                                  <td>
+                                    <p class="m-0">{{item.CellNo || 'NA'}} | {{item.VisitedBranch?item.VisitedBranch:'NA'}}</p>
+                                  </td>
+                                  <td><strong>{{item.RequestCreatedOn | date:"dd MMM, yyyy, h:mm a" }}</strong></td>
+                                  <td>{{item.CreatedByEmployeeName?item.CreatedByEmployeeName: 'NA' }}</td>
+                                  <td>
+                                    <span [ngStyle]="getStatusStyles(item.CMSStatusID)" class="badge ">
+                                      {{item.CMSStatus}}
+                                    </span>
+                                    <!-- <div class="center-aligned" [ngStyle]="getStatusStyles(item.CMSStatusID)"> 
+                                      <p>{{item.CMSStatus}}</p>
+                                    </div> -->
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div id="printableContent" class="printableContent container show-patient-search">
+                            <ng-template #showComplaintDataOnclick let-showComplaintDataOnclick>
+                              <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+                                <div class="row">
+                                  <!-- <div class="col-xl-11 col-lg-11 col-md-6 col-sm-12">
+                                    <button type="button" class="pull-right btn btn-sm btn-outline-secondary no-print"
+                                      (click)="printComplaint('printableContent')" ngbTooltip="Print Document">
+                                      <i class="fa fa-print"></i>Print
+                                    </button>
+                                  </div> -->
+                                  <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+                                    <p class="m-0">
+                                      <b>REQ#:{{ complaintDetailsList.CMSRequestNo}}</b>
+                                      <i class="fas fa-arrow-alt-circle-right text-primary cursor-pointer ml-1"
+                                        aria-hidden="true" ngbTooltip="Navigate to CMS Inquiry"
+                                        (click)="navigateToCmsInquiryPage()"></i>
+                                    </p>
+                                  </div>
+                                  <div class="col-xl-10 col-lg-10 col-md-6 col-sm-6">
+                                    <i class="fas fa-window-close text-danger cursor-pointer mr-1 float-right"
+                                      aria-label="Close" (click)="showComplaintDataOnclick.close(); reset()">
+                                      <!-- <span class="cursor-pointer" aria-hidden="true"
+                                        style="display: inline-block; color:grey;">&times;</span> -->
+                                    </i>
+                                  </div>
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 content-wrapper">
+                                    <h5 class="text-center m-0 cursor-pointer" *ngIf="complaintDetailsList.RequestSubject" ngbTooltip="Subject">
+                                      <b></b> {{ complaintDetailsList.RequestSubject ?
+                                      complaintDetailsList.RequestSubject : "NA" }}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-body">
+                                <div class="card-body">
+                                  <div class="row">
+                                    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
+                                      <div class="card">
+                                        <ngx-spinner class="spinner-warning" [name]="spinnerRefs.recentComplaintRequesDetails" bdColor="rgba(0,0,0,0.8)"
+                                          size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                          <p style="color: white"> Loading... </p>
+                                        </ngx-spinner>
+                                    
+                                        <div class="card-body">
+                                          <p class="card-title" *ngIf="complaintDetailsList.ComplainantName || complaintDetailsList.FullName">
+                                           <b>Patient Name: </b>{{ complaintDetailsList.FullName ? complaintDetailsList.FullName : "NA"}}
+                                            <span class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                                              - <b>Complainant Name: </b> {{ complaintDetailsList.ComplainantName ? complaintDetailsList.ComplainantName : "NA"}}
+                                            </span>
+                                          </p>
+                                          <!-- <h5 class="card-title" *ngIf="complaintDetailsList.ComplainantName">
+                                            Complainant Name: 
+                                          </h5> -->
+                                          <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="patientId || getVisitID">
+                                              <div class="mt-1 mb-1" style="max-height: 150px; overflow-y: auto;">
+                                                <app-patient-basic-info [PatientId]="patientId" [VisitId]="getVisitID"></app-patient-basic-info>
+                                              </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                              <p class="card-text"><b>Created On:</b> {{
+                                                complaintDetailsList.RequestCreatedOn | date:"dd MMM, yyyy, h:mm a" }}</p>
+                                              <p *ngIf="complaintDetailsList.VisitId && !getVisitID" class="card-text">
+                                                <b>PIN:</b> {{ complaintDetailsList.VisitId ? complaintDetailsList.VisitId : "NA" }}
+                                              </p>
+                                              <p *ngIf="complaintDetailsList.CellNo || complaintDetailsList.PatientCLI" 
+                                               class="card-text"><b>Contact:</b> 
+                                                <span class="cursor-pointer" *ngIf="complaintDetailsList.CellNo" 
+                                                ngbTooltip="Calling CLI/Cell No">
+                                                  {{complaintDetailsList.CellNo ? complaintDetailsList.CellNo : "NA" }}
+                                                </span>
+                                                <span class="cursor-pointer" *ngIf="complaintDetailsList.PatientCLI" 
+                                                ngbTooltip="Patient Registered Contact">
+                                                  - {{complaintDetailsList.PatientCLI ? complaintDetailsList.PatientCLI : "NA" }}
+                                                </span>
+                                              </p>
+                                              <p *ngIf="complaintDetailsList.Email" class="card-text"><b>Email:</b> {{
+                                                complaintDetailsList.Email ? complaintDetailsList.Email : "NA" }}</p>
+                                              
+                                                <p class="card-text"><strong>Complain Medium/Source:</strong> {{complaintDetailsList.RequestSourceName || "na"}}</p>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                              <p *ngIf="complaintDetailsList.VisitedBranchName" class="card-text">
+                                                <b>Visited Branch:</b> {{
+                                                complaintDetailsList.VisitedBranchName ? 
+                                                complaintDetailsList.VisitedBranchName : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.TPCode" class="card-text"><b>Test Done:</b> {{
+                                                complaintDetailsList.TPCode ? complaintDetailsList.TPCode : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.ReportedError" class="card-text"><b>Reported Error:</b> {{
+                                                complaintDetailsList.ReportedError ? complaintDetailsList.ReportedError : "NA" }}</p>
+                                              <p *ngIf="complaintDetailsList.ReqAssignedToName" class="card-text"><b>Request Assigned To:</b> {{
+                                                complaintDetailsList.ReqAssignedToName ? complaintDetailsList.ReqAssignedToName : "NA" }}</p>
+                                              <p class="card-text"><strong>Is Callback Required?:</strong> {{complaintDetailsList.IsCallBackRequired ? 'YES' : 'NO'}}</p>
+                                            </div>
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 content-wrapper">
+                                              <p class="card-text"><strong>Complaint Description:</strong> {{
+                                                complaintDetailsList.RequestMessage ? complaintDetailsList.RequestMessage : "NA" }}</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                      <app-cms-contactback-tracking
+                                        (formValuesChange)="getsubmitContactBackFormValue($event)"
+                                        [paramInputSelector]="{CMSRequestID:getCMSrequestID,CMSstatusID:StatusID}"></app-cms-contactback-tracking>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr />
+                                <div class="container row mt-2" >
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <form [formGroup]="getRemarksStatusForm">
+                                      <div class="row">
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label for="cmsCategoryID" class="control-label">CMS Category:<span
+                                                class="mandatory-asterisk">*</span></label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="cmsCategoryList"
+                                              bindLabel="CMSCategory" placeholder="-Select CMS Category-"
+                                              bindValue="CMSCategoryID" formControlName="cmsCategoryID" 
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('cmsCategoryID').errors, 'invalid-highlighted': getRemarksStatusForm.get('cmsCategoryID').errors && isSubmitted}"
+                                              (change)="getCMSsubCategoryData(); onChangeOfCategorizedTest() ">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items ">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label"> {{item.CMSCategory}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" *ngIf="cmsSubCategoryList">
+                                          <div class="form-group">
+                                            <!-- (change)="onChangeOfCategorizedTest($event)" -->
+                                            <label for="cmsSubCategory" class="control-label">CMS SUB Category:<span
+                                                class="mandatory-asterisk">*</span></label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                              [items]="cmsSubCategoryList" bindLabel="Code"
+                                              placeholder="-Select CMS Category-" bindValue="CMSSubCategoryID"
+                                              formControlName="cmsSubCategoryID"
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('cmsSubCategoryID').errors, 'invalid-highlighted': getRemarksStatusForm.get('cmsSubCategoryID').errors && isSubmitted}">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items ">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label"> {{item.Code}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div *ngIf="testCategorization==2 || testCategorization==3"
+                                          class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <!-- *ngIf="showCityAreaSelector" -->
+                                          <div class="form-group">
+                                            <label class="">Tests:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1"
+                                              placeholder="-Select Tests-" [items]="testList" bindLabel="TestCompleteName"
+                                              bindValue="TPId" formControlName="TpID" (change)="getLabSectionID()">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                    <span>{{item.TestCompleteName }}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label for="labDeptID">Department:</label>
+                                            <select class="form-control" name="labDeptID" [disabled]="labDeptDisable"
+                                              placeholder="--Select Department--" [(ngModel)]="labDeptID"
+                                              [ngModelOptions]="{standalone: true}" (ngModelChange)="getSubSection()">
+                                              <option value="-1">-Select All-</option>
+                                              <option value="1">Lab</option>
+                                              <option value="2">Radiology</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                                          <div class="form-group">
+                                            <label class="control-label">Section:</label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1" [items]="subSectionList"
+                                              bindLabel="SubSectionTitle" placeholder="-Select Section-"
+                                              bindValue="SubSectionId" formControlName="cmsSectionID">
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="BranchId" class="control-label">Assigned To Branch:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1"
+                                              placeholder="-Select Branch-" [items]="branchList" bindLabel="Title"
+                                              bindValue="LocId" formControlName="assignedBranchID" 
+                                              (change)="getEmployeesData(); disableDepartment($event)">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label">{{item.Title}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="DepartmentId" class="control-label">Assigned To
+                                              Department:</label>
+                                            <ng-select style="width: 100%;" class="mt-1 mr-1" [items]="departmentsList"
+                                              bindLabel="DepartmentName" placeholder="-Select Department-"
+                                              bindValue="DepartmentId" formControlName="assignedDepartmentId"
+                                              (change)="getEmployeesData(); disableBranch($event)">
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span class="ng-value-label">{{item.DepartmentName}}</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label>Assigned To Person:</label>
+                                            <ng-select [items]="employeesList" class=" mt-1 mr-1" bindLabel="EmpName"
+                                              bindValue="UserId" name="EmployeeData" formControlName="assignedEmpName"
+                                              placeholder="-- Select Employee --" [multiple]="true"
+                                              [closeOnSelect]="false" (change)="onAssignedEmpNameChange($event)">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.EmpName }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.EmpName }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label>Responsible Person:</label>
+                                            <ng-select [items]="employeesList" class=" mt-1 mr-1" bindLabel="EmpName"
+                                              bindValue="UserId" name="EmployeeData"
+                                              formControlName="responsibleEmpName" placeholder="-- Select Employee --"
+                                              [multiple]="true" [closeOnSelect]="false">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.EmpName }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.EmpName }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                          <div class="form-group">
+                                            <label for="measuresTakenList" class="control-label">Measures Taken:</label>
+                                            <ng-select style="width: 100%;" class=" mt-1 mr-1"
+                                              placeholder="-Select Action Taken-" [items]="measuresTakenList"
+                                              bindLabel="Action" bindValue="ActionTakenID"
+                                              formControlName="measuresTaken" [multiple]="true" [closeOnSelect]="false">
+                                              <!-- (change)="getAreasByDepartmentID($event)" -->
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <span>{{item.Action }}</span>
+                                              </ng-template>
+                                              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                  <span class="ng-value-icon right" (click)="clear(item)"
+                                                    aria-hidden="true">×</span>
+                                                  <span>{{item.Action }}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                  <span class="ng-value-label">{{items.length - 2}}
+                                                    more...</span>
+                                                </div>
+                                              </ng-template>
+
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>CMS Findings/Remarks:<span class="mandatory-asterisk">*</span></label>
+                                            <!-- <input formControlName="getRemarks" type="text" class="form-control"
+                                              [ngClass]="{'invalid': getRemarksStatusForm.get('getRemarks').errors, 'invalid-highlighted': getRemarksStatusForm.get('getRemarks').errors && isSubmitted}" /> -->
+                                              <textarea  
+                                                id="message" rows="2" formControlName="getRemarks" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('getRemarks').errors, 'invalid-highlighted': getRemarksStatusForm.get('getRemarks').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Root Cause:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="RootCause" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('RootCause').errors, 'invalid-highlighted': getRemarksStatusForm.get('RootCause').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Corrective Measures:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="DirectCaseMeasure" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('DirectCaseMeasure').errors, 'invalid-highlighted': getRemarksStatusForm.get('DirectCaseMeasure').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="form-group">
+                                            <label>Preventive Measures:</label>
+                                              <textarea  
+                                                id="message" rows="2" formControlName="PreventiveMeasure" type="text" class="form-control"
+                                                [ngClass]="{'invalid': getRemarksStatusForm.get('PreventiveMeasure').errors, 'invalid-highlighted': getRemarksStatusForm.get('PreventiveMeasure').errors && isSubmitted}"></textarea>
+                                          </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" [ngClass]="{'col-xl-3 col-lg-3 col-md-12 col-sm-12': StatusID==4}">
+                                          <div class="form-group mt-9" style="display: inline-flex;">
+                                            <mat-chip-list *ngFor="let item of filteredItems">
+                                              <mat-chip color="primary" selected="true" class="ml-2 cursor-pointer"
+                                                mwlConfirmationPopover [popoverTitle]="'Set CMS Request Status'"
+                                                [popoverMessage]="'Are you sure to proceed?'"
+                                                [disabled]="selectedChip && selectedChip !== item"
+                                                *ngIf="!selectedAssignedEmpName || item.CMSStatusID === 2"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                [ngStyle]="getStatusStyles(item.CMSStatusID)"
+                                                (confirm)="setCMSRequestStatus(item.CMSStatusID)"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="primary btn-sm"
+                                                cancelButtonType="outline-secondary btn-sm"
+                                                (click)="selectChip(item); confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                {{ item.CMSStatus }}
+                                              </mat-chip>
+                                            </mat-chip-list>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                                <div class="row" [ngClass]="{'d-none': StatusID==4}">
+                                  <div class="col-12">
+                                    <div class="docs-area mt-2">
+                                      <app-visit-docs [forFilterComp]="filtercomp" [module]="screenIdentity"  [allowRemove]="allowRemove" [CMSrequestID]="getCMSrequestID"
+                                          [editing]="{insert:true,select: true, camera: true}" [sectionHead]="'Attach'"
+                                          (outputDocs)="getLoadedDocs($event)"></app-visit-docs>   
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row mt-2 d-flex justify-content-center align-items-center" >
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <fieldset class="fieldset-border-all-primary">
+                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                                        Inquiry Report
+                                      </legend>
+                                      <div style="max-height: 200px; overflow-y: auto">
+                                        <div class="table-responsive">
+                                          <table class="table table-hover cursor-pointer compact">
+                                            <thead>
+                                              <tr>
+                                                <th scope="col" width="2%">#</th>
+                                                <th scope="col" width="8%">Status</th>
+                                                <th scope="col" width="10%">Created by</th>
+                                                <th scope="col" width="10%">Created On</th>
+                                                <th scope="col" width="17%">CMS Findings/Remarks</th>
+                                                
+                                                <th scope="col" width="18%">Root Cause</th>
+                                                <th scope="col" width="18%">Corrective Measures</th>
+                                                <th scope="col" width="17%">Preventive Measures</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let item of cmsInquiryList; let i = index">
+                                                <td>{{i+1}}</td>
+                                                <td>{{ item.CMSStatus }}</td>
+                                                <td>
+                                                  {{ item.CreatedBy1?item.CreatedBy1:"NA" }}
+                                            
+                                                </td>
+                                                <td>
+                                                  {{ item.CreatedOn | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  <!-- {{item.CMSStatusRemarks}} -->
+                                                  {{ item.CMSStatusRemarks? item.CMSStatusRemarks:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                      {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                                </td>
+                                                
+                                                <td>
+                                                  <!-- {{item.CMSStatusRemarks}} -->
+                                                  {{ item.RootCause? item.RootCause:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                      {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                                </td>
+                                                <td>
+                                                  <!-- {{item.CMSStatusRemarks}} -->
+                                                  {{ item.DirectCaseMeasure? item.DirectCaseMeasure:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                      {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                                </td>
+                                                <td>
+                                                  <!-- {{item.CMSStatusRemarks}} -->
+                                                  {{ item.PreventiveMeasure? item.PreventiveMeasure:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.CMSStatusRemarks }}">
+                                                      {{ truncate(item.CMSStatusRemarks, 15) }}</span> -->
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <!-- </div>
+                                              </div> -->
+                                  </div> 
+                                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="contactBackHistory.length > 0">
+                                    <!-- <div class="card card-custom gutter-t">
+                                                  <div class="card-body px-4 py-4"> -->
+                                    <fieldset class="fieldset-border-all-primary">
+                                      <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+                                        CallBack Details
+                                      </legend>
+                                      <div style="max-height: 200px; overflow-y: auto">
+                                        <!-- <ng-container *ngIf="contactBackHistory !==null && contactBackHistory.length"> -->
+                                        <div class="table-responsive">
+                                          <table class="table cursor-pointer table-hover compact">
+                                            <thead>
+                                              <tr>
+                                                <th scope="col" width="4%">#</th>
+                                                <th scope="col" width="13%">Status</th>
+                                                <th scope="col" width="15%">CreatedBy</th>
+                                                <th scope="col" width="13%">CreatedOn</th>
+                                                <th scope="col" width="13%">Call Back Time</th>
+                                                <th scope="col" width="42%">Findings</th>
+                                                <!-- <th>Remarks</th> -->
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let item of contactBackHistory; let i = index">
+                                                <td>{{ i+1 }}</td>
+                                                <td>{{ item.CMSContactBackStatusTitle }}</td>
+                                                <td>{{ item.CreatedBy?item.CreatedBy:"NA" }}</td>
+                                                <td>
+                                                  {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  {{ item.ContactBackDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                                                </td>
+                                                <td>
+                                                  {{ item.ContactBackFindings?item.ContactBackFindings:'NA' }}
+                                                  <!-- <span placement="left" ngbTooltip="{{ item.ContactBackFindings }}">
+                                                    {{ truncate(item.ContactBackFindings, 150) }}</span> -->
+                                                </td>
+                                                <!-- <td>
+                                                  <span placement="left" ngbTooltip="{{ item.ContactBackRemarks }}">
+                                                    {{ truncate(item.ContactBackRemarks, 15) }}</span>
+                                                </td> -->
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        <!-- </ng-container> -->
+                                        <!-- <ng-container *ngIf="contactBackHistory===null || !contactBackHistory.length">
+                                            <p style="border-bottom: 1px dashed #cccdd3; text-align: center;"><strong class="text-primary">No
+                                                history found</strong></p>
+                                          </ng-container> -->
+                                      </div>
+                                    </fieldset>
+                                    <!-- </div>
+                                              </div> -->
+                                  </div>
+                                  <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"> -->
+                                    <ng-template #openEmployeeCard let-openEmployeeCard>
+                                      <div class="modal-body">
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                            <div class="card card-custom gutter-t" style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                                              <div class="card-body px-4 py-4 bg-light">
+                                                <app-cms-employee-card [UserID]="employeeID"></app-cms-employee-card>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                          (click)="openEmployeeCard.close()">
+                                          <i class="fa fa-times-circle"></i>Close
+                                        </button>
+                                      </div>
+                                    </ng-template>
+                                  <!-- </div> -->
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                  (click)="showComplaintDataOnclick.close(); reset()">
+                                  <i class="fa fa-times-circle"></i>Close
+                                </button>
+                              </div>
+                            </ng-template>
+                          </div>
+
+
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="d-flex justify-content-between p-2">
+                                <ngb-pagination [collectionSize]="paginationforReq.collectionSize"
+                                  [(page)]="paginationforFb.page" [pageSize]="paginationforReq.pageSize"
+                                  [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                  (pageChange)="refreshPaginationforReq()">
+                                </ngb-pagination>
+                                <select class="custom-select" style="width: auto" [(ngModel)]="paginationforReq.pageSize"
+                                  (ngModelChange)="refreshPaginationforReq()">
+                                  <option [ngValue]="5">5 items per page</option>
+                                  <option [ngValue]="10">10 items per page</option>
+                                  <option [ngValue]="20">20 items per page</option>
+                                  <option [ngValue]="50">50 items per page</option>
+                                  <option [ngValue]="100">100 items per page</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                          <div class="container ">
+
+                            <div class="col-12">
+                              <button class="btn btn-primary " style="float: right;"
+                                (click)="openCreateCmsRequestFormPopUp()">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>Create New Request
+                              </button>
+                            </div>
+                            <ng-template #createCmsRequestForm let-createCmsRequestForm>
+                              <div class="modal-body">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <app-cc-complaint-handling></app-cc-complaint-handling>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                                  (click)="createCmsRequestForm.close(); refreshData()">
+                                  <i class="fa fa-times-circle"></i>Close
+                                </button>
+                              </div>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </mat-tab>
+                    </mat-tab-group>
+                  </mat-card-content>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

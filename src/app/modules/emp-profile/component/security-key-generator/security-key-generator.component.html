@@ -1,0 +1,132 @@
+<ng-container *ngIf="user">
+    <div class="card card-custom card-stretch" [formGroup]="securityForm">
+        <!-- begin::Loading -->
+        <ng-container *ngIf="isLoading$ | async">
+            <div class="progress progress-modal">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                    style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </ng-container>
+        <!-- end::Loading -->
+        <!--begin::Header-->
+        <div class="card-header py-3">
+            <div class="card-title align-items-start flex-column">
+                <h3 class="card-label font-weight-bolder text-dark">{{cardTitleText}} Security Key</h3>
+                <span class="text-muted font-weight-bold font-size-sm mt-1">{{cardTitleDescText}} security key for your screen (purpose)</span>
+            </div>
+            <div class="card-toolbar">
+                <button type="submit" [disabled]="securityForm.invalid || disabledButton" class="btn btn-success mr-2"
+                    (click)="insertUpdateAppUserScreenPIN()">{{saveButtonText}} <i class="spinner-border-custom"
+                        aria-hidden="true" [hidden]="isSpinner"></i></button>
+                <button  *ngIf="isUpdate" type="button" [disabled]="disabledButtonDelete" class="btn btn-danger mr-2"
+                    (click)="deleteSecurityKey()">Delete<i class="spinner-border-custom"
+                        aria-hidden="true" [hidden]="isSpinnerDelete"></i></button>
+                <button type="reset" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+            </div> 
+        </div>
+        <!--end::Header-->
+        
+        <!--begin::Form-->
+        <div class="form container mt-2">
+            <div class="card-body">
+                <!--begin::Alert Noticeboard-->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-custom alert-light-danger" role="alert">
+                            <div class="alert-icon"><span
+                                    class="svg-icon svg-icon-danger svg-icon-xl">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"></rect>
+                                            <path
+                                                d="M7.07744993,12.3040451 C7.72444571,13.0716094 8.54044565,13.6920474 9.46808594,14.1079953 L5,23 L4.5,18 L7.07744993,12.3040451 Z M14.5865511,14.2597864 C15.5319561,13.9019016 16.375416,13.3366121 17.0614026,12.6194459 L19.5,18 L19,23 L14.5865511,14.2597864 Z M12,3.55271368e-14 C12.8284271,3.53749572e-14 13.5,0.671572875 13.5,1.5 L13.5,4 L10.5,4 L10.5,1.5 C10.5,0.671572875 11.1715729,3.56793164e-14 12,3.55271368e-14 Z"
+                                                fill="#000000" opacity="0.3"></path>
+                                            <path
+                                                d="M12,10 C13.1045695,10 14,9.1045695 14,8 C14,6.8954305 13.1045695,6 12,6 C10.8954305,6 10,6.8954305 10,8 C10,9.1045695 10.8954305,10 12,10 Z M12,13 C9.23857625,13 7,10.7614237 7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 C17,10.7614237 14.7614237,13 12,13 Z"
+                                                fill="#000000" fill-rule="nonzero"></path>
+                                        </g>
+                                    </svg>
+                                    </span>
+                            </div>
+                            <div class="alert-text">
+                                For security reasons, this screen allows you to generate a <strong>6 Digits Security
+                                    Key</strong> to protect sensitive financial and secure data screens when a user
+                                steps away from the system. This ensures that only authorized personnel can access
+                                protected areas if needed. Please use the fields below to create and manage your 6 Digits access
+                                Key.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Alert Noticeboard-->
+                <div class="form-group row" *ngIf="isUpdate">
+                    <label class="col-xl-3 col-lg-3 col-form-label text-alert">Current Security Key</label>
+                    <div class="col-lg-9 col-xl-6">
+                        <div class="position-relative">
+                            <input type="password" class="form-control form-control-lg form-control-solid mb-2" (keypress)="validateNo($event)"
+                                placeholder="Current Security Key" autocomplete="off" formControlName="currentpin"
+                                [type]="showpinOld ? 'text' : 'password'"
+                                maxlength="6"
+                                [ngClass]="{'is-invalid': securityForm.get('currentpin')?.invalid && (securityForm.get('currentpin')?.touched || securityForm.get('currentpin')?.dirty), 'is-valid': securityForm.get('currentpin')?.valid && (securityForm.get('currentpin')?.touched || securityForm.get('currentpin')?.dirty)}">
+                            <span class="text-button" ngbTooltip="Show Security Key" (click)="showpinOld = !showpinOld">
+                                <i class="fa" [ngClass]="{'fa-eye': !showpinOld, 'fa-eye-slash': showpinOld}"></i>
+                            </span>
+                        </div>
+                        <div class="text-danger mt-1" *ngIf="securityForm.get('currentpin')?.errors?.required && (securityForm.get('currentpin')?.touched || securityForm.get('currentpin')?.dirty)">
+                            Current Security Key is required
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xl-3 col-lg-3 col-form-label text-alert">New Security Key</label>
+                    <div class="col-lg-9 col-xl-6">
+                        <div class="position-relative">
+                            <input type="password" class="form-control form-control-lg form-control-solid" (keypress)="validateNo($event)"
+                                placeholder="New Security Key (6 digits)" autocomplete="off" formControlName="pin"
+                                (input)="securityForm.updateValueAndValidity()"
+                                [type]="showpin ? 'text' : 'password'"
+                                maxlength="6"
+                                [ngClass]="{'is-invalid': securityForm.get('pin')?.invalid && (securityForm.get('pin')?.touched || securityForm.get('pin')?.dirty), 'is-valid': securityForm.get('pin')?.valid && (securityForm.get('pin')?.touched || securityForm.get('pin')?.dirty)}">
+                            <span class="text-button" ngbTooltip="Show Security Key" (click)="showpin = !showpin">
+                                <i class="fa" [ngClass]="{'fa-eye': !showpin, 'fa-eye-slash': showpin}"></i>
+                            </span>
+                        </div>
+                        <div class="text-danger mt-1" *ngIf="securityForm.get('pin')?.errors?.required && (securityForm.get('pin')?.touched || securityForm.get('pin')?.dirty)">
+                            New Security Key is required
+                        </div>
+                        <div class="text-danger mt-1" *ngIf="(securityForm.get('pin')?.errors?.minlength || securityForm.get('pin')?.errors?.maxlength) && (securityForm.get('pin')?.touched || securityForm.get('pin')?.dirty)">
+                            Please enter a 6 digit key
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xl-3 col-lg-3 col-form-label text-alert">Verify Security Key</label>
+                    <div class="col-lg-9 col-xl-6">
+                        <div class="position-relative">
+                            <input type="password" class="form-control form-control-lg form-control-solid" (keypress)="validateNo($event)"
+                                placeholder="Verify Security Key" autocomplete="off" formControlName="cpin"
+                                (input)="securityForm.updateValueAndValidity()"
+                                [type]="showpinConfirm ? 'text' : 'password'"
+                                maxlength="6"
+                                [ngClass]="{'is-invalid': (securityForm.get('cpin')?.invalid || securityForm.hasError('MatchSecurityPIN')) && (securityForm.get('cpin')?.touched || securityForm.get('cpin')?.dirty), 'is-valid': securityForm.get('cpin')?.valid && !securityForm.hasError('MatchSecurityPIN') && (securityForm.get('cpin')?.touched || securityForm.get('cpin')?.dirty)}">
+                            <span class="text-button" ngbTooltip="Show Security Key" (click)="showpinConfirm = !showpinConfirm">
+                                <i class="fa" [ngClass]="{'fa-eye': !showpinConfirm, 'fa-eye-slash': showpinConfirm}"></i>
+                            </span>
+                        </div>
+                        <div class="text-primary mt-1" *ngIf="securityForm.get('cpin')?.valid && !securityForm.hasError('MatchSecurityPIN') && (securityForm.get('cpin')?.touched || securityForm.get('cpin')?.dirty)">
+                            Security Key confirmed successfully
+                        </div>
+                        <div class="text-danger mt-1" *ngIf="securityForm.get('cpin')?.errors?.required && (securityForm.get('cpin')?.touched || securityForm.get('cpin')?.dirty)">
+                            Confirm Security Key is required
+                        </div>
+                        <div class="text-danger mt-1" *ngIf="securityForm.hasError('MatchSecurityPIN') && (securityForm.get('cpin')?.touched || securityForm.get('cpin')?.dirty)">
+                            Security Key and Confirm Security Key must match
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Form-->
+    </div>
+</ng-container>

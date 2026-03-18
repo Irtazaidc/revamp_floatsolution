@@ -1,0 +1,123 @@
+.form-control-mini {
+  height: 30px;
+  width: 65px;
+}
+
+.form-control-mini {
+  width: 80px;
+  /* Adjust the width according to your needs */
+}
+
+.sticky-header th,
+.sticky-header-2 th {
+  position: sticky;
+  top: 0;
+  background: #f8f9fa;
+  /* Light grey background */
+  border: 1px solid #dee2e6;
+  /* Border color */
+  z-index: 2;
+  text-align: center;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+  /* Add a shadow to simulate the border */
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.sticky-header-2 th {
+  top: 30px;
+  /* Adjust according to the height of the first sticky header */
+  z-index: 1;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+  /* Add a shadow to simulate the border */
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
+/* Checked state */
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle {
+  border-color: #0BB7AF !important;
+  background-color: #0BB7AF !important;
+  /* Change background color when checked */
+}
+
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #0BB7AF !important;
+  /* Change outer circle border color when checked */
+}
+
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-ripple .mat-ripple-element {
+  background-color: #0BB7AF !important;
+}
+
+/* Unchecked state */
+::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-outer-circle {
+  border-color: #0BB7AF !important;
+}
+
+::ng-deep .mat-radio-button.mat-accent:not(.mat-radio-checked) .mat-radio-ripple .mat-ripple-element {
+  background-color: #0BB7AF !important;
+}
+
+::ng-deep .mat-radio-group.mat-accent .mat-radio-button .mat-radio-label-content {
+  color: #0BB7AF !important;
+  /* Change label text color */
+}
+
+tr td {
+  // padding-top: 1em;
+  padding-top: 1px;
+  padding-bottom: 0px;
+}
+
+.scroll-top-btn:hover {
+  background-color: #1BC5BD;
+}
+
+.scroll-top-btn i {
+  color: white !important;
+}
+
+.scroll-top-btn {
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 188, 212, 0.8);
+  /* cyan border */
+  background-color: rgba(0, 188, 212, 0.25);
+  /* soft cyan tint */
+  color: #00bcd4;
+  /* solid cyan arrow */
+  backdrop-filter: blur(3px);
+  box-shadow: 0 2px 6px rgba(0, 188, 212, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover state – slightly darker cyan */
+.scroll-top-btn:hover {
+  background-color: rgba(0, 188, 212, 0.45);
+  border-color: rgba(0, 188, 212, 1);
+  color: #fff;
+  /* white arrow on hover */
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .scroll-top-btn {
+    width: 34px;
+    height: 34px;
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-top-btn {
+    width: 34px;
+    height: 34px;
+    bottom: 8px;
+  }
+}

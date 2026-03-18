@@ -1,0 +1,121 @@
+<div class="row">
+    <div class="col-md-6 text-center" *ngIf="!isShowVitalsCard &&TPCode">
+        <h4 class="ml-2 tp-name"><strong>{{TPCode}} - {{TPName}}</strong></h4>
+    </div>
+    <div class="col-md-6 mt-2" *ngIf="visitTests.length">
+        <div class="tests-box">
+            <select name="moIntervenedTests" class="form-control form-control-sm" [(ngModel)]="TPId">
+                <option *ngFor="let row of visitTests" value="{{row.TPID}}">{{row.TPCode}}</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <label for="DepartmentId">Assignee</label>
+        <ng-select style="width: 100%;"
+            class="mr-1"
+            [items]="radoiologistList"
+            bindLabel="FullName" 
+            placeholder="-Select Dr-"
+            bindValue="EmpId"
+            [(ngModel)]="EmpID"
+            (change)="getRadiologistInfoByID($event)"
+            >
+
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    <span class="ng-value-label"> {{item.FullName}}</span>
+                </div>
+            </ng-template>
+        </ng-select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="true" class="row patient-basic-info-container"> 
+            <div class="pic-area">
+                <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" 
+                style="
+                z-index: 99999;
+                position: absolute;
+                opacity: 1;
+                top: 19px;
+                left: 29px;
+                width: 80px;
+                height: 74px;"
+                    [name]="spinnerRefs.drPic" size="small" color="#fff"
+                    type="square-loader" [fullScreen]="false">
+                    <p style="color: white; margin-top: 48px;"> Loading... </p>
+                </ngx-spinner>
+                <img class="patient-img" [src]="radiologistPic || defaultPatientPic" alt="Doctors Pic"/>
+            </div>
+            <div class="row col-sm info-area">
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <label>
+                        <span class="label-name">Nanme: </span>
+                        <br>
+                        <strong class="label-value">{{radoiologistRow.FullName}}</strong>
+                    </label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <label>
+                        <span class="label-name">ID: </span>
+                        <br>
+                        <strong class="label-value">{{radoiologistRow.EmpNoWithPrefix}}</strong>
+                    </label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <label>
+                        <span class="label-name">Department: </span>
+                        <br>
+                        <strong class="label-value">{{radoiologistRow.Department}}</strong>
+                    </label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <label>
+                        <span class="label-name">Designation: </span>
+                        <br>
+                        <strong class="label-value">{{radoiologistRow.Designation}}</strong> 
+                    </label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <label>
+                        <span class="label-name">Location: </span>
+                        <br>
+                        <strong class="label-value">{{radoiologistRow.LocationFromIorgLoc}}</strong> 
+                    </label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <label>
+                        <span class="label-name">Emp Status/Guaranteed Income: </span>
+                        <br>
+                        <strong class="label-value">{{radoiologistRow.EmploymentStatus}}/{{radoiologistRow.SharingGuaranteedIncome}}</strong>
+                    </label>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <button *ngIf="TPId" type="button" [disabled]="disabledButtonAssign"
+            class="btn btn-sm btn-primary pull-right mt-2 mr-8" mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]" 
+            (confirm)="assignTestToDoctor()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-primary" 
+            cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+            [appendToBody]="true">
+            <i class="fa fa-check-square"></i> Assign <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerAssign"></i>
+        </button>
+    </div>
+</div>

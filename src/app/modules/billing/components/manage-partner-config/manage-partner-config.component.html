@@ -1,0 +1,568 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="fa fa-user-circle text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Manage Partners Configuration
+            </h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.searchTable" bdColor="rgba(0,0,0,0.8)"
+                size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                <!-- <p style="color: white"> Loading... </p> -->
+            </ngx-spinner>
+            
+            <div class="col-md-4 col-sm-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                                [(ngModel)]="searchText" name="searchText" />
+                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                (click)="getPartnersData()"><i class="ti-reload"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive table-container fixed-height-table">
+                            <table class="table table-hover compact table-bordered"
+                                style="width: 100%; " cellpadding=0 cellspacing=0>
+                                <thead class="sticky-header">
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                </thead>
+                                <tbody>
+                                    <tr class="text-center" *ngIf="!partnersDataList.length">
+                                        <td colspan="3">No Record Found</td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="let data of partnersDataList | filterByKey: searchText:['PatnerName']; let i = index" [ngClass]="{'active':i == rowIndex}" (click)="getTableDate(data,i)">
+                                        <td>{{i+1}}</td>
+                                        <td>{{data.PatnerName || 'NA'}}
+                                            <div class="position-relative d-inline-block" 
+                                            (mouseenter)="showTooltip(data.PatnerID)" 
+                                            (mouseleave)="hideTooltip()" >
+                                            <i class="fa fa-exclamation-circle text-warning cursor-pointer"></i>
+                                            <div *ngIf="tooltipVisible && hoveredMachineID === data.PatnerID" 
+                                            class="custom-tooltip-box">
+                                            {{ tooltipBranchesMap[data.PatnerID] || 'Loading...' }}
+                                            </div>
+                                        </div>
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-card>
+                            <mat-card-content>
+                                <mat-tab-group class="demo-tab-group" style="background-color: #fff;" animationDuration="0ms"> 
+                                    
+                                <mat-tab label="Partner Insertion" >
+                                    <app-card  [cardClass]="'tim-card tim-card tim-card-primary'" *matTabContent>
+                                        <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                            <form [formGroup]="insertionForm" class="form-horizontal container mt-4 p-3 border rounded shadow-sm bg-light" name="form" role="form">
+                                                <ngx-spinner class="spinner-warning" [name]="spinnerRefs.insertForm" bdColor="rgba(0,0,0,0.8)"
+                                                size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                                <!-- <p style="color: white"> Loading... </p> -->
+                                            </ngx-spinner>
+                                                <div class="row justify-content-center">
+                                                    <!-- <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Username: <span class="text-danger">*</span></label>
+                                                        <input formControlName="Username" type="text" class="form-control"
+                                                            placeholder="Enter Username" autocomplete="off"
+                                                            [ngClass]="{'is-invalid': userCreationForm.get('Username').errors && isSubmitted}" />
+                                                        <div *ngIf="userCreationForm.get('Username').errors && isSubmitted" class="invalid-feedback">
+                                                            Username is required.
+                                                        </div>
+                                                    </div>
+                                            
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Password: <span class="text-danger">*</span></label>
+                                                        <input formControlName="Password" type="password" class="form-control"
+                                                            placeholder="Enter Password" autocomplete="off"
+                                                            [ngClass]="{'is-invalid': userCreationForm.get('Password').errors && isSubmitted}" />
+                                                        <div *ngIf="userCreationForm.get('Password').errors && isSubmitted" class="invalid-feedback">
+                                                            Password is required.
+                                                        </div>
+                                                    </div> -->
+                                            
+                                                    <!-- Full Name -->
+                                                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                                        <label class="form-label">Full Name: <span class="text-danger">*</span></label>
+                                                        <input formControlName="PatnerName" type="text" class="form-control"
+                                                            placeholder="Enter Full Name"
+                                                            [ngClass]="{'is-invalid': insertionForm.get('PatnerName')?.errors && isSubmitted}" />
+                                                        <div *ngIf="insertionForm.get('PatnerName')?.errors && isSubmitted" class="invalid-feedback">
+                                                            Full Name is required.
+                                                        </div>
+                                                    </div>
+                                            
+                                                    <!-- Cell -->
+                                                    <div class="col-lg-4 col-md-6 col-sm-12  mb-3">
+                                                        <label class="form-label">Contact No: <span class="text-danger">*</span></label>
+                                                        <input formControlName="PatnerContactNo" (keypress)="validateNo($event)" type="text" class="form-control" placeholder="Contact No" 
+                                                        [ngClass]="{'is-invalid': insertionForm.get('PatnerContactNo')?.errors && isSubmitted}"/>
+                                                    </div>
+                                            
+                                                    <!-- Phone -->
+                                                    <div class="col-lg-4 col-md-6 col-sm-12  mb-3">
+                                                        <label class="form-label">Contact Person: <span class="text-danger">*</span></label>
+                                                        <input formControlName="PatnerContactPerson"  type="text" class="form-control" placeholder="Contact Person"
+                                                        [ngClass]="{'is-invalid': insertionForm.get('PatnerContactPerson')?.errors && isSubmitted}" />
+                                                    </div>
+                                            
+                                                    <!-- Email -->
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+                                                        <label class="form-label">Address: <span class="text-danger">*</span></label>
+                                                        
+                                                        <textarea formControlName="PatnerAddress" rows="2" class="form-control"
+                                                            placeholder="Enter Address" id=""
+                                                            [ngClass]="{'is-invalid': insertionForm.get('PatnerAddress')?.errors && isSubmitted}" ></textarea>
+                                                    </div>
+                                                    <!-- *ngIf="PatnerID" -->
+                                                    <!-- <div class="col-lg-12 col-md-12 col-sm-12 mb-3" *ngIf="PatnerID"> 
+                                                        <label class="form-label">RIS Machines: </label>
+                                                        <div class="form-group">
+                                                            <ng-select id="pat_branch" style="width: 100%;"  [ngClass]="{'invalid': !RISMachineIDs, 'invalid-highlighted': !RISMachineIDs && isSubmitted}" 
+                                                            [(ngModel)]="RISMachineIDs" [items]="RISMachines" bindLabel="MachinesnLocation" [multiple]="true" 
+                                                                [closeOnSelect]="false"  [ngModelOptions]="{standalone: true}" [disabled]="!isEditing"
+                                                                bindValue="RISMachineID" placeholder="--Select RIS Machines--">
+
+                                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                    <div class="ng-value" *ngFor="let item of items | slice:0:6">
+                                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                        <span class="ng-value-label"> {{item.MachinesnLocation}}</span>
+                                                                    </div>
+                                                                    <div class="ng-value" *ngIf="items.length > 6">
+                                                                        <span class="ng-value-label">{{items.length - 6}} more...</span>
+                                                                    </div>
+                                                                </ng-template>
+                                                               
+                                                            </ng-select>
+                                                        
+                                                        </div> 
+                                                    </div> -->
+                                            
+                                                    <!-- Action Buttons -->
+                                                
+                                                        <div class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4">
+                                                        <!-- <button *ngIf="isEditing || isSaveEditing" (click)="InsertUpdatePartners()" class="btn btn-success mr-1">
+                                                            <i class="fas fa-save me-2"></i> 
+                                                            <span *ngIf="isEditing">Update</span>
+                                                            <span *ngIf="isSaveEditing">Save</span>
+                                                        </button> -->
+                                                        <button *ngIf="isEditing || isSaveEditing" 
+                                                            type="button" 
+                                                            class="btn btn-success mr-1" mwlConfirmationPopover
+                                                            [popoverTitle]="'Do you want to <strong>Proceed</strong>?'"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                                            (confirm)="InsertUpdatePartners()"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="btn btn-sm btn-primary"
+                                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true">
+                                                            <i class="fas fa-save me-2"></i> 
+                                                            <span *ngIf="isEditing">Update</span>
+                                                            <span *ngIf="isSaveEditing">Save</span>
+                                                        </button>
+                                                        <button *ngIf="isEditing || isSaveEditing" (click)="cancelEdit()" class="btn btn-secondary mr-1">
+                                                            <i class="fas fa-times-circle me-2"></i> Cancel
+                                                        </button>
+                                                        <button  *ngIf="toggleEditFields" (click)="refreshForm()" class="btn btn-info mr-1">
+                                                            <i class="fas fa-sync-alt me-2"></i> Refresh
+                                                        </button>
+                                                        <!-- <button  *ngIf="toggleEditFields" (click)="deleteUser()" class="btn btn-danger mr-1">
+                                                            <i class="fas fa-trash-alt me-2"></i> Delete
+                                                        </button> -->
+                                                        <!-- <button *ngIf="toggleEditFields" 
+                                                            type="button" 
+                                                            class="btn btn-danger mr-1" mwlConfirmationPopover
+                                                            [popoverTitle]="'Do you want to proceed <strong>Delete</strong>?'"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                                            (confirm)="deleteUser()"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="btn btn-sm btn-primary"
+                                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true">
+                                                            <i class="fas fa-trash-alt me-2"></i> Delete 
+                                                        </button> -->
+                                                        <button  *ngIf="toggleEditFields" (click)="editUser()" class="btn btn-outline-primary mr-1">
+                                                            <i class="fas fa-edit me-2"></i> Edit
+                                                        </button>
+                                                        <!-- <button  *ngIf="toggleEditFields" (click)="copyUser()" class="btn btn-warning mr-1">
+                                                            <i class="fas fa-copy me-2"></i> Copy
+                                                        </button> -->
+                                                        <button  *ngIf="toggleEditFields" (click)="createNewUser()" class="btn btn-primary">
+                                                            <i class="fas fa-plus-circle me-2"></i> New
+                                                        </button>
+                                                        </div>
+                                                </div>
+                                            </form>                        
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </app-card>
+                                </mat-tab>  
+                                <mat-tab label="Associate Machines" [disabled]='!PatnerID'>
+                                    <app-card [title]="'Associate machine with Partner - [   ' + PartnerName +'   ]'" [cardClass]="'tim-card tim-card tim-card-primary'"  *matTabContent>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                               
+                                                <div class="row">
+                                                    <div class="col-md-12 ">
+                                                        <input 
+                                                        type="text"
+                                                        #search
+                                                        placeholder="Search Machine"
+                                                        class="form-control form-control-sm"
+                                                        [(ngModel)]="searchMachineText"
+                                                        name="searchText"
+                                                        />
+                                                    </div>
+                                                <!-- <div class="col-md-8 col-lg-8 col-sm-12">
+                                                    <label class="control-label">Branch:</label>
+                                                        
+                                                            <div class="form-group">
+                                                                <ng-select id="pat_branch" style="width: 100%;"  
+                                                                     [items]="branchList" bindLabel="Title" [multiple]="true" 
+                                                                    [closeOnSelect]="false" (change)="BranchChange($event)"
+                                                                     [(ngModel)]="SelectedlocID"
+                                                                   [ngModelOptions]="{standalone: true}"
+                                                                    bindValue="LocId" placeholder="--Select Branch--">
+
+                                                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                        <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                            <span class="ng-value-label"> {{item.Title}}</span>
+                                                                        </div>
+                                                                        <div class="ng-value" *ngIf="items.length > 2">
+                                                                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                                        </div>
+                                                                    </ng-template>
+                                                                </ng-select>
+                                                            </div> 
+                                                    </div>
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3" > 
+                                                        <label class="form-label">RIS Machines: </label>
+                                                        <div class="form-group">
+                                                            <ng-select id="pat_branch" style="width: 100%;"  [ngClass]="{'invalid': !RISMachineIDs || RISMachineIDs == '', 'invalid-highlighted': !RISMachineIDs || RISMachineIDs == ''}" 
+                                                            [(ngModel)]="RISMachineIDs" [items]="RISMachines" bindLabel="MachinesnLocation" [multiple]="true" 
+                                                                [closeOnSelect]="false"  [ngModelOptions]="{standalone: true}" 
+                                                                bindValue="RISMachineID" placeholder="--Select RIS Machines--">
+                                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                    <div class="ng-value" *ngFor="let item of items | slice:0:6">
+                                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                        <span class="ng-value-label"> {{item.MachinesnLocation}}</span>
+                                                                    </div>
+                                                                    <div class="ng-value" *ngIf="items.length > 6">
+                                                                        <span class="ng-value-label">{{items.length - 6}} more...</span>
+                                                                    </div>
+                                                                </ng-template>
+                                                                <ng-template ng-header-tmp>
+                                                                    <button (click)="onSelectAllMachines()" class="btn btn-mini btn-outline-primary"
+                                                                        type="button"><i class="ti-check"></i>Select all</button>
+                                                                    <button (click)="onUnselectAllMachines()"
+                                                                        class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i
+                                                                            class="ti-close"></i>Unselect all</button>
+                                                                </ng-template>
+                                                            </ng-select>
+                                                        
+                                                        </div> 
+
+                                                    </div> -->
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3" > 
+                                                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                                                        <table class="table table-hover cursor-pointer compact table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- <th style="width: 5%;">#</th> -->
+                                                                    <th width="5%" > <input type="checkbox" class="" *ngIf="!searchMachineText?.length"
+                                                                            (change)="selectAllTestsSection($event.target.checked)" />
+                                                                    </th>
+                                                                    <th width="65%">Machine</th>
+                                                                    <th width="15%">Share %</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngIf="!RISMachines.length">
+                                                                    <td class="text-center" colspan="4"><strong class="text-info">No
+                                                                            machine found</strong></td>
+                                                                </tr>
+                                                                <ng-container
+                                                                    *ngFor="let data of RISMachines | filterByKey:searchMachineText:['BranchCode', 'MachineName']; let i=index;">
+                                                                    <tr>
+                                                                        <!-- <td>{{i+1}}</td> -->
+                                                                        <td >
+                                                                            <input type="checkbox" class=""
+                                                                                (change)="onSelectedSectionChange(data)"
+                                                                                [(ngModel)]="data.checked"
+                                                                                [ngModelOptions]="{standalone: true}" />
+                                                                        </td>
+                                                                        <td>{{data.MachinesnLocation}}</td>
+                                                                        <td><input type="text" [(ngModel)]="data.SharePerc"
+                                                                                [ngModelOptions]="{standalone: true}"
+                                                                                (keypress)="validateNo($event)"
+                                                                                (blur)="onValueChange(data)"
+                                                                                value="{{data.SharePerc ? data.SharePerc : 0}}"
+                                                                                [ngClass]="{ 'invalid': !data.SharePerc && data.checked,'invalid-highlighted': !data.SharePerc && data.checked }"
+                                                                                class="form-control custom-form-control form-control-sm"/></td>
+                                                                    </tr>                                                               
+                                                                </ng-container>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    </div>
+
+
+                                                    <!-- Action Buttons -->
+
+                                                    <div
+                                                        class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4"
+                                                    >
+                                                    <button type="button" 
+                                                    class="btn btn-primary pull-right" mwlConfirmationPopover
+                                                    [popoverTitle]="'Please Confirm...!'"
+                                                    [popoverMessage]="'Are you sure want to save?'"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]" 
+                                                    (confirm)="InsertUpdatePartnersRISMachine()" 
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false" [appendToBody]="true">
+                                                    <i class="fa fa-save"></i> Save
+                                                </button>
+                                                    </div>
+                                                </div>
+                                               
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </app-card>
+                                </mat-tab> 
+                                <mat-tab label="Associate Partner with User" [disabled]='!PatnerID'>
+                                    <app-card  [cardClass]="'tim-card tim-card tim-card-primary'"  *matTabContent>
+                                        <div class="card-body">
+                                            <!-- [title]="'Associate user with Partner - [   ' + PartnerName +'   ]'" -->
+                                            <ngx-spinner class="spinner-warning" [name]="spinnerRefs.searchTable2" bdColor="rgba(0,0,0,0.8)"
+                                                size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                                <!-- <p style="color: white"> Loading... </p> -->
+                                            </ngx-spinner>
+                                            <div class="row">
+                                            <!-- <div class="col-md-4 col-sm-12">
+                                             <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                                                            [(ngModel)]="searchTextUers" name="searchText" />
+                                                        <button class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                                                            (click)="getPartnerUsersData()"><i class="ti-reload"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive table-container fixed-height-table">
+                                                        <table class="table table-hover compact table-bordered"
+                                                            style="width: 100%; " cellpadding=0 cellspacing=0>
+                                                            <thead class="sticky-header">
+                                                                <th>#</th>
+                                                                <th>FullName</th>
+                                                                <th>UserName</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="text-center" *ngIf="!partnerUsersDataList.length">
+                                                                    <td colspan="3">No Record Found</td>
+                                                                </tr>
+                                                                <tr
+                                                                    *ngFor="let data of partnerUsersDataList | filterByKey: searchText:['FullName','Username']; let i = index" [ngClass]="{'active':i == UserRowIndex}" (click)="getPartnerUserTableDate(data,i)">
+                                                                    <td>{{i+1}}</td>
+                                                                    <td>{{data.FullName || 'NA'}}</td>
+                                                                    <td>{{data.Username || 'NA'}}</td>
+                                                                    
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                             </div> -->
+                                             <div class="col-md-12 col-sm-12">
+
+                                                <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                            <form [formGroup]="CreateUsersForm" class="form-horizontal container mt-4 p-3 border rounded shadow-sm bg-light" name="form" role="form">
+                                                <ngx-spinner class="spinner-warning" [name]="spinnerRefs.UsersCreateForm" bdColor="rgba(0,0,0,0.8)"
+                                                size="medium" color="#fff" type="ball-atom" [fullScreen]="false">
+                                                <!-- <p style="color: white"> Loading... </p> -->
+                                            </ngx-spinner>
+                                                <div class="row justify-content-center">
+                                                       <div class="col-md-6 mb-3">
+                                                            <label class="form-label">Username: <span class="text-danger">*</span></label>
+                                                            <input formControlName="Username" type="text" class="form-control"
+                                                                placeholder="Enter Username" autocomplete="off"
+                                                                [ngClass]="{'is-invalid': CreateUsersForm.get('Username')?.errors && isSubmitted}" />
+                                                            <div *ngIf="CreateUsersForm.get('Username')?.errors && isSubmitted" class="invalid-feedback">
+                                                                Username is required.
+                                                            </div>
+                                                        </div>
+                                                
+                                                        <!-- Password -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label">Password: <span class="text-danger">*</span></label>
+                                                            <input formControlName="Password" type="password" class="form-control"
+                                                                placeholder="Enter Password" autocomplete="off"
+                                                                [ngClass]="{'is-invalid': CreateUsersForm.get('Password')?.errors && isSubmitted}" />
+                                                            <div *ngIf="CreateUsersForm.get('Password')?.errors && isSubmitted" class="invalid-feedback">
+                                                                Password is required.
+                                                            </div>
+                                                        </div>
+                                                
+                                                        <!-- Full Name -->
+                                                        <div class="col-md-12 mb-3">
+                                                            <label class="form-label">Full Name: <span class="text-danger">*</span></label>
+                                                            <input formControlName="FullName" type="text" class="form-control"
+                                                                placeholder="Enter Full Name"
+                                                                [ngClass]="{'is-invalid': CreateUsersForm.get('FullName')?.errors && isSubmitted}" />
+                                                            <div *ngIf="CreateUsersForm.get('FullName')?.errors && isSubmitted" class="invalid-feedback">
+                                                                Full Name is required.
+                                                            </div>
+                                                        </div>
+                                                
+                                                        <!-- <div class="col-md-6 mb-3">
+                                                            <label class="form-label">Cell:</label>
+                                                            <input formControlName="Cell" (keypress)="validateNo($event)" type="text" class="form-control" placeholder="Enter Cell" />
+                                                        </div>
+                                                
+                                                        <div class="col-md-6 mb-3">
+                                                            <label class="form-label">Phone:</label>
+                                                            <input formControlName="Phone" (keypress)="validateNo($event)" type="text" class="form-control" placeholder="Enter Phone" />
+                                                        </div> -->
+                                                
+                                                        <!-- Email -->
+                                                        <div class="col-md-12 mb-3">
+                                                            <label class="form-label">Email: <span class="text-danger">*</span></label>
+                                                            <input formControlName="Email" type="email" class="form-control"
+                                                                placeholder="Enter Email"
+                                                                [ngClass]="{'is-invalid': CreateUsersForm.get('Email')?.errors && isSubmitted}" />
+                                                            <div *ngIf="CreateUsersForm.get('Email')?.errors && isSubmitted" class="invalid-feedback">
+                                                                A valid email is required.
+                                                            </div>
+                                                        </div>
+                                            
+                                                        <div class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4">
+                                                        <button *ngIf="isUsersEditing || isUsersSaveEditing" 
+                                                            type="button" 
+                                                            class="btn btn-success mr-1" mwlConfirmationPopover
+                                                            [popoverTitle]="'Do you want to <strong>Proceed</strong>?'"
+                                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                                            (confirm)="InsertUpdatePartnerUsers()"
+                                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                            confirmButtonType="btn btn-sm btn-primary"
+                                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                            [appendToBody]="true">
+                                                            <i class="fas fa-save me-2"></i> 
+                                                            <span *ngIf="isUsersEditing">Update</span>
+                                                            <span *ngIf="isUsersSaveEditing">Save</span>
+                                                        </button>
+                                                        <button *ngIf="isUsersEditing || isUsersSaveEditing" (click)="cancelUsersEdit()" class="btn btn-secondary mr-1">
+                                                            <i class="fas fa-times-circle me-2"></i> Cancel
+                                                        </button>
+                                                        <!-- <button  *ngIf="toggleUsersEditFields" (click)="refreshUsersForm()" class="btn btn-info mr-1">
+                                                            <i class="fas fa-sync-alt me-2"></i> Refresh
+                                                        </button> -->
+                                                
+                                                        <!-- <button  *ngIf="toggleUsersEditFields" (click)="editPartnerUser()" class="btn btn-outline-primary mr-1">
+                                                            <i class="fas fa-edit me-2"></i> Edit
+                                                        </button> -->
+                                                   
+                                                        <button  *ngIf="toggleUsersEditFields" (click)="createNewPartnerUser()" class="btn btn-primary">
+                                                            <i class="fas fa-plus-circle me-2"></i> New
+                                                        </button>
+                                                        </div>
+                                                </div>
+                                            </form>                        
+                                        </div>
+                                    </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </app-card>
+                                </mat-tab> 
+                                <!-- <mat-tab label="Associate Partner Users" [disabled]='!PatnerID'>
+                                    <app-card [title]="'Associate user with Partner - [   ' + PartnerName +'   ]'" [cardClass]="'tim-card tim-card tim-card-primary'"  *matTabContent>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12 mt-5" style="min-height: 600px;">
+                                               
+                                                    <div class="row">
+                                                    <label for="Panel User" class="control-label"
+                                                        >Partner User</label
+                                                    >
+                                                    <ng-select
+                                                        style="width: 100%;"
+                                                        [multiple]="false"     
+                                                        bindLabel="Username"
+                                                        [items]="partnerUsersDataList"
+                                                        placeholder="Select Partner User"
+                                                        bindValue="PanelUserId"
+                                                        [(ngModel)]="selectedPatnerUserID" [ngModelOptions]="{standalone: true}"
+                                                        [closeOnSelect]="true"
+                                                    ></ng-select>
+
+
+                                                    <div
+                                                        class="col-12 d-flex justify-content-end flex-wrap gap-4 mt-4"
+                                                    >
+                                                    <button type="button" 
+                                                    class="btn btn-primary pull-right" mwlConfirmationPopover
+                                                    [popoverTitle]="'Please Confirm...!'"
+                                                    [popoverMessage]="'Are you sure want to save?'"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]" 
+                                                    (confirm)="insertPanelUserForAssociation()" 
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary" cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false" [appendToBody]="true">
+                                                    <i class="fa fa-save"></i> Save
+                                                </button>
+                                                    </div>
+                                                    </div>
+                                               
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </app-card>
+                                </mat-tab>          -->
+                                </mat-tab-group>
+                            </mat-card-content>
+                        </mat-card>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

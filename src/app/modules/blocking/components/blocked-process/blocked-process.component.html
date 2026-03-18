@@ -1,0 +1,186 @@
+<div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="ti-na text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                Blocking
+                <small>Blocked Processes</small>
+            </h3>
+        </div>
+    </div>
+    <!-- <div class="card-body">
+     <div class="container">
+            <form [formGroup]="formForSMSstatus" class="form-horizontal" name="form" role="form"
+            (ngSubmit)="getSendingSMSstatus()">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="dateFrom">Date From:<span
+                            class="mandatory-asterisk">*</span></label>
+                        <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="YYYY-MM-DD"
+                            autocomplete="off" ngbDatepicker formControlName="dateFrom" name="dateFrom"
+                            class="form-control" type="text" [value]="" [ngClass]="{'invalid': formForSMSstatus.get('dateFrom').errors , 'invalid-highlighted': formForSMSstatus.get('dateFrom').errors && isSubmitted }"/>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="dateTo">Date To:<span
+                            class="mandatory-asterisk">*</span></label>
+                        <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="YYYY-MM-DD"
+                            autocomplete="off" ngbDatepicker formControlName="dateTo" name="dateTo" class="form-control"
+                            type="text" [value]="" [ngClass]="{'invalid': formForSMSstatus.get('dateTo').errors , 'invalid-highlighted': formForSMSstatus.get('dateTo').errors && isSubmitted }"/>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="cellNumber">Cell Number:<span
+                            class="mandatory-asterisk">*</span></label>
+                        <input formControlName="cellNumber" type="text" mask='0000-0000000' [showMaskTyped]="true"
+                            class="form-control"
+                            [ngClass]="{'invalid': formForSMSstatus.get('cellNumber').errors , 'invalid-highlighted': formForSMSstatus.get('cellNumber').errors && isSubmitted }" />
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 text-center">
+                    <button class="btn btn btn-light-danger font-weight-bold btn-hover-primary">
+                        <span> <i class="fas fa-search"></i>Search</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        </div> 
+    </div> -->
+</div>
+
+<!-- <div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar">
+    <div class="card-toolbar ">
+        <div class="card-body">
+            
+        </div>
+    </div>
+</div> -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar">
+            <div class="card-toolbar ">
+                <div class="card-body">
+                    <!-- <div class="card card-custom gutter-t">
+                                <div class="card-body px-4 py-4"> -->
+                    <!-- <fieldset class="fieldset-border-all-primary">
+                    <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">
+                    CallBack Details </legend> -->
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.tableList" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>   
+                    <div style="max-height: 500px; min-height: 500px; overflow-y: auto;">
+                        <div class="table-responsive  mt-3">
+                            <!-- <ng-container *ngIf="smsHistoryList !==null && smsHistoryList.length"> -->
+                                <table class="table cursor-pointer table-hover compact table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th width="70%">Message</th>
+                                            <th width="10%">Status</th>
+                                            <th width="15%" class="text-right">Sent On</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="!blockingList.length">
+                                            <td colspan="4" style="text-align: center;"><strong class="text-primary">
+                                                No Record Found..</strong></td>
+                                        </tr>
+                                        <tr *ngFor="let item of blockingList; let i = index" (click)="getTableRowData(item)" 
+                                        [ngClass]="{'active': i==CellNo}">
+                                            <td>
+                                                {{item.CellNo}}
+                                            </td>
+                                            <td class="msgTooltip">
+                                                {{item.Message}}
+                                                <!-- <span placement="top" ngbTooltip="{{item.Message}}">
+                                                    {{truncate(item.Message,88)}}
+                                                </span> -->
+                                                <!-- {{item.Message}} -->
+                                            </td>
+                                            <td>
+                                                <!-- {{item.CreatedBy}}  -->
+                                                
+                                            </td>
+                                            <td class="text-right">
+                                                {{item.SentOn | date:"dd MMM, yyyy, h:mm a"}} 
+                                            </td>
+                                        </tr>
+                                    
+                                    </tbody>
+                                </table>
+                            <!-- </ng-container> -->
+
+                            <!-- <ng-container *ngIf="blockingList===null || !blockingList.length">
+                                <p style="border-bottom: 1px dashed #cccdd3; text-align: center;">
+                                    <strong class="text-primary">No Record Found</strong>
+                                </p>
+                            </ng-container> -->
+                        </div>
+                    </div>
+
+                    <!-- </fieldset> -->
+                    <!-- </div>
+                            </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="col-xl-4 col-lg-5 col-md-12 col-sm-12">
+        <div class="card card-custom mt-2 mb-2 scrollable scrollable-element perfect-scrollbar">
+            <div class="card-toolbar ">
+                <div class="card-body">
+                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.sendSMS" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                        <p style="color: white"> Loading... </p>
+                    </ngx-spinner>
+                    <div style="max-height: 400px; min-height: 400px; overflow-y: auto;">
+                        <form [formGroup]="formForSendingSMS" class="form-horizontal mt-4" name="form" role="form"
+                        (ngSubmit)="resendSMS()">
+                        <div class="container row ">
+                            <div class="col-12">
+                                <div class="form-row mt-3">
+                                    <label for="cellNumber">Cell Number:</label>
+                                    <input [attr.disabled]="true" formControlName="cellNumber" type="text"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-row mt-3">
+                                    <label for="OpratorID">Mobile Operator:<span
+                                        class="mandatory-asterisk">*</span></label>
+                                    <select class="form-control" placeholder="--Select Operator--" formControlName="MobileOperatorID" [ngClass]="{'invalid': formForSendingSMS.get('MobileOperatorID').errors , 'invalid-highlighted': formForSendingSMS.get('MobileOperatorID').errors && operatorID }">
+                                        <option [value]="''"  hidden>--Select Operator--</option>
+                                        <option *ngFor="let item of mobileOperatorList" [value]="item.id">
+                                            {{item.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group mt-3">
+                                    <label>Message:</label>
+                                    <textarea [attr.disabled]="true" maxlength="500" rows="5"
+                                        formControlName="Message" type="text" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary pull-right mt-5">
+                                    <span> <i class="far fa-envelope"></i>Send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+

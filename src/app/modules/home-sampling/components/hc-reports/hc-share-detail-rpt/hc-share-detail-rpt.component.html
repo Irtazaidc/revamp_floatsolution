@@ -1,0 +1,463 @@
+<app-card
+  [title]="'HC Share Detail Report'"
+  [cardClass]="'tim-card tim-card tim-card-primary'"
+  [cardHeaderClass]="'card-header-narrow'"
+>
+  <div id="">
+    <form
+      [formGroup]="HCShareRptForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row form-group">
+        <div class="col-md-3 col-sm-12">
+          <!-- <label class="control-label">Date From</label> -->
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            value="1980-08-26"
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            value=""
+          />
+        </div>
+        <div class="col-md-3 col-sm-12">
+          <!-- <label class="control-label">Date To</label> -->
+          <input
+            (click)="dateTo.toggle()"
+            placeholder="dd-mm-yyyy"
+            value="1980-08-26"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control mb-4"
+            name="dateTo"
+            type="text"
+            value=""
+          />
+        </div>
+
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <ng-select
+            multiple="true"
+            tabindex="1"
+            placeholder="HC City"
+            formControlName="hcCity"
+            name="hcCity"
+            [closeOnSelect]="true"
+          >
+            <ng-option
+              style="width: 100%"
+              [value]="city.HCCityID"
+              *ngFor="let city of HomeCollectionCites"
+            >
+              {{ city.Code }}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <ng-select
+            multiple="true"
+            tabindex="1"
+            placeholder="Location"
+            formControlName="LocId"
+            name="LocId"
+            [closeOnSelect]="true"
+          >
+            <ng-option
+              style="width: 100%"
+              [value]="city.LocId"
+              *ngFor="let city of SampleCenters"
+            >
+              {{ city.Code }}
+            </ng-option>
+          </ng-select>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-sm-12">
+          <ng-select
+            #rd
+            tabindex="1"
+            placeholder="HC Staff"
+            formControlName="rider"
+            name="riderHCStaff"
+            [closeOnSelect]="true"
+          >
+            <ng-option
+              style="width: 100%"
+              [value]="rider.RiderID"
+              *ngFor="let rider of RidersDetailList"
+            >
+              <i
+                [ngStyle]="{
+                  color:
+                    rider.RiderStatusID == 1
+                      ? '#1fc645'
+                      : rider.RiderStatusID == 2
+                      ? 'grey'
+                      : null
+                }"
+                class="fas fa-circle"
+                placement="left"
+                ngbTooltip="Select HC Staff"
+              ></i>
+              {{ rider.RiderFullName }}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="pull-right">
+          <button
+            (click)="getHCShareDetail()"
+            class="btn btn-primary"
+            type="submit"
+          >
+            <i ngbTooltip="Search Detail Report" class="fa fa-search"></i>
+            Detail Report
+          </button>
+          &nbsp;
+          <button
+            (click)="getHCSummary()"
+            class="btn btn-primary"
+            type="submit"
+          >
+            <i ngbTooltip="Search Summary Report" class="fa fa-search"></i>
+            Summary Report
+          </button>
+          &nbsp;
+          <button
+            (click)="getHCShareComplianceRpt()"
+            class="btn btn-primary"
+            type="submit"
+          >
+            <i ngbTooltip="Search Summary Report" class="fa fa-search"></i>
+            Compliance Report
+          </button>
+          &nbsp;
+          <!-- <button *ngIf="HCSummaryRpt.length || ShareRptDetailList.length || HCShareComplianceData.length"
+                        (click)="exportAsXLSX()" class="btn btn-primary" type="submit">
+                        <i ngbTooltip="Export Report" class="fa fa-download" aria-hidden="true"></i> Export Report
+                    </button> -->
+
+          <button
+            *ngIf="
+              HCSummaryRpt.length ||
+              ShareRptDetailList.length ||
+              HCShareComplianceData.length
+            "
+            type="submit"
+            class="btn btn-primary"
+            mwlConfirmationPopover
+            [popoverTitle]="'Export to...!'"
+            [popoverMessage]="'Which file to export?'"
+            [confirmText]="confirmationPopoverConfig.confirmText"
+            [cancelText]="confirmationPopoverConfig.cancelText"
+            [placement]="confirmationPopoverConfig.placements[0]"
+            (confirm)="exportAsExcel()"
+            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-success d-flex align-items-center gap-1"
+            cancelButtonType="btn btn-sm btn-danger d-flex align-items-center gap-1"
+            (click)="
+              confirmationPopoverConfig.confirmClicked = false;
+              confirmationPopoverConfig.cancelClicked = false
+            "
+            [appendToBody]="true"
+          >
+            <i class="fa fa-download"></i>
+            <span>Export Report</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-card>
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <div class="card card-custom gutter-t">
+      <div class="card-body px-4 py-4">
+        <div *ngIf="ShareRptDetailList.length" class="row mt-3 ml-0 mr-0">
+          <div class="col-md-12 col-lg-12 col-sm-12 mb-4">
+            <input
+              type="text"
+              placeholder="Search Here "
+              style="float: right"
+              class="col-lg-4 col-sm-12 form-control form-control-sm"
+              [(ngModel)]="searchShareDatatilRpt"
+              name="searchShareDatatilRpt"
+            />
+            <div>
+              <span
+                ngbTooltip="Share Sum"
+                style="
+                  float: right;
+                  margin-right: 10px;
+                  background: #1bc5bd;
+                  padding: 4px;
+                  border: #28a745 1px solid;
+                  border-radius: 16px;
+                  color: #f3f6f9;
+                  font-weight: bold;
+                  font-size: 12px;
+                "
+                >{{ ShareSum }}</span
+              >
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table
+              class="table table-striped table-sm table-bordered selected-test-rate-table"
+            >
+              <thead>
+                <tr>
+                  <th>PIN</th>
+                  <th>Booking ID</th>
+                  <th>Request ID</th>
+                  <th>Full Name</th>
+                  <th>Share Amount</th>
+                  <th>Share CreatedOn</th>
+                  <th>Test Name</th>
+                  <th>Visit Charges</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let ShareRpt of paginatedSearchResults
+                      | filterByKey
+                        : searchShareDatatilRpt
+                        : [
+                            'CommSepVisitID',
+                            'RiderEmpNo',
+                            'PatientCell',
+                            'RiderFullName',
+                            'HCRequestID',
+                            'BookingPatientID'
+                          ]
+                  "
+                >
+                  <td>
+                    {{ ShareRpt.CommSepVisitID }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.CommaSepBookingIDs }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.HCRequestID }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.RiderFullName }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.ShareAmount }}
+                  </td>
+                  <td>
+                    {{
+                      ShareRpt.ShareCreatedOn | date : "dd MMM, yyyy, h:mm a"
+                    }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.TestName }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.VisitCharges }}
+                  </td>
+                </tr>
+                <tr *ngIf="!ShareRptDetailList">
+                  No Record Found
+                </tr>
+              </tbody>
+            </table>
+            <ngb-pagination
+              [collectionSize]="collectionSize"
+              [(page)]="page"
+              size=""
+              [pageSize]="pageSize"
+              [boundaryLinks]="true"
+              [maxSize]="5"
+              [rotate]="true"
+              (pageChange)="refreshPagination()"
+            >
+            </ngb-pagination>
+          </div>
+        </div>
+
+        <div *ngIf="HCSummaryRpt.length" class="row mt-3 ml-0 mr-0">
+          <div class="table-responsive">
+            <input
+              type="text"
+              placeholder="Search Here "
+              style="float: right"
+              class="col-lg-4 col-sm-12 form-control form-control-sm"
+              [(ngModel)]="searchShareSummaryRpt"
+              name="searchShareSummaryRpt"
+            />
+
+            <table
+              class="table table-striped table-sm table-bordered selected-test-rate-table"
+            >
+              <thead>
+                <tr>
+                  <th>Sr.#</th>
+                  <th>Staff Name</th>
+                  <th>Location</th>
+                  <th>Visit Charges</th>
+                  <th>HC Share</th>
+                  <th>Other Allowances</th>
+                  <th>Net Payable</th>
+                  <!-- <th>Others</th> -->
+                  <!-- <th>Net Payable</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let ShareRpt of paginatedSearchSummaryResults
+                      | filterByKey
+                        : searchShareSummaryRpt
+                        : [
+                            'RiderEmpNo',
+                            'RiderName',
+                            'ShareAmount',
+                            'VisitCharges'
+                          ];
+                    let i = index
+                  "
+                >
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>{{ ShareRpt.RiderFullName }}</td>
+                  <td>
+                    {{ ShareRpt.RiderLocation }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.VisitCharges }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.ShareAmount }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.OtherAllowance || "-" }}
+                  </td>
+                  <td>
+                    {{
+                      (ShareRpt.ShareAmount || 0) +
+                        (ShareRpt.OtherAllowance || 0)
+                    }}
+                  </td>
+                  <!-- <td>
+                    {{ "--" }}
+                  </td> -->
+                  <!-- <td>
+                    {{ "--" }}
+                  </td> -->
+                </tr>
+                <tr *ngIf="!HCSummaryRpt">
+                  No Record Found
+                </tr>
+              </tbody>
+            </table>
+            <ngb-pagination
+              [collectionSize]="collectionSizeSummaryDetail"
+              [(page)]="pageSummary"
+              size=""
+              [pageSize]="pageSummarySize"
+              [boundaryLinks]="true"
+              [maxSize]="5"
+              [rotate]="true"
+              (pageChange)="refreshHCSummaryPagination()"
+            >
+            </ngb-pagination>
+          </div>
+        </div>
+
+        <div *ngIf="HCShareComplianceData.length" class="row mt-3 ml-0 mr-0">
+          <div style="height: 4" class="table-responsive">
+            <input
+              type="text"
+              placeholder="Search Here "
+              style="float: right"
+              class="col-lg-4 col-sm-12 form-control form-control-sm"
+              [(ngModel)]="searchShareComplianceRpt"
+              name="searchShareComplianceRpt"
+            />
+
+            <table
+              class="table table-striped table-sm table-bordered selected-test-rate-table"
+            >
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>HC Staff Name</th>
+                  <th>HC Staff Location</th>
+                  <th>Request ID</th>
+                  <th>BookingIDs</th>
+                  <th>VisitIDs</th>
+                  <th>TPCodes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let ShareRpt of HCShareComplianceData
+                      | filterByKey
+                        : searchShareComplianceRpt
+                        : [
+                            'RiderName',
+                            'RiderEmpNo',
+                            'MRNo',
+                            'VisitNo',
+                            'PatientCell',
+                            'PatientName',
+                            'HCRequestID',
+                            'BookingPatientID'
+                          ];
+                    let i = index
+                  "
+                >
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>{{ ShareRpt.RiderEmpNo }} {{ ShareRpt.RiderName }}</td>
+                  <td>
+                    {{ ShareRpt.RiderLocation }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.HCRequestID }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.CommaSepBookingIDs }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.CommSepVisitID }}
+                  </td>
+                  <td>
+                    {{ ShareRpt.TestName }}
+                  </td>
+                </tr>
+                <tr *ngIf="!ShareRptDetailList">
+                  No Record Found
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner
+    class="spinner-info"
+    bdColor="rgba(0,0,0,0.8)"
+    size="large"
+    color="#fff"
+    type="square-loader"
+    [fullScreen]="true"
+  >
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
+</div>

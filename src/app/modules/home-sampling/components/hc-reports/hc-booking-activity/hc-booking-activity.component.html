@@ -1,0 +1,202 @@
+<app-card 
+    [title]="'HC Booking Activity'" 
+    [cardClass]="'tim-card tim-card-primary'" 
+    [cardHeaderClass]="'card-header-narrow'">
+
+    <form [formGroup]="filterForm" class="container">
+
+        <div class="row g-3"> <!-- added gap for spacing -->
+
+            <div class="col-md-6 col-lg-4 col-sm-12">
+                    <label class="control-label">Date From:</label>
+                    <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy" ngbDatepicker
+                         value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                        class="form-control mb-4" type="text" value="" [ngClass]="{'invalid': filterForm.get('dateFrom').errors , 'invalid-highlighted': filterForm.get('dateFrom').errors && isSubmitted }"/>
+                </div>
+                <div class="col-md-6 col-lg-4 col-sm-12">
+                    <label class="control-label">Date To:</label>
+                    <input (click)="dateTo.toggle()"  placeholder="dd-mm-yyyy" #dateTo="ngbDatepicker"  ngbDatepicker
+                        formControlName="dateTo" class="form-control mb-4" name="dateTo" type="text" value=""
+                        [ngClass]="{'invalid': filterForm.get('dateTo').errors , 'invalid-highlighted': filterForm.get('dateTo').errors && isSubmitted }"/>
+                </div>
+
+            <!-- Buttons -->
+            <div class="col-md-6 col-lg-4 col-sm-12 d-flex align-items-center mt-3">
+                <button 
+                    type="button"
+                    class="btn btn-primary mr-2" 
+                    ngbTooltip="Search" 
+                    (click)="getHCBookingAuditSummary()">
+                    <i class="fa fa-search me-1"></i> Search
+                </button>
+
+                <!-- <button 
+                    *ngIf="hcBookingDetailData.length" 
+                    type="button"
+                    class="btn btn-primary mr-2" 
+                    ngbTooltip="Export as Excel" 
+                    (click)="exportAsXLSX()"
+                >
+                    <i class="fa fa-download me-1"></i> 
+                </button> -->
+
+                <button 
+                    type="reset" 
+                    class="btn btn-danger" 
+                    ngbTooltip="Clear Text"
+                >
+                    <i class="fa fa-eraser me-1"></i> 
+                </button>
+            </div>
+
+        </div>
+        
+    </form>
+
+</app-card>
+
+
+<app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" [cardHeaderClass]="'card-header-narrow'">
+    <ngx-spinner class="spinner-warning" [name]="spinnerRefs.hcRequesTable" bdColor="rgba(0,0,0,0.8)"
+        size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+    <ng-container *ngIf="hcBookingAuditSummary.length; then hcbookingRptSpace  else NohcbookingDataFoundSpace">
+    </ng-container>
+    <ng-template #hcbookingRptSpace>
+         <div class="row d-flex justify-content-end">
+            <div class="col-md-8 col-sm-12 ">
+               <input
+                type="text"
+                placeholder="Type to filter"
+                class="form-control form-control-sm custom-filter-input"
+                [(ngModel)]="searchTextSUMMARY"
+                name="searchTextSUMMARY"
+                />
+            </div>
+        </div>
+        <div class="table-responsive table-container fixed-height-table">
+            <table class="table compact">
+                <thead>
+                    <tr style="font-weight: bold;">
+                        <th scope="col">#</th>
+                        <th scope="col">Booking Id</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">MobileNO</th>
+
+                        <th scope="col">First Action</th>
+                        <th scope="col">Last Action</th>
+
+                        <th scope="col">Change Count</th>
+                    
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr scope="row" *ngFor="let hcRpt of hcBookingAuditSummary | filterByKey: searchTextSUMMARY:['PKValue','PatientName','MobileNO','ChangeCount']; let i = index">
+                        <td scope="row"> {{i + 1}}</td>
+                        <td scope="row"> {{hcRpt.PKValue }}</td>
+                        <td scope="row"> {{hcRpt.PatientName }}</td>
+                        <td scope="row"> {{hcRpt.MobileNO }}</td>
+
+                        <td scope="row"> {{hcRpt.FirstChange | date : "dd MMM, yyyy, h:mm a"}}</td>
+                        <td scope="row"> {{hcRpt.LastChange | date : "dd MMM, yyyy, h:mm a"}}</td>
+
+                        <td scope="row"> {{hcRpt.ChangeCount}}</td>
+                        
+                        <td scope="row">
+                             <button class="btn btn-link p-0 view-details-btn" (click)="openAuditDetails(hcRpt)">
+                          <i class="ti-receipt me-1 text-primary"></i>
+                          <span>
+                            View Details
+                          </span>
+                        </button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-template>
+
+    <ng-template #NohcbookingDataFoundSpace>
+        <div style="text-align: center;">
+            <p>No Record Found</p>
+        </div>
+    </ng-template>
+
+</app-card>
+
+
+
+<ng-template #BookingAuditDetails let-BookingAuditDetails>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Booking Activity Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="BookingAuditDetails.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="position: relative">
+    <!-- <label>Select visit to open Invoice</label> -->
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <input type="text" placeholder="type to filter" class="form-control form-control-sm" [(ngModel)]="searchText"
+          name="searchTextVisit" />
+      </div>
+    </div>
+    <div class="table-responsive table-container fixed-height-table">
+      <table class="table compact">
+
+        <thead>
+            <tr>
+            <!-- <th>PK Value</th> -->
+            <th>#</th>
+            <th>Field Name</th>
+            <th>Old Status</th>
+            <th>New Status</th>
+            <th>Modified By</th>
+            <th>Modified On</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <!-- No Data -->
+            <tr *ngIf="!hcBookingDetailData || hcBookingDetailData.length === 0">
+            <td colspan="6" class="text-center py-3 text-muted">
+                No Activity Found
+            </td>
+            </tr>
+
+            <!-- Data Rows -->
+            <tr *ngFor="let item of hcBookingDetailData | filterByKey: searchText:['FieldName','ModifiedBy','OldValue','NewValue']; let i = index">
+            <!-- <td>{{ item.PKValue }}</td> -->
+
+            <!-- Cleaned FieldName -->
+            <td>{{ i+1 }}</td>
+            <td>{{ item.FieldName }}</td>
+
+            <td>{{ item.OldValue }}</td>
+            <td>{{ item.NewValue }}</td>
+            <td>{{ item.ModifiedBy }}</td>
+
+            <td>{{ item.ModifiedOn | date:'dd MMM yyyy, hh:mm a' }}</td>
+            </tr>
+
+        </tbody>
+
+        </table>
+
+    </div>
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.hcRequesDetail" size="medium"
+      color="#fff" type="square-loader" [fullScreen]="false">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-dark" (click)="BookingAuditDetails.dismiss('close button clicked')">
+      Close
+    </button>
+  </div>
+</ng-template>

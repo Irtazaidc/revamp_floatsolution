@@ -1,0 +1,21 @@
+
+.border {
+  border-right: 2px dotted rgb(166 155 236) !important;
+}
+
+.card-tag{
+  text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+.copy-text-button {
+  position: absolute;
+  right: 8px;
+  top: 7px;
+  cursor: pointer;
+}
+.copy-text-button i:hover {
+    color: #1bc5bd;
+}
+

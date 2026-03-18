@@ -1,0 +1,58 @@
+.recomendation{
+    border: 1px dotted #30281b;
+}
+
+ul.info-list {
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0;
+}
+
+ul.info-list li {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+}
+
+ul.info-list li .val {
+    font-weight: bold;
+}
+
+
+.received-amount-field {
+    font-size: 1.3rem;
+    padding: 0 10px;
+    height: 31px;
+    color: #008000;
+}
+.refund-amount-field {
+    font-size: 1.5rem;
+    padding: 0 10px;
+    height: 31px;
+    color: #ff0000;
+}
+.table-installment-receiving {
+
+    .receiving-amount-area {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 100%;
+        border: 0;
+    }
+
+    .compact-field {
+        width: 100px;
+        float: right;
+        padding: 0 3px;
+        height: 25px;
+    }
+    .receiving-field {
+        direction: rtl;
+    }
+}
+
+
+::ng-deep .mat-tab-body-content {
+    overflow: hidden !important;
+}

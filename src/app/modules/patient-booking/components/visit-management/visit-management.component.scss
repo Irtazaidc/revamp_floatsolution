@@ -1,0 +1,125 @@
+
+.inusrance-info-container .info-box {
+    border: 2px solid #1bc5bd; /* Blue border */
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow */
+    font-size: 14px;
+    color: #333; /* Dark text */
+}
+
+.note-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #d9534f; /* Red color for emphasis */
+    display: block;
+    margin-bottom: 8px;
+}
+
+
+
+ul.info-list {
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0;
+}
+
+ul.info-list li {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+}
+
+ul.info-list li .val {
+    font-weight: bold;
+}
+
+
+.received-amount-field {
+    font-size: 1.3rem;
+    padding: 0 10px;
+    height: 31px;
+    color: #008000;
+}
+.refund-amount-field {
+    font-size: 1.5rem;
+    padding: 0 10px;
+    height: 31px;
+    color: #ff0000;
+}
+.table-installment-receiving {
+
+    .receiving-amount-area {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 100%;
+        border: 0;
+    }
+
+    .compact-field {
+        width: 100px;
+        float: right;
+        padding: 0 3px;
+        height: 25px;
+    }
+    .receiving-field {
+        direction: rtl;
+    }
+}
+
+
+::ng-deep .popover-content{
+    min-width: 200px;
+}
+
+::ng-deep .tooltip{
+    min-width: 250px !important;
+}
+::ng-deep .tooltip-inner {
+  min-width: 250px !important; /* or width: 200px if you want fixed */
+}
+
+.otp-wrapper {
+    display: flex;
+    align-items: end !important;
+    justify-content: end !important;
+    gap: 1px;
+  }
+  
+  .otp-input-group {
+    position: relative;
+    // width: 140px;
+  }
+  
+  .otp-input {
+    padding-right: 30px;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .otp-refresh {
+    position: absolute;
+    right: 4px;
+    cursor: pointer;
+    // padding: 15px 15px !important;
+    color: #dc3545 !important;
+    font-size: 19px;
+    // background-color: #1BC5BD;
+  }
+  
+  .otp-refresh:hover {
+    color: #a71d2a;
+  }
+  
+  .otp-timer {
+    font-size: 14px;
+    // min-width: 85px;
+  }
+  
+
+  .font-bold{
+    font-weight: 700 !important;
+  }

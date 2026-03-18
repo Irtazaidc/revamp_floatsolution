@@ -1,0 +1,245 @@
+<div class="roles-page">
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-card [title]="'User Role Assignment'" [cardClass]="'tim-card tim-card tim-card-danger'">
+
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" > 
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" placeholder="type to filter" class="form-control form-control-sm"
+                                        [(ngModel)]="searchText" name="searchText" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.tableList"
+                                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <table class="table table-hover compact cursor-pointer">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Users</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!usersList.length">
+                                        <td colspan="2" style="text-align: center;"><strong class="text-primary">
+                                            No Record Found...</strong></td>
+                                    </tr>
+                                    <tr *ngFor="let item of usersList | filterByKey: searchText:['UserName']; let i = index"
+                                        (click)="getUsersInfo(item);userChanged()"
+                                        [ngClass]="{'active': item.UserID==UserID}">
+                                        <td>{{(i+1)}}</td>
+                                        <td>{{item.UserName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
+                        <!-- <form class="" [formGroup]="roleAssignmentForm">
+                            <div class="row" >
+                                
+                                <div class="col-md-4">
+                                    <label>Users: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <ng-select style="width: 100%;" (change)="userChanged()" [items]="usersList" tabindex="1" formControlName="userID"
+                                            bindLabel="UserName" 
+                                            bindValue="UserID" 
+                                            [ngClass]="{'invalid': roleAssignmentForm.get('userID').errors, 'invalid-highlighted': roleAssignmentForm.get('userID').errors && roleAssignmentFormSubmitted}" required>
+                                        </ng-select>
+                                        [(ngModel)]="selectedCar"
+                                        <ngx-select-dropdown style="width: 100%;" (change)="selectionChanged($event)" tabindex="1" formControlName="userID" [multiple]="false" [config]="config" [options]="usersList"></ngx-select-dropdown>
+                                        <select class="form-control" tabindex="1" (change)="userChanged()" formControlName="userID" [ngClass]="{'invalid': roleAssignmentForm.get('userID').errors, 'invalid-highlighted': roleAssignmentForm.get('userID').errors && roleAssignmentFormSubmitted}" required>
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let u of usersList" [value]="u.appUserVIMSID">{{u.userName}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Roles: <span class="mandatory-asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <ng-select style="width: 100%;" formControlName="userRoleID" 
+                                            [items]="rolesList" tabindex="2" 
+                                            bindLabel="UserRoleTitle" 
+                                            bindValue="UserRoleID" 
+                                            [ngClass]="{'invalid': roleAssignmentForm.get('userRoleID').errors, 'invalid-highlighted': roleAssignmentForm.get('userRoleID').errors && roleAssignmentFormSubmitted}" required>
+                                        </ng-select>
+
+                                        <select class="form-control" tabindex="2" formControlName="userRoleID" [ngClass]="{'invalid': roleAssignmentForm.get('userRoleID').errors, 'invalid-highlighted': roleAssignmentForm.get('userRoleID').errors && roleAssignmentFormSubmitted}" required>
+                                            <option [value]="''">--select--</option>
+                                            <option *ngFor="let r of rolesList" [value]="r.userRoleID">{{r.userRoleTitle}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-4">
+                                    <label>&nbsp;</label>
+                                    <div class="input-group">
+                                        <button
+                                            class="btn btn-danger btn-sm"
+                                            title="Save Role"
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfig.confirmText"
+                                            [cancelText]="confirmationPopoverConfig.cancelText"
+                                            [placement]="confirmationPopoverConfig.placements[0]"
+                                            (confirm)="assignUserRole()"
+                                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                            confirmButtonType="danger"
+                                            cancelButtonType="outline-secondary"
+                                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                            [appendToBody]="true"
+                                        > <i class="fa fa-save m-0"></i>
+                                        Save
+                                        </button>
+
+                                        <button class="btn btn-outline-secondary btn-sm m-l-10" (click)="resetroleAssignmentForm()">Cancel</button>
+                                    </div>
+                                </div>
+    
+
+                            </div>
+
+                        </form> -->
+
+
+
+                    </div>
+                    <div class="col-xl-9 col-lg-8 col-md-6 col-sm-12" *ngIf="usersList.length">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.EditInfo"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" *ngIf="UserID">
+                            <div class="card card-custom gutter-t"
+                                style="max-height: 150px; min-height: 150px; overflow-y: auto">
+                                <div class="card-body px-4 py-4 bg-light">
+                                    <app-cms-employee-card [UserID]="UserID"></app-cms-employee-card>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-md-6 col-sm-12">
+
+                                <form class="" [formGroup]="roleAssignmentForm">
+                                    <div class="container row mt-2">
+                                        <div class="col-12 mt-2">
+                                            <div class="form-group">
+                                                <label>UserName:</label>
+                                                <input formControlName="userName" type="text" class="form-control"
+                                                    [ngClass]="{'invalid': roleAssignmentForm.get('userName').errors, 'invalid-highlighted': roleAssignmentForm.get('userName').errors && roleAssignmentFormSubmitted }" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>Password:</label>
+                                                <!-- <div class="position-relative"> -->
+                                                <input formControlName="password" type="password" class="form-control"
+                                                    [ngClass]="{'invalid': roleAssignmentForm.get('password').errors, 'invalid-highlighted': roleAssignmentForm.get('password').errors && roleAssignmentFormSubmitted  }" />
+                                                <!-- <span class="copy-text-button" ngbTooltip="Reset Password">
+                                                    <i class="fa fa-unlock-alt" ngbPopover="reset" triggers="click:mouseleave"
+                                                        (click)="resetPassword()" *ngIf="resetDisPassword"></i>
+                                                </span> -->
+                                                <!-- <span class="md-line"></span> -->
+                                                <!-- </div> -->
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>Employee:</label>
+                                                <input formControlName="employeeName" type="text" class="form-control"
+                                                    [ngClass]="{'invalid': roleAssignmentForm.get('employeeName').errors, 'invalid-highlighted': roleAssignmentForm.get('employeeName').errors && roleAssignmentFormSubmitted}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label>Roles List:<span class="mandatory-asterisk">*</span></label>
+                                            <div class="input-group">
+                                                <ng-select style="width: 100%;" formControlName="userRoleID"
+                                                    [items]="rolesList" tabindex="2" bindLabel="UserRoleTitle"
+                                                    bindValue="UserRoleID"
+                                                    [ngClass]="{'invalid': roleAssignmentForm.get('userRoleID').errors, 'invalid-highlighted': roleAssignmentForm.get('userRoleID').errors && roleAssignmentFormSubmitted}"
+                                                    required>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label>&nbsp;</label>
+                                            <div class="input-group d-flex justify-content-end">
+                                                <button class="btn btn-primary btn-sm " ngbTooltip="Save Role"
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="assignUserRole()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"> <i class="fa fa-save m-0"></i>
+                                                    Update
+                                                </button>
+                                                <button *ngIf="resetDisPassword"
+                                                    class="btn btn-outline-danger btn-sm m-l-10 ml-1"
+                                                    ngbTooltip="Reset Password" mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="resetPassword()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"> <i class="fa fa-unlock-alt m-0"></i>
+                                                    Reset
+                                                </button>
+
+                                                <button *ngIf="showHideCancelButton==true"
+                                                    class="btn btn-outline-secondary btn-sm m-l-10 ml-1"
+                                                    ngbTooltip="Cancel" mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="resetroleAssignmentForm()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"> <i class="flaticon-cancel m-0"></i>
+                                                    Cancel
+                                                </button>
+
+                                                <!-- <button *ngIf="showHideCancelButton==true" class="btn btn-outline-secondary btn-sm m-l-10 ml-1" (click)="resetroleAssignmentForm()">Cancel</button> -->
+                                                <button *ngIf="showHideEditButton==true"
+                                                    class="btn btn-info btn-sm ml-1" (click)="EditAssignmentForm()"
+                                                    ngbTooltip="Edit Role"><i class="ti-pencil-alt"></i>Edit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </app-card>
+        </div>
+
+    </div>
+
+
+</div>

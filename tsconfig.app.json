@@ -8,10 +8,16 @@
       "node"
     ]
   },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": false,
+    "strictTemplates": false
+  },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/app/modules/ngbootstrap/**",
+    "src/app/modules/material/**"
   ]
 }

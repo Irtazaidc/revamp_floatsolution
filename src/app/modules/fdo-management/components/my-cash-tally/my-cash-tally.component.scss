@@ -1,0 +1,30 @@
+.table-container {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        th {
+          position: sticky;
+          top: 0;
+          background-color: lightgrey; // Or use your theme color
+          border-bottom: 1px solid #777;
+          z-index: 2;
+        }
+      }
+    }
+  }
+}
+
+.sticky-footer{
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 2 !important;
+    background-color: #186f9a !important; /* Match your footer color */
+    color: white !important;
+}

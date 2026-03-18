@@ -1,0 +1,95 @@
+<!-- <div class="container"> -->
+<div class="test-profile-additional-configs">
+    <div class="row">
+        <!--  -->
+        <div class="col-md-4">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm"
+                                    [(ngModel)]="searchText" name="searchText" [ngModelOptions]="{standalone: true}" />
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom"><i
+                                        class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection"
+                            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Test Profile</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="pointer"
+                                    *ngFor="let item of testProfileList | filterByKey:searchText:['TestCompleteName']; let i = index"
+                                    (click)="getTestCommentWithID(item,i)"
+                                    [ngClass]="{'active-rec-border-left': i==rowIndex}">
+                                    <td style="padding-top: 6px; padding-bottom: 6px">{{i+1}}</td>
+                                    <td style="padding-top: 6px; padding-bottom: 6px">
+                                        <strong>{{item.TestProfileCode}}-</strong> {{item.TestProfileName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+
+        <div class="col-md-8" [ngClass]="{'offset-md-2': hasQueryParams}">
+            <app-card [title]="TPNameCardHeader||'Test Profile Config'">
+                <form #TestProfileConfig="ngForm" role="form" name="TestProfileConfig">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.mainFormSection" size="medium" color="#fff" type="square-loader"
+                                [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="ckeditor-tp">
+                                        <label>Report Comments:</label>
+                                        <!-- <ckeditor name="TPComments" class="custom-ckeditor2" id="myCkEditor2"
+                                            [(ngModel)]="TPComments">
+                                        </ckeditor> -->
+                                        <ckeditor [config]="getConfig()" debounce="500" [(ngModel)]="TPComments"
+                                            [ngModelOptions]="{standalone: true}"> </ckeditor>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right mt-2">
+                            <div class="input-group " style="display: inline-block;" *ngIf="TPID">
+                                <button [disabled]="disabledButton" type="button" class="btn btn-primary btn-sm"
+                                    title="Save Role" mwlConfirmationPopover [popoverTitle]="'Please Confirm...!'"
+                                    [popoverMessage]="'Are you <strong>sure</strong> want to submit the form?'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]" (confirm)="updateTPComments()"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="btn btn-sm btn-primary"
+                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <i class="fa fa-save m-0"></i> Save <i class="spinner-border-custom"
+                                        aria-hidden="true" [hidden]="isSpinner"></i>
+                                </button>
+                                <button type="reset" class="btn btn-outline-danger btn-sm ml-2"><i
+                                        class="fa fa-eraser m-0"></i>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,33 @@
+.advance-btn{
+    padding: 3% 30% 5% 28% !important;
+}
+@media only screen and (max-width: 800px) {
+    .btn {
+        padding: 8px !important;
+    }
+    .btn-mt{
+        margin-top:2px !important
+    }
+}
+.table-container tbody tr {
+    cursor: pointer !important;
+}
+
+
+.table thead th, .table thead td {
+     padding:4px 0px !important;
+}
+
+.family-card-alert {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff0000; /* bright red */
+  color: #fff;               /* white text */
+  font-weight: 700;
+  font-size: 1rem;
+  border: 2px solid #990000;
+  border-radius: 6px;
+  text-align: center;
+}
+
+

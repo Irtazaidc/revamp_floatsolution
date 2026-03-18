@@ -1,0 +1,341 @@
+
+<div class="roles-page">
+    <div class="row">
+        <!-- begin:: Disclaimer Configuration Listing -->
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getDDisclaimer(null, null)"><i class="ti-reload"></i></button>
+                                <button type="button" (click)="clearForm()" class="btn btn-outline-primary btn-sm ml-1 pull-right" ngbTooltip="Add new disclaimer"><i class="ti-plus"></i>New</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row-12">
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <button (click)="disclaimerFilter(1);"  class="btn btn-mini mr-3" [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th" aria-hidden="true"></i> All <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAll}}</span></button>
+                               
+                                <button (click)="disclaimerFilter(2)" class="btn btn-mini mr-3" [ngClass]="isLab? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-flask" aria-hidden="true"></i>Lab <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countLab}}</span></button>
+    
+                                <button (click)="disclaimerFilter(3)"  class="btn btn-mini " [ngClass]="isRadio ? 'btn-primary' : 'btn-outline-primary'"><i class="fas fa-tv" aria-hidden="true"></i>Radio 
+                                    <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countRadiology}}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="table-responsive fixed-height-table" style="overflow-x: hidden;">
+                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.disclaimerListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                            <p style="color: white"> Loading... </p>
+                        </ngx-spinner>
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%">#</th>
+                                    <th style="width: 25%">Title</th>
+                                    <th style="width: 70%">Disclaimer</th>
+                                    <th style="width: 3%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="disclaimerList.length; else noData">
+                                    <tr  class="pointer" *ngFor="let item of disclaimerList| filterByKey: searchText:['DisclaimerTitle']; ; let i = index" (click)="getDDisclaimer(item.DDisclaimerID, i)"
+                                        [ngClass]="{'active-rec-border-left': rowIndex==i}" >
+                                        <td style="width: 2%" >{{i+1}}</td>
+                                        <td style="width: 25%" >{{item.DisclaimerTitle}}</td>
+                                        <td style="width: 70%">{{truncate(item.DisclaimerBody,40)}}</td>
+                                        <td style="width: 3%">
+                                            <a (click)="getDataForTestAssociation()" class="cursor-pointer" style="font-size: 17px;"  ngbTooltip="Associate Test(s) with disclaimer"> 
+                                                <i class="fas fa-link text-primary"></i>
+                                            </a>
+                                        </td>
+                                        
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noData>
+                                    <tr>
+                                        <td class="text-center" colspan="4">
+                                            <app-no-record-found></app-no-record-found>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <!-- end:: Disclaimer Configuration Listing-->
+
+
+        <!-- begin:: Disclaimer Configuration Form and Test Association -->
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <mat-card>
+                <mat-card-content >
+                    <mat-tab-group (selectedTabChange)="tabSelected($event)" [(selectedIndex)]="selectedIndex">
+                        <!-- begin:: Disclaimer Configuration Form -->
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"/>
+                                        <path d="M18.6225,9.75 L18.75,9.75 C19.9926407,9.75 21,10.7573593 21,12 C21,13.2426407 19.9926407,14.25 18.75,14.25 L18.6854912,14.249994 C18.4911876,14.250769 18.3158978,14.366855 18.2393549,14.5454486 C18.1556809,14.7351461 18.1942911,14.948087 18.3278301,15.0846699 L18.372535,15.129375 C18.7950334,15.5514036 19.03243,16.1240792 19.03243,16.72125 C19.03243,17.3184208 18.7950334,17.8910964 18.373125,18.312535 C17.9510964,18.7350334 17.3784208,18.97243 16.78125,18.97243 C16.1840792,18.97243 15.6114036,18.7350334 15.1896699,18.3128301 L15.1505513,18.2736469 C15.008087,18.1342911 14.7951461,18.0956809 14.6054486,18.1793549 C14.426855,18.2558978 14.310769,18.4311876 14.31,18.6225 L14.31,18.75 C14.31,19.9926407 13.3026407,21 12.06,21 C10.8173593,21 9.81,19.9926407 9.81,18.75 C9.80552409,18.4999185 9.67898539,18.3229986 9.44717599,18.2361469 C9.26485393,18.1556809 9.05191298,18.1942911 8.91533009,18.3278301 L8.870625,18.372535 C8.44859642,18.7950334 7.87592081,19.03243 7.27875,19.03243 C6.68157919,19.03243 6.10890358,18.7950334 5.68746499,18.373125 C5.26496665,17.9510964 5.02757002,17.3784208 5.02757002,16.78125 C5.02757002,16.1840792 5.26496665,15.6114036 5.68716991,15.1896699 L5.72635306,15.1505513 C5.86570889,15.008087 5.90431906,14.7951461 5.82064513,14.6054486 C5.74410223,14.426855 5.56881236,14.310769 5.3775,14.31 L5.25,14.31 C4.00735931,14.31 3,13.3026407 3,12.06 C3,10.8173593 4.00735931,9.81 5.25,9.81 C5.50008154,9.80552409 5.67700139,9.67898539 5.76385306,9.44717599 C5.84431906,9.26485393 5.80570889,9.05191298 5.67216991,8.91533009 L5.62746499,8.870625 C5.20496665,8.44859642 4.96757002,7.87592081 4.96757002,7.27875 C4.96757002,6.68157919 5.20496665,6.10890358 5.626875,5.68746499 C6.04890358,5.26496665 6.62157919,5.02757002 7.21875,5.02757002 C7.81592081,5.02757002 8.38859642,5.26496665 8.81033009,5.68716991 L8.84944872,5.72635306 C8.99191298,5.86570889 9.20485393,5.90431906 9.38717599,5.82385306 L9.49484664,5.80114977 C9.65041313,5.71688974 9.7492905,5.55401473 9.75,5.3775 L9.75,5.25 C9.75,4.00735931 10.7573593,3 12,3 C13.2426407,3 14.25,4.00735931 14.25,5.25 L14.249994,5.31450877 C14.250769,5.50881236 14.366855,5.68410223 14.552824,5.76385306 C14.7351461,5.84431906 14.948087,5.80570889 15.0846699,5.67216991 L15.129375,5.62746499 C15.5514036,5.20496665 16.1240792,4.96757002 16.72125,4.96757002 C17.3184208,4.96757002 17.8910964,5.20496665 18.312535,5.626875 C18.7350334,6.04890358 18.97243,6.62157919 18.97243,7.21875 C18.97243,7.81592081 18.7350334,8.38859642 18.3128301,8.81033009 L18.2736469,8.84944872 C18.1342911,8.99191298 18.0956809,9.20485393 18.1761469,9.38717599 L18.1988502,9.49484664 C18.2831103,9.65041313 18.4459853,9.7492905 18.6225,9.75 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                        <path d="M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z" fill="#000000"/>
+                                    </g>
+                                </svg></span>
+                                Disclaimer Config
+                            </ng-template>
+                            <app-card [title]="CardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                                <div class="card-body" *matTabContent>
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.addUpdateSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                                <div class="form-group">
+                                                    <label for="DisclaimerTitle" class="control-label">Disclaimer Title:</label>
+                                                    <input type="text" class="form-control form-control-sm" name="DisclaimerTitle" [(ngModel)]="DisclaimerTitle"
+                                                        [ngClass]="{'invalid': (!DisclaimerTitle || DisclaimerTitle==''), 'invalid-highlighted': (!DisclaimerTitle || DisclaimerTitle=='') && actionButtonClicked}"
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                                <div class="form-group">
+                                                    <label for="DisclaimerBodyHTML" class="control-label">Disclaimer:</label>
+                                                    <ckeditor [required]="true" debounce="500" [(ngModel)]="DisclaimerBodyHTML"  [ngModelOptions]="{standalone: true}" class="custom-ckeditor">
+                                                    </ckeditor>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                <div *ngIf="existingSectionIDs.length && existingTPIDs.length" class="disclaimer-container text-center" style="margin-top: -17px;">
+                                                    <small class="disclaimer-text">
+                                                        This disclaimer is linked to a Section/Test and cannot be edited. Please create a new one.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">                                                
+                                                <button type="reset" [disabled]="(existingSectionIDs.length && existingTPIDs.length)" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                                <button
+                                                    [disabled]="disabledButton || (existingSectionIDs.length && existingTPIDs.length)"
+                                                    class="btn btn-sm btn-primary pull-right"
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="'Please confirm...!'"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="insertDDisclaimer()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true">
+                                                    <i 
+                                                    [ngClass]="(TPDisclaimerID)?'fa fa-edit':'fa fa-save'"
+                                                    ></i>{{ActionLabel}} <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                                </button>
+                                                <button *ngIf="DDisclaimerID"
+                                                    [disabled]="disabledButtonDeative"
+                                                    class="btn btn-sm btn-danger pull-right mr-2"
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfigDeative.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfigDeative.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfigDeative.confirmText"
+                                                    [cancelText]="confirmationPopoverConfigDeative.cancelText"
+                                                    [placement]="confirmationPopoverConfigDeative.placements[0]"
+                                                    (confirm)="deActiveDisclaimer()"
+                                                    (cancel)="confirmationPopoverConfigDeative.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfigDeative.confirmClicked = false; confirmationPopoverConfigDeative.cancelClicked = false"
+                                                    [appendToBody]="true">
+                                                    <i 
+                                                    [ngClass]="(TPDisclaimerID)?'fa fa-trash':'fa fa-trash'"
+                                                    ></i>Deative <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerDeative" ></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                </div>
+                            </app-card>
+                        </mat-tab>
+                        <!-- end:: Disclaimer Configuration Form -->
+
+                        <!-- begin:: Disclaimer Configuration Section Test Association -->
+                        <mat-tab [disabled]='!DDisclaimerID'> 
+                            <ng-template mat-tab-label>
+                                <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"/>
+                                        <path d="M11.7573593,15.2426407 L8.75735931,15.2426407 C8.20507456,15.2426407 7.75735931,15.6903559 7.75735931,16.2426407 C7.75735931,16.7949254 8.20507456,17.2426407 8.75735931,17.2426407 L11.7573593,17.2426407 L11.7573593,18.2426407 C11.7573593,19.3472102 10.8619288,20.2426407 9.75735931,20.2426407 L5.75735931,20.2426407 C4.65278981,20.2426407 3.75735931,19.3472102 3.75735931,18.2426407 L3.75735931,14.2426407 C3.75735931,13.1380712 4.65278981,12.2426407 5.75735931,12.2426407 L9.75735931,12.2426407 C10.8619288,12.2426407 11.7573593,13.1380712 11.7573593,14.2426407 L11.7573593,15.2426407 Z" fill="#000000" opacity="0.3" transform="translate(7.757359, 16.242641) rotate(-45.000000) translate(-7.757359, -16.242641) "/>
+                                        <path d="M12.2426407,8.75735931 L15.2426407,8.75735931 C15.7949254,8.75735931 16.2426407,8.30964406 16.2426407,7.75735931 C16.2426407,7.20507456 15.7949254,6.75735931 15.2426407,6.75735931 L12.2426407,6.75735931 L12.2426407,5.75735931 C12.2426407,4.65278981 13.1380712,3.75735931 14.2426407,3.75735931 L18.2426407,3.75735931 C19.3472102,3.75735931 20.2426407,4.65278981 20.2426407,5.75735931 L20.2426407,9.75735931 C20.2426407,10.8619288 19.3472102,11.7573593 18.2426407,11.7573593 L14.2426407,11.7573593 C13.1380712,11.7573593 12.2426407,10.8619288 12.2426407,9.75735931 L12.2426407,8.75735931 Z" fill="#000000" transform="translate(16.242641, 7.757359) rotate(-45.000000) translate(-16.242641, -7.757359) "/>
+                                        <path d="M5.89339828,3.42893219 C6.44568303,3.42893219 6.89339828,3.87664744 6.89339828,4.42893219 L6.89339828,6.42893219 C6.89339828,6.98121694 6.44568303,7.42893219 5.89339828,7.42893219 C5.34111353,7.42893219 4.89339828,6.98121694 4.89339828,6.42893219 L4.89339828,4.42893219 C4.89339828,3.87664744 5.34111353,3.42893219 5.89339828,3.42893219 Z M11.4289322,5.13603897 C11.8194565,5.52656326 11.8194565,6.15972824 11.4289322,6.55025253 L10.0147186,7.96446609 C9.62419433,8.35499039 8.99102936,8.35499039 8.60050506,7.96446609 C8.20998077,7.5739418 8.20998077,6.94077682 8.60050506,6.55025253 L10.0147186,5.13603897 C10.4052429,4.74551468 11.0384079,4.74551468 11.4289322,5.13603897 Z M0.600505063,5.13603897 C0.991029355,4.74551468 1.62419433,4.74551468 2.01471863,5.13603897 L3.42893219,6.55025253 C3.81945648,6.94077682 3.81945648,7.5739418 3.42893219,7.96446609 C3.0384079,8.35499039 2.40524292,8.35499039 2.01471863,7.96446609 L0.600505063,6.55025253 C0.209980772,6.15972824 0.209980772,5.52656326 0.600505063,5.13603897 Z" fill="#000000" opacity="0.3" transform="translate(6.014719, 5.843146) rotate(-45.000000) translate(-6.014719, -5.843146) "/>
+                                        <path d="M17.9142136,15.4497475 C18.4664983,15.4497475 18.9142136,15.8974627 18.9142136,16.4497475 L18.9142136,18.4497475 C18.9142136,19.0020322 18.4664983,19.4497475 17.9142136,19.4497475 C17.3619288,19.4497475 16.9142136,19.0020322 16.9142136,18.4497475 L16.9142136,16.4497475 C16.9142136,15.8974627 17.3619288,15.4497475 17.9142136,15.4497475 Z M23.4497475,17.1568542 C23.8402718,17.5473785 23.8402718,18.1805435 23.4497475,18.5710678 L22.0355339,19.9852814 C21.6450096,20.3758057 21.0118446,20.3758057 20.6213203,19.9852814 C20.2307961,19.5947571 20.2307961,18.9615921 20.6213203,18.5710678 L22.0355339,17.1568542 C22.4260582,16.76633 23.0592232,16.76633 23.4497475,17.1568542 Z M12.6213203,17.1568542 C13.0118446,16.76633 13.6450096,16.76633 14.0355339,17.1568542 L15.4497475,18.5710678 C15.8402718,18.9615921 15.8402718,19.5947571 15.4497475,19.9852814 C15.0592232,20.3758057 14.4260582,20.3758057 14.0355339,19.9852814 L12.6213203,18.5710678 C12.2307961,18.1805435 12.2307961,17.5473785 12.6213203,17.1568542 Z" fill="#000000" opacity="0.3" transform="translate(18.035534, 17.863961) scale(1, -1) rotate(45.000000) translate(-18.035534, -17.863961) "/>
+                                    </g>
+                                </svg></span>
+                                TP Association
+                            </ng-template>
+                            <app-card [title]="AssociationCardTitle" [cardClass]="'tim-card tim-card tim-card-primary'" *matTabContent>
+                                <div class="card-body">
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.testAssociationSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                            <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Sections ({{subSectionList.length}})</legend>
+                                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.sectionListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                    <p style="color: white"> Loading... </p>
+                                                </ngx-spinner>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="input-group">
+                                                            <input type="text" placeholder="Search Section" class="form-control form-control-sm" [(ngModel)]="searchTextSection" [ngModelOptions]="{standalone: true}" name="searchTextForSection"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                    <table class="table table-hover cursor-pointer compact table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="5%" [hidden]="hideSections"> <input type="checkbox" class="cursor-pointer"
+                                                                    (change)="selectAllTestsSection($event.target.checked);" /> </th>
+                                                                <th style="width: 65%;">Section</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngIf="!subSectionList.length">
+                                                                <td class="text-center bg-gray" colspan="2"><span class="">No section found</span></td>
+                                                            </tr>
+                                                            <tr *ngFor="let sec of subSectionList | filterByKey:searchTextSection:['SubSectionCode'];let i=index;">
+                                                                <td [hidden]="hideSections"> <input class="cursor-pointer" type="checkbox"  [(ngModel)]="sec.checked" [ngModelOptions]="{standalone: true}"  (change)="getTestProfileBySectionIDs()" /></td>
+                                                                <td>{{sec.SubSectionCode || sec.SubSectionShortName}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 ">
+                                            <fieldset class="fieldset-primary fieldset-border-top"><legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Tests ({{testProfileList.length}})</legend>
+                                                <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.testListSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                    <p style="color: white"> Loading... </p>
+                                                </ngx-spinner>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="input-group">
+                                                            <input type="text" placeholder="Search Test" class="form-control form-control-sm" [(ngModel)]="searchTextTest" [ngModelOptions]="{standalone: true}" name="searchTextTest"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                                                    <table class="table table-hover cursor-pointer compact table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 5%;" [hidden]="hideSections"> <input class="cursor-pointer" type="checkbox"
+                                                                    (change)="selectAllTests($event.target.checked)" /> </th>
+                                                                <th style="width: 95%;">Test</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <ng-container *ngIf="testProfileList.length; else noTest">
+                                                                <tr *ngFor="let sec of testProfileList | filterByKey:searchTextTest:['TPName'];let i=index;">
+                                                                    <td [hidden]="hideSections" style="width: 5%;"> <input type="checkbox" class="cursor-pointer" [(ngModel)]="sec.checked" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td style="width: 95%;">{{sec.TPName}}</td>
+                                                                </tr>
+                                                            </ng-container>
+                                                            <ng-template #noTest>
+                                                                <tr>
+                                                                    <td style="width: 100%;"class="text-center" colspan="2">
+                                                                        <app-no-record-found [pyClassParam]="'py-5'" [infoMessageParam]="'No test found'"></app-no-record-found>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-template>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <hr>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button *ngIf="hideSections"
+                                                class="btn btn-sm btn-outline-danger pull-right"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="'Please confirm...!'"
+                                                [popoverMessage]="'Are you <strong>sure</strong> want to edit?'"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="enableDisableAction(1)"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="btn btn-sm btn-primary"
+                                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i 
+                                                class="ti-pencil-alt"
+                                                ></i>Edit 
+                                            </button>
+                                            <button *ngIf="!hideSections"
+                                                class="btn btn-sm btn-outline-danger pull-right"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="'Please confirm...!'"
+                                                [popoverMessage]="'Are you <strong>sure</strong> want to edit?'"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="enableDisableAction(2)"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="btn btn-sm btn-primary"
+                                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i 
+                                                class="fa fa-window-close"
+                                                ></i>Cancel 
+                                            </button>
+                                            <button *ngIf="!hideSections"
+                                                [disabled]="disabledButtonAssociation"
+                                                class="btn btn-sm btn-primary pull-right mr-2"
+                                                mwlConfirmationPopover
+                                                [popoverTitle]="'Please confirm...!'"
+                                                [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                [confirmText]="confirmationPopoverConfig.confirmText"
+                                                [cancelText]="confirmationPopoverConfig.cancelText"
+                                                [placement]="confirmationPopoverConfig.placements[0]"
+                                                (confirm)="insertTPDisclaimer()"
+                                                (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                confirmButtonType="btn btn-sm btn-primary"
+                                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                [appendToBody]="true">
+                                                <i 
+                                               class="ti-save"
+                                                ></i>Save <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerAssociation" ></i>
+                                            </button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </app-card>
+                        </mat-tab>
+                        <!-- end:: Disclaimer Configuration Section Test Association -->
+                    </mat-tab-group>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <!-- End:: Disclaimer Configuration Form and Test Association -->
+    </div>
+</div>

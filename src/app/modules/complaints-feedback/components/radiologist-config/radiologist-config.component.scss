@@ -1,0 +1,110 @@
+
+  // .tim-card-primary {
+  //   background: linear-gradient(135deg, #1bc5bd, #159c94);
+  //   border-radius: 12px;
+  //   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  //   padding: 20px;
+  //   color: #fff;
+  // }
+  
+  /* Search Input */
+  input.form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  input.form-control:focus {
+    border-color: #1bc5bd;
+    box-shadow: 0 0 8px rgba(27, 197, 189, 0.5);
+  }
+  
+  /* Table Styling */
+  .table-container {
+    // border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    // padding: 15px;
+    // box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .fixed-height-table {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  
+  .sticky-header {
+    background: #1bc5bd;
+    color: rgb(26, 22, 22);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  /* Table Rows */
+  .table tbody tr:hover {
+    background: rgba(27, 197, 189, 0.1);
+    cursor: pointer;
+  }
+  
+  /* Checkbox Styling */
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #1bc5bd;
+    cursor: pointer;
+  }
+  
+  /* Select Dropdowns */
+  ng-select {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    width: 100%;
+  }
+  
+  /* Remarks Textarea */
+  textarea {
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 14px;
+    resize: none;
+  }
+  
+  /* Validation Highlights */
+  .invalid {
+    border: 2px solid red !important;
+  }
+  
+  .invalid-highlighted {
+    background: rgba(255, 0, 0, 0.1);
+  }
+  
+  /* Buttons */
+  .btn-primary {
+    background: #159c94;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background: #117d78;
+  }
+  
+  .spinner-border-custom {
+    width: 18px;
+    height: 18px;
+    margin-left: 5px;
+    border-width: 2px;
+  }
+  
+  /* Confirmation Popover */
+  .popover {
+    border-radius: 8px;
+  }
+  

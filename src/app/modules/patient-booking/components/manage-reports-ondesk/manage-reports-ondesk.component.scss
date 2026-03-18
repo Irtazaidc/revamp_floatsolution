@@ -1,0 +1,22 @@
+.custom-button{
+    padding: 10px 50px;
+}
+
+.balance-due {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 2px solid #ff4500; /* Bright red-orange border */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #ffe4e1; /* Light coral background */
+    color: #d80000; /* Bold red text */
+    font-size: 1.2rem; /* Slightly larger font size */
+    font-weight: bold; /* Make text bold */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s, box-shadow 0.3s; /* Hover animations */
+  }
+  
+  .balance-due:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+  }
+  

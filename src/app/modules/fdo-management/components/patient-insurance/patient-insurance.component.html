@@ -1,0 +1,430 @@
+<div class="container-fluid">
+  <div class="card card-custom">
+    <div class="card-body pb-0">
+      <form
+        [formGroup]="filterForm"
+        class="form-horizontal"
+        name="form"
+        role="form"
+      >
+        <div class="row container form-group justify-content-center">
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2">
+            <label class="control-label">Date From:</label>
+            <div class="effective-date-time mt-1 d-flex align-items-center">
+              <input
+                (click)="dateFrom.toggle()"
+                #dateFrom="ngbDatepicker"
+                placeholder="dd-mm-yyyy"
+                ngbDatepicker
+                value="1980-08-26"
+                formControlName="dateFrom"
+                name="dateFrom"
+                class="form-control"
+                type="text"
+                value=""
+                [ngClass]="{
+                  invalid: filterForm.get('dateFrom').errors,
+                  'invalid-highlighted':
+                    filterForm.get('dateFrom').errors && isSubmitted
+                }"
+                [maxDate]="maxDate"
+              />
+              <ngb-timepicker
+                #timePicker
+                class="mini-input-field time-picker ml-2 mb-2"
+                formControlName="timeFrom"
+                [spinners]="false"
+                [ngClass]="{
+                  invalid: filterForm.get('timeFrom').errors,
+                  'invalid-highlighted':
+                    filterForm.get('timeFrom').errors && isSubmitted
+                }"
+              >
+              </ngb-timepicker>
+            </div>
+            <small class="text-danger">* 24-hour format</small>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2">
+            <label>Date To:</label>
+            <div class="effective-date-time mt-1 d-flex align-items-center">
+              <input
+                (click)="dateTo.toggle()"
+                placeholder="dd-mm-yyyy"
+                #dateTo="ngbDatepicker"
+                ngbDatepicker
+                formControlName="dateTo"
+                class="form-control"
+                name="dateTo"
+                type="text"
+                value=""
+                [ngClass]="{
+                  invalid: filterForm.get('dateTo').errors,
+                  'invalid-highlighted':
+                    filterForm.get('dateTo').errors && isSubmitted
+                }"
+                [maxDate]="maxDate"
+              />
+              <ngb-timepicker
+                #timePicker
+                class="mini-input-field time-picker ml-2 mb-2"
+                formControlName="timeTo"
+                [spinners]="false"
+                [ngClass]="{
+                  invalid: filterForm.get('timeTo').errors,
+                  'invalid-highlighted':
+                    filterForm.get('timeTo').errors && isSubmitted
+                }"
+              >
+              </ngb-timepicker>
+            </div>
+            <small class="text-danger">* 24-hour format</small>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-4">
+            <label class="control-label">Branch:</label>
+
+            <div class="form-group">
+              <ng-select
+                id="pat_branch"
+                style="width: 100%"
+                [ngClass]="{
+                  invalid: filterForm.get('locationid').errors,
+                  'invalid-highlighted':
+                    filterForm.get('locationid').errors && isSubmitted
+                }"
+                formControlName="locationid"
+                [items]="branchList"
+                bindLabel="Title"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                bindValue="LocId"
+                placeholder="--Select Branch--"
+              >
+                <ng-template
+                  ng-multi-label-tmp
+                  let-items="items"
+                  let-clear="clear"
+                >
+                  <div
+                    class="ng-value"
+                    *ngFor="let item of items | slice : 0 : 2"
+                  >
+                    <span
+                      class="ng-value-icon right"
+                      (click)="clear(item)"
+                      aria-hidden="true"
+                      >×</span
+                    >
+                    <span class="ng-value-label"> {{ item.Title }}</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label"
+                      >{{ items.length - 2 }} more...</span
+                    >
+                  </div>
+                </ng-template>
+                <ng-template ng-header-tmp>
+                  <button
+                    (click)="onSelectAllBranches()"
+                    class="btn btn-mini btn-outline-primary"
+                    type="button"
+                  >
+                    <i class="ti-check"></i>Select all
+                  </button>
+                  <button
+                    (click)="onUnselectAllBranches()"
+                    class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                    type="button"
+                  >
+                    <i class="ti-close"></i>Unselect all
+                  </button>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-4">
+            <label class="control-label">Patient Type:</label>
+            <div class="form-group">
+              <ng-select
+                class="mr-1"
+                style="width: 100%"
+                value=""
+                [items]="patientTypeList"
+                bindLabel="Title"
+                (change)="onPanelChange($event)"
+                placeholder="Select Patient Type"
+                bindValue="TypeId"
+                formControlName="TypeId"
+                name="TypeId"
+              >
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-1">
+            <label for="DateTo" class="control-label">Panel:</label>
+            <div class="input-group">
+              <ng-select
+                id="tp_panel"
+                style="width: 100%"
+                #panel
+                [items]="panelsList"
+                bindLabel="CodeName"
+                bindValue="PanelId"
+                placeholder="Select Panel"
+                name="panel"
+                formControlName="PanelId"
+                [ngClass]="{
+                  invalid: filterForm.get('PanelId').errors,
+                  'invalid-highlighted':
+                    filterForm.get('PanelId').errors && isSubmitted
+                }"
+              >
+              </ng-select>
+            </div>
+            <ngx-spinner
+              class="spinner-warning"
+              bdColor="rgba(0,0,0,0.8)"
+              [name]="spinnerRefs.panelsDropdown"
+              size="medium"
+              color="#fff"
+              type="square-loader"
+              [fullScreen]="false"
+            >
+              <p style="color: white">Loading...</p>
+            </ngx-spinner>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <label lass="control-label">Registration Type:</label>
+            <div class="form-group">
+              <select
+                class="form-control"
+                [(ngModel)]="ForHomeSampling"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Select status"
+              >
+                <option
+                  *ngFor="let b of statusOptionForRegistration"
+                  [value]="b.value"
+                >
+                  {{ b.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+            <label lass="control-label">Status:</label>
+            <div class="form-group">
+              <select
+                class="form-control"
+                [(ngModel)]="isActive"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Select status"
+              >
+                <option *ngFor="let b of statusOptions" [value]="b.value">
+                  {{ b.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-7 col-xl-3 col-lg-4 col-md-6 col-sm-12 ">
+            <div
+              (click)="getPatientInsuranceData()"
+              class="btn btn-primary mt-1"
+              type="button"
+            >
+              Search
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <ngx-spinner
+        class="spinner-warning"
+        [name]="spinnerRefs.dataTable"
+        bdColor="rgba(0,0,0,0.8)"
+        size="medium"
+        color="#fff"
+        type="square-loader"
+        [fullScreen]="false"
+      >
+        <p style="color: white">Loading...</p>
+      </ngx-spinner>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12">
+          <div class="input-group">
+            <input
+              type="text"
+              placeholder="Type to filter: MRN, Patient Name, Cell, Visit ID, Policy No"
+              class="form-control form-control-sm"
+              [(ngModel)]="searchText"
+              name="searchText"
+              (keyup)="filterResults()"
+            />
+            <button
+              class="btn btn-mini btn-outline-primary input-group-btn-custom"
+              (click)="getPatientInsuranceData()"
+            >
+              <i class="ti-reload"></i>
+            </button>
+            <button
+              class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+              ngbTooltip="Export To Excel"
+              (click)="exportAsExcel()"
+            >
+              <i class="fa fa-file-excel"></i>
+            </button>
+            <span
+              class="badge badge-success cursor-pointer ml-1"
+              ngbTooltip="Total Cases"
+            >
+              <span class="badge badge-light badge-light-custom">
+                {{ insuranceDataList.length || 0 }}
+              </span>
+            </span>
+            <span
+              class="badge badge-primary cursor-pointer ml-1"
+              ngbTooltip="Active"
+            >
+              <span class="badge badge-light badge-light-custom">
+                {{ activeCases }}
+              </span>
+            </span>
+            <span
+              class="badge badge-danger cursor-pointer ml-1"
+              ngbTooltip="InActive"
+            >
+              <span class="badge badge-light badge-light-custom">
+                {{ inactiveCases }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive table-container">
+        <table class="table table-hover compact" style="width: 100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th width="8%">MRN</th>
+              <th>PatientName</th>
+              <th width="8%">Age / Gender</th>
+              <th>Cell</th>
+              <th>VisitID</th>
+              <th>VisitDate</th>
+              <th *ngIf="showLocColumn">Location</th>
+              <th>Amount</th>
+              <th>Registration</th>
+              <th>Status</th>
+              <th>Active Date</th>
+              <th>Expire Date</th>
+              <th width="8%">Policy No</th>
+              <th>Registered By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="text-center"
+              *ngIf="!insuranceDataList || insuranceDataList == ''"
+            >
+              <td colspan="15">
+                <div class="container-fluid">
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+            <tr
+              *ngFor="
+                let data of pagination.paginatedSearchResults;
+                let i = index
+              "
+            >
+              <td>
+                <strong>
+                  {{ (pagination.page - 1) * pagination.pageSize + i + 1 }}
+                </strong>
+              </td>
+              <td width="8%">{{ data.PatientMRNo || "-" }}</td>
+              <td>{{ data.PatientName || "-" }}</td>
+              <td width="8%">
+                {{ data.Age || "-" }} / {{ data.Gender || "-" }}
+              </td>
+              <td>{{ data.Cell || "-" }}</td>
+              <td>{{ data.VisitID || "-" }}</td>
+              <td>
+                {{
+                  data.VisitDate
+                    ? (data.VisitDate | date : "dd MMM, yyyy, h:mm a")
+                    : "-"
+                }}
+              </td>
+              <td *ngIf="showLocColumn">{{ data.LocCode || "-" }}</td>
+              <td>
+                {{
+                  (data.RegInvoiceAmt
+                    | currency : "Rs." : "symbol" : "1.0-0") || "-"
+                }}
+              </td>
+              <td>
+                {{
+                  data.isNormalRegistration === 1 ? "Normal" : "Home Sampling"
+                }}
+              </td>
+              <td [ngClass]="getInsuranceStatusClass(data)">
+                <strong>{{ getInsuranceStatusText(data) }}</strong>
+              </td>
+              <td>
+                {{
+                  data.InsuranceActiveDate
+                    ? (data.InsuranceActiveDate | date : "dd MMM, yyyy, h:mm a")
+                    : "-"
+                }}
+              </td>
+              <td>
+                {{
+                  data.InsuranceExpireDate
+                    ? (data.InsuranceExpireDate | date : "dd MMM, yyyy, h:mm a")
+                    : "-"
+                }}
+              </td>
+              <td width="8%" style="word-break: break-word">
+                {{ data.PatientPolicyNo || "-" }}
+              </td>
+              <td>{{ data.CreatedBy || "-" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+        <div class="col-md-6 col-sm-12">
+          <ngb-pagination
+            [collectionSize]="pagination.collectionSize"
+            [(page)]="pagination.page"
+            [pageSize]="pagination.pageSize"
+            [boundaryLinks]="true"
+            [maxSize]="5"
+            [rotate]="true"
+            (pageChange)="refreshPagination()"
+          >
+          </ngb-pagination>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <select
+            class="custom-select pull-right"
+            style="width: auto"
+            [(ngModel)]="pagination.pageSize"
+            (ngModelChange)="refreshPagination()"
+          >
+            <option [ngValue]="5">5 items per page</option>
+            <option [ngValue]="10">10 items per page</option>
+            <option [ngValue]="20">20 items per page</option>
+            <option [ngValue]="50">50 items per page</option>
+            <option [ngValue]="100">100 items per page</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

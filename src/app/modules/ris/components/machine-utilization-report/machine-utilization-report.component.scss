@@ -1,0 +1,55 @@
+/* Wrapper */
+.utilization-table-wrapper {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+/* Table */
+.utilization-table {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Header */
+.utilization-table thead th {
+  background: #f4f6f9;
+  color: #2c2c2c;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Body cells */
+.utilization-table tbody td {
+  vertical-align: middle;
+  padding: 8px 10px;
+}
+
+/* Hover effect */
+.utilization-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Failed rows */
+.failed-row {
+  background-color: #fff5f5;
+  color: #dc3545;
+}
+
+.failed-row td {
+  font-weight: 500;
+}
+
+/* Time taken highlight */
+.time-taken {
+  font-weight: 600;
+  color: #0d6efd;
+}
+
+/* Center important columns */
+.utilization-table th:first-child,
+.utilization-table td:first-child {
+  text-align: center;
+  width: 50px;
+}

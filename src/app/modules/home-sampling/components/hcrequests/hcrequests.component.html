@@ -1,0 +1,3133 @@
+<div class="card card-custom">
+  <div class="card-header">
+    <div class="card-title">
+      <span class="card-icon">
+        <i class="flaticon2-setup text-primary ml-3"></i>
+      </span>
+      <h3 class="card-label">
+        Home Collection Requests
+        <small>Search HC Requests Data</small>
+      </h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- #region  Filters-->
+    <!-- <mat-card class="mb-5"> -->
+    <!-- <mat-card-title> -->
+
+    <!-- </mat-card-title> -->
+    <!-- <mat-card-content> -->
+    <!-- <div class="row">
+            <div class="col-md-12">
+                <span *ngIf="isAllowFullScreen" (click)="OpenHCReqInFullScreen()"
+                    style="float: right;margin: 2%;cursor: pointer;"><i class="fa fa-expand" aria-hidden="true"></i>
+                </span>
+                <i [attr.aria-expanded]="!isCollapsed" ngbTooltip="Filters" (click)="isCollapsed = !isCollapsed"
+                    class="fas fa-filter mt-2 filter-icon"></i>
+            </div>
+        </div> -->
+    <div id="collapseExample" [ngbCollapse]="isCollapsed">
+      <form [formGroup]="HCForm" class="form-horizontal" name="form" role="form" (ngSubmit)="HCRequests()">
+        <div class="row form-group">
+          <div class="col-md-3 col-lg-2 col-sm-12">
+            <label class="control-label">Date From:</label>
+            <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="YYYY-MM-DD" autocomplete="off"
+              ngbDatepicker formControlName="dateFrom" name="dateFrom" class="form-control" type="text" [value]=""
+              [ngClass]="{'invalid': HCForm.get('dateFrom').errors , 'invalid-highlighted': HCForm.get('dateFrom').errors && isSubmitted }" />
+
+            <!-- <input (click)="dateFrom.toggle()" #dateFrom="ngbDatepicker" placeholder="dd-mm-yyyy"
+                                    ngbDatepicker value="1980-08-26" formControlName="dateFrom" name="dateFrom"
+                                    class="form-control mb-4" type="text" value="" /> -->
+          </div>
+
+          <div class="col-md-3 col-lg-2 col-sm-12">
+            <label class="control-label">Date To:</label>
+            <input (click)="dateTo.toggle()" #dateTo="ngbDatepicker" placeholder="YYYY-MM-DD" autocomplete="off"
+              ngbDatepicker formControlName="dateTo" name="dateTo" class="form-control" type="text" [value]=""
+              [ngClass]="{'invalid': HCForm.get('dateTo').errors , 'invalid-highlighted': HCForm.get('dateTo').errors && isSubmitted }" />
+          </div>
+          <!-- *ngIf="advancedSearchEnabled" -->
+          <div class="col-md-3 col-lg-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Cities:</label>
+              <ng-select multiple="true" tabindex="1" placeholder="HC City" formControlName="hcCity" name="hcCity"
+                [closeOnSelect]="true">
+                <ng-option style="width: 100%" [value]="city.HCCityID" *ngFor="let city of HomeCollectionCites">
+                  {{ city.Code }}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-3 col-lg-2 col-sm-12">
+            <ng-select
+              tabindex="1"
+              (change)="RidersDetailF()"
+              placeholder="Select Branch"
+              #branchid
+              formControlName="branchid"
+              name="branchid"
+              [closeOnSelect]="true"
+            >
+              <ng-option
+                style="width: 100%"
+                [value]="b.LocId"
+                *ngFor="let b of branchList"
+              >
+                {{ b.Title }}
+              </ng-option>
+            </ng-select>
+          </div> -->
+
+          <div class="col-md-3 col-lg-3 col-sm-12">
+            <label class="control-label">Riders:</label>
+            <ng-select #rd tabindex="1" placeholder="{{
+                RidersDetailListInParam.length
+              }} HC Staff Availabale " formControlName="rider" name="riderHCStaff" [closeOnSelect]="true">
+              <ng-option style="width: 100%" [value]="rider.RiderID" *ngFor="let rider of RidersDetailListInParam">
+                <i [ngStyle]="{
+                    color:
+                      rider.RiderStatusID == 1
+                        ? '#1fc645'
+                        : rider.RiderStatusID == 2
+                        ? 'grey'
+                        : null
+                  }" class="fas fa-circle" placement="left" ngbTooltip="Select HC Staff"></i>
+                {{ rider.RiderFullName }}
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <div *ngIf="advancedSearchEnabled" class="col-md-4 col-lg-4 mt-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Technician:</label>
+              <ng-select multiple="true" tabindex="1" placeholder="Technician" formControlName="techID" name="hcCity"
+                [closeOnSelect]="true">
+                <ng-option style="width: 100%" [value]="tech.RiderID" *ngFor="let tech of techList">
+                  {{ tech.RiderFullName }}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-4 col-lg-4 mt-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Helping Staff:</label>
+              <ng-select multiple="true" tabindex="1" placeholder="Helping Staff" formControlName="helpingStaffID"
+                name="helpingStaffID" [closeOnSelect]="true">
+                <ng-option style="width: 100%" [value]="hs.RiderID" *ngFor="let hs of HelpingStaffList">
+                  {{ hs.RiderFullName }}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-4 col-lg-4 mt-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Doctor:</label>
+              <ng-select multiple="true" tabindex="1" placeholder="Doctor" formControlName="doctorID" name="doctorID"
+                [closeOnSelect]="true">
+                <ng-option style="width: 100%" [value]="doc.RiderID" *ngFor="let doc of DocList">
+                  {{ doc.RiderFullName }}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">First Name:</label>
+              <input placeholder="First Name" formControlName="firstName" class="form-control" name="firstName"
+                type="text" value="" />
+            </div>
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-2 col-sm-12">
+            <label class="control-label">Booking ID:</label>
+            <input placeholder="BookingID" formControlName="bookingid" class="form-control mb-4" name="bookingid"
+              type="text" value="" />
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-2 col-sm-12">
+            <label class="control-label">HC Request ID:</label>
+            <input placeholder="RequestID" formControlName="HCrequestid" class="form-control mb-4" name="HCrequestid"
+              type="text" value="" />
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-2 col-lg-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Mobile Number:</label>
+              <input placeholder="Mobile Number" formControlName="mobileno" class="form-control" name="mobileno"
+                type="text" value="" />
+            </div>
+          </div>
+          <div *ngIf="advancedSearchEnabled" class="col-md-2 col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Email:</label>
+              <input placeholder="Email" formControlName="email" class="form-control" name="email" type="text" value=""
+                [ngClass]="{'invalid': HCForm.get('email').errors , 'invalid-highlighted': HCForm.get('email').errors && isSubmitted }" />
+            </div>
+          </div>
+
+          <div *ngIf="advancedSearchEnabled" class="col-md-3 col-lg-3 col-sm-12">
+            <label class="control-label">Status:</label>
+            <ng-select tabindex="1" placeholder="HC Status" formControlName="HCStatus" name="HCStatus"
+              [closeOnSelect]="true">
+              <ng-option style="width: 100%" [value]="bs.HCBookingStatusID" *ngFor="let bs of BookingStatusList">
+                {{ bs.HCBookingStatus }}
+              </ng-option>
+            </ng-select>
+          </div>
+          <!-- <div *ngIf="advancedSearchEnabled" class="col-md-2 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label">Last Name</label>
+                            <input formControlName="lastName" class="form-control" name="lastName" type="text"
+                                value="" />
+                        </div>
+                    </div> -->
+          <div class="col-md-3 col-lg-3 col-sm-12 pull-right mt-7">
+            <button class="btn btn-primary mt-1 mr-2" type="submit">
+              <i ngbTooltip="Search Requests" class="fa fa-search"></i>Search
+            </button>
+            <button type="button" class="btn btn-success mt-1" (click)="advancedSearch()">
+              <i class="flaticon-add-circular-button"></i>Advanced
+            </button>
+             <!-- <button type="button" class="btn btn-success mt-1" (click)="sendToAll()">
+              <i class="flaticon-add-circular-button"></i>Send Message to All
+            </button> -->
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- </mat-card-content>
+        </mat-card> -->
+
+    <!-- endregion -->
+
+    <!-- #region  Tabs-->
+  </div>
+</div>
+<div class="card card-custom gutter-b mt-3">
+  <div class="card-header card-header-tabs-line">
+    <!-- #region Tabs List Names-->
+    <div class="col-md-12 mt-2">
+      <div class="card-toolbar">
+        <ul class="nav" id="myTab" role="tablist">
+          <li ngbTooltip="Online Requests" class="nav-item bg-danger" [ngClass]="{ 'active-nav': visibleTab == 9 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(9)">
+              <span class="nav-icon"><i class="far fa-clock text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">MyIDC ({{ HCOnlineRequestList.length }})</span>
+            </a>
+          </li>
+          <li ngbTooltip="New Requests" class="nav-item bg-warning" [ngClass]="{ 'active-nav': visibleTab == 1 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(1)">
+              <span class="nav-icon"><i class="far fa-clock text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">New ({{ HCRequestList.length }})</span>
+            </a>
+          </li>
+          <li ngbTooltip="In Progress Requests" class="nav-item bg-primary"
+            [ngClass]="{ 'active-nav': visibleTab == 2 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(2)">
+              <span class="nav-icon"><i class="fa fa-spinner text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">In Prog. ({{ HCInProgressRequests.length }})</span>
+            </a>
+          </li>
+          <li ngbTooltip="Completed Requests" class="nav-item bg-green" [ngClass]="{ 'active-nav': visibleTab == 3 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(3)">
+              <span class="nav-icon"><i class="fas fa-check-circle text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">Completed ({{ HCCompletedRquestsList.length
+                }})</span>
+            </a>
+          </li>
+          <!-- <li
+            ngbTooltip="Urgent Requests"
+            class="nav-item bg-danger"
+            [ngClass]="{ 'active-nav': visibleTab == 4 }"
+          >
+            <a
+              class="nav-link"
+              href="javascript:void(0)"
+              (click)="tabChanged(4)"
+            >
+              <span class="nav-icon"
+                ><i
+                  class="fa fa-exclamation-triangle text-white font-weight-bolder"
+                ></i
+              ></span>
+              <span class="nav-text text-white font-weight-bolder"
+                >Urgent ({{ HCUrgentRequestList.length }})</span
+              >
+            </a>
+          </li> -->
+          <li ngbTooltip="Cancelled Requests" class="nav-item bg-purpule" [ngClass]="{ 'active-nav': visibleTab == 5 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(5)">
+              <span class="nav-icon"><i class="fa fa-times-circle text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">Cancelled ({{ HCCancelledRequestList.length
+                }})</span>
+            </a>
+          </li>
+          <li ngbTooltip="Cancellation Requests" class="nav-item bg-purple"
+            [ngClass]="{ 'active-nav': visibleTab == 11 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(11)">
+              <span class="nav-icon"><i class="fa fa-recycle text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">Cancellation Req. ({{
+                FilteredCancellationHCRequests.length }})</span>
+            </a>
+          </li>
+          <!-- <li ngbTooltip="Delayed Requests" class="nav-item bg-warning">
+                        <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(6)"
+                            [ngClass]="{'active-nav': visibleTab == 6}">
+                            <span class="nav-icon"><i class="fa-solid fa fa-clock text-white font-weight-bolder"></i></span>
+                            <span class="nav-text text-white font-weight-bolder"> Delayed ({{HCDelayedRequests.length}})</span>
+                        </a>
+                    </li> -->
+          <!-- <li class="nav-item bg-dark">
+                        <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(7)"
+                            [ngClass]="{'active-nav': visibleTab == 7}">
+                            <span class="nav-text text-white font-weight-bolder"> Missed ({{HCMissedRequests.length}})</span>
+                        </a>
+                    </li> -->
+          <li ngbTooltip="Visits" style="background-color: #007bff" class="nav-item"
+            [ngClass]="{ 'active-nav': visibleTab == 8 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(8)">
+              <span class="nav-icon"><i class="flaticon-users-1 text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">
+                Visits ({{ PendingBookingVisits.length }})</span>
+            </a>
+          </li>
+          <li style="background-color: #987070" class="nav-item" ngbTooltip="Requests from CCRs"
+            [ngClass]="{ 'active-nav': visibleTab == 10 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(10)">
+              <span class="nav-icon"><i class="flaticon-signs-1 text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">HSC Req.({{ hscReqCount }})
+              </span>
+            </a>
+          </li>
+          <li style="background-color: #e58a55" class="nav-item" ngbTooltip="HC Staff Req."
+            [ngClass]="{ 'active-nav': visibleTab == 12 }">
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(12)">
+              <span class="nav-icon"><i class="flaticon-user text-white font-weight-bolder"></i></span>
+              <span class="nav-text text-white font-weight-bolder">HC Staff Req. ({{ HSCStaffRequestList.length }})
+              </span>
+            </a>
+          </li>
+
+          <!-- <li style="background-color: #e58a55" class="nav-item" ngbTooltip="Notifications"
+            [ngClass]="{ 'active-nav': visibleTab == 13 }">
+
+            <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(13)">
+              <span class="nav-icon">
+                <i class="flaticon-user text-white font-weight-bolder"></i>
+              </span>
+              <span class="badge badge-light ml-2"> Notifications
+                {{ notifications.length }}
+              </span>
+            </a>
+          </li> -->
+          <!-- <li class="nav-item bg-dark">
+                        <a class="nav-link" href="javascript:void(0)" (click)="tabChanged(10)"
+                            [ngClass]="{'active-nav': visibleTab == 10}">
+                            <span class="nav-text text-white font-weight-bolder"> IDC On Wheels ({{HCRadioSrvList.length}})</span>
+                        </a>
+                    </li> -->
+          <!-- <li class="nav-item bg-purpule">
+                        <a class="nav-link" href="javascript:void(0)" (click)="visibleTab = 5"
+                            [ngClass]="{'active-nav': visibleTab == 5}">
+                            <span class="nav-icon"><i class="fa fa-times-circle text-white font-weight-bolder"></i></span>
+                            <span class="nav-text text-white font-weight-bolder"> ({{HCCancelledRequestList.length}})</span>
+                        </a>
+                    </li> -->
+        </ul>
+      </div>
+    </div>
+    <!-- endregion -->
+
+    <!-- #region  rider and zone dropdown-->
+    <div class="col-lg-12 col-md-12">
+      <div class="card-toolbar" style="margin: 10px">
+        <div *ngIf="enabaleAssignRiderBtn && SelBookkings.length" class="row">
+
+          <!-- <ng-select style="width: 200px;" tabindex="1" (change)="RidersDetail()" placeholder="Select Branch"
+                        #branchid [(ngModel)]="selBranchid" name="branchid" [closeOnSelect]="true">
+                        <ng-option style="width: 100%;" [value]="b.LocId" *ngFor="let b of branchList">
+                            {{b.Title}}
+                        </ng-option>
+                    </ng-select>
+
+                    <ng-select [(ngModel)]="selRiderToAssign" style="width: 400px;float: left;margin-right: 2px;"
+                        #riderHCStaff tabindex="3" placeholder="-Select HC Staff-" name="riderHCStaff"
+                        [closeOnSelect]="true">
+                        <ng-option (change)="AssignRider(rider, 'rider')" style="width: 100%;" [value]="rider.RiderID"
+                            *ngFor="let rider of RidersDetailList">
+                            <i [ngStyle]="{'color': rider.RiderStatusID == 1 ? '#1fc645' : (rider.RiderStatusID == 2 ? 'grey' : null) }"
+                                class="fas fa-circle " placement="left" ngbTooltip="Select HC Staff"></i>
+                            {{rider.RiderFullName}}
+                        </ng-option>
+                    </ng-select>
+
+
+                    <div *ngIf="enableRadioServicesActions" class="form-group">                        
+                        <ng-select multiple="true" tabindex="1" placeholder="Technician" [(ngModel)]="SelTechIDToAssign"
+                            name="hcCity" [closeOnSelect]="true">
+                            <ng-option style="width: 100%;" [value]="tech.RiderID" *ngFor="let tech of techList">
+                                {{tech.RiderFullName}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div *ngIf="enableRadioServicesActions" class="form-group">                        
+                        <ng-select multiple="true" tabindex="1" placeholder="Helping Staff"
+                            [(ngModel)]="SelhelpingStaffIDToAssign" name="helpingStaffID" [closeOnSelect]="true">
+                            <ng-option style="width: 100%;" [value]="hs.RiderID" *ngFor="let hs of HelpingStaffList">
+                                {{hs.RiderFullName}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div *ngIf="enableRadioServicesActions" class="form-group">                        
+                        <ng-select multiple="true" tabindex="1" placeholder="Doctor" [(ngModel)]="SelDoctorIDToAssign"
+                            name="doctorID" [closeOnSelect]="true">
+                            <ng-option style="width: 100%;" [value]="doc.RiderID" *ngFor="let doc of DocList">
+                                {{doc.RiderFullName}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <button mwlConfirmationPopover class="btn btn-danger btn-sm waves-effect text-center"
+                        [popoverTitle]="'Assign HC Staff'" [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]" (confirm)="getSelRider()"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="primary btn-sm"
+                        cancelButtonType="secondary btn-sm"
+                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                        [appendToBody]="true">
+                        <i class="fa fa-check"></i>
+                    </button>
+                    &nbsp;
+                    <div ngbDropdown class="d-inline-block">
+                        <button ngbDropdownToggle id="dropdownHCZones" class="btn btn-success">Assign Zone</button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownHCZones">
+                            <div *ngFor="let zones of ZonesList">
+                                <button style="width: -webkit-fill-available;" mwlConfirmationPopover
+                                    class="btn btn-secondary text-center" [popoverTitle]="'Assign HC Staff'"
+                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                    (confirm)="AssignRider(zones, 'branch')"
+                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                    confirmButtonType="primary btn-mini" cancelButtonType="outline-secondary btn-mini"
+                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                    [appendToBody]="true">
+                                    <a href="javascript:void(0)">
+                                        {{zones.ZoneName}}
+                                    </a>
+                                </button>
+                            </div>
+                        </div>
+                    </div> -->
+          <!-- *ngIf="visibleTab == 9 && SelOnlineBookkings.length" -->
+          <button id="AssignOnlinerRequest" (click)="openRiderAssignWithScheduleModal()" class="btn btn-success">
+            Assign HC Staff
+          </button>
+          <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+            [fullScreen]="true">
+            <p style="color: white">Loading...</p>
+          </ngx-spinner>
+        </div>
+        <button *ngIf="visibleTab == 9 && SelOnlineBookkings.length" id="AssignOnlinerRequest"
+          (click)="openRiderAssignWithScheduleModal()" class="btn btn-success">
+          Assign
+        </button>
+      </div>
+
+      <!-- </div> -->
+      <!-- endregion -->
+
+      <div class="card-body col-md-12">
+        <div class="tab-content">
+          <!-- #region  IDC On Wheels New requests Requests::Begin-->
+          <!-- <div class="fade show active" [hidden]="visibleTab != 10" id="hc_radio_srv_pending_requests"
+                        role="tabpanel" aria-labelledby="hc_radio_srv_pending_requests">
+                        <ng-container
+                            *ngIf="HCRadioSrvList.length; then HCRadioSrvReqSpace  else HCRadioSrvReqFoundSpace">
+                        </ng-container>
+                        <ng-template #HCRadioSrvReqSpace>
+                            <table style="font-size: small;" class="table table-sm" style="overflow: scroll;">
+                                <thead>
+                                    <tr style="font-weight: bold;">
+                                        <th>
+                                            <button class="btn btn-sm btn-icon btn-light-info" (click)="HCRequests()">
+                                                <i class="fas fa-sync-alt refresh-icon"></i>
+                                            </button>
+                                        </th>
+                                        <th scope="col">
+                                           
+
+                                        </th>
+                                        <th scope="col">Booking ID</th>
+                                        <th scope="col">Patient Name</th>
+                                        <th scope="col">Patient Contact</th>
+                                     
+                                        <th scope="col">Address</th>
+                                        <th scope="col">City</th>
+                                        <th scope="col">Date/Time</th>
+
+                                        <th scope="col">Assigned To</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col"><i ngbTooltip="Map Location" color="black"
+                                                class="fas fa-globe mapicon" aria-hidden="true"></i></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="">
+                                    <tr (dblclick)="OpenMoreInfoPopup(hc)"
+                                        [ngStyle]="{'color': hc.isUrgentBooking == 1 ? 'red' : 'black' }" scope="row"
+                                        *ngFor="let hc of HCRadioSrvList; let i = index">
+                                        <td class="notification">
+                                            <span *ngIf="hc.chatNoticount > 0" class="badge">
+                                                {{hc.chatNoticount}}</span>
+                                            <button ngbTooltip="Start Chat Against BookingID"
+                                                class="btn btn-sm btn-icon btn-light-info"
+                                                (click)="startHCBookingChat(hc)">
+                                                <i class="fas fa-comment"></i>
+                                            </button>
+                                        </td>
+                                        <td> 
+                                        
+                                            <input (change)="isAllOnlineReqSelected()" [(ngModel)]="hc.isSelected"
+                                                type="checkbox" class="" />
+                                        </td>
+                                        <td scope="row"> {{hc.BookingPatientID}}</td>
+                                        <td scope="row"> {{hc.PatientFullName}}</td>
+                                        <td scope="row"> {{hc.PatientMobileNumber }}</td>
+                        
+                                        <td scope="row"> {{hc.PatientAddress }}</td>
+                                        <td scope="row"> {{hc.HCCityName }}</td>
+                                        <td scope="row"> {{hc.HCDateTime}}</td>
+
+                                        <td scope="row"> {{hc.RiderName }}</td>
+                                        <td scope="row"> {{hc.HCBookingStatus}}</td>
+                                        <td scope="row">
+                                            <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px;"
+                                                placement="top" ngbTooltip="View Map">
+                                                <i class="fas fa-map-marker-alt mapicon"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <div class="btn-group" ngbDropdown role="group"
+                                                    aria-label="Button group with nested dropdown">
+                                                    <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                        <i class="fas fa-ellipsis-h"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" ngbDropdownMenu>
+                                                        <button (click)="OpenMoreInfoPopup(hc)" class="dropdown-item">
+                                                            <span><i class="fa fa-info-circle eidt-info"></i> &nbsp;
+                                                                More Info</span>
+                                                        </button>
+                                                        <button (click)="editRequest(hc)" class="dropdown-item"><i
+                                                                class="fa fa-edit eidt-button"></i> &nbsp;
+                                                            Edit</button>
+                                                        <button (click)="CancelRequestModal(hc, 'openCancelReqModal')"
+                                                            class="dropdown-item"> <i
+                                                                class="fas fa-ban cancel-icon"></i>
+                                                            &nbsp;
+                                                            Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <button *ngIf="hc.BookingPatientID"
+                                                    (click)="openEditOnlineReq(hc.BookingPatientID)"
+                                                    class="btn btn-primary"><i class="fa fa-edit eidt-button"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+                        <ng-template #HCRadioSrvReqFoundSpace>
+                            <div style="text-align: center;">
+                                <p>No New Radiology Services Request Found</p>
+                            </div>
+                        </ng-template>
+                    </div> -->
+
+          <!-- #region  Online New requests Requests::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 9" id="hc_online_pending_requests" role="tabpanel"
+            aria-labelledby="hc_pending_requests">
+            <ng-container *ngIf="
+                HCOnlineRequestList.length;
+                then HCOnlineReqSpace;
+                else NoHCOnlineReqFoundSpace
+              ">
+            </ng-container>
+            <!-- <app-online-hc-requests></app-online-hc-requests> -->
+
+            <ng-template #HCOnlineReqSpace>
+              <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRep.MyIDCTable" size="medium"
+                color="#fff" type="ball-atom" [fullScreen]="false">
+                <p style="color: white">Loading...</p>
+              </ngx-spinner>
+              <div class="table-responsive table-container">
+                <!-- <span class="pull-right text-danger font-weight-bolder m-0 p-0">
+                                            <p>Total Requests:{{HCOnlineRequestList.length}}</p>
+                                        </span> -->
+                <table style="font-size: small" class="table table-sm table-hover compact">
+                  <thead>
+                    <tr style="font-weight: bold">
+                      <th>
+                        <button class="btn btn-sm btn-icon btn-light-info" title="Refresh" (click)="OnlineHCRequests()">
+                          <i class="fas fa-sync-alt refresh-icon"></i>
+                        </button>
+                      </th>
+                      <th scope="col"></th>
+                      <th scope="col">BookingID</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col">Patient Contact</th>
+
+                      <th scope="col">Address</th>
+                      <th scope="col">City</th>
+                      <th scope="col">Payment</th>
+                      <th scope="col">HC Time</th>
+                      <th scope="col">Booking Time</th>
+                      <th scope="col">Assigned To</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">
+                        <i title="Map Location" color="black" class="fas fa-globe mapicon" aria-hidden="true"></i>
+                      </th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="">
+                    <tr (dblclick)="OpenMoreInfoPopup(hc)" [ngStyle]="{
+                        color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                      }" scope="row" *ngFor="
+                        let hc of paginationMyIDC.paginatedSearchResults;
+                        let i = index
+                      ">
+                      <td class="notification">
+                        <span *ngIf="hc.chatNoticount > 0" class="badge">
+                          {{ hc.chatNoticount }}</span>
+                        <button ngbTooltip="Start Chat Against BookingID" class="btn btn-sm btn-icon btn-light-info"
+                          (click)="startHCBookingChat(hc)">
+                          <i class="fas fa-comment"></i>
+                        </button>
+
+                      </td>
+                      <td>
+                        <input (change)="isAllOnlineReqSelected()" [(ngModel)]="hc.isSelected" type="checkbox"
+                          class="" />
+                      </td>
+                      <td scope="row">{{ hc.BookingPatientID }}</td>
+                      <td scope="row">{{ hc.PatientFullName }}</td>
+                      <td scope="row">
+                        <span>
+                          <span ngbTooltip="MobileNo">{{ hc.PatientMobileNumber }}</span>
+                          <span *ngIf="hc.PhoneNo" ngbTooltip="Phone No"> <br>{{hc.PhoneNo? hc.PhoneNo: ''}}</span>
+                          <span *ngIf="hc.AlternateContact" ngbTooltip="Calling Number"> <br> {{hc.AlternateContact?
+                            hc.AlternateContact: ''}}</span>
+                        </span>
+                      </td>
+                      <td scope="row">{{ hc.PatientAddress }}</td>
+                      <td scope="row">{{ hc.HCCityName }}</td>
+                      <td scope="row">{{ hc.ModeOfPayment || "-" }}</td>
+                      <td scope="row">
+                        <b>{{ hc.BookingSlot }}</b>
+                      </td>
+                      <td scope="row">
+                        {{
+                        hc.BookingInitiatedAt | date : "dd MMM, yyyy, h:mm a"
+                        }}
+                      </td>
+                      <td scope="row">{{ hc.RiderName }}</td>
+                      <td scope="row">{{ hc.HCBookingStatus }}</td>
+                      <td scope="row">
+                        <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px" placement="top"
+                          ngbTooltip="View Map">
+                          <i class="fas fa-map-marker-alt mapicon"></i>
+                        </a>
+                      </td>
+                      <td>
+                        <div class="btn-group">
+                          <div class="btn-group" ngbDropdown role="group"
+                            aria-label="Button group with nested dropdown">
+                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                              <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <div class="dropdown-menu" ngbDropdownMenu>
+                              <button (click)="OpenMoreInfoPopup(hc)" class="dropdown-item">
+                                <span><i class="fa fa-info-circle eidt-info"></i>
+                                  &nbsp; More Info</span>
+                              </button>
+                              <!-- <button (click)="editRequest(hc)"
+                                                                        class="dropdown-item"><i
+                                                                            class="fa fa-edit eidt-button"></i> &nbsp;
+                                                                        Edit</button> -->
+                              <button (click)="
+                                  CancelRequestModal(hc, 'openCancelReqModal')
+                                " class="dropdown-item">
+                                <i class="fas fa-ban cancel-icon"></i> &nbsp;
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div>
+                          <button *ngIf="hc.BookingPatientID" (click)="openEditOnlineReq(hc)"
+                            class="btn btn-icon btn-primary">
+                            <i class="fa fa-edit eidt-button"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-flex justify-content-between p-2 flex-wrap align-items-center">
+                    <ngb-pagination [collectionSize]="paginationMyIDC.collectionSize" [(page)]="paginationMyIDC.page"
+                      [pageSize]="paginationMyIDC.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                      (pageChange)="refreshPagination()" class="mb-2 mb-sm-0">
+                    </ngb-pagination>
+                    <select class="custom-select" style="width: auto" [(ngModel)]="paginationMyIDC.pageSize"
+                      (ngModelChange)="refreshPagination()">
+                      <option [ngValue]="5">5 items per page</option>
+                      <option [ngValue]="10">10 items per page</option>
+                      <option [ngValue]="20">20 items per page</option>
+                      <option [ngValue]="50">50 items per page</option>
+                      <!-- <option [ngValue]="100">100 items per page</option> -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #NoHCOnlineReqFoundSpace>
+              <div style="text-align: center">
+                <p>No New Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--#endregion  -->
+          <!-- //here -->
+          <!-- #region::Begin-->
+
+
+          <div class="fade show active" [hidden]="visibleTab != 10" id="hc_online_ccr_requests" role="tabpanel"
+            aria-labelledby="hc_pending_ccr_requests">
+            <app-cc-hc-request (hcHomeCollectionRequestLength)="HscReqLength($event)"></app-cc-hc-request>
+            <!-- <ng-container *ngIf="HCOnlineRequestList.length; then HCOnlineReqSpace  else NoHCOnlineReqFoundSpace">
+                         </ng-container> -->
+          </div>
+
+          <div class="fade show active" [hidden]="visibleTab != 13" id="hc_online_ccr_requests" role="tabpanel"
+            aria-labelledby="hc_pending_ccr_requests">
+            <div class="table-responsive table-container fixed-height-table">
+              <table style="font-size: small" class="table table-sm compact table-bordered">
+                <thead>
+                  <tr style="font-weight: bold">
+                    <th scope="col">
+                      Sr#. </th>
+                    <th scope="col">Booking ID</th>
+                    <th scope="col">Message</th>
+                  </tr>
+                </thead>
+                <tbody id="">
+                  <tr *ngFor="let n of notifications; let i = index">
+                    <td scope="row">
+                      {{i+1}}
+                    </td>
+                    <td scope="row">{{ n.bookingID }}</td>
+                    <td scope="row">{{ n.message }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="fade show active" [hidden]="visibleTab != 12" id="hc_online_ccr_requests" role="tabpanel"
+            aria-labelledby="hc_pending_ccr_requests">
+
+            <ng-container *ngIf="
+                HSCStaffRequestList.length;
+                then HSCStaffRequestListReqSpace;
+                else NoHSCStaffRequestListFoundSpace">
+            </ng-container>
+            <ng-template #HSCStaffRequestListReqSpace>
+              <div class="table-responsive table-container fixed-height-table">
+                <table style="font-size: small" class="table table-sm compact table-bordered">
+                  <thead>
+                    <tr style="font-weight: bold">
+                      <!-- <th>
+                        <button
+                          class="btn btn-sm btn-icon btn-light-info"
+                          (click)="HCRequests()"
+                        >
+                          <i class="fas fa-sync-alt refresh-icon"></i>
+                        </button>
+                      </th> -->
+                      <th scope="col">
+                        Sr#.
+                        <!-- <input
+                          type="checkbox"
+                          [attr.disabled]="IsMasterDisable ? true : null"
+                          [(ngModel)]="masterSelected"
+                          name="list_name"
+                          value="m1"
+                          (change)="checkUncheckAll()"
+                        /> -->
+                      </th>
+                      <th scope="col">Booking ID</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col">Patient Contact</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Remarks</th>
+                      <th scope="col">City</th>
+                      <th scope="col">Date/Time</th>
+                      <th scope="col">Assigned To</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="">
+                    <tr (dblclick)="OpenMoreInfoPopup(hc)" [ngStyle]="{
+                        color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                      }" [ngClass]="{
+                        'text-warning': hc.RiderID != null && hc.HCBookingStatusID == 1
+                      }" scope="row" *ngFor="let hc of HSCStaffRequestList; let i = index">
+                      <!-- <td class="notification">
+                        <span *ngIf="hc.chatNoticount > 0" class="badge">
+                          {{ hc.chatNoticount }}</span
+                        >
+                        <button
+                          ngbTooltip="Start Chat Against BookingID"
+                          class="btn btn-sm btn-icon btn-light-info"
+                          (click)="startHCBookingChat(hc)"
+                        >
+                          <i class="fas fa-comment"></i>
+                        </button>
+                      </td> -->
+                      <td scope="row">
+                        {{i+1}}
+                        <!-- <input
+                          (change)="isAllSelected()"
+                          [(ngModel)]="hc.isSelected"
+                          type="checkbox"
+                          class=""
+                        /> -->
+                      </td>
+                      <td scope="row">{{ hc.BookingPatientID }}</td>
+                      <td scope="row">{{ hc.PatientFullName }}</td>
+                      <td scope="row">
+                        <span>
+                          <span ngbTooltip="MobileNo">{{ hc.PatientMobileNumber }}</span>
+                          <span *ngIf="hc.PhoneNo" ngbTooltip="Phone No"> <br>{{hc.PhoneNo? hc.PhoneNo: ''}}</span>
+                          <span *ngIf="hc.AlternateContact" ngbTooltip="Calling Number"> <br> {{hc.AlternateContact?
+                            hc.AlternateContact: ''}}</span>
+                        </span>
+                      </td>
+                      <td scope="row">{{ hc.PatientAddress }}</td>
+                      <td scope="row">{{ hc.HCRemarks ? hc.HCRemarks : "--" }}</td>
+                      <td scope="row">{{ hc.HCCityName }}</td>
+                      <td scope="row">
+                        {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                      </td>
+                      <td scope="row">{{ hc.RiderName }}</td>
+                      <td scope="row">{{ hc.HCBookingStatus }}</td>
+                      <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                          <!-- <button
+                                class="btn btn-sm mb-1 dropdown-item"  title="Accept Request"
+                                (click)="UpdateRequestStatus(hc, 'AcceptReq', 'HC-Admin task - Accepted')">
+                                <i class="fas fa-check-circle text-primary"></i>Accept
+                              </button> -->
+                          <button class="btn btn-sm mb-1 dropdown-item" title="Accept Request" mwlConfirmationPopover
+                            [appendToBody]="true" [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]"
+                            (confirm)="UpdateRequestStatus(hc, 'AcceptReq', 'HC-Admin task - Accepted')"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="success"
+                            cancelButtonType="outline-secondary" (click)="
+                            confirmationPopoverConfig.confirmClicked = false;
+                            confirmationPopoverConfig.cancelClicked = false">
+                            <i class="fas fa-check-circle text-primary"></i>Accept
+                          </button>
+                          <button class="btn btn-sm mb-1 dropdown-item" title="Reject Request"
+                            (click)=" CancelRequestModal(hc, 'openCancelReqModal')">
+                            <i class="fas fa-times-circle text-danger"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- *ngIf="PendingReqcollectionSize > pageSize" -->
+              <!-- <div class="d-flex justify-content-between p-2">
+                <ngb-pagination
+                  [collectionSize]="PendingReqcollectionSize"
+                  [(page)]="page"
+                  size=""
+                  [pageSize]="pageSize"
+                  [boundaryLinks]="true"
+                  [maxSize]="5"
+                  [rotate]="true"
+                  (pageChange)="refreshPendingRequestsPagination()"
+                >
+                </ngb-pagination>
+              </div> -->
+            </ng-template>
+            <ng-template #NoHSCStaffRequestListFoundSpace>
+              <div style="text-align: center">
+                <p>No New Request Found</p>
+              </div>
+            </ng-template>
+
+          </div>
+          <!--#endregion  -->
+
+          <!-- #region  HC Pending Requests::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 1" id="hc_pending_requests" role="tabpanel"
+            aria-labelledby="hc_pending_requests">
+            <ng-container *ngIf="
+                PendingHCRequests.length;
+                then HCPendingReqSpace;
+                else NoHCPendingReqFoundSpace
+              ">
+            </ng-container>
+            <ng-template #HCPendingReqSpace>
+              <div class="table-responsive table-container" style="min-height: 250px;">
+                <table style="font-size: small;" class="table compact">
+                  <thead>
+                    <tr style="font-weight: bold">
+                      <th>
+                        <button class="btn btn-sm btn-icon btn-light-info" (click)="HCRequests()">
+                          <i class="fas fa-sync-alt refresh-icon"></i>
+                        </button>
+                      </th>
+                      <th scope="col">
+                        <input type="checkbox" [attr.disabled]="IsMasterDisable ? true : null"
+                          [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll()" />
+                      </th>
+                      <th scope="col">Booking ID</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col">Patient Contact</th>
+                      <!-- <th scope="col">Tests</th> -->
+                      <th scope="col">Address</th>
+                      <th scope="col">Remarks</th>
+                      <th scope="col">City</th>
+                      <th scope="col">Date/Time</th>
+                      <th scope="col">Assigned To</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">
+                        <i title="Map Location" color="black" class="fas fa-globe mapicon" aria-hidden="true"></i>
+                      </th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="">
+                    <tr (dblclick)="OpenMoreInfoPopup(hc)" [ngStyle]="{
+                        color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                      }" [ngClass]="{
+                        'text-warning': hc.RiderID != null && hc.HCBookingStatusID == 1
+                      }" scope="row" *ngFor="let hc of PendingHCRequests; let i = index">
+                      <td class="notification">
+                        <span *ngIf="hc.chatNoticount > 0" class="badge">
+                          {{ hc.chatNoticount }}</span>
+                        <button title="Start Chat Against BookingID" class="btn btn-sm btn-icon btn-light-info"
+                          (click)="startHCBookingChat(hc)">
+                          <i class="fas fa-comment"></i>
+                        </button>
+                      </td>
+                      <td>
+                        <!-- [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null" -->
+                        <input (change)="isAllSelected()" [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                      </td>
+                      <td scope="row">{{ hc.BookingPatientID }}</td>
+                      <td scope="row">{{ hc.PatientFullName }}</td>
+                      <td scope="row">
+                        <span>
+                          <span ngbTooltip="MobileNo">{{ hc.PatientMobileNumber }}</span>
+                          <span *ngIf="hc.PhoneNo" ngbTooltip="Phone No"> <br>{{hc.PhoneNo? hc.PhoneNo: ''}}</span>
+                          <span *ngIf="hc.AlternateContact" ngbTooltip="Calling Number"> <br> {{hc.AlternateContact?
+                            hc.AlternateContact: ''}}</span>
+                        </span>
+                      </td>
+                      <!-- <td scope="row"> {{hc.CM}}</td> -->
+                      <td scope="row">{{ hc.PatientAddress }}</td>
+                      <td scope="row">{{ hc.HCRemarks ? hc.HCRemarks : "--" }}</td>
+                      <td scope="row">{{ hc.HCCityName }}</td>
+                      <td scope="row">
+                        {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                      </td>
+                      <td scope="row">{{ hc.RiderName }}</td>
+                      <td scope="row">{{ hc.HCBookingStatus }}</td>
+                      <td scope="row">
+                        <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px" placement="top"
+                          ngbTooltip="View Map">
+                          <i class="fas fa-map-marker-alt mapicon"></i>
+                        </a>
+                      </td>
+                      <td>
+                        <!-- <div class="btn-group"> -->
+                        <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                          <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                            <i class="fas fa-ellipsis-h"></i>
+                          </button>
+                          <div class="dropdown-menu" ngbDropdownMenu>
+                            <button (click)="OpenMoreInfoPopup(hc)" class="dropdown-item">
+                              <span><i class="fa fa-info-circle eidt-info"></i>
+                                &nbsp; More Info</span>
+                            </button>
+                            <!-- (click)="editRequest(hc)" -->
+                            <button (click)="openEditOnlineReq(hc)" class="dropdown-item">
+                              <i class="fa fa-edit eidt-button"></i> &nbsp;
+                              Edit
+                            </button>
+                            <button (click)="
+                                  CancelRequestModal(hc, 'openCancelReqModal')
+                                " class="dropdown-item">
+                              <i class="fas fa-ban cancel-icon"></i> &nbsp;
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                        <!-- </div> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- *ngIf="PendingReqcollectionSize > pageSize" -->
+              <div class="d-flex justify-content-between p-2 flex-wrap align-items-center">
+                <ngb-pagination [collectionSize]="PendingReqcollectionSize" [(page)]="page" size=""
+                  [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                  (pageChange)="refreshPendingRequestsPagination()">
+                </ngb-pagination>
+                <select class="custom-select" style="width: auto" [(ngModel)]="pageSize"
+                  (ngModelChange)="refreshPendingRequestsPagination()">
+                  <option [ngValue]="5">5 items per page</option>
+                  <option [ngValue]="10">10 items per page</option>
+                  <option [ngValue]="20">20 items per page</option>
+                  <option [ngValue]="50">50 items per page</option>
+                  <!-- <option [ngValue]="100">100 items per page</option> -->
+                </select>
+              </div>
+            </ng-template>
+            <ng-template #NoHCPendingReqFoundSpace>
+              <div style="text-align: center">
+                <p>No New Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--endregion  HC Pending Requests::End-->
+
+          <!--#region HC In Progress::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 2">
+            <ng-container *ngIf="
+                InProgressRequests.length;
+                then HCInProgressRequestsSpace;
+                else NoHCInProgressReqSpace
+              ">
+            </ng-container>
+
+            <ng-template #HCInProgressRequestsSpace>
+              <div class="row">
+                <div class="table-responsive table-container col-md-12" style="min-height: 250px;"
+                  *ngIf="InProgressRequests.length">
+                  <table class="table table-compact" style="overflow: scroll">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <!-- <th scope="col" style="font-size: smaller;">
+                                                <button class="btn btn-sm btn-icon btn-light-info"
+                                                    (click)="HCRequests()">
+                                                    <i class="fas fa-sync-alt refresh-icon"></i>
+                                                </button>
+                                            </th> -->
+                        <th scope="col">Request ID</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">HC Time</th>
+                        <th scope="col">HC Staff Name</th>
+                        <th scope="col">HC Staff Status</th>
+                        <th scope="col">Remarks</th>
+                        <th scope="col">
+                          <i title="Map Location" color="black" class="fas fa-globe mapicon text-dark"
+                            aria-hidden="true"></i>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr (dblclick)="OpenInProgMoreInfoPopup(hc)" scope="row"
+                        *ngFor="let hc of InProgressRequests; let i = index"
+                        [ngStyle]="{'color': hc.isUrgentBooking == 1 ? 'red' : 'black' }">
+                        <td scope="row">
+                          {{ hc.HCRequestID }} <br />
+                          <small ngbTooltip="BookingID_Name_MobileNo,PhoneNo_Req-From-City_PIN_RegInfo"
+                            style="font-weight: bold" *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            <span>
+                              <!-- <button ngbTooltip="Start Chat Against BookingID"
+                                class="btn btn-sm btn-icon btn-light-info" (click)="startHCBookingChat(hc)">
+                                <i class="fas fa-comment"></i>
+                              </button> -->
+                              <button ngbTooltip="Start Chat Against BookingID"
+                                class="btn btn-sm btn-icon btn-light-info" (click)="openChat(hc)">
+                                <i class="fas fa-comment"></i>
+                              </button>
+                            </span>
+                            {{ hcd.BookingPatientID }} _
+                            {{ hcd.PatientFullName }} _
+                            {{ hcd.PatientMobileNumber }},
+                            {{hcd.PhoneNo? hcd.PhoneNo: ''}} _
+                            {{ hcd.HCCityCode
+                            }}<span (click)="openRegistredTestIfo(hc)" *ngIf="hcd.VisitNo">_ {{ hcd.VisitNo }}_</span>
+                            <span (click)="openRegDetailInfoPopup(hc)" *ngIf="hcd.VisitNo"><i
+                                class="fa fa-info-circle eidt-info"></i>
+                              &nbsp;
+                            </span>
+                            <br />
+                            <!-- {{hcd.cotp}} -->
+                          </small>
+                        </td>
+                        <!-- <td> {{hc.CommSepTP}}</td> -->
+                        <td scope="row">{{ hc.PatientAddress }}</td>
+
+                        <td scope="row">
+                          <span *ngIf="hc.BookingSourceID == 7">
+                            {{ hc.BookingSlot }}
+                          </span>
+                          <span *ngIf="hc.BookingSourceID != 7">
+                            <b>
+                              {{
+                              hc.HCDateTime | date : "dd MMM, yyyy, h:mm a"
+                              }}
+                            </b>
+                          </span>
+                        </td>
+                        <td>{{ hc.RiderName }}</td>
+                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <td scope="row">
+                          {{ hc.HCRemarks ? hc.HCRemarks : "--" }}
+                        </td>
+
+                        <td>
+                          <a (click)="ShowMapView(hc)" style="font-size: 17px" placement="top" ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                        <td scope="col"></td>
+                        <td>
+                          <div class="btn-group">
+                            <div class="btn-group" ngbDropdown role="group"
+                              aria-label="Button group with nested dropdown">
+                              <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                <i class="fas fa-ellipsis-h"></i>
+                              </button>
+
+                              <div class="dropdown-menu" ngbDropdownMenu>
+                                <button (click)="OpenInProgMoreInfoPopup(hc)" class="dropdown-item">
+                                  <span><i class="fa fa-info-circle eidt-info"></i>
+                                    &nbsp; More Info</span>
+                                </button>
+                                <!-- (click)="editInProgRequest(hc)" -->
+                                <button (click)="openEditOnlineReq(hc)" class="dropdown-item">
+                                  <i class="fa fa-edit eidt-button"></i> &nbsp;
+                                  Edit
+                                </button>
+                                <button (click)="
+                                    CompleteRequestModal(hc, 'openModel')
+                                  " class="dropdown-item" [attr.disabled]="
+                                    hc.AdminCloseTaskBtnDisabled ? true : null
+                                  ">
+                                  <span><i class="fas fa-tasks"></i> &nbsp;
+                                    Completed</span>
+                                </button>
+
+                                <button [attr.disabled]="
+                                    hc.AfterRegDisbaled ? true : null
+                                  " [attr.disabled]="
+                                    hc.ChangeRiderByAdminDisabled ? true : null
+                                  " (click)="
+                                    openConfirmationModalForupdateRequest(
+                                      hc,
+                                      changeriderconfirmationbox
+                                    )
+                                  " class="dropdown-item">
+                                  <span><i class="fas fa-exchange-alt"></i> &nbsp;
+                                    change Rider</span>
+                                </button>
+
+                                <button [attr.disabled]="
+                                    hc.AfterRegDisbaled ? true : null
+                                  " (click)="
+                                    openConfirmationModalForupdateRequest(
+                                      hc,
+                                      CancelReqModal
+                                    )
+                                  " class="dropdown-item">
+                                  <span><i class="fas fa-ban"></i> &nbsp; Cancel
+                                    Request</span>
+                                </button>
+                                <button [attr.disabled]="
+                                    hc.AfterRegDisbaled ? true : null
+                                  " style="margin-left: 12px" mwlConfirmationPopover
+                                  class="btn btn-secondary btn-sm waves-effect text-center"
+                                  [popoverTitle]="'Revert  Request'" [confirmText]="
+                                    confirmationPopoverConfig.confirmText
+                                  " [cancelText]="
+                                    confirmationPopoverConfig.cancelText
+                                  " [placement]="
+                                    confirmationPopoverConfig.placements[0]
+                                  " (confirm)="
+                                    UpdateRequestStatus(
+                                      hc,
+                                      'revertReq',
+                                      'InProgress Tab'
+                                    )
+                                  " (cancel)="
+                                    confirmationPopoverConfig.confirmPopoverCancel()
+                                  " confirmButtonType="primary btn-sm" cancelButtonType="secondary btn-sm" (click)="
+                                    confirmationPopoverConfig.confirmClicked = false;
+                                    confirmationPopoverConfig.cancelClicked = false
+                                  " [appendToBody]="true">
+                                  <span><i class="fas fa-sync-alt"></i> &nbsp;
+                                    Revert Request</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                        *ngIf="InProgressRequests.length">
+                        <ngb-pagination [collectionSize]="InProgressReqcollectionSize" [(page)]="InProgpage" size=""
+                          [pageSize]="InProgpageSize" [boundaryLinks]="true" [maxSize]="10" [rotate]="true"
+                          (pageChange)="refreshInProgressPagination()">
+                        </ngb-pagination>
+                        <select class="custom-select" style="width: auto" [(ngModel)]="InProgpageSize"
+                          (ngModelChange)="refreshInProgressPagination()">
+                          <option [ngValue]="5">5 items per page</option>
+                          <option [ngValue]="10">10 items per page</option>
+                          <option [ngValue]="20">20 items per page</option>
+                          <option [ngValue]="50">50 items per page</option>
+                          <option [ngValue]="100">100 items per page</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoHCInProgressReqSpace>
+              <div style="text-align: center">
+                <p>No Home Sampling Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--endregion  HC In Process::End-->
+
+          <!--#region HC Completed::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 3">
+            <ng-container *ngIf="
+                FilteredCompletedHCRequests.length;
+                then HCcompletedRequestsSpace;
+                else NoHCcompletedRequestsSpace
+              ">
+            </ng-container>
+
+            <ng-template #HCcompletedRequestsSpace>
+              <div class="row">
+                <div class="table-responsive table-container col-md-12" style="min-height: 250px;"
+                  *ngIf="FilteredCompletedHCRequests.length">
+                  <table class="table" style="overflow: scroll">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <!-- <th scope="col"> <input type="checkbox"
+                                                        [attr.disabled]="IsMasterDisable ? true : null"
+                                                        [(ngModel)]="masterSelected" name="list_name" value="m1"
+                                                        (change)="checkUncheckAll()" /> -->
+                        <!-- <th scope="col"></th> -->
+                        <th scope="col">Request ID</th>
+                        <th scope="col">HC DateTime</th>
+                        <th scope="col">Booked At</th>
+                        <th scope="col">Booked By</th>
+                        <th scope="col">Completed At</th>
+                        <th scope="col">Completed By</th>
+                        <th scope="col">Admin Remarks</th>
+                        <th scope="col">HC Staff Remarks</th>
+                        <th scope="col">Sample Sub Branch</th>
+                        <th scope="col">Sample Rec By</th>
+                        <th scope="col">Tests</th>
+                        <th scope="col">HC Staff Name</th>
+                        <th scope="col">
+                          <i ngbTooltip="Map Location" placement="left" class="fas fa-globe mapicon text-dark"
+                            aria-hidden="true"></i>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr scope="row" *ngFor="
+                          let hc of FilteredCompletedHCRequests;
+                          let i = index
+                        ">
+                        <td scope="row">
+                          {{ hc.HCRequestID }} <br />
+                          <small ngbTooltip="BookingID_Name_Mob_PIN_Req-From-City_RegInfo" style="font-weight: bold"
+                            *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            {{ hcd.BookingPatientID }} _
+                            {{ hcd.PatientFullName }} _
+                            {{ hcd.PatientMobileNumber }} _ {{ hcd.VisitNo }}_{{
+                            hcd.HCCityCode
+                            }}<span (click)="openRegDetailInfoPopup(hc)" *ngIf="hcd.VisitNo"><i
+                                class="fa fa-info-circle eidt-info"></i>
+                              &nbsp;
+                            </span>
+                            <br />
+                            <!-- {{hcd.cotp}} -->
+                          </small>
+                        </td>
+                        <td scope="row">
+                          {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                        </td>
+                        <td scope="row">{{ hc.BookingInitiatedAt }}</td>
+                        <td scope="row">{{ hc.BookingAssignedByEmpName }}</td>
+                        <td scope="row">{{ hc.BookingCompletedAt }}</td>
+                        <td scope="row">{{ hc.BookingCompletedBy }}</td>
+                        <td scope="row">{{ hc.BookingCompletedRemarks }}</td>
+                        <td scope="row">
+                          {{ hc.HCRemarks ? hc.HCRemarks : "--" }}
+                        </td>
+                        <td scope="row">{{ hc.SampleSubBranchTitle }}</td>
+                        <td scope="row">{{ hc.SampleSubEmpName }}</td>
+                        <td scope="row">
+                          <small ngbTooltip="" style="font-weight: bold"
+                            *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            {{ hcd.cotp }} <br />
+                          </small>
+                        </td>
+                        <td>{{ hc.RiderName }}</td>
+                        <td>
+                          <a (click)="ShowMapView(hc)" style="font-size: 17px" placement="left" ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                  *ngIf="CompletedReqcollectionSize > compPageSize">
+                  <ngb-pagination [collectionSize]="CompletedReqcollectionSize" [(page)]="compPage" size=""
+                    [pageSize]="compPageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                    (pageChange)="refreshCompletedRequetsPagination()">
+                  </ngb-pagination>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoHCcompletedRequestsSpace>
+              <div style="text-align: center">
+                <p>No Completed Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--endregion HC Completed::End-->
+
+          <!--#region HC Urgent::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 4">
+            <ng-container *ngIf="
+                HCUrgentRequestList.length;
+                then HCUrgentRequestsSpace;
+                else NoHCUrgentRequestsSpace
+              ">
+            </ng-container>
+
+            <ng-template #HCUrgentRequestsSpace>
+              <div class="row">
+                <div class="table-responsive table-container fixed-height-table col-md-12"
+                  *ngIf="HCUrgentRequestList.length">
+                  <table class="table compact" style="min-height: 300px">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <th>
+                          <button class="btn btn-mini btn-icon btn-light-info" (click)="HCRequests()">
+                            <i class="fas fa-sync-alt refresh-icon"></i>
+                          </button>
+                        </th>
+                        <!-- <th scope="col"> 
+                                                            <input type="checkbox"
+                                                                [attr.disabled]="IsMasterDisable ? true : null"
+                                                                [(ngModel)]="masterSelected" name="list_name" value="m1"
+                                                                (change)="checkUncheckAll()" />
+
+                                                        </th> -->
+                        <th scope="col">Booking ID</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Patient Contact</th>
+                        <!-- <th scope="col">Tests</th> -->
+                        <th scope="col">Address</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Date/Time</th>
+
+                        <th scope="col">Assigned To</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">
+                          <i ngbTooltip="Map Location" color="black" class="fas fa-globe mapicon"
+                            aria-hidden="true"></i>
+                        </th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr (dblclick)="OpenMoreInfoPopup(hc)" [ngStyle]="{
+                          color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                        }" scope="row" *ngFor="let hc of HSUrgentRequests; let i = index">
+                        <!-- <td>
+                                                            
+
+                                                            <i (click)="HCRequests()" class="fas fa-sync-alt refresh-icon"></i>
+                                                        </td> -->
+                        <td>
+                          <!-- [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null" -->
+                          <input (change)="isAllSelected()" [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                        </td>
+                        <td scope="row">{{ hc.BookingPatientID }}</td>
+                        <td scope="row">{{ hc.PatientFullName }}</td>
+                        <td scope="row">{{ hc.PatientMobileNumber }}</td>
+                        <!-- <td scope="row"> {{hc.CM}}</td> -->
+                        <td scope="row">{{ hc.PatientAddress }}</td>
+                        <td scope="row">{{ hc.HCCityName }}</td>
+                        <td scope="row">
+                          {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
+                        </td>
+
+                        <td scope="row">{{ hc.RiderName }}</td>
+                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <td scope="row">
+                          <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px" placement="top"
+                            ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <div class="btn-group">
+                            <div class="btn-group" ngbDropdown role="group"
+                              aria-label="Button group with nested dropdown">
+                              <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                <i class="fas fa-ellipsis-h"></i>
+                              </button>
+                              <div class="dropdown-menu" ngbDropdownMenu>
+                                <button (click)="OpenMoreInfoPopup(hc)" class="dropdown-item">
+                                  <span><i class="fa fa-info-circle eidt-info"></i>
+                                    &nbsp; More Info</span>
+                                </button>
+                                <!-- (click)="editRequest(hc)" -->
+                                <button (click)="openEditOnlineReq(hc)" class="dropdown-item">
+                                  <i class="fa fa-edit eidt-button"></i> &nbsp;
+                                  Edit
+                                </button>
+                                <button (click)="
+                                    CancelRequestModal(hc, 'openCancelReqModal')
+                                  " class="dropdown-item">
+                                  <i class="fas fa-ban cancel-icon"></i> &nbsp;
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                  *ngIf="UrgentReqcollectionSize > urgentPageSize">
+                  <ngb-pagination [collectionSize]="UrgentReqcollectionSize" [(page)]="urgentPage" size="sm"
+                    [pageSize]="urgentPageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                    (pageChange)="refreshUrgentRequestsPagination()">
+                  </ngb-pagination>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoHCUrgentRequestsSpace>
+              <div style="text-align: center">
+                <p>No Urgent Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--endregion HC Urgent::End-->
+
+          <!--#region HC Cancelled::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 5">
+            <ng-template mat-tab-label>
+              <span>Cancelled </span>
+            </ng-template>
+            <ng-container *ngIf="
+                HCCancelledRequestList.length;
+                then HCCancelledRequestSpace;
+                else NoHCCancelledRequestSpace
+              ">
+            </ng-container>
+
+            <ng-template #HCCancelledRequestSpace>
+              <div class="row">
+                <div class="table-responsive table-container fixed-height-table col-md-12"
+                  *ngIf="HCCancelledRequestList.length">
+                  <table class="table" style="overflow: scroll; min-height: 250px;">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <th scope="col">Request ID</th>
+                        <th scope="col">Cancelled By</th>
+                        <th scope="col">Cancelled At</th>
+                        <th scope="col">Cancelled Remarks</th>
+                        <th scope="col">HC Time</th>
+                        <th scope="col">Status</th>
+
+                        <th scope="col">
+                          <i ngbTooltip="Map Location" placement="left" class="fas fa-globe mapicon text-dark"
+                            aria-hidden="true"></i>
+                        </th>
+                        <!-- <th scope="col">More Actions</th> -->
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" scope="row" *ngFor="
+                          let hc of FilteredCancelledHCRequests;
+                          let i = index
+                        ">
+                        <!-- <td>
+                                                    <input [attr.disabled]="hc.isDisabled ? true : null"
+                                                        [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                                                </td> -->
+                        <td scope="row">
+                          {{ hc.HCRequestID }} <br />
+                          <small ngbTooltip="BookingID_Name_Mob_Req-From-city" style="font-weight: bold"
+                            *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            {{ hcd.BookingPatientID }} _
+                            {{ hcd.PatientFullName }} _
+                            {{ hcd.PatientMobileNumber }}_{{ hcd.HCCityCode }}
+                            <br />
+                            <!-- {{hcd.cotp}} -->
+                          </small>
+                        </td>
+                        <td scope="row">{{ hc.BookingCanceledBy }}</td>
+                        <td scope="row">
+                          {{
+                          hc.BookingCanceledAt | date : "dd MMM, yyyy, h:mm a"
+                          }}
+                        </td>
+                        <td scope="row" style="word-break: break-word">{{ hc.BookingCanceledRemarks }}</td>
+                        <td scope="row">
+                          <b>{{
+                            hc.HCDateTime | date : "dd MMM, yyyy, h:mm a"
+                            }}</b>
+                        </td>
+                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+
+                        <!-- BookingCanceledRemarks: d., -->
+                        <td>
+                          <a (click)="ShowMapView(hc)" style="font-size: 17px" placement="left" ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <div class="btn-group" ngbDropdown role="group"
+                            aria-label="Button group with nested dropdown">
+                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                              <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <div class="dropdown-menu" ngbDropdownMenu>
+                              <button (click)="OpencancelledMoreInfoPopup(hc)" class="dropdown-item">
+                                <span><i class="fa fa-info-circle eidt-info"></i>
+                                  &nbsp; More Info</span>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                  *ngIf="CancelledReqcollectionSize > cancelledPageSize">
+                  <ngb-pagination [collectionSize]="CancelledReqcollectionSize" [(page)]="cancelledPage" size=""
+                    [pageSize]="cancelledPageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                    (pageChange)="refreshCancelledRequetsPagination()">
+                  </ngb-pagination>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoHCCancelledRequestSpace>
+              <div style="text-align: center">
+                <p>No cancelled Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--#endregion HC Cancelled::End-->
+
+          <!--#region HC Cancellation::Begin-->
+          <div class="fade show active" [hidden]="visibleTab != 11">
+            <!-- <ng-template mat-tab-label>
+              <span>Cancellation</span>
+            </ng-template> -->
+            <ng-container *ngIf="FilteredCancellationHCRequests.length;
+                then HCCancellllationRequestSpace;
+                else NoHCCancellationRequestSpace
+              ">
+            </ng-container>
+
+            <ng-template #HCCancellllationRequestSpace>
+              <div class="row">
+                <div class="table-responsive table-container fixed-height-table col-md-12">
+                  <table class="table" style="overflow: scroll; min-height: 250px;">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <th scope="col">Request ID</th>
+                        <th scope="col">Cancelled By</th>
+                        <th scope="col">Cancelled At</th>
+                        <th scope="col">Cancelled Remarks</th>
+                        <th scope="col">HC Time</th>
+                        <th scope="col">Status</th>
+
+                        <th scope="col">
+                          <i ngbTooltip="Map Location" placement="left" class="fas fa-globe mapicon text-dark"
+                            aria-hidden="true"></i>
+                        </th>
+                        <!-- <th scope="col">More Actions</th> -->
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" scope="row" *ngFor="
+                          let hc of FilteredCancellationHCRequests;
+                          let i = index
+                        ">
+                        <!-- <td>
+                                                    <input [attr.disabled]="hc.isDisabled ? true : null"
+                                                        [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                                                </td> -->
+                        <td scope="row">
+                          {{ hc.HCRequestID }} <br />
+                          <small ngbTooltip="BookingID_Name_Mob_Req-From-city" style="font-weight: bold"
+                            *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            {{ hcd.BookingPatientID }} _
+                            {{ hcd.PatientFullName }} _
+                            {{ hcd.PatientMobileNumber }}_{{ hcd.HCCityCode }}
+                            <br />
+                            <!-- {{hcd.cotp}} -->
+                          </small>
+                        </td>
+                        <td scope="row">{{ hc.BookingCanceledBy || '-'}}</td>
+                        <td scope="row">
+                          {{
+                          hc.BookingCanceledAt | date : "dd MMM, yyyy, h:mm a"
+                          }}
+                        </td>
+                        <td scope="row" style="word-break: break-word">{{ hc.BookingCanceledRemarks || '-' }}</td>
+                        <td scope="row">
+                          <b>{{
+                            hc.HCDateTime | date : "dd MMM, yyyy, h:mm a"
+                            }}</b>
+                        </td>
+                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+
+                        <!-- BookingCanceledRemarks: d., -->
+                        <td>
+                          <a (click)="ShowMapView(hc)" style="font-size: 17px" placement="left" ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                        <td>
+                          <div class="btn-group" ngbDropdown role="group"
+                            aria-label="Button group with nested dropdown">
+                            <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                              <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <div class="dropdown-menu" ngbDropdownMenu>
+                              <button (click)="OpencancelledMoreInfoPopup(hc)" class="dropdown-item">
+                                <span><i class="fa fa-info-circle eidt-info"></i>
+                                  &nbsp; More Info</span>
+                              </button>
+                              <button [attr.disabled]="
+                                    hc.AfterRegDisbaled ? true : null
+                                  " (click)="
+                                    openConfirmationModalForupdateRequest(
+                                      hc,
+                                      CancelReqModal
+                                    )
+                                  " class="dropdown-item">
+                                <span><i class="fas fa-ban"></i> &nbsp; Cancel
+                                  Request</span>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                  *ngIf="CancellationReqcollectionSize > cancellationPageSize">
+                  <ngb-pagination [collectionSize]="CancellationReqcollectionSize" [(page)]="cancellationPage" size=""
+                    [pageSize]="cancellationPageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                    (pageChange)="refreshCancellationRequetsPagination()">
+                  </ngb-pagination>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoHCCancellationRequestSpace>
+              <div style="text-align: center">
+                <p>No Cancellation Requests Found(s)</p>
+              </div>
+            </ng-template>
+          </div>
+          <!--#endregion HC Cancellation Requests::End-->
+
+          <!--#region  HC Delayed Request :: Begin -->
+          <div class="fade show active" [hidden]="visibleTab != 6">
+            <ng-template mat-tab-label>
+              <span>Delayed</span>
+            </ng-template>
+            <ng-container *ngIf="
+                HCDelayedRequests.length;
+                then DelayedRequestSpace;
+                else NoDelayedRequestSpace
+              ">
+            </ng-container>
+
+            <ng-template #DelayedRequestSpace>
+              <div class="row">
+                <div class="table-responsive col-md-12" *ngIf="HCDelayedRequests.length">
+                  <table class="table" style="overflow: scroll">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <th scope="col" style="font-size: smaller"></th>
+                        <th scope="col">Request ID</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">City</th>
+                        <!-- <th scope="col">Test Profile</th> -->
+                        <th scope="col">HC Time</th>
+                        <th scope="col">HC Staff Name</th>
+                        <th scope="col">HC Staff Status</th>
+                        <!-- <th scope="col">Booking Count</th> -->
+                        <th scope="col">
+                          <i ngbTooltip="Map Location" color="black" class="fas fa-globe mapicon text-dark"
+                            aria-hidden="true"></i>
+                        </th>
+                        <!-- <th scope="col">More Actions</th> -->
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" scope="row" *ngFor="
+                          let hc of FilteredDelyedHCRequests;
+                          let i = index
+                        ">
+                        <!-- <td>
+                                                    <input [attr.disabled]="hc.isDisabled ? true : null"
+                                                        [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                                                </td> -->
+                        <td>
+                          <!-- <span > -->
+                          <button *ngIf="visibleTab == 9" class="btn btn-sm btn-icon btn-light-info"
+                            (click)="HCRequests()">
+                            <i class="fas fa-sync-alt refresh-icon"></i>
+                          </button>
+                          <button *ngIf="visibleTab !== 9" class="btn btn-sm btn-icon btn-light-info"
+                            (click)="OnlineHCRequests()">
+                            <i class="fas fa-sync-alt refresh-icon"></i>
+                          </button>
+                          <!-- </span> -->
+
+                          <!--<i style="font-size: smaller !important;" (click)="HCRequests()"
+                                                        class="fas fa-sync-alt refresh-icon"></i>-->
+                        </td>
+
+                        <td scope="row">
+                          {{ hc.HCRequestID }} <br />
+                          <small ngbTooltip="BookingID_Name_Mob_PIN" style="font-weight: bold"
+                            *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            {{ hcd.BookingPatientID }} _
+                            {{ hcd.PatientFullName }} _
+                            {{ hcd.PatientMobileNumber }} <br />
+                            <!-- {{hcd.cotp}} -->
+                          </small>
+                        </td>
+                        <!-- <td> {{hc.CommSepTP}}</td> -->
+                        <td scope="row">{{ hc.PatientAddress }}</td>
+                        <td scope="row">{{ hc.HCCityName }}</td>
+                        <td scope="row">
+                          <b>{{ hc.HCDateTime }}</b>
+                        </td>
+                        <td>{{ hc.RiderName }}</td>
+                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <!-- <td scope="row"> {{hc.BC}}</td> -->
+
+                        <!-- <td> {{hc.FirstName }}</td> -->
+                        <!-- <td> {{hc.PatientAddress }}</td> -->
+                        <td>
+                          <a (click)="ShowMapView(hc)" style="font-size: 17px" placement="top" ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                        <td scope="col"></td>
+                        <!-- <td>
+                                                <div class="btn-group">
+                                                    <div class="btn-group" ngbDropdown role="group"
+                                                        aria-label="Button group with nested dropdown">
+
+                                                        <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+
+                                                        <div class="dropdown-menu" ngbDropdownMenu>
+                                                            <button (click)="OpenInProgMoreInfoPopup(hc)"
+                                                                class="dropdown-item">
+                                                                <span><i class="fa fa-info-circle eidt-info"></i> &nbsp;
+                                                                    More Info</span>
+                                                            </button>
+                                                            <button (click)="CompleteRequestModal(hc, 'openModel')"
+                                                                class="dropdown-item"
+                                                                [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null">
+                                                                <span><i class="fas fa-tasks"></i> &nbsp;
+                                                                    Completed</span>
+                                                            </button>
+
+                                                            <button
+                                                                (click)="openConfirmationModalForupdateRequest(hc, changeriderconfirmationbox)"
+                                                                class="dropdown-item">
+                                                                <span><i class="fas fa-exchange-alt"></i> &nbsp;
+                                                                    Chnage Rider</span>
+                                                            </button>
+
+                                                            <button
+                                                                (click)="openConfirmationModalForupdateRequest(hc, cancelreqconfirmationbox)"
+                                                                class="dropdown-item">
+                                                                <span><i class="fas fa-ban"></i> &nbsp;
+                                                                    Cancel Request</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                  *ngIf="DelayedReqcollectionSize > delayedPageSize">
+                  <ngb-pagination [collectionSize]="DelayedReqcollectionSize" [(page)]="delayedPage" size=""
+                    [pageSize]="delayedPageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                    (pageChange)="refreshDelayedRequestsPagination()">
+                  </ngb-pagination>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoDelayedRequestSpace>
+              <div style="text-align: center">
+                <p>No Delayed Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!-- endregion HC Delayed Request :: End -->
+
+          <!-- #region HC Delayed Request :: Begin -->
+          <div class="fade show active" [hidden]="visibleTab != 7">
+            <ng-template mat-tab-label>
+              <span>Missed</span>
+            </ng-template>
+            <ng-container *ngIf="
+                HCMissedRequests.length;
+                then MissedRequestSpace;
+                else NoMissedRequestSpace
+              ">
+            </ng-container>
+
+            <ng-template #MissedRequestSpace>
+              <div class="row">
+                <div class="table-responsive col-md-12">
+                  <table class="table" style="overflow: scroll">
+                    <thead>
+                      <tr style="font-weight: bold">
+                        <th scope="col" style="font-size: smaller"></th>
+                        <th scope="col">Request ID</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">City</th>
+                        <!-- <th scope="col">Test Profile</th> -->
+                        <th scope="col">HC Time</th>
+                        <th scope="col">HC Staff Name</th>
+                        <th scope="col">HC Staff Status</th>
+                        <!-- <th scope="col">Booking Count</th> -->
+                        <th scope="col">
+                          <i ngbTooltip="Map Location" color="black" class="fas fa-globe mapicon text-dark"
+                            aria-hidden="true"></i>
+                        </th>
+                        <!-- <th scope="col">More Actions</th> -->
+                      </tr>
+                    </thead>
+                    <tbody id="">
+                      <tr scope="row" *ngFor="
+                          let hc of FilteredMissedHCRequests;
+                          let i = index
+                        ">
+                        <!-- <td>
+                                    <input [attr.disabled]="hc.isDisabled ? true : null"
+                                        [(ngModel)]="hc.isSelected" type="checkbox" class="" />
+                                </td> -->
+                        <td>
+                          <button *ngIf="visibleTab === 9" class="btn btn-sm btn-icon btn-light-info"
+                            (click)="HCRequests()">
+                            <i class="fas fa-sync-alt refresh-icon"></i>
+                          </button>
+                          <button *ngIf="visibleTab !== 9" class="btn btn-sm btn-icon btn-light-info"
+                            (click)="OnlineHCRequests()">
+                            <i class="fas fa-sync-alt refresh-icon"></i>
+                          </button>
+
+                          <!--<i style="font-size: smaller !important;" (click)="HCRequests()"
+                                        class="fas fa-sync-alt refresh-icon"></i>-->
+                        </td>
+
+                        <td scope="row">
+                          {{ hc.HCRequestID }} <br />
+                          <small ngbTooltip="BookingID_Name_Mob_PIN" style="font-weight: bold"
+                            *ngFor="let hcd of hc.bookingDetail; let ii = index">
+                            {{ hcd.BookingPatientID }} _
+                            {{ hcd.PatientFullName }} _
+                            {{ hcd.PatientMobileNumber }} <br />
+                            <!-- {{hcd.cotp}} -->
+                          </small>
+                        </td>
+                        <!-- <td> {{hc.CommSepTP}}</td> -->
+                        <td scope="row">{{ hc.PatientAddress }}</td>
+                        <td scope="row">{{ hc.HCCityName }}</td>
+                        <td scope="row">
+                          <b>{{ hc.HCDateTime }}</b>
+                        </td>
+                        <td>{{ hc.RiderName }}</td>
+                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <!-- <td scope="row"> {{hc.BC}}</td> -->
+
+                        <!-- <td> {{hc.FirstName }}</td> -->
+                        <!-- <td> {{hc.PatientAddress }}</td> -->
+                        <td>
+                          <a (click)="ShowMapView(hc)" style="font-size: 17px" placement="top" ngbTooltip="View Map">
+                            <i class="fas fa-map-marker-alt mapicon"></i>
+                          </a>
+                        </td>
+                        <td scope="col"></td>
+                        <td>
+                          <div class="btn-group">
+                            <div class="btn-group" ngbDropdown role="group"
+                              aria-label="Button group with nested dropdown">
+                              <button class="btn btn-icon btn-light" ngbDropdownToggle>
+                                <i class="fas fa-ellipsis-h"></i>
+                              </button>
+
+                              <div class="dropdown-menu" ngbDropdownMenu>
+                                <button (click)="OpenInProgMoreInfoPopup(hc)" class="dropdown-item">
+                                  <span><i class="fa fa-info-circle eidt-info"></i>
+                                    &nbsp; More Info</span>
+                                </button>
+                                <button (click)="
+                                    openConfirmationModalForupdateRequest(
+                                      hc,
+                                      changeriderconfirmationbox
+                                    )
+                                  " class="dropdown-item">
+                                  <span><i class="fas fa-exchange-alt"></i> &nbsp;
+                                    Chnage Rider</span>
+                                </button>
+                                <button (click)="
+                                    openConfirmationModalForupdateRequest(
+                                      hc,
+                                      cancelreqconfirmationbox
+                                    )
+                                  " class="dropdown-item">
+                                  <span><i class="fas fa-ban"></i> &nbsp; Cancel
+                                    Request</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="d-flex justify-content-between p-2 flex-wrap align-items-center"
+                    *ngIf="MissedReqcollectionSize > missedPageSize">
+                    <ngb-pagination [collectionSize]="MissedReqcollectionSize" [(page)]="missedPage" size=""
+                      [pageSize]="missedPageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                      (pageChange)="refreshMissedRequetsPagination()">
+                    </ngb-pagination>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoMissedRequestSpace>
+              <div style="text-align: center">
+                <p>No Missed Request Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!-- #endregion HC Delayed Request :: End -->
+
+          <!--#region Pending visists  :: Begin -->
+          <div class="fade show active" [hidden]="visibleTab != 8">
+            <ng-template mat-tab-label>
+              <span>Missed</span>
+            </ng-template>
+
+            <ng-container *ngIf="
+                1 == 1;
+                then PendingBookingVisitsSpace;
+                else NoPendingBookingVisitsSpace
+              ">
+            </ng-container>
+
+            <ng-template #PendingBookingVisitsSpace>
+              <div class="row">
+                <div class="col-2">
+                  <div *ngFor="let hc of PendingBookingVisits; let i = index">
+                    <!-- <div class="row"> -->
+                    <mat-chip-list>
+                      <mat-chip (click)="getVisitDetailByVisitID(hc)" color="primary" selected="true">
+                        <i *ngIf="selVisit == hc.VisitId" style="font-size: xx-small" class="fas fa-circle"
+                          style="color: #28a745"></i>
+                        {{ hc.VisitId }}
+                      </mat-chip>
+                      <br />
+                    </mat-chip-list>
+                    <!-- </div> -->
+                  </div>
+                </div>
+                <div style="border-right: silver solid 1px"></div>
+                <div class="col-9">
+                  <div class="col-md-10">
+                    <div class="row mb-4">
+                      <div class="col-md-4">
+                        <input [(ngModel)]="SearchVisitNo" placeholder="" type="text" class="form-control" />
+                      </div>
+                      <div class="col-md-2">
+                        <button (click)="getVisitDetailByVisitID('')" type="button" class="btn btn-primary">
+                          <i ngbTooltip="Search" class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row mb-4 ml-3">
+                      <div *ngIf="visitCreatedByName" class="col-md-6 col-lg-6 col-sm-12">
+                        <div class="row">
+                          <span class="mt-3"><b>Visit Created By:</b></span>
+                          &nbsp;
+                          <mat-chip-list>
+                            <mat-chip color="accent" selected="true">
+                              {{ visitCreatedByName }}
+                            </mat-chip>
+                          </mat-chip-list>
+                        </div>
+                      </div>
+                      <div *ngIf="hcPerformedby" class="col-md-6 col-lg-6 col-sm-12">
+                        <div class="row">
+                          <span class="mt-3"><b>HC Performed By:</b></span>
+                          &nbsp;
+                          <mat-chip-list>
+                            <mat-chip color="warn" selected="true">
+                              {{ hcPerformedby }}
+                            </mat-chip>
+                          </mat-chip-list>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <mat-card class="mb-5">
+                      <mat-card-content>
+                        <div class="row">
+                          <table class="table" style="overflow: scroll">
+                            <thead>
+                              <tr style="font-weight: bold">
+                                <th scope="col">PatientName</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">DateOfBirth</th>
+                                <!-- <th scope="col">MobileOperatorID</th> -->
+                                <th scope="col">MobileNO</th>
+                                <th scope="col">PatientAddress</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Panel</th>
+                              </tr>
+                            </thead>
+                            <tbody id="">
+                              <tr scope="row" colspan="4" *ngIf="!VisitPatDetail.length">
+                                <td>No Record Found</td>
+                              </tr>
+                              <tr scope="row" *ngFor="
+                                  let pat of VisitPatDetail;
+                                  let i = index
+                                ">
+                                <td scope="row">
+                                  {{ pat.SalutationTitle }}
+                                  {{ pat.FirstName }}
+                                  {{ pat.LastName }}
+                                </td>
+                                <td scope="row">{{ pat.Gender }}</td>
+                                <td>{{ pat.DateOfBirth }}</td>
+                                <!-- <td scope="row"> {{pat.MobileOperatorID}}</td> -->
+                                <td scope="row">{{ pat.MobileNO }}</td>
+                                <td scope="row">{{ pat.PatientAddress }}</td>
+                                <td scope="row">{{ pat.HCCityName }}</td>
+                                <td scope="row">{{ pat.PanelName }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                  <div class="col-12">
+                    <mat-card class="mb-5">
+                      <mat-card-content>
+                        <table class="table" style="overflow: scroll">
+                          <thead>
+                            <tr style="font-weight: bold">
+                              <th scope="col">Test</th>
+                              <th scope="col">Price</th>
+                              <th scope="col">Delivery Date</th>
+                              <th scope="col">Remarks</th>
+                            </tr>
+                          </thead>
+                          <tbody id="">
+                            <tr scope="row" colspan="4" *ngIf="!VisitTPDetail.length">
+                              <td>No Record Found</td>
+                            </tr>
+                            <tr scope="row" *ngFor="let tp of VisitTPDetail; let i = index">
+                              <td scope="col">{{ tp.TestProfileCode }}</td>
+                              <td scope="col">{{ tp.TestProfilePrice }}</td>
+                              <td scope="col">{{ tp.DeliveryDate }}</td>
+                              <td scope="col">{{ tp.Remarks }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                  <div (click)="openBookingScreen()" class="col-12" style="text-align: right">
+                    <button class="btn btn-primary">Book</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #NoPendingBookingVisitsSpace>
+              <div style="text-align: center">
+                <p>No Visit Found</p>
+              </div>
+            </ng-template>
+          </div>
+          <!-- endregion HC Pending visists  :: End -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- endregion -->
+
+  <!-- region Map View Popup -->
+  <ng-template #MapView>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Patient Address</h5>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.applicantDetailModal"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner> -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default" id="">
+              <div class="panel-body">
+                <app-google-maps [MapName]="mapName" [gMapsControls]="['show-marker', 'allow-multiple-markers']"
+                  [gMapInfoToDisplay]="gMapInfoToDisplay" [gMultipleMarlers]="gMultipleMarlers">
+                </app-google-maps>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+      <!-- class="close" -->
+      <button type="button" class="btn btn-primary" aria-label="Close" (click)="closeLoginModal()">
+        <span aria-hidden="">Close &times;</span>
+      </button>
+    </div>
+  </ng-template>
+  <!-- endregion Map View Popup -->
+
+  <!-- region CompleteReqModal View Popup -->
+
+  <ng-template #CompleteReqModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">
+        Admin Request Completed Feedback
+      </h5>
+    </div>
+    <div class="modal-body">
+      <div class="row m-2">
+        <div class="col-md-12">
+          <button class="btn btn-md btn-primary pull-right" (click)="openHCReports(1)">Inquiry Report</button>
+          <button class="btn btn-md btn-success pull-right mr-2" (click)="openHCReports(2)">Booking Report</button>
+        </div>
+        <div *ngIf="CommaSepBIdsToSeeDetail" class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <fieldset class="fieldset-border-all-primary">
+            <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+              Booking Detail
+            </legend>
+            <app-hc-booking-card [multipleBookingIds]="CommaSepBIdsToSeeDetail"></app-hc-booking-card>
+          </fieldset>
+        </div>
+        <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <fieldset class="fieldset-border-all-primary">
+                        <legend class="font-weight-bold text-primary" style="font-size: 1.1rem;">Registration Detail
+                        </legend>
+                        <app-hc-reg-card [bookingid]="96676451"></app-hc-reg-card>
+                    </fieldset>
+                </div> -->
+        <div *ngIf="RiderIDtoSeeDetail" class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <fieldset class="fieldset-border-all-primary">
+            <legend class="font-weight-bold text-primary" style="font-size: 1.1rem">
+              HC Staff
+            </legend>
+            <app-hc-rider-card [riderId]="RiderIDtoSeeDetail"></app-hc-rider-card>
+          </fieldset>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row mt-4">
+          <div class="col-12">
+            <img class="emojifeedback" ngbTooltip="Verry Happy" (click)="setEmoji('VHappy')"
+              src="{{ appName }}assets/images/feedback/very-happy2.png" class="block-img mr-2 mb-2" width="70px"
+              height="70px" [ngClass]="selectedEmoji.rating == 1 ? 'active' : ''" />
+            <img ngbTooltip="Happy" (click)="setEmoji('Happy')" src="{{ appName }}assets/images/feedback/happy.png"
+              class="block-img mr-2 mb-2" width="70px" height="70px"
+              [ngClass]="selectedEmoji.rating == 2 ? 'active' : ''" />
+            <img ngbTooltip="Normal" (click)="setEmoji('Normal')" src="{{ appName }}assets/images/feedback/normal.png"
+              class="block-img mr-2 mb-2" width="70px" height="70px"
+              [ngClass]="selectedEmoji.rating == 3 ? 'active' : ''" />
+            <img (click)="setEmoji('Sad')" ngbTooltip="Bad" src="{{ appName }}assets/images/feedback/sad.png"
+              class="block-img mr-2 mb-2" width="70px" height="70px"
+              [ngClass]="selectedEmoji.rating == 4 ? 'active' : ''" />
+            <img (click)="setEmoji('VSad')" ngbTooltip="Verry Bad"
+              src="{{ appName }}assets/images/feedback/very-sad.png" class="block-img mr-2 mb-2" width="70px"
+              height="70px" [ngClass]="selectedEmoji.rating == 5 ? 'active' : ''" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default" id="">
+              <div class="panel-body">
+                <textarea (change)="checkRequestCompRemarksValidation()" [ngClass]="reqComRemarksClass" required
+                  class="form-control" rows="3" [(ngModel)]="HCAdminCloseRequestRemarks">
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- <button type="button" class="btn btn-primary" (click)="">
+            <span aria-hidden="true"></span>
+        </button> -->
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+      <!-- <input type="checkbox" > -->
+      <!-- <label class="switch">
+            <input [(ngModel)]="isShareGenerated" name="isShareGenerated" type="checkbox">
+            <span class="slider round"></span>
+        </label> -->
+      <button class="btn btn-primary" title="{{ confirmationPopoverConfig.popoverTitle }}" mwlConfirmationPopover
+        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+        [confirmText]="confirmationPopoverConfig.confirmText" [cancelText]="confirmationPopoverConfig.cancelText"
+        [placement]="confirmationPopoverConfig.placements[0]" (confirm)="CompleteRequestModal('', 'updaterequest')"
+        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="success"
+        cancelButtonType="outline-secondary" (click)="
+          confirmationPopoverConfig.confirmClicked = false;
+          confirmationPopoverConfig.cancelClicked = false
+        ">
+        Complete And Close Request
+      </button>
+    </div>
+    <!-- </div> -->
+
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <!-- endregion -->
+
+  <ng-template #CancelReqModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Cancel Request</h5>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default" id="">
+              <div class="panel-body">
+                <textarea (change)="checkCanRemarksValidation()" required placeholder="Enter Remarks"
+                  [ngClass]="CanRemarksClass" class="form-control" rows="3" [(ngModel)]="CancelRequestRemarks">
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+      <button class="btn btn-primary" (click)="CancelRequestModal('', 'updateCancelReq')"
+        ngbTooltip="Confirm Cancel Request">
+        Confirm Cancel Request
+      </button>
+      <button *ngIf="visibleTab == 11" class="btn btn-warning" (click)="RejectRequestModal()"
+        ngbTooltip="Reject Request">
+        Reject Request
+      </button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #RevertReqModal let-RevertReqModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Revert Request</h5>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default" id="">
+              <div class="panel-body">
+                <textarea required class="form-control" rows="3" [(ngModel)]="CancelRequestRemarks">
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+      <button class="btn btn-primary" (click)="CancelRequestModal('', 'updateCancelReq')" ngbTooltip="Cancel Request">
+        Cancel Request
+      </button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #RequestDetailModal let-RequestDetailModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <h5 class="modal-title" id="modal-basic-title">
+            Booking Request Details -
+          </h5>
+          <h5 style="float: right">{{ SelBookingData[0].PatientFullName }}</h5>
+          <h5 style="float: right">
+            ({{ SelBookingData[0].BookingPatientID }})
+          </h5>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="table-responsive" style="width: 100%">
+              <table class="table" style="overflow: scroll">
+                <thead>
+                  <tr style="font-weight: bold">
+                    <th scope="col">Test(s)</th>
+                    <th scope="col">Staff Contact</th>
+                    <th scope="col">BookedAt</th>
+                    <th scope="col">BookedBy</th>
+                    <th scope="col">AssignedAt</th>
+                    <th scope="col">AssignedBy</th>
+                    <th scope="col">Discount%</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Gross Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="">
+                  <tr [ngStyle]="{
+                      color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                    }" scope="row" *ngFor="let hc of SelBookingData; let i = index">
+                    <td scope="row">{{ hc.tpCodes || "-" }}</td>
+                    <td scope="row">{{ hc.RiderCell || "-" }}</td>
+                    <td scope="row">{{ hc.BookingInitiatedAt }}</td>
+                    <td scope="row">{{ hc.BookedByEmpName || "-" }}</td>
+                    <td scope="row">{{ hc.BookingAssignedAt || "-" }}</td>
+                    <td scope="row">
+                      {{ hc.BookingAssignedByEmpName || "-" }}
+                    </td>
+                    <!-- BookedByEmpName  BookingAssignedByEmpName -->
+                    <td scope="row">{{ hc.DiscountPerc || "-" }}</td>
+                    <td scope="row">{{ hc.NetAmount || "-" }}</td>
+                    <td scope="row">{{ hc.GrossAmount || "-" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #InProgReqMoreInfoModal let-InProgReqMoreInfoModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <h5 class="modal-title" id="modal-basic-title">
+            In Progress Booking Request Detail
+          </h5>
+          <h5 style="float: right">{{ selInProgReq.BookingPatientID }}</h5>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+    <div class="modal-body">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="table-responsive col-md-12">
+            <table class="table" style="overflow: scroll">
+              <thead>
+                <tr style="font-weight: bold">
+                  <th scope="col">Test Profile</th>
+                  <th scope="col">HC Staff Contact</th>
+                  <th scope="col">Assiged At</th>
+                  <th scope="col">Assigned To</th>
+                  <th scope="col">Booked At</th>
+                  <th scope="col">Booked By</th>
+                  <th scope="col">Discount Percentage</th>
+                  <th scope="col">Net Amount</th>
+                  <th scope="col">Gross Amount</th>
+                </tr>
+              </thead>
+              <tbody id="">
+                <tr [ngStyle]="{
+                      color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                    }" scope="row" *ngFor="let hc of selInProgReq; let i = index">
+                  <td scope="row">{{ hc.CommSepTP }}</td>
+                  <td scope="row">{{ hc.RiderCell }}</td>
+                  <td scope="row">{{ hc.BookingAssignedAt }}</td>
+                  <td scope="row">{{ hc.BookingAssignedByEmpName }}</td>
+                  <td scope="row">{{ hc.BookingInitiatedAt }}</td>
+                  <td scope="row">{{ hc.BookedByEmpName }}</td>
+                  <td scope="row">{{ hc.DiscountPerc }}</td>
+                  <td scope="row">{{ hc.NetAmount }}</td>
+                  <td scope="row">{{ hc.GrossAmount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #RegDetailInfoModal let-RegDetailInfoModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <mat-toolbar>
+        <mat-toolbar-row>
+          <h5 class="modal-title" id="modal-basic-title">Registration info</h5>
+          <h5 style="float: right">
+            {{ registredTestInfoByBookingID[0].BookingPatientID }}
+          </h5>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="table-responsive col-md-12">
+              <table class="table" style="overflow: scroll">
+                <thead>
+                  <tr style="font-weight: bold">
+                    <!-- <th scope="col">Sample Collected TP</th> -->
+                    <th scope="col">Visit TP</th>
+                    <th scope="col">Amount Recieved</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Panel Name</th>
+                    <th scope="col">Sample Submitted Loc</th>
+                    <th scope="col">Employee Submitted To</th>
+                  </tr>
+                </thead>
+                <tbody id="">
+                  <tr [ngStyle]="{
+                      color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                    }" scope="row" *ngFor="
+                      let hc of registredTestInfoByBookingID;
+                      let i = index
+                    ">
+                    <!-- <td scope="row"> {{hc.SampleCollectedTPCode }}</td> -->
+                    <td scope="row">{{ hc.VisitTPCode }}</td>
+                    <td scope="row">{{ hc.AmountRecieved }}</td>
+                    <td scope="row">{{ hc.Discount }}</td>
+                    <td scope="row">{{ hc.PanelName }}</td>
+                    <td scope="row">{{ hc.SampleSubmittedLoc }}</td>
+                    <td scope="row">{{ hc.EmployeeSubmittedTo }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #CancelledMoreInfoModal let-CancelledMoreInfoModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header">
+      <!-- <mat-toolbar>
+        <mat-toolbar-row> -->
+      <h5 class="modal-title" id="modal-basic-title">
+        Cancelled Booking Request Detail
+      </h5>
+      <!-- </mat-toolbar-row>
+      </mat-toolbar> -->
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="table-responsive compact col-md-12">
+          <table class="table" style="overflow: scroll">
+            <thead>
+              <tr style="font-weight: bold">
+                <th width="15%">Assiged By</th>
+                <th width="10%">Booked At</th>
+                <th width="10%">Booked By</th>
+                <th width="10%">Assiged At</th>
+                <th width="10%">HC Staff Contact</th>
+                <th width="5%">Discount Percentage</th>
+                <th width="5%">Net Amount</th>
+                <th width="5%">Gross Amount</th>
+                <th width="30%">Test Profile</th>
+              </tr>
+            </thead>
+            <tbody id="">
+              <tr [ngStyle]="{
+                      color: hc.isUrgentBooking == 1 ? 'red' : 'black'
+                    }" *ngFor="let hc of selcancelledReq; let i = index">
+                <td>{{ hc.BookingAssignedByEmpName }}</td>
+                <td>{{ hc.BookingInitiatedAt | date : "dd MMM, yyyy, h:mm a"}}</td>
+                <td>{{ hc.BookedByEmpName || '-'}}</td>
+                <td>{{ hc.BookingAssignedAt | date : "dd MMM, yyyy, h:mm a"}}</td>
+                <td>{{ hc.RiderCell }}</td>
+                <td>{{ hc.DiscountPerc || '-'}}</td>
+                <td>{{ hc.NetAmount || '-'}}</td>
+                <td>{{ hc.GrossAmount || '-'}}</td>
+                <td>{{ hc.CommSepTP }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #ZoneRiders let-ZoneRiders>
+    <div class="modal-body">
+      <div class="container">
+        <div class="col-md-12">
+          <div class="row">
+            <ul>
+              <li *ngFor="let zr of zonesRidersList">
+                {{ zr.RiderName }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeLoginModal()">Close</button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+  <!-- HC Inquiry Report -->
+  <ng-template #InquiryReport let-InquiryReport>
+    <!-- <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Inquuiry Report</h5>
+      <button
+        class="btn btn-danger"
+        (click)="InquiryReport.close()">X
+      </button>
+    </div> -->
+    <div class="modal-body">
+      <!-- <div class="container-fluid"> -->
+      <div class="row">
+        <div class="col-md-12">
+          <app-hc-booking-inquiry></app-hc-booking-inquiry>
+        </div>
+      </div>
+      <!-- </div> -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="InquiryReport.close()">Close</button>
+    </div>
+  </ng-template>
+
+  <!-- HC Booking Report -->
+
+  <ng-template #BookingReport let-BookingReport>
+    <!-- <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Inquuiry Report</h5>
+      <button
+        class="btn btn-danger"
+        (click)="BookingReport.close()">X
+      </button>
+    </div> -->
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <app-exp-hcbooking-rpt></app-exp-hcbooking-rpt>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="BookingReport.close()">Close</button>
+    </div>
+  </ng-template>
+
+  <ng-template #changeriderconfirmationbox let-changeriderconfirmationbox>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Change HC Staff</h5>
+      <button class="btn btn-danger" (click)="changeriderconfirmationbox.close()">
+        x
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="panel panel-default" id="">
+          <div class="panel-body">
+            <div class="row">
+
+              <div class="col-md-12">
+                <label>Hc Staff Name</label>
+                <ng-select [(ngModel)]="ChangedRiderID" (change)="DisplayRiderSchedule($event)" #riderNGS class="mb-3"
+                  [items]="RidersDetailList" tabindex="3" placeholder="-Select rider-" name="riderNGS"
+                  bindLabel="RiderFullName" bindValue="RiderID" [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mat-elevation-z12">
+                  <!-- <div  class="col-md-12 col-lg-12"> -->
+                  <mat-table *ngIf="showRiderSchedule" #table [dataSource]="RiderScheduleData">
+                    <!--- Note that these columns can be defined in any order.
+                                                                    The actual rendered columns are set as a property on the row definition" -->
+                    <!-- PatientName Column -->
+                    <ng-container matColumnDef="PatientName">
+                      <mat-header-cell *matHeaderCellDef>
+                        Patient Name
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{ element.PatientName }}
+                      </mat-cell>
+                    </ng-container>
+                    <!-- PatientAddress Column -->
+                    <ng-container matColumnDef="PatientAddress">
+                      <mat-header-cell *matHeaderCellDef>
+                        Patient Address
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{ element.PatientAddress }}
+                      </mat-cell>
+                    </ng-container>
+                    <!-- HCDateTime Column -->
+                    <ng-container matColumnDef="HCDateTime">
+                      <mat-header-cell *matHeaderCellDef>
+                        HCDateTime
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{element.HCDateTime | date: "MMM d, y, h:mm:ss a" }}
+                      </mat-cell>
+                    </ng-container>
+                    <!-- HCBookingStatus Column -->
+                    <ng-container matColumnDef="HCBookingStatus">
+                      <mat-header-cell *matHeaderCellDef>
+                        HCBookingStatus
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{ element.HCBookingStatus }}
+                      </mat-cell>
+                    </ng-container>
+                    <!-- Map Column
+                                    <ng-container matColumnDef="Map">
+                                        <mat-header-cell *matHeaderCellDef> Map </mat-header-cell>
+                                        <mat-cell (click)="OpenMap(element)" *matCellDef="let element">
+                                            <i class="fas fa-map-marker-alt mapicon"></i>
+                                        </mat-cell>
+                                    </ng-container> -->
+
+                    <mat-header-row *matHeaderRowDef="RiderScheduleDisplayedColumns">
+                    </mat-header-row>
+                    <mat-row *matRowDef="
+                        let row;
+                        columns: RiderScheduleDisplayedColumns
+                      ">
+                    </mat-row>
+                  </mat-table>
+                </div>
+                <div style="text-align: center" *ngIf="!showRiderSchedule" class="mat-elevation-z12">
+                  <ngb-alert [dismissible]="false" [type]="'info'">
+                    <strong>No Home collection Staff's Task Found </strong>
+                  </ngb-alert>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="
+          UpdateRequestStatus(
+            '',
+            'ChangeRider',
+            'HC-Admin task - InProgressRequestTab'
+          )
+        ">
+        Change Rider
+      </button>
+      <button class="btn btn-danger" (click)="changeriderconfirmationbox.close()">
+        Close
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #cancelreqconfirmationbox let-cancelreqconfirmationbox>
+    <div class="modal-body">
+      <h3>Are you sure?</h3>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="
+          UpdateRequestStatus(
+            '',
+            'CancelReq',
+            'HC-Admin task - PendingRequestsTab'
+          )
+        ">
+        Confirm
+      </button>
+
+      <!-- <span>
+                <i title="{{confirmationPopoverConfig.popoverTitle}}"
+                    mwlConfirmationPopover
+                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                    [confirmText]="confirmationPopoverConfig.confirmText"
+                    [cancelText]="confirmationPopoverConfig.cancelText"
+                    [placement]="confirmationPopoverConfig.placements[0]"
+                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                    confirmButtonType="success" cancelButtonType="outline-secondary"
+                    (confirm)="UpdateRequestStatus(hc, 'CancelReq', 'HC-Admin task - PendingRequestsTab')"
+                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                    ngbTooltip="Cancel Request" class="fas fa-ban cancel-icon"></i>
+            </span> -->
+
+      <button class="btn btn-danger" (click)="confirmation1.close()">
+        Close
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #hcBookingChat let-hcBookingChat>
+    <div class="modal-content">
+      <ngx-spinner class="spinner-info" [name]="spinnerRep.chatBoxSpiiner" bdColor="rgba(0,0,0,0.8)" size="large"
+        color="#fff" type="ball-atom" [fullScreen]="false">
+        <p style="color: white">Loading...</p>
+      </ngx-spinner>
+      <div class="modal-header">
+        <h3 class="modal-title">ChatBox</h3>
+        <button class="btn btn-sm btn-danger" (click)="CloseModel()">X</button>
+      </div>
+      <!-- [scrollTop]="scrollMe.scrollHeight" -->
+      <div class="modal-body  position-relative flex-grow-1" #scrollMe appScrollToBottom="true">
+        <ng-container *ngIf="
+            HCBookingMessages.length;
+            then HCBookingChatSpace;
+            else HCNotFoundBookingChatSpace
+          ">
+        </ng-container>
+        <ng-template #HCBookingChatSpace>
+          <div *ngFor="let hcChat of HCBookingMessages" class="chat-msjs-container">
+            <div class="row">
+              <div class="col-md-12 mb-1">
+                <div [ngClass]="{
+                    'ccr-chat-msj': hcChat.UserType == 2,
+                    'rider-chat-msj': hcChat.UserType == 1
+                  }">
+                  <!-- <span><i class="fa fa-expand"></i></span> -->
+                  <mat-chip-list class="chat-mat-list">
+                    <mat-chip (click)="showMessageDetail()" [ngClass]="{
+                        'ccr-chat-msj': hcChat.UserType == 2,
+                        'rider-chat-msj': hcChat.UserType == 1
+                      }" selected="true">
+                      {{ hcChat.Remarks }}
+                    </mat-chip>
+                  </mat-chip-list>
+                  <br />
+                  <span *ngIf="isShowMessageDetail" style="font-size: small">
+                    <small> By {{ hcChat.RemarksBy }} At {{ hcChat.MsgSentDateTime | date: "dd MMM, yyyy, h:mm a" }}
+                    </small>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #HCNotFoundBookingChatSpace>
+          <div style="text-align: center" class="col-12">
+            <span>No Message Found</span>
+          </div>
+        </ng-template>
+      </div>
+      <div class="modal-footer p-2" style="flex-shrink: 0;">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <input type="checkbox" [(ngModel)]="isHCMsgUrgent" ngbTooltip="Is Urgent?" />
+            </div>
+          </div>
+
+          <textarea class="form-control" [(ngModel)]="hcBookingTxtMsg" rows="1" placeholder="Type a message..."
+            (keyup.enter)="sendHCBookingChatMessage()"></textarea>
+
+          <div class="input-group-append">
+            <button mwlConfirmationPopover class="btn btn-primary" [popoverTitle]="'Send Message'"
+              [confirmText]="confirmationPopoverConfig.confirmText" [cancelText]="confirmationPopoverConfig.cancelText"
+              [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+              [placement]="confirmationPopoverConfig.placements[0]" (confirm)="sendMessage()"
+              (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="primary btn-md"
+              cancelButtonType="secondary btn-md">
+              <i class="fa fa-paper-plane">sends</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template #EditOnlineReqModal let-EditOnlineReqModal>
+    <!-- <div class="modal"> -->
+    <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem">
+      <div class="row">
+        <div class="col-12">
+          <h4 class="card-title">Edit Booking Details</h4>
+          <p *ngIf="BookingSlot">Home Collection Booking Slot :: {{ BookingSlot }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <app-update-hc-request [bookingID]="BookingIDToEdit"></app-update-hc-request>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+        (click)="EditOnlineReqModal.close(); refreshEditBooking()">
+        <i class="fa fa-times-circle"></i>Close
+      </button>
+    </div>
+    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" size="large" color="#fff" type="ball-atom"
+      [fullScreen]="true">
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+  </ng-template>
+
+  <ng-template #AssignRiderWithScheduleModal let-AssignRiderWithScheduleModal>
+    <!-- //here -->
+    <!-- <app-hc-rider-card [riderId] = "81"></app-hc-rider-card> -->
+
+    <div class="row m-2">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <fieldset class="fieldset-border-all-booking">
+          <legend class="font-weight-bold text-white" style="font-size: 1.1rem">
+            <i class="far fa-calendar-check text-white"></i> HC Booking Details
+          </legend>
+          <app-hc-booking-card [multipleBookingIds]="selCommaSepBookingIds"></app-hc-booking-card>
+        </fieldset>
+      </div>
+      <div *ngIf="selRiderToAssign" class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <fieldset class="fieldset-border-all-rider">
+          <legend class="font-weight-bold">
+            <i class="fa fa-motorcycle text-white"></i> HC Staff info
+          </legend>
+          <app-hc-rider-card [riderId]="selRiderToAssign"></app-hc-rider-card>
+        </fieldset>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="card" id="">
+        <div class="card-body">
+          <div class="mt-10">
+            <!-- <div class="col-md-4">
+                              <ng-select [(ngModel)]="selRiderToAssign" (change)="DisplayRiderSchedule($event);" #riderNGS
+                                  class="mb-3" [items]="RidersDetailList" tabindex="3" placeholder="-Select rider-"
+                                  name="riderNGS" bindLabel="RiderFullName" bindValue="RiderID" [closeOnSelect]="true">
+                              </ng-select>
+                          </div>
+                          <div class="col-md-4">
+                              <button mwlConfirmationPopover class="btn btn-danger btn-sm waves-effect text-center"
+                                  [popoverTitle]="'Assign HC Staff'" [confirmText]="confirmationPopoverConfig.confirmText"
+                                  [cancelText]="confirmationPopoverConfig.cancelText" 
+                                  [placement]="confirmationPopoverConfig.placements[0]" (confirm)="getSelRider()"
+                                  (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                  confirmButtonType="primary btn-sm" cancelButtonType="secondary btn-sm"
+                                  (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                  [appendToBody]="true">
+                                  <i class="fa fa-check"> Assign</i>
+                              </button>
+                          </div> -->
+            <div *ngIf="SelBookkings.length || SelOnlineBookkings.length" class="row">
+              <div class="form-group col-md-4">
+                <ng-select tabindex="1" (change)="RidersDetail()" placeholder="Select Branch" #branchid
+                  [(ngModel)]="selBranchid" name="branchid" [closeOnSelect]="true">
+                  <ng-option style="width: 100%" [value]="b.LocId" *ngFor="let b of branchList">
+                    {{ b.Title }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="form-group col-md-4">
+                <ng-select [(ngModel)]="selRiderToAssign" (change)="DisplayRiderSchedule($event)" #riderHCStaff
+                  tabindex="3" placeholder="-Select HC Staff-" name="riderHCStaff" [closeOnSelect]="true">
+                  <ng-option (change)="AssignRider(rider, 'rider')" style="width: 100%" [value]="rider.RiderID"
+                    *ngFor="let rider of RidersDetailList">
+                    <i [ngStyle]="{
+                        color:
+                          rider.RiderStatusID == 1
+                            ? '#1fc645'
+                            : rider.RiderStatusID == 2
+                            ? 'grey'
+                            : null
+                      }" class="fas fa-circle" placement="left" ngbTooltip="Select HC Staff"></i>
+                    {{ rider.RiderFullName }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div *ngIf="enableRadioServicesActions" class="form-group col-md-4">
+                <ng-select multiple="true" tabindex="1" placeholder="Technician" [(ngModel)]="SelTechIDToAssign"
+                  name="hcCity" [closeOnSelect]="true">
+                  <ng-option style="width: 100%" [value]="tech.RiderID" *ngFor="let tech of techList">
+                    {{ tech.RiderFullName }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div *ngIf="enableRadioServicesActions" class="form-group col-md-4">
+                <ng-select multiple="true" tabindex="1" placeholder="Helping Staff"
+                  [(ngModel)]="SelhelpingStaffIDToAssign" name="helpingStaffID" [closeOnSelect]="true">
+                  <ng-option style="width: 100%" [value]="hs.RiderID" *ngFor="let hs of HelpingStaffList">
+                    {{ hs.RiderFullName }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div *ngIf="enableRadioServicesActions" class="form-group col-md-4">
+                <ng-select multiple="true" tabindex="1" placeholder="Doctor" [(ngModel)]="SelDoctorIDToAssign"
+                  name="doctorID" [closeOnSelect]="true">
+                  <ng-option style="width: 100%" [value]="doc.RiderID" *ngFor="let doc of DocList">
+                    {{ doc.RiderFullName }}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="form-group col-md-4">
+                <button mwlConfirmationPopover class="btn btn-primary" [popoverTitle]="'Assign HC Staff'"
+                  [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                  [confirmText]="confirmationPopoverConfig.confirmText"
+                  [cancelText]="confirmationPopoverConfig.cancelText"
+                  [placement]="confirmationPopoverConfig.placements[0]" (confirm)="getSelRider()"
+                  (cancel)="confirmationPopoverConfig.confirmPopoverCancel()" confirmButtonType="btn btn-primary btn-sm"
+                  cancelButtonType="btn btn-secondary btn-sm" (click)="
+                    confirmationPopoverConfig.confirmClicked = false;
+                    confirmationPopoverConfig.cancelClicked = false
+                  " [appendToBody]="true">
+                  <i class="fa fa-check"></i> Assign Rider
+                </button>
+                &nbsp;
+                <!-- <div ngbDropdown class="d-inline-block">
+                                  <button ngbDropdownToggle id="dropdownHCZones" class="btn btn-success">Assign
+                                      Zone</button>
+                                  <div ngbDropdownMenu aria-labelledby="dropdownHCZones">
+                                      <div *ngFor="let zones of ZonesList">
+                                          <button style="width: -webkit-fill-available;" mwlConfirmationPopover
+                                              class="btn btn-secondary text-center" [popoverTitle]="'Assign HC Staff'"
+                                              [confirmText]="confirmationPopoverConfig.confirmText"
+                                              [cancelText]="confirmationPopoverConfig.cancelText"
+                                              [placement]="confirmationPopoverConfig.placements[0]"
+                                              (confirm)="AssignRider(zones, 'branch')"
+                                              (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                              confirmButtonType="primary btn-mini"
+                                              cancelButtonType="outline-secondary btn-mini"
+                                              (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                              [appendToBody]="true">
+                                              <a href="javascript:void(0)">
+                                                  {{zones.ZoneName}}
+                                              </a>
+                                          </button>
+                                      </div>
+                                  </div>
+                              </div> -->
+                <button class="btn btn-danger" (click)="
+                    AssignRiderWithScheduleModal.dismiss('close button clicked')
+                  ">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mat-elevation-z12">
+                <!-- <div  class="col-md-12 col-lg-12"> -->
+                <mat-table *ngIf="showRiderSchedule" #table [dataSource]="RiderScheduleData">
+                  <!--- Note that these columns can be defined in any order.
+                                                                      The actual rendered columns are set as a property on the row definition" -->
+                  <!-- PatientName Column -->
+                  <ng-container matColumnDef="PatientName">
+                    <mat-header-cell *matHeaderCellDef>
+                      Patient Name
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element.PatientName }}
+                    </mat-cell>
+                  </ng-container>
+                  <!-- PatientAddress Column -->
+                  <ng-container matColumnDef="PatientAddress">
+                    <mat-header-cell *matHeaderCellDef>
+                      Patient Address
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element.PatientAddress }}
+                    </mat-cell>
+                  </ng-container>
+                  <!-- HCDateTime Column -->
+                  <ng-container matColumnDef="HCDateTime">
+                    <mat-header-cell *matHeaderCellDef>
+                      HCDateTime
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{
+                      element.HCDateTime
+                      | date
+                      : "MMM d,
+                      y,
+                      h:mm:ss a"
+                      }}
+                    </mat-cell>
+                  </ng-container>
+                  <!-- HCBookingStatus Column -->
+                  <ng-container matColumnDef="HCBookingStatus">
+                    <mat-header-cell *matHeaderCellDef>
+                      HCBookingStatus
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{ element.HCBookingStatus }}
+                    </mat-cell>
+                  </ng-container>
+                  <!-- Map Column -->
+                  <ng-container matColumnDef="Map">
+                    <!-- <mat-header-cell *matHeaderCellDef> Map </mat-header-cell>
+                                          <mat-cell (click)="OpenMap(element)" *matCellDef="let element">
+                                              <i class="fas fa-map-marker-alt mapicon"></i>
+                                          </mat-cell> -->
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="RiderScheduleDisplayedColumns">
+                  </mat-header-row>
+                  <mat-row *matRowDef="let row; columns: RiderScheduleDisplayedColumns">
+                  </mat-row>
+                </mat-table>
+              </div>
+              <div style="text-align: center" *ngIf="!showRiderSchedule" class="mat-elevation-z12">
+                <ngb-alert [dismissible]="false" [type]="'info'">
+                  <strong>No Home collection Staff's Task Found </strong>
+                </ngb-alert>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </ng-template>
+
+  <ngx-spinner class="spinner-info" [name]="spinnerRep.fileterspinner" bdColor="rgba(0,0,0,0.8)" size="large"
+    color="#fff" type="ball-atom" [fullScreen]="false">
+    <p style="color: white">Loading...</p>
+  </ngx-spinner>
+</div>

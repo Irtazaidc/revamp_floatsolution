@@ -1,0 +1,277 @@
+
+
+
+
+<div class="tp-cancellation-requests-page" style="position: relative;">
+
+    <div class="row">
+        <div class="col-sm-4">
+
+
+            <app-card [title]="'Test Cancellation Requests'" [cardClass]="'tim-card tim-card tim-card-primary'" [cardHeaderClass]="'card-header-narrow'">
+                
+                <div class="tp-cancellation-requests-area">                    
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="search-filters-area p-2">
+
+                                <form class="" [formGroup]="searchVisitsForm">
+                                    <div class="form-inline">
+
+                                        <ng-select style="width: 100%;"
+                                            class=" mt-1 mr-1"
+                                            [items]="branchesList"
+                                            bindLabel="Title" 
+                                            placeholder="-select branch-"
+                                            bindValue="LocId"
+                                            formControlName="branchIds"
+                                            [multiple]="true"
+                                            [closeOnSelect]="false"
+                                            >
+
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                    <span class="ng-value-label"> {{item.Title}}</span>
+                                                </div>
+                                                <div class="ng-value" *ngIf="items.length > 2">
+                                                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template ng-header-tmp>
+                                                <button (click)="onSelectAllBranches()" class="btn btn-mini btn-outline-primary" type="button"><i class="ti-check"></i> Select all</button>
+                                                <button (click)="onUnselectAllBranches()" class="btn btn-mini btn-outline-primary m-l-10 pull-right" type="button"><i class="ti-close"></i> Unselect all</button>
+                                            </ng-template>
+                                        </ng-select>
+
+                                        <input
+                                            #dFrom
+                                            type="text"
+                                            style="max-width: 100%;"
+                                            class="form-control mt-1 mr-1"
+                                            (click)="dFrom_date.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            name="dFrom"
+                                            ngbDatepicker
+                                            #dFrom_date="ngbDatepicker"
+                                            formControlName="fromDate"
+                                            [ngClass]="{'invalid': !dFrom.value, 'invalid-highlighted': !dFrom.value}"
+                                            required>
+
+                                        <input
+                                            #dTo
+                                            type="text"
+                                            style="max-width: 100%;"
+                                            class="form-control mt-1 mr-1"
+                                            (click)="dTo_date.toggle()"
+                                            placeholder="dd-mm-yyyy"
+                                            autocomplete="off"
+                                            name="dTo"
+                                            ngbDatepicker
+                                            #dTo_date="ngbDatepicker"
+                                            formControlName="toDate"
+                                            [ngClass]="{'invalid': !dTo.value, 'invalid-highlighted': !dTo.value}"
+                                            required>
+                                        <button class="btn btn-outline-primary mt-1" type="button" title="Fetch Record(s)" (click)="getCancellationRequests()"><i class="ti-search"></i></button>
+                                    </div>
+    
+                                    <div class="">
+                                        <hr class="mt-0">
+                                        <input type="text" class="form-control" placeholder="type to filter" [ngModelOptions]="{standalone: true}" [(ngModel)]="pinFilterString" />
+                                    </div>     
+                                </form>
+
+
+                                <div style="border-top: 1px solid #eee; max-height: 350px; overflow-y: auto;" class="mt-2 pl-2">
+                                    
+                                    <label class="text-danger">Total Records: <strong>{{cancellationRequests.length}}</strong></label>
+                                    <!-- <ul class="visits-list">
+                                        <li
+                                        class="cursor-pointer"
+                                        [ngClass]="{'bg-light': (selectedVisit && selectedVisit.VisitId == visit.VisitId)}"
+                                        *ngFor="let visit of cancellationRequests | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                        style="border-bottom: 1px solid #eee;"
+                                        (click)="visitSelectedEvent(visit)"
+                                        >
+                                            <a
+                                            href="javascript:void(0)"
+                                            [ngClass]="{'font-weight-bolder': (selectedVisit && selectedVisit.VisitId == visit.VisitId),  'text-danger font-weight-bold': visit.ProcessId == 2}"
+                                            >{{visit.PIN}}</a>
+                                        </li>
+                                    </ul> -->
+                                    <ul class="visits-list list-unstyled px-2">
+                                        <li
+                                            class="visit-item mb-2 p-3 rounded shadow-sm"
+                                            [ngClass]="{
+                                            'bg-light border border-primary': selectedVisit?.VisitId === visit.VisitId,
+                                            'bg-white': selectedVisit?.VisitId !== visit.VisitId
+                                            }"
+                                            *ngFor="let visit of cancellationRequests | filterByKey:pinFilterString:['PIN','VisitId']; let i = index"
+                                            (click)="visitSelectedEvent(visit)"
+                                        >
+                                            <a
+                                            href="javascript:void(0)"
+                                            class="d-block text-decoration-none"
+                                            [ngClass]="{
+                                                'font-weight-bolder text-primary': selectedVisit?.VisitId === visit.VisitId,
+                                                'text-danger font-weight-bold': visit.ProcessId === 2
+                                            }"
+                                            >
+                                            <i class="fas fa-id-card mr-2 text-muted"></i> {{ visit.VisitId }}
+                                            </a>
+                                        </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </app-card>
+        </div>
+
+        <div class="col-sm-8">
+
+            <app-card [title]="'Visit Tests (' + (selectedVisit ? selectedVisit.VisitId : '') + ')'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                    
+                <div>
+    
+
+                    <ng-container *ngIf="selectedVisit; then visitSamplesContainer else noVisitSamplesContainer"></ng-container>
+                    <ng-template #visitSamplesContainer>
+                        <div class="row">
+    
+                            <div class="col">
+                                <div>
+                                    <div class="header">
+        
+                                        <div class="patient0-info-bar-container" style="position: relative;">
+                                            <app-patient-basic-info class="mb-3" [VisitId]="selectedVisit.VisitId"></app-patient-basic-info>
+                                        </div>                                        
+                                    </div>
+        
+                                    <div class="body" style="position: relative;">
+
+                                         <fieldset class="fieldset-primary fieldset-border-top" *ngIf="selectedVisit">
+                                            <legend>Tests <span *ngIf="selectedVisit.VisitId">of (PIN <strong class="text-primary">{{selectedVisit.VisitId}}</strong>)</span></legend>
+
+                                            <div class="row">
+
+                                                <div class="col-md-8 col-sm-12">
+                                                    <div class="section-header">
+                                                        <h3 class="section-title">Visit Details</h3>
+                                                    </div>
+                                                    <ul class="cancelled-req-info" *ngIf="selectedVisits">
+                                                        <li><span class="lbl">Registered By</span> <span class="">{{selectedVisits.VisitCreatedBy || '-'}}</span></li>
+                                                        <li><span class="lbl">Registered On</span> <span class="" *ngIf="selectedVisits.VisitDate ">{{selectedVisits.VisitDate | date:"dd MMM, yyyy, h:mm a"}}</span></li>
+                                                        <li><span class="lbl">Cancellation Request By</span> <span class="val">{{selectedVisits.RequestedBy || '-'}}</span></li>
+                                                        <li><span class="lbl">Cancellation Request On</span> <span class="val" *ngIf="selectedVisits.CreatedOn">{{selectedVisits.CreatedOn | date:"dd MMM, yyyy, h:mm a"}}</span></li>
+                                                        <li><span class="lbl">Payment  Mode </span> <span class="">{{(selectedVisits.TitleCash || '')}}</span></li>
+                                                        <li><span class="lbl">Refunded Amount</span> <span class="val">{{helperSrv.formatNumericValues(selectedVisits.RefundedAMountCash || '0' )}}</span></li>
+
+                                                        <li *ngIf="selectedVisits.TitleRewardPoint"><span class="lbl">Payment  Mode </span> <span class="">{{(selectedVisits.TitleRewardPoint || '')}}</span></li>
+                                                        <li *ngIf="selectedVisits.RefundedAMountRewardPoints"><span class="lbl">Refunded Amount</span> <span class="val">{{helperSrv.formatNumericValues(selectedVisits.RefundedAMountRewardPoints || '0' )}}</span></li>
+                                                        <li><span class="lbl">Cancellation Remarks</span> <span class="">{{(selectedVisits.Remarks || '')}}</span></li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="col-md-4 col-sm-12">
+                                                    <!-- <div class="font-weight-bolder text-center"></div> -->
+                                                     <div class="section-header">
+                                                        <h3 class="section-title">Tests</h3>
+                                                    </div>
+                                                    <ul class="cancelled-tests-list text-center">
+                                                        <li *ngFor="let tp of testsForApproval">{{tp.TPName}}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <hr class="mb-3 mt-0">
+
+                                        <div class="row">
+                                            <div class="col-md-9 col-sm-12">
+                                                <textarea
+                                                placeholder="Enter approval remarks"
+                                                class="form-control"
+                                                rows="2"
+                                                [(ngModel)]="cancellationApprovelRemarks"
+                                                [ngClass]="{ 'invalid': (cancellationApprovelRemarks || '').length < 10 }">
+                                                </textarea>
+                                            </div>
+                                            <div class="col-md-3 col-sm-12">
+                                                 <span class="">
+                                                    <button
+                                                    class="btn btn-primary waves-effect text-center"
+                                                    title="Send to Pending"
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="approveCancellation()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="primary"
+                                                    cancelButtonType="outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"
+                                                    >
+                                                    <i class="ti-check"></i>Approve</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                
+                                        <div *ngIf="testsForApproval && testsForApproval.length">
+
+                                            <div class="visit-remarks-area mb-2" *ngIf="selectedVisit">
+                                                <app-visit-remarks [propVisitNo]="selectedVisit.VisitId" [editing]="{save: true}"></app-visit-remarks>
+                                            </div>
+                                            
+                                            <div class="visit-docs-area" *ngIf="selectedVisit">
+                                                <app-visit-docs [propVisitNo]="selectedVisit.VisitId" [layout]="'grid2'" [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [editing]="{save: true}"></app-visit-docs>
+                                            </div>
+        
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+        
+                        </div>                        
+                    </ng-template>
+                    <ng-template #noVisitSamplesContainer>
+
+                       <div class="row justify-content-center my-4">
+                            <div class="col-md-12">
+                                <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-lock fa-2x text-primary mb-3"></i>
+                                    <h4 class="font-weight-bold mb-2">Select PIN to View Tests</h4>
+                                    <p class="text-muted mb-0">Please choose a PIN from the list to see related test details.</p>
+                                </div>
+                                </div>
+                            </div>
+                       </div>
+
+                    </ng-template>
+                </div>
+            </app-card>
+        </div>
+    </div>
+
+</div>
+      
+
+
+
+
+
+<ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>

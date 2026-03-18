@@ -1,0 +1,111 @@
+<div class="visit-remarks-container">
+
+    <div class="">
+  
+        <fieldset class="fieldset-primary fieldset-border-top">
+            <legend>Visit Remarks  <i class="ti-reload text-primary cursor-pointer" title="refresh" (click)="getVisitRemarks()"></i> </legend>
+    
+            <div class="">
+                <ul *ngIf="visitRemarks && visitRemarks.length">
+                    <li *ngFor="let rem of visitRemarks">
+                        <div class="remarks-by small" *ngIf="rem.UserName || rem.Form || rem.CreatedOn"> <span>{{rem.UserName || ' -- '}} - {{rem.LocCode || ' -- '}}</span> | <span>{{rem.Form || ' -- '}}</span> @ <span *ngIf="rem.CreatedOn">{{rem.CreatedOn | date: 'dd-MMM-yyyy HH:mm:ss'}}</span> </div>
+                        <div
+                            class="remarks-contents font-weight-bold"
+                            [ngClass]="{'text-danger': rem.Priority == 1, 'text-warning': rem.Priority == 2, 'text-center': rem.Remarks == 'no remarks'}">{{rem.Remarks || ''}}
+                        </div>
+                    </li>
+                </ul>
+                <div *ngIf="!visitRemarks.length" class="pl-5">No Remarks</div>
+            </div>
+            
+            <!-- <ng-container *ngIf="showRemarksAdding"> -->
+                <div *ngIf="this.editing.save">
+                    <textarea
+                        class="form-control"
+                        rows="2"
+                        placeholder="Enter visit remarks here"
+                        [(ngModel)]="visitRemarksToSave">
+                    </textarea>
+                </div>
+                <div class="py-3 text-right" *ngIf="this.editing.save">
+
+                    <div class="form-group row">
+                        <!-- <label class="col-2 col-form-label">Report Priority: </label> -->
+                        <div class="col-7 col-form-label mt-1">
+                            
+                            <div class="radio-inline" *ngIf="showRemarksPriority">
+                                <label class="radio">Priority:</label>
+                                <label class="radio">
+                                    <input type="radio" name="remarksPriority" [(ngModel)]="remarksPriority" value="0" id="radio_p_low"> 
+                                    <!-- <label for="radio_p_low" class="mb-0">Low</label> -->
+                                    <span></span>
+                                    Low
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="remarksPriority" [(ngModel)]="remarksPriority" value="1" id="radio_p_high"> 
+                                    <!-- <label for="radio_p_high" class="mb-0">High</label> -->
+                                    <span></span>
+                                    High
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-5 col-form-label text-right">
+                            <button
+                            class="btn btn-light-primary"
+                            title="Save Remarks"
+                            mwlConfirmationPopover
+                            [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                            [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                            [confirmText]="confirmationPopoverConfig.confirmText"
+                            [cancelText]="confirmationPopoverConfig.cancelText"
+                            [placement]="confirmationPopoverConfig.placements[0]"
+                            (confirm)="saveVisitRemarks()"
+                            (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                            confirmButtonType="primary"
+                            cancelButtonType="outline-secondary"
+                            (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                            [appendToBody]="true"
+                            >
+                            <i class="ti-save"></i>
+                            Save&nbsp;Remarks
+                        </button>
+                        </div>
+                    </div>
+
+                    <!-- <span class="mr-2">
+                        Priority:
+                        <input class="ramarks-priority-radio-btn ml-1" type="radio" name="remarksPriority" [(ngModel)]="remarksPriority" value="0" id="radio_p_low"> <label for="radio_p_low" class="mb-0">Low</label> -->
+                        <!-- <input class="ramarks-priority-radio-btn ml-2" type="radio" name="remarksPriority" [(ngModel)]="remarksPriority" value="2" id="radio_p_med"> <label for="radio_p_med" class="mb-0">Medium</label> -->
+                        <!-- <input class="ramarks-priority-radio-btn ml-2" type="radio" name="remarksPriority" [(ngModel)]="remarksPriority" value="1" id="radio_p_high"> <label for="radio_p_high" class="mb-0">High</label>
+                    </span> -->
+                    <!-- <button
+                        class="btn btn-light-primary"
+                        title="Save Remarks"
+                        mwlConfirmationPopover
+                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                        [confirmText]="confirmationPopoverConfig.confirmText"
+                        [cancelText]="confirmationPopoverConfig.cancelText"
+                        [placement]="confirmationPopoverConfig.placements[0]"
+                        (confirm)="saveVisitRemarks()"
+                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                        confirmButtonType="primary"
+                        cancelButtonType="outline-secondary"
+                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                        [appendToBody]="true"
+                        >
+                        <i class="ti-save"></i>
+                        Save&nbsp;Remarks
+                    </button> -->
+
+                </div>
+            <!-- </ng-container> -->
+        </fieldset>
+
+    </div>
+
+    <ngx-spinner class="spinner-primary" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.visitRemarks" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+</div>

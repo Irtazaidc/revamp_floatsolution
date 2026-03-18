@@ -1,0 +1,182 @@
+<!-- Form Section -->
+<div class="card card-custom mb-4">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <i class="flaticon2-setup text-primary"></i>
+      <h3 class="card-label ml-3">HC Worklist</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <form
+      [formGroup]="hcWorklistForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+      (ngSubmit)="getHCWorklist()"
+    >
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="DateFrom"
+            class="form-control form-control-md"
+            type="text"
+            [ngClass]="{
+              invalid: hcWorklistForm.get('DateFrom').errors,
+              'invalid-highlighted':
+                hcWorklistForm.get('DateFrom').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label class="font-weight-bold">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            #dateTo="ngbDatepicker"
+            placeholder="YYYY-MM-DD"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="DateTo"
+            class="form-control form-control-md"
+            type="text"
+            [ngClass]="{
+              invalid: hcWorklistForm.get('DateTo').errors,
+              'invalid-highlighted':
+                hcWorklistForm.get('DateTo').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label for="dateRange"><b>Branch</b></label>
+          <ng-select
+            id="pat_branch"
+            style="width: 100%"
+            formControlName="LocId"
+            [items]="branchList"
+            bindLabel="Title"
+            [multiple]="false"
+            [closeOnSelect]="true"
+            bindValue="LocId"
+            placeholder="--Select Branch--"
+          >
+          </ng-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button
+            class="btn btn-primary btn-md px-4"
+            type="submit"
+            [disabled]="disabledButton"
+          >
+            <ngx-spinner
+              *ngIf="isSpinner"
+              size="sm"
+              bdColor="rgba(0,0,0,0.8)"
+              color="#fff"
+              type="square-loader"
+              [fullScreen]="false"
+              style="display: inline-block; margin-right: 5px"
+            >
+            </ngx-spinner>
+            <i class="fa fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="card card-custom">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0,0,0,0.8)"
+      [name]="spinnerRefs.WorklistSection"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Please wait...</p>
+    </ngx-spinner>
+
+    <div class="row justify-content-center mt-2">
+      <div class="col-12">
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="type to filter"
+            class="form-control form-control-sm"
+            [(ngModel)]="searchText"
+            name="searchText"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right text-danger">
+          <strong>Total Records: {{ hcWorkListGrouped.length }}</strong>
+        </small>
+        <div
+          class="table-responsive table-container fixed-height-table mt-3"
+          style="overflow: auto"
+        >
+        <table class="table table-hover" cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Patient Name</th>
+              <th class="text-center">Branch</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Time</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="hcWorkListGrouped.length > 0; else noRecord">
+            
+            <ng-container *ngFor="let group of hcWorkListGrouped;  let groupIndex = index">
+              <!-- Visit ID Row (Group Header) -->
+              <tr class="table-primary">
+                <td colspan="6" class="text-left font-weight-bold">
+                  Visit ID: {{ group.VisitID }}
+                </td>
+              </tr>
+        
+              <!-- Group Items -->
+              <tr *ngFor="let item of group.items| filterByKey: searchText:['PatientName','TestStatus','TestStatus']; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-center">{{ item.PatientName }}</td>
+                <td class="text-center">{{ item.Branch }}</td>
+                <td class="text-center">{{ item.TestStatus }}</td>
+                <td class="text-center">{{ item.RegDate }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noRecord>
+    <div
+      class="no-record-message"
+      style="
+        text-align: center;
+        padding: 1rem;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+      "
+    >
+      <strong>No Record Found</strong>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,199 @@
+<!-- <div class="row" *ngFor="let item of TotalCOunts; let i = index">
+    <div class="col-xl-2">
+        begin::Tiles Widget 11 this is commented
+        <div class="card card-custom bg-success gutter-b" style="height: 150px">
+            <div class="card-body">
+                <span class="svg-icon svg-icon-3x svg-icon-white ml-n2">
+                    begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Layout/Layout-4-blocks.svg this is commented
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                        height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect>
+                            <rect fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"></rect>
+                            <path
+                                d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z"
+                                fill="#000000" opacity="0.3"></path>
+                        </g>
+                    </svg>
+                    end::Svg Icon this is commented
+                </span>
+                <div class="text-inverse-success small-font-size font-weight-bolder font-size-h2 mt-3">
+                    {{item.HCCityName}} <br />
+                    {{item.TotalHCRequests || 0}}
+                </div>
+                <a href="javascript:void(0)" class="text-inverse-success font-weight-bold font-size-lg mt-1">Total
+                    Requests</a>
+            </div>
+        </div>
+        end::Tiles Widget 11 this is commented
+    </div>
+    <div class="col-xl-2">
+        begin::Tiles Widget 11 this is commented
+        <div class="card card-custom bg-warning gutter-b" style="height: 150px">
+            <div class="card-body">
+                <span class="svg-icon svg-icon-3x svg-icon-white ml-n2">
+                    begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Layout/Layout-4-blocks.svg this is commented
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                        height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <polygon points="0 0 24 0 24 24 0 24" />
+                            <path
+                                d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
+                                fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                            <rect fill="#000000" x="9" y="12" width="6" height="2" rx="1" />
+                        </g>
+                    </svg>
+                    end::Svg Icon this is commented
+                </span>
+                <div class="text-inverse-warning small-font-size font-weight-bolder font-size-h2 mt-3">
+                    {{item.HCCityName}} <br />
+                    {{item.TotalUnAssignedRequests || 0}}</div>
+                <a href="javascript:void(0)"
+                    class="text-inverse-warning font-weight-bold font-size-lg mt-1">Unassigned</a>
+            </div>
+        </div>
+        end::Tiles Widget 11 this is commented
+    </div>
+    <div class="col-xl-2">
+        begin::Tiles Widget 11 this is commented
+        <div class="card card-custom bg-primary gutter-b" style="height: 150px">
+            <div class="card-body">
+                <span class="svg-icon svg-icon-3x svg-icon-white ml-n2">
+                    begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Layout/Layout-4-blocks.svg this is commented
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                        height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <path
+                                d="M12,22 C7.02943725,22 3,17.9705627 3,13 C3,8.02943725 7.02943725,4 12,4 C16.9705627,4 21,8.02943725 21,13 C21,17.9705627 16.9705627,22 12,22 Z"
+                                fill="#000000" opacity="0.3" />
+                            <path
+                                d="M11.9630156,7.5 L12.0475062,7.5 C12.3043819,7.5 12.5194647,7.69464724 12.5450248,7.95024814 L13,12.5 L16.2480695,14.3560397 C16.403857,14.4450611 16.5,14.6107328 16.5,14.7901613 L16.5,15 C16.5,15.2109164 16.3290185,15.3818979 16.1181021,15.3818979 C16.0841582,15.3818979 16.0503659,15.3773725 16.0176181,15.3684413 L11.3986612,14.1087258 C11.1672824,14.0456225 11.0132986,13.8271186 11.0316926,13.5879956 L11.4644883,7.96165175 C11.4845267,7.70115317 11.7017474,7.5 11.9630156,7.5 Z"
+                                fill="#000000" />
+                        </g>
+                    </svg>
+                    end::Svg Icon this is commented
+                </span>
+                <div class="text-inverse-primary small-font-size font-weight-bolder font-size-h2 mt-3">
+                    {{item.HCCityName}} <br />
+                    {{item.TotalInProgressRequests || 0}}</div>
+                <a href="javascript:void(0)"
+                    class="text-inverse-primary font-weight-bold font-size-lg mt-1">Inprogress</a>
+            </div>
+        </div>
+        end::Tiles Widget 11 this is commented
+    </div>
+    <div class="col-xl-2">
+        begin::Tiles Widget 11 this is commented
+        <div class="card card-custom bg-green gutter-b" style="height: 150px">
+            <div class="card-body">
+                <span class="svg-icon svg-icon-3x svg-icon-white ml-n2">
+                    begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Layout/Layout-4-blocks.svg this is commented
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                        height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <path
+                                d="M9,10 L9,19 L10.1525987,19.3841996 C11.3761964,19.7920655 12.6575468,20 13.9473319,20 L17.5405883,20 C18.9706314,20 20.2018758,18.990621 20.4823303,17.5883484 L21.231529,13.8423552 C21.5564648,12.217676 20.5028146,10.6372006 18.8781353,10.3122648 C18.6189212,10.260422 18.353992,10.2430672 18.0902299,10.2606513 L14.5,10.5 L14.8641964,6.49383981 C14.9326895,5.74041495 14.3774427,5.07411874 13.6240179,5.00562558 C13.5827848,5.00187712 13.5414031,5 13.5,5 L13.5,5 C12.5694044,5 11.7070439,5.48826024 11.2282564,6.28623939 L9,10 Z"
+                                fill="#000000" />
+                            <rect fill="#000000" opacity="0.3" x="2" y="9" width="5" height="11" rx="1" />
+                        </g>
+                    </svg>
+                    end::Svg Icon this is commented
+                </span>
+                <div class="text-inverse-primary small-font-size font-weight-bolder font-size-h2 mt-3">
+                    {{item.HCCityName}} <br />
+                    {{item.TotalCompletedRequests || 0}}</div>
+                <a href="javascript:void(0)"
+                    class="text-inverse-primary font-weight-bold font-size-lg mt-1">Completed</a>
+            </div>
+        </div>
+        end::Tiles Widget 11 this is commented
+    </div>
+    <div class="col-xl-2">
+        begin::Tiles Widget 11 this is commented
+        <div class="card card-custom bg-danger gutter-b" style="height: 150px">
+            <div class="card-body">
+                <span class="svg-icon svg-icon-3x svg-icon-white ml-n2">
+                    begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Layout/Layout-4-blocks.svg this is commented
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                        height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                            <path
+                                d="M12.0355339,10.6213203 L14.863961,7.79289322 C15.2544853,7.40236893 15.8876503,7.40236893 16.2781746,7.79289322 C16.6686989,8.18341751 16.6686989,8.81658249 16.2781746,9.20710678 L13.4497475,12.0355339 L16.2781746,14.863961 C16.6686989,15.2544853 16.6686989,15.8876503 16.2781746,16.2781746 C15.8876503,16.6686989 15.2544853,16.6686989 14.863961,16.2781746 L12.0355339,13.4497475 L9.20710678,16.2781746 C8.81658249,16.6686989 8.18341751,16.6686989 7.79289322,16.2781746 C7.40236893,15.8876503 7.40236893,15.2544853 7.79289322,14.863961 L10.6213203,12.0355339 L7.79289322,9.20710678 C7.40236893,8.81658249 7.40236893,8.18341751 7.79289322,7.79289322 C8.18341751,7.40236893 8.81658249,7.40236893 9.20710678,7.79289322 L12.0355339,10.6213203 Z"
+                                fill="#000000" />
+                        </g>
+                    </svg>
+                    end::Svg Icon this is commented
+                </span>
+                <div class="text-inverse-danger small-font-size font-weight-bolder font-size-h2 mt-3">
+                    {{item.HCCityName}} <br />
+                    {{item.TotalCancelledRequests || 0}}</div>
+                <a href="javascript:void(0)"
+                    class="text-inverse-danger font-weight-bold font-size-lg mt-1">Cancelled</a>
+            </div>
+        </div>
+        end::Tiles Widget 11 this is commented
+    </div>
+    <div class="col-xl-2">
+        begin::Tiles Widget 12 this is commented
+        <div class="card card-custom gutter-b" style="height: 150px">
+            <div class="card-body">
+                <span class="svg-icon svg-icon-3x svg-icon-success">
+                    begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Communication/Group.svg this is commented
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                        height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <path
+                                d="M8,3 L8,3.5 C8,4.32842712 8.67157288,5 9.5,5 L14.5,5 C15.3284271,5 16,4.32842712 16,3.5 L16,3 L18,3 C19.1045695,3 20,3.8954305 20,5 L20,21 C20,22.1045695 19.1045695,23 18,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,5 C4,3.8954305 4.8954305,3 6,3 L8,3 Z"
+                                fill="#000000" opacity="0.3" />
+                            <path
+                                d="M11,2 C11,1.44771525 11.4477153,1 12,1 C12.5522847,1 13,1.44771525 13,2 L14.5,2 C14.7761424,2 15,2.22385763 15,2.5 L15,3.5 C15,3.77614237 14.7761424,4 14.5,4 L9.5,4 C9.22385763,4 9,3.77614237 9,3.5 L9,2.5 C9,2.22385763 9.22385763,2 9.5,2 L11,2 Z"
+                                fill="#000000" />
+                            <rect fill="#000000" opacity="0.3" x="7" y="10" width="5" height="2" rx="1" />
+                            <rect fill="#000000" opacity="0.3" x="7" y="14" width="9" height="2" rx="1" />
+                        </g>
+                    </svg>
+                    end::Svg Icon this is commented
+                </span>
+                <div class="text-dark small-font-size font-weight-bolder font-size-h2 mt-3">
+                    {{item.HCCityName}} <br />
+                    {{item.TotalUpcomingRequests || 0}}
+                </div>
+                <a href="javascript:void(0)" class="text-muted text-hover-primary font-weight-bold font-size-lg mt-1">Up
+                    Coming</a>
+            </div>
+        </div>
+        end::Tiles Widget 12 this is commented
+    </div>
+</div> -->
+
+
+<div class="chart-wrapper">
+    <!-- <div  style="margin-left: -1em;">
+        <div style="float: left; margin-left: 1em;">
+            <span style="border-left: 1.8em solid #19ee2b; padding-left: 0.2em; white-space: nowrap;" >Islamabad</span>
+        </div>
+        <div style="float: left; margin-left: 1em;">
+            <span style="border-left: 1.8em solid #06ec9b; padding-left: 0.2em; white-space: nowrap;" >Rawalpindi</span>
+        </div>
+        <div style="float: left; margin-left: 1em;">
+            <span style="border-left: 1.8em solid #0b2fe2; padding-left: 0.2em; white-space: nowrap;" ><b>Peshawar</b></span>
+        </div>
+        <div style="float: left; margin-left: 1em;">
+            <span style="border-left: 1.8em solid #e3ee08; padding-left: 0.2em; white-space: nowrap;" >Lahore</span>
+        </div>
+        <div style="clear: left;"></div>
+    </div> -->
+    <canvas baseChart 
+        [datasets]="ChartData" 
+        [labels]="ChartLabels" 
+        [options]="ChartOptions"
+        [legend]="ChartLegend" 
+        [type]="ChartType" 
+        [plugins]="ChartPlugins">
+    </canvas>                 
+</div>

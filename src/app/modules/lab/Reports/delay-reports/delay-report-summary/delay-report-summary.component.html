@@ -1,0 +1,316 @@
+<div class="card card-custom">
+  <div class="card-body pb-0">
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row container form-group justify-content-center">
+        <div class="col-md-3 col-sm-12">
+          <label class="control-label">Date From:</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            ngbDatepicker
+            value="1980-08-26"
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateFrom').errors,
+              'invalid-highlighted':
+                filterForm.get('dateFrom').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label class="control-label">Date To:</label>
+          <input
+            (click)="dateTo.toggle()"
+            placeholder="dd-mm-yyyy"
+            #dateTo="ngbDatepicker"
+            ngbDatepicker
+            formControlName="dateTo"
+            class="form-control mb-4"
+            name="dateTo"
+            type="text"
+            value=""
+            [ngClass]="{
+              invalid: filterForm.get('dateTo').errors,
+              'invalid-highlighted':
+                filterForm.get('dateTo').errors && isSubmitted
+            }"
+            [maxDate]="maxDate"
+          />
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label class="control-label">Branch:</label>
+
+          <div class="form-group">
+            <ng-select
+              id="pat_branch"
+              style="width: 100%"
+              [ngClass]="{
+                invalid: filterForm.get('locID').errors,
+                'invalid-highlighted':
+                  filterForm.get('locID').errors && isSubmitted
+              }"
+              formControlName="locID"
+              [items]="branchList"
+              bindLabel="Title"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              bindValue="LocId"
+              placeholder="--Select Branch--"
+              appendTo="body"
+            >
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items | slice : 0 : 2"
+                >
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                  <span class="ng-value-label"> {{ item.Title }}</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+              <ng-template ng-header-tmp>
+                <button
+                  (click)="onSelectAllBranches()"
+                  class="btn btn-mini btn-outline-primary"
+                  type="button"
+                >
+                  <i class="ti-check"></i>Select all
+                </button>
+                <button
+                  (click)="onUnselectAllBranches()"
+                  class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                  type="button"
+                >
+                  <i class="ti-close"></i>Unselect all
+                </button>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label for="departmentIds">Department</label>
+          <div class="form-group">
+            <select
+              class="form-control"
+              placeholder="-Select Department-"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="labDeptID"
+              (change)="getSubSection()"
+            >
+              <option [ngValue]="-1">Select All</option>
+              <option [ngValue]="1">Lab</option>
+              <option [ngValue]="2">Imaging</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label class="control-label">Sub Section:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              value=""
+              formControlName="locID"
+              [items]="subSectionList"
+              bindLabel="SubSectionTitle"
+              placeholder="-Select Sub Section-"
+              bindValue="SubSectionId"
+              formControlName="subSectionID"
+              appendTo="body"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label class="control-label">Status:</label>
+          <div class="form-group">
+            <ng-select
+              style="width: 100%"
+              value=""
+              [items]="testStatusList"
+              bindLabel="Title"
+              placeholder="-Select Status-"
+              bindValue="StatusId"
+              formControlName="statusID"
+              name="statusID"
+              appendTo="body"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-12">
+          <label class="control-label">Panel:</label>
+          <div class="form-group">
+            <ng-select
+              [items]="panelList"
+              value=""
+              bindLabel="CodeName"
+              bindValue="PanelId"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              placeholder="-Select Panel-"
+              formControlName="panelID"
+              appendTo="body"
+            >
+              <ng-template
+                ng-multi-label-tmp
+                let-items="items"
+                let-clear="clear"
+              >
+                <div
+                  class="ng-value"
+                  *ngFor="let item of items | slice : 0 : 2"
+                >
+                  <span
+                    class="ng-value-icon right"
+                    (click)="clear(item)"
+                    aria-hidden="true"
+                    >×</span
+                  >
+                  <span class="ng-value-label"> {{ item.CodeName }}</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label"
+                    >{{ items.length - 2 }} more...</span
+                  >
+                </div>
+              </ng-template>
+              <ng-template ng-header-tmp>
+                <button
+                  (click)="onSelectAllPanels()"
+                  class="btn btn-mini btn-outline-primary"
+                  type="button"
+                >
+                  <i class="ti-check"></i>Select all
+                </button>
+                <button
+                  (click)="onUnselectAllPanels()"
+                  class="btn btn-mini btn-outline-primary m-l-10 pull-right"
+                  type="button"
+                >
+                  <i class="ti-close"></i>Unselect all
+                </button>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="mt-8 col-md-2 col-lg-2 col-sm-12">
+          <div
+            (click)="getdelayReportData()"
+            class="btn btn-primary"
+            type="button"
+          >
+            Search
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-warning"
+      [name]="spinnerRefs.delayreportTable"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-sm-12">
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="type to filter"
+            class="form-control form-control-sm"
+            [(ngModel)]="searchText"
+            name="searchText"
+          />
+          <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom"
+            (click)="getdelayReportData()"
+          >
+            <i class="ti-reload"></i>
+          </button>
+          <button
+            class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+            ngbTooltip="Export To Excel"
+            (click)="exportAsExcel()"
+          >
+            <i class="fa fa-file-excel"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive table-container fixed-height-table">
+      <table
+        class="table table-hover compact table-bordered"
+        style="width: 100%"
+        cellpadding="0"
+        cellspacing="0"
+      >
+        <thead class="sticky-header">
+          <th>#</th>
+          <th>Section Name</th>
+          <th>Test Counts</th>
+          <th>Delayed Reports</th>
+          <th>Delayed %</th>
+        </thead>
+        <tbody>
+          <tr class="text-center" *ngIf="delayReportDataList.length < 1">
+            <td colspan="100">No Record Found</td>
+          </tr>
+          <tr
+            *ngFor="
+              let data of delayReportDataList
+                | filterByKey : searchText : ['SubSectionName'];
+              let i = index
+            "
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ data.SubSectionName }}</td>
+            <td>{{ data.TestCount }}</td>
+            <td>{{ data.DelayedReports }}</td>
+            <td>
+              <ng-container *ngIf="data.TestCount > 0; else zero">
+                {{
+                  (data.DelayedReports / data.TestCount) * 100
+                    | number : "1.0-2"
+                }}%
+              </ng-container>
+              <ng-template #zero>0%</ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<mat-card>
+    <mat-card-content>
+        <mat-tab-group class="demo-tab-group" style="background-color: #fff;"> 
+            <mat-tab label="First Interview Confirmation">
+                <app-first-confirmation-process *matTabContent></app-first-confirmation-process>
+            </mat-tab>
+            <mat-tab label="Second Interview Confirmation">
+                <app-second-confirmation-process *matTabContent></app-second-confirmation-process> 
+            </mat-tab>
+            <mat-tab label="Third Interview Confirmation">
+                <app-third-shortlisted-applicants *matTabContent></app-third-shortlisted-applicants>
+            </mat-tab>                            
+            <mat-tab label="Finalization Confirmation">
+                <app-finalized-confirmation-process *matTabContent></app-finalized-confirmation-process>
+            </mat-tab>                            
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

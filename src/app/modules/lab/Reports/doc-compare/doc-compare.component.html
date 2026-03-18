@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="card-body ">
+
+        <div class="row container  form-group justify-content-center">
+
+            <div class="col-md-4 col-sm-12">
+                <label for="file1">TEXT</label>
+                <div class="form-group">
+                    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Enter Text">
+                </div> 
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <label for="file2">FILE</label>
+                <div class="form-group">
+                    <input type="file" (change)="onFileChange($event)" accept="image/jpeg, image/jpg">
+                </div> 
+            </div>
+            <div class="mt-8 col-md-4 col-sm-12">
+                <button class="btn btn-primary" [disabled]="!text2" (click)="compareDocuments()">Compare</button>
+            </div>
+            <div class="mt-8 col-md-12">
+               <div *ngIf="comparisonResult">{{ comparisonResult }}</div>
+            </div>
+        </div>
+       
+            
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="container table-responsive py-5">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">PatientName</th>
+                <th scope="col">MobileNo</th>
+                <th scope="col">VisitID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ola of OlaRptData; let i = index">
+                <th scope="row">{{i + 1}}</th>
+                <td>{{ola.PatientName}}</td>
+                <td>{{ola.MobileNo}}</td>
+                <td>{{ola.VisitID}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

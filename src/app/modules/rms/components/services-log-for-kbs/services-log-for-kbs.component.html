@@ -1,0 +1,412 @@
+<div class="roles-page">
+  <div class="row">
+    <!-- Radiology Machines Section -->
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <app-card
+            [title]="''"
+            [cardClass]="'tim-card tim-card tim-card-primary'"
+          >
+            <form
+              [formGroup]="serviceConfigForm"
+              class="form-horizontal"
+              name="form"
+              role="form"
+              (ngSubmit)="getServices()"
+            >
+              <div class="row">
+                <!-- Location Field -->
+                <div
+                  class="col-12 col-md-3 col-lg-3"
+                  [formGroup]="serviceConfigForm"
+                >
+                  <label for="locID" class="control-label">Location</label>
+                  <ng-select
+                    style="width: 100%"
+                    class="mr-1"
+                    [items]="BranchesList"
+                    bindLabel="Title"
+                    placeholder="-Select Location-"
+                    bindValue="LocId"
+                    formControlName="LocIDs"
+                    [closeOnSelect]="false"
+                    [multiple]="true"
+                    [ngClass]="{
+                      invalid:
+                        serviceConfigForm.get('LocIDs').errors &&
+                        serviceConfigForm.get('LocIDs').touched,
+                      'invalid-highlighted':
+                        serviceConfigForm.get('LocIDs').errors
+                    }"
+                  ></ng-select>
+                </div>
+
+                <!-- Section Field -->
+                <div class="col-12 col-md-3 col-lg-3">
+                  <label for="subSectionIDs" class="control-label"
+                    >Section</label
+                  >
+                  <ng-select
+                    style="width: 100%"
+                    class="mr-1"
+                    [items]="subSectionList"
+                    bindLabel="SubSectionTitle"
+                    placeholder="-Select Section-"
+                    bindValue="SubSectionId"
+                    [closeOnSelect]="true"
+                    [multiple]="false"
+                    formControlName="SubSectionID"
+                  ></ng-select>
+                </div>
+                <!-- <div class="col-12 col-md-3 col-lg-3">
+                  <label for="subSectionIDs" class="control-label">Test</label>
+                  <ng-select
+                    [items]="testList"
+                    bindLabel="TestProfileName"
+                    bindValue="TPId"
+                    placeholder="--select--"
+                    name="tests"
+                    formControlName="TestID"
+                  >
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-search="searchTerm"
+                      let-index="index"
+                    >
+                      <span
+                        ><strong>{{ item.TestProfileCode }} </strong>-
+                        {{ item.TestProfileName }}</span
+                      >
+                    </ng-template>
+                  </ng-select>
+                </div> -->
+                <div
+                  class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-8"
+                >
+                  <button
+                    class="btn btn-primary btn-md px-4"
+                    type="submit"
+                    [disabled]="disabledButton"
+                  >
+                    <ngx-spinner
+                      *ngIf="isSpinner"
+                      size="sm"
+                      bdColor="rgba(0,0,0,0.8)"
+                      color="#fff"
+                      type="square-loader"
+                      [fullScreen]="false"
+                      style="display: inline-block; margin-right: 5px"
+                    >
+                    </ngx-spinner>
+                    <i class="fa fa-search"></i> Search
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      placeholder="Search Item"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="searchText"
+                      (ngModelChange)="filterServicesList()"
+                      name="searchTextMachine"
+                    />
+                    <button
+                      class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                      (click)="getServices()"
+                    >
+                      <i class="ti-search"></i>
+                    </button>
+                    <button
+                      class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+                      (click)="
+                        $event.stopPropagation(); toggleParentSort($event)
+                      "
+                    >
+                      {{ parentSort === "asc" ? "A-Z" : "Z-A" }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Table with pagination -->
+              <div
+                class="table-resposive table-container"
+                *ngIf="servicesList.length > 0; else noRecord"
+                style="overflow-x: hidden"
+              >
+                <ngx-spinner
+                  class="spinner-info"
+                  bdColor="rgba(0,0,0,0.8)"
+                  [name]="spinnerRefs.listSection"
+                  size="medium"
+                  color="#fff"
+                  type="square-loader"
+                  [fullScreen]="false"
+                >
+                  <p style="color: white">Loading...</p>
+                </ngx-spinner>
+                <table
+                  class="table table-bordered table-hover"
+                  style="width: 100%; table-layout: auto"
+                >
+                  <thead>
+                    <tr>
+                      <th width="4%">#</th>
+                      <th width="20%">Service Name</th>
+                      <th width="5%">Location</th>
+                      <th width="20%">Location Address</th>
+                      <th width="7%">Location Time</th>
+                      <th width="5%">Status</th>
+                      <th width="8%">Services information</th>
+                      <th width="31%">Remarks</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <!-- SubSectionCode for Parent-->
+                    <ng-container
+                      *ngFor="
+                        let group of servicesList
+                          | filterGroups
+                            : searchText
+                            : ['SubSectionCode', 'TPName', 'LocCode']
+                      "
+                    >
+                      <!-- Group Header Row -->
+                      <tr
+                        class="table-secondary font-weight-bold bg-light cursor-pointer"
+                        (click)="toggleGroup(group.SubSectionCode)"
+                      >
+                        <td>
+                          <i
+                            class="ti-angle-down me-2"
+                            [ngClass]="{
+                              'ti-angle-down':
+                                expandedGroup === group.SubSectionCode,
+                              'ti-angle-right':
+                                expandedGroup !== group.SubSectionCode
+                            }"
+                          >
+                          </i>
+                        </td>
+
+                        <td>{{ group.SubSectionCode }}</td>
+
+                        <!-- Location -->
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              getGroupCommonData(group).LocCode;
+                              else mixedST
+                            "
+                          >
+                            {{ getGroupCommonData(group).LocCode }}
+                          </ng-container>
+                        </td>
+
+                        <!-- Location Address -->
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              getGroupCommonData(group).LocAddress;
+                              else mixedST
+                            "
+                          >
+                            {{ getGroupCommonData(group).LocAddress }}
+                          </ng-container>
+                        </td>
+
+                        <!-- Location Time -->
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              getGroupCommonData(group).LocTiming;
+                              else mixedST
+                            "
+                          >
+                            {{ getGroupCommonData(group).LocTiming }}
+                          </ng-container>
+                        </td>
+
+                        <!-- Status -->
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              getGroupCommonData(group).isServicePerform !==
+                                null;
+                              else mixedST
+                            "
+                          >
+                            <span
+                              [ngClass]="{
+                                badge: true,
+                                'badge-primary':
+                                  getGroupCommonData(group).isServicePerform,
+                                'badge-danger':
+                                  !getGroupCommonData(group).isServicePerform
+                              }"
+                            >
+                              {{
+                                getGroupCommonData(group).isServicePerform
+                                  ? "Active"
+                                  : "Inactive"
+                              }}
+                            </span>
+                          </ng-container>
+                        </td>
+
+                        <!-- Service Timing -->
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              getGroupCommonData(group).ServiceTiming;
+                              else mixedST
+                            "
+                          >
+                            {{ getGroupCommonData(group).ServiceTiming }}
+                          </ng-container>
+                        </td>
+
+                        <!-- Remarks -->
+                        <td>
+                          <ng-container
+                            *ngIf="
+                              getGroupCommonData(group).ServiceTiming;
+                              else mixedST
+                            "
+                          >
+                            {{ getGroupCommonData(group).ServiceRemarks }}
+                          </ng-container>
+                        </td>
+                      </tr>
+
+                      <!-- Child items (expandable section) -->
+                      <ng-container
+                        *ngIf="expandedGroup === group.SubSectionCode"
+                      >
+                        <tr
+                          *ngFor="let item of group.items; let i = index"
+                          [hidden]="expandedGroup !== group.SubSectionCode"
+                          [ngClass]="{
+                            'active-rec-border-left': rowIndex == i
+                          }"
+                          class="cursor-pointer"
+                        >
+                          <td>{{ i + 1 }}</td>
+                          <td>{{ item.TPName }}</td>
+                          <td>
+                            <ng-container
+                              *ngIf="
+                                !getGroupCommonData(group).LocCode;
+                                else dash
+                              "
+                            >
+                              {{ item.LocCode }}
+                            </ng-container>
+                            <ng-template #dash>-</ng-template>
+                          </td>
+
+                          <!-- Location Address -->
+                          <td>
+                            <ng-container
+                              *ngIf="
+                                !getGroupCommonData(group).LocAddress;
+                                else dash
+                              "
+                            >
+                              {{ item.LocAddress }}
+                            </ng-container>
+                          </td>
+
+                          <!-- Location Time -->
+                          <td>
+                            <ng-container
+                              *ngIf="
+                                !getGroupCommonData(group).LocTiming;
+                                else dash
+                              "
+                            >
+                              {{ item.LocTiming }}
+                            </ng-container>
+                          </td>
+
+                          <!-- Status -->
+                          <td>
+                            <ng-container
+                              *ngIf="
+                                getGroupCommonData(group).isServicePerform ===
+                                  null;
+                                else dash
+                              "
+                            >
+                              <span
+                                [ngClass]="{
+                                  badge: true,
+                                  'badge-primary': item.isServicePerform,
+                                  'badge-danger': !item.isServicePerform
+                                }"
+                              >
+                                {{
+                                  item.isServicePerform ? "Active" : "Inactive"
+                                }}
+                              </span>
+                            </ng-container>
+                          </td>
+
+                          <!-- Service Timing -->
+                          <td>
+                            <ng-container
+                              *ngIf="
+                                !getGroupCommonData(group).ServiceTiming;
+                                else dash
+                              "
+                            >
+                              {{ item.ServiceTiming }}
+                            </ng-container>
+                          </td>
+
+                          <!-- Remarks -->
+                          <td class="text-centered">
+                            <ng-container
+                              *ngIf="
+                                !getGroupCommonData(group).ServiceRemarks;
+                                else dash
+                              "
+                            >
+                              <span
+                                [innerHTML]="
+                                  getFormattedDetail(item.ServiceRemarks) || '-'
+                                "
+                              ></span>
+                            </ng-container>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </app-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <ng-template #noRecord>
+    <div class="no-record-message">
+      <app-no-record-found></app-no-record-found>
+    </div>
+  </ng-template>
+
+  <ng-template #mixedST>
+    <span class="text-muted">Mixed</span>
+  </ng-template>
+</div>

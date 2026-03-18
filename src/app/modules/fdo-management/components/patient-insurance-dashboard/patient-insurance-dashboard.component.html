@@ -1,0 +1,313 @@
+<div class="card card-custom">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">
+        📊 FIT Coverage Reporting Dashboard
+        <small>View FIT Coverage Reporting</small>
+      </h3>
+    </div>
+  </div>
+  <div class="card-header">
+    <div class="card-body">
+      <div class="row text-center mb-4">
+        <div class="col-md-4">
+          <div class="card text-white bg-success shadow-sm">
+            <div class="card-body">
+              <h5>Total Visits</h5>
+              <h3>{{ insuranceDataList.length || 0 }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body">
+              <h5>Active</h5>
+              <h3>{{ activeCases }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-warning shadow-sm">
+            <div class="card-body">
+              <h5>InActive</h5>
+              <h3>{{ inactiveCases }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Filters Section -->
+      <div class="container-fluid">
+        <form
+          [formGroup]="dashboardDataForm"
+          class="form-horizontal"
+          name="form"
+          role="form"
+        >
+          <div class="row align-items-center mb-4">
+            <div class="col-md-2 mt-6">
+              <label for="dateRange"><b>Date:</b></label>
+              <input
+                (click)="dateFrom.toggle()"
+                #dateFrom="ngbDatepicker"
+                placeholder="dd-mm-yyyy"
+                ngbDatepicker
+                value="1980-08-26"
+                formControlName="date"
+                name="date"
+                class="form-control mb-4"
+                type="text"
+                value=""
+                [ngClass]="{
+                  invalid: dashboardDataForm.get('date').errors,
+                  'invalid-highlighted':
+                    dashboardDataForm.get('date').errors && isSubmitted
+                }"
+                [maxDate]="maxDate"
+              />
+            </div>
+            <div class="col-md-2 mt-2">
+              <label for="dateRange"><b>Branch</b></label>
+              <ng-select
+                id="pat_branch"
+                style="width: 100%"
+                formControlName="locationid"
+                [items]="branchList"
+                bindLabel="Title"
+                [multiple]="false"
+                [closeOnSelect]="true"
+                bindValue="LocId"
+                placeholder="--Select Branch--"
+              >
+              </ng-select>
+            </div>
+            <div class="col-md-2 mt-8">
+              <label for="category"><b>Filter by Category:</b></label>
+              <div class="form-group">
+                <ng-select
+                  class="mr-1"
+                  style="width: 100%"
+                  value=""
+                  [items]="patientTypeList"
+                  bindLabel="Title"
+                  (change)="onPanelChange($event)"
+                  placeholder="Select Patient Type"
+                  bindValue="TypeId"
+                  formControlName="TypeId"
+                  name="TypeId"
+                >
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-2 mt-3">
+              <label for="DateTo" class="control-label"><b>Panel:</b></label>
+              <div class="input-group">
+                <ng-select
+                  id="tp_panel"
+                  style="width: 100%"
+                  #panel
+                  [items]="panelsList"
+                  bindLabel="CodeName"
+                  bindValue="PanelId"
+                  placeholder="Select Panel"
+                  name="panel"
+                  formControlName="PanelId"
+                  [ngClass]="{
+                    invalid: dashboardDataForm.get('PanelId').errors,
+                    'invalid-highlighted':
+                      dashboardDataForm.get('PanelId').errors && isSubmitted
+                  }"
+                >
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-2 mt-4 text-end">
+              <button class="btn btn-primary mt-4" (click)="fetchReports()">
+                <i class="fa fa-search"></i> Search
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Chart Section -->
+      <div class="row">
+        <div class="col-md-6">
+          <canvas
+            baseChart
+            [datasets]="chartOptionsForBar"
+            [labels]="barChartLabels"
+            [options]="chartOptions"
+            [legend]="true"
+            [type]="'horizontalBar'"
+          >
+          </canvas>
+        </div>
+        <div class="col-md-6">
+          <canvas
+            baseChart
+            [datasets]="pieChartData"
+            [labels]="pieChartLabels"
+            [options]="chartOptionsForPie"
+            [legend]="true"
+            [type]="'doughnut'"
+          >
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Filter and Export section -->
+      <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-sm-12">
+          <div class="input-group">
+            <input
+              type="text"
+              placeholder="Type to filter"
+              class="form-control form-control-sm"
+              [(ngModel)]="searchText"
+              name="searchText"
+              (keyup)="filterResults()"
+            />
+            <button
+              class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+              ngbTooltip="Export To Excel"
+              (click)="exportAsExcel()"
+            >
+              <i class="fa fa-file-excel"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- Table Section -->
+      <small class="pull-right text-danger">
+        <strong>Total Records: {{ insuranceDataList.length }}</strong>
+      </small>
+      <div
+        class="table-responsive table-container mt-5"
+        style="overflow-x: hidden"
+      >
+        <table class="table table-hover compact">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>MRN</th>
+              <th>PatientName</th>
+              <th>Age / Gender</th>
+              <th>Cell</th>
+              <th>VisitID</th>
+              <th>VisitDate</th>
+              <th>Location</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Active Date</th>
+              <th>Expire Date</th>
+              <!-- <th>Policy No</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="text-center"
+              *ngIf="!insuranceDataList || insuranceDataList == ''"
+            >
+              <td colspan="12">
+                <div>
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+            <tr
+              *ngFor="
+                let report of pagination.paginatedSearchResults;
+                let i = index
+              "
+              class="fade-in"
+            >
+              <td>
+                <strong>
+                  {{ (pagination.page - 1) * pagination.pageSize + i + 1 }}
+                </strong>
+              </td>
+              <td>{{ report.PatientMRNo || "-" }}</td>
+              <td>{{ report.PatientName || "-" }}</td>
+              <td>{{ report.Age || "-" }} / {{ report.Gender || "-" }}</td>
+              <td>{{ report.Cell || "-" }}</td>
+              <td>{{ report.VisitID || "-" }}</td>
+              <td>
+                {{
+                  report.VisitDate
+                    ? (report.VisitDate | date : "dd MMM, yyyy, h:mm a")
+                    : "-"
+                }}
+              </td>
+              <td>{{ report.LocCode || "-" }}</td>
+              <td>
+                {{
+                  (report.RegInvoiceAmt
+                    | currency : "Rs." : "symbol" : "1.0-0") || "-"
+                }}
+              </td>
+              <td
+                [ngClass]="{
+                  'text-danger': !report.isInsuranceActive,
+                  'text-green': report.isInsuranceActive
+                }"
+              >
+                <strong>
+                  {{ report.isInsuranceActive ? "Active" : "InActive" }}
+                </strong>
+              </td>
+              <td>
+                {{
+                  report.InsuranceActiveDate
+                    ? (report.InsuranceActiveDate
+                      | date : "dd MMM, yyyy, h:mm a")
+                    : "-"
+                }}
+              </td>
+              <td>
+                {{
+                  report.InsuranceExpireDate
+                    ? (report.InsuranceExpireDate
+                      | date : "dd MMM, yyyy, h:mm a")
+                    : "-"
+                }}
+              </td>
+              <!-- <td>{{ report.PatientPolicyNo || '-' }}</td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+        <div class="col-12">
+          <div class="d-flex justify-content-between p-2">
+            <ngb-pagination
+              [collectionSize]="pagination.collectionSize"
+              [(page)]="pagination.page"
+              [pageSize]="pagination.pageSize"
+              [boundaryLinks]="true"
+              [maxSize]="5"
+              [rotate]="true"
+              (pageChange)="refreshPagination()"
+            >
+            </ngb-pagination>
+            <select
+              class="custom-select"
+              style="width: auto"
+              [(ngModel)]="pagination.pageSize"
+              (ngModelChange)="refreshPagination()"
+            >
+              <option [ngValue]="5">5 items per page</option>
+              <option [ngValue]="10">10 items per page</option>
+              <option [ngValue]="20">20 items per page</option>
+              <option [ngValue]="50">50 items per page</option>
+              <option [ngValue]="100">100 items per page</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

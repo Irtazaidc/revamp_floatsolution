@@ -1,0 +1,856 @@
+<div class="patient-search-page" style="position: relative;">
+
+    <div class="card card-custom">
+        <div class="card-header" *ngIf="!infoDeskChk">
+            <div class="card-title">
+                <span class="card-icon">
+                    <i class="fas fa-search text-primary"></i>
+                </span>
+                <h3 class="card-label">
+                    Search Patient
+                    <small>Search Patient Records</small>
+                </h3>
+            </div>
+            <div class="card-toolbar">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-sm btn-success" (click)="advancedSearch()"
+                        ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button>
+                    <button type="button" class="btn btn-sm btn-primary" *ngIf="buttonControlsPermissions.bookingBtn"
+                        (click)="newRegistration()" ngbTooltip="New Registration"><i class="fas fa-user-plus"></i>New
+                        Reg.</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form class="md-float-material">
+                <!-- <pre>{{patientSearchParams|json}}</pre> -->
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Contact No: <span class="mandatory-asterisk"></span></label>
+                        <div class="position-relative">
+                            <input minlength="11" (change)="clearFields('MobileNO')" (input)="onMobileInput()" (keypress)="onlyNumberKey($event)" type="text"
+                                class="form-control mb-4" name="mobileNo" [(ngModel)]="patientSearchParams.MobileNO">
+                            <span class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                <i class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
+                                    (click)="copyText(patientSearchParams.MobileNO)"></i>
+                            </span>
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="SectionToShow.showCardNo">
+                        <label>Card No: <span class="mandatory-asterisk"></span></label>
+                        <div class=" ">
+                            <input (change)="clearFields('CardNO')" type="text" class="form-control mb-4" name="cardNo"
+                                [(ngModel)]="patientSearchParams.CardNO">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="SectionToShow.hidePIN">
+                        <label>PIN:</label>
+                        <div class="">
+                            <input (change)="clearFields('VisitId')" (keypress)="onlyNumberKey($event)" type="text" class="form-control" name="VisitId"
+                                [(ngModel)]="patientSearchParams.VisitId">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>MRN:</label>
+                        <div class="">
+                            <input 
+                                (change)="clearFields('PatientNo')" 
+                                type="text" 
+                                class="form-control" 
+                                name="PatientNo"
+                                [(ngModel)]="patientSearchParams.PatientNo"
+                                [mask]="'A-0-00000'" 
+                                [dropSpecialCharacters]="false"
+                                [patterns]="customPatterns"
+                                placeholder="D-0-00000"
+                                style="text-transform:uppercase"
+                                (input)="onInputChange()"
+                                />
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3">
+                        <label>Lab ID:</label>
+                        <div class="">
+                            <input (change)="clearFields('PatientNo')" type="text" class="form-control" name="PatientNo"
+                                [(ngModel)]="patientSearchParams.PatientNo">
+                            <span class="md-line"></span>
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-3" *ngIf="advancedSearchEnabled" [@fadeInOutTranslate]>
+                        <label>CNIC: <span class="mandatory-asterisk"></span></label>
+                        <div class="">
+                            <input type="text" class="form-control" name="cnic" [(ngModel)]="patientSearchParams.CNIC">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="advancedSearchEnabled" [@fadeInOutTranslate]>
+                        <label>Passport: <span class="mandatory-asterisk"></span></label>
+                        <div class="">
+                            <input type="text" class="form-control" name="passportNo"
+                                [(ngModel)]="patientSearchParams.PassportNo">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="advancedSearchEnabled" [@fadeInOutTranslate]>
+                        <label>First Name: <span class="mandatory-asterisk"></span></label>
+                        <div class="">
+                            <input type="text" class="form-control" name="firstName"
+                                [(ngModel)]="patientSearchParams.FirstName">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="advancedSearchEnabled" [@fadeInOutTranslate]>
+                        <label>Last Name: <span class="mandatory-asterisk"></span></label>
+                        <div class="">
+                            <input type="text" class="form-control" name="lastName"
+                                [(ngModel)]="patientSearchParams.LastName">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="advancedSearchEnabled" [@fadeInOutTranslate]>
+                        <label>ECL Hospital MRNo <span class="mandatory-asterisk"></span></label>
+                        <div class="">
+                            <input type="text" class="form-control" name="eclHospitalMrno"
+                                [(ngModel)]="patientSearchParams.eclHospitalMrno">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-2" *ngIf="advancedSearchEnabled" [@fadeInOutTranslate]>
+                        <label>GIZ Reference Number: <span class="mandatory-asterisk"></span></label>
+                        <div class="">
+                            <input type="text" class="form-control" name="gIZReferenceNo"
+                                [(ngModel)]="patientSearchParams.GIZReferenceNo">
+                            <span class="md-line"></span>
+                        </div>
+                    </div>
+                    <div class="col pull-right">
+                        <label>&nbsp;</label>
+                        <div class="input-group d-flex flex-wrap justify-content-end">
+                            <button *ngIf="!buttonControlsPermissions.searchVisitBtn " type="submit"
+                                class="btn btn-primary float-right waves-effect" (click)="searchPatient()"><i
+                                    class="ti-search m-0"></i>Search Patient</button>
+                            <!-- && !buttonControlsPermissions.searchCardBtn -->
+                            <button *ngIf="buttonControlsPermissions.searchVisitBtn " title="search visits"
+                                type="submit"
+                                class="btn btn-primary  float-right waves-effect text-center m-t-10 mb-2 me-2"
+                                (click)="searchPatientVisit()"><i class="ti-search m-0"></i>Visit(s) </button>
+                            <!-- <button *ngIf="buttonControlsPermissions.searchCardBtn " title="search visits" type="submit"
+                                class="btn btn-primary  float-right waves-effect text-center m-t-10"
+                                (click)="getCardInfo()"><i class="ti-search m-0"></i>Get Card Info </button> -->
+
+                            <button *ngIf="infoDeskChk" type="button" class="btn btn-sm btn-primary ml-2 mb-2 me-2"
+                                (click)="advancedSearch()" ngbTooltip="Advance filters for search"><i
+                                    class="fa fa-filter" aria-hidden="true"></i>Advance Search</button>
+                            <button *ngIf="buttonControlsPermissions.testSearchBtn" title="test search" type="submit"
+                                class="btn btn-primary  float-right waves-effect text-center ml-1 mb-2 me-2"
+                                (click)="openSearchTest()">Test Search</button>
+
+                            <!--<button type="button" class="btn btn-outline-primary btn-sm float-right waves-effect text-center ml-1" (click)="advancedSearch()"><i class="ti-search"></i>Advanced</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm float-right waves-effect text-center ml-1" *ngIf="buttonControlsPermissions.bookingBtn" (click)="newRegistration()">New Reg.</button>-->
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <!--<div class="separator separator-dashed separator-border-1 separator-primary"></div>
+            <h5 class="col-12">Results:</h5>-->
+            <ng-container
+                *ngIf="searchResults.length && searchResults[0].Message; then defaultTemplateContainer else patientRecordsContainer"></ng-container>
+            <ng-template #defaultTemplateContainer>
+                <div *ngIf="!buttonControlsPermissions.searchVisitBtn && SectionToShow.NoRecordLabel"
+                    class="col-12 text-center">
+                    <hr>
+                    <h5 class="text-primary">{{searchResults[0].Message}}</h5>
+                    <hr>
+                </div>
+            </ng-template>
+            <ng-template #patientRecordsContainer>
+                <div class="col-12" [hidden]="hideTable">
+                    <div class="col-md-12">
+                        <input type="text" #filterSearchedPatients class="form-control" placeholder="type to filter">
+                    </div>
+
+                    <div class="table-responsive table-container d-none d-md-block fixed-height-table">
+                        <table class="table table-hover compact cursor-pointer">
+                            <thead>
+                                <tr>
+                                    <th>MRNo </th>
+                                    <th>Name</th>
+                                    <!-- <th>CNIC / PP</th> -->
+                                    <th>Mobile</th>
+                                    <th>Patient's Latest Visit Date</th>
+                                    <!-- <th>DOB / Gender</th> -->
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let patient of searchResults  | filterByKey: filterSearchedPatients.value: ['OrbitMRNo','FirstName', 'PatientName', 'LastName', 'MobileNO']; let i = index"
+                                    (dblclick)="patientRowDoubleClick(patient)"
+                                    (dblclick)="patientExistingAddFamily(patient)">
+                                    <td>{{patient.OrbitMRNo}}</td>
+                                    <td>{{patient.SalutationTitle || patient.Salutation || ''}} {{patient.FirstName}}
+                                        {{patient.LastName || ''}}</td>
+                                    <!-- <td>{{patient.CNIC}} / {{patient.PassportNo}}</td> -->
+                                    <td>{{patient.MobileNO}}</td>
+                                    <!-- <td>{{patient.DateOfBirth | date:'dd-MMM-yyyy'}} / {{patient.Gender}}</td> -->
+                                    <td>{{(patient.LastVisitDate | date:'dd-MMM-yyyy HH:mm') || 'No visit exists'}}</td>
+                                    <td class="text-right">
+                                        <button *ngIf="buttonControlsPermissions.discountCardSaleBtn"
+                                            class="btn btn-primary btn-sm mr-1" (click)="patientSelected(patient)"
+                                            ngbTooltip="Select Patient">Select</button>
+                                        <button *ngIf="buttonControlsPermissions.bookingBtn"
+                                            class="btn btn-primary btn-sm mr-1" (click)="patientSelected(patient)"
+                                            ngbTooltip="Create Visit">Booking</button>
+                                        <button
+                                            *ngIf="buttonControlsPermissions.patientSelectBtn || SectionToShow.selectedPatientEvent"
+                                            class="btn btn-success btn-sm mr-1" (click)="patientRowDoubleClick(patient)"
+                                            ngbTooltip="Select Patient">Select</button>
+                                        <button *ngIf="buttonControlsPermissions.visitsBtn"
+                                            class="btn btn-success btn-sm mr-1" (click)="getVisitsForInvoice(patient)"
+                                            ngbTooltip="View old Visits">Visits</button>
+                                        <button *ngIf="buttonControlsPermissions.discountCardsViewBtn"
+                                            class="btn btn-success btn-sm" (click)="getPatientDiscountCards(patient)"
+                                            title="Discount Cards" ngbTooltip="View Discount Cards"><i
+                                                class="far fa-address-card"></i></button>
+                                        <!-- <button *ngIf="buttonControlsPermissions.visitEditBtn"
+                                            class="btn btn-danger btn-sm ml-1" (click)="editSelectedPatient(patient)"
+                                            ngbTooltip="Edit Information"><i class="ti-pencil-alt"></i></button>         -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex justify-content-between p-2" *ngIf="collectionSize > pageSize && 0">
+                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size=""
+                                [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                (pageChange)="refreshPagination()">
+                            </ngb-pagination>
+
+                            <!-- <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshPagination()">
+                                <option [ngValue]="5">5 items per page</option>
+                                <option [ngValue]="10">10 items per page</option>
+                                <option [ngValue]="9999999999">All</option>
+                            </select> -->
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive table-container d-block d-md-none">
+                        <table class="table table-hover compact patients-table-mobile">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let patient of paginatedSearchResults; let i = index"
+                                    (dblclick)="patientRowDoubleClick(patient)">
+                                    <td>
+                                        <span class="r1">{{patient.OrbitMRNo}} | {{patient.MobileNO}} |
+                                            {{patient.LastVisitDate | date:'dd-MMM-yyyy HH:mm'}}</span>
+                                        <br>
+                                        <span class="r2">
+                                            <span class="font-weight-bold">
+                                                {{patient.SalutationTitle || patient.Salutation || ''}}
+                                                {{patient.FirstName}} {{patient.LastName || ''}} &nbsp;
+                                            </span>
+                                            <span style="visibility: hidden;">
+                                                <button *ngIf="buttonControlsPermissions.bookingBtn"
+                                                    class="btn btn-outline-primary btn-mini mr-1"
+                                                    (click)="patientSelected(patient)"
+                                                    ngbTooltip="Create Visit">Booking</button>
+                                                <button *ngIf="buttonControlsPermissions.patientSelectBtn"
+                                                    class="btn btn-outline-primary btn-mini mr-1"
+                                                    (click)="patientRowDoubleClick(patient)"
+                                                    ngbTooltip="Select Patient">Select</button>
+                                                <button *ngIf="buttonControlsPermissions.visitsBtn"
+                                                    class="btn btn-outline-primary btn-mini"
+                                                    (click)="getVisitsForInvoice(patient)"
+                                                    ngbTooltip="View old Visits">Visits</button>
+
+                                                <button *ngIf="buttonControlsPermissions.discountCardsViewBtn"
+                                                    class="btn btn-outline-primary btn-mini"
+                                                    (click)="getPatientDiscountCards(patient)" title="Discount Cards"
+                                                    ngbTooltip="Discount Cards"><i
+                                                        class="far fa-address-card"></i></button>
+
+                                            </span>
+                                            <span class="action-btns">
+                                                <button *ngIf="buttonControlsPermissions.bookingBtn"
+                                                    class="btn btn-outline-primary btn-mini mr-1"
+                                                    (click)="patientSelected(patient)"
+                                                    ngbTooltip="Create Visit">Booking</button>
+                                                <button *ngIf="buttonControlsPermissions.patientSelectBtn"
+                                                    class="btn btn-outline-primary btn-mini mr-1"
+                                                    (click)="patientRowDoubleClick(patient)"
+                                                    ngbTooltip="Select Patient">Select</button>
+                                                <button *ngIf="buttonControlsPermissions.visitsBtn"
+                                                    class="btn btn-outline-primary btn-mini"
+                                                    (click)="getVisitsForInvoice(patient)"
+                                                    ngbTooltip="View old Visits">Visits</button>
+                                                <button *ngIf="buttonControlsPermissions.discountCardSaleBtn"
+                                                    class="btn btn-outline-primary btn-mini"
+                                                    (click)="patientSelected(patient)"
+                                                    ngbTooltip="Select Patient">Select</button>
+                                                <button *ngIf="buttonControlsPermissions.discountCardsViewBtn"
+                                                    class="btn btn-outline-primary btn-mini"
+                                                    (click)="getPatientDiscountCards(patient)" title="Discount Cards"
+                                                    ngbTooltip="Discount Cards"><i
+                                                        class="far fa-address-card"></i></button>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex justify-content-between p-2" *ngIf="collectionSize > pageSize">
+                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" size="sm"
+                                [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true"
+                                (pageChange)="refreshPagination()">
+                            </ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+
+            </ng-template>
+            <ng-template #EditPatientRecord let-EditPatientRecord>
+                <div class="modal-header" style="display: block !important; padding: 1rem 1.75rem;">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="card-title">
+                                Edit Patient Contact Information
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <form class="md-float-material" [formGroup]="editPatientInformation">
+                                <div class="row form-group">
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                        <label>First Name: <span class="mandatory-asterisk">*</span></label>
+                                        <div class="">
+                                            <input [attr.disabled]="editPatientContactBtn" type="text"
+                                                formControlName="FirstName" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                        <label>Last Name: <span class="mandatory-asterisk">*</span></label>
+                                        <div class="">
+                                            <input [attr.disabled]="editPatientContactBtn" type="text"
+                                                class="form-control" formControlName="LastName">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                        <label for="pat_mobile">Mobile: <span
+                                                class="mandatory-asterisk">*</span></label>
+                                        <div class="input-group">
+                                            <select #oprtr class="form-control col-5 pl-1 pr-0"
+                                                formControlName="MobileOperatorID"
+                                                [ngClass]="{'invalid': (!oprtr.value && mobile.value), 'invalid-highlighted': !oprtr.value && mobile.value && patientBasicInforFormSubmitted}">
+                                                <option [value]="''">--select--</option>
+                                                <option *ngFor="let item of mobileOperatorList" [value]="item.id">
+                                                    {{item.name}}
+                                                </option>
+                                            </select>
+                                            <input #mobile id="pat_mobile" type="text" class="form-control" mask="0*"
+                                                formControlName="MobileNO" mask='0000-0000000' [showMaskTyped]="true"
+                                                [validation]="true" [attr.disabled]="editPatientContactBtn"
+                                                [ngClass]="{'invalid': editPatientInformation.get('MobileNO')?.errors, 'invalid-highlighted': editPatientInformation.get('MobileNO')?.errors && patientBasicInforFormSubmitted}"
+                                                (blur)="getMobileOperatorByCode(editPatientInformation.get('MobileNO')?.value)">
+                                            <span class="md-line"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label>Email:</label>
+                                            <input formControlName="Email" type="text" class="form-control"
+                                                placeholder="example@domain.com" maxlength="50"
+                                                [ngClass]="{'invalid': editPatientInformation.get('Email')?.touched && editPatientInformation.get('Email')?.errors, 'invalid-highlighted': editPatientInformation.get('Email')?.errors }" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
+                                        <label>Adress: <span class="mandatory-asterisk"></span></label>
+                                        <div class="input-group">
+                                            <textarea id="pat_address" maxlength="200" rows="1" type="text"
+                                                class="form-control" formControlName="HomeAddress"></textarea>
+                                            <span class="md-line"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary pull-right" ngbTooltip="Update">
+                        <i class="ti-save"></i>Update</button>
+                    <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal"
+                        (click)="EditPatientRecord.close()">
+                        <i class="fa fa-times-circle"></i>Close
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- <br/><br/> -->
+
+    <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.searchPatients" size="medium"
+        color="#fff" type="square-loader" [fullScreen]="false">
+        <p style="color: white"> Loading... </p>
+    </ngx-spinner>
+
+</div>
+
+
+
+
+
+
+<ng-template #patientVisits let-patientVisits>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Patient Visits List</h4>
+        <button type="button" class="close" aria-label="Close" (click)="patientVisits.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="position: relative;">
+        <!-- <label>Select visit to open Invoice</label> -->
+        <div class="">
+            <ng-container
+                *ngIf="patientVisitsList.length && patientVisitsList[0].Message; then defaultTemplateContainer_visits else patientVisitsContainer_visits"></ng-container>
+            <ng-template #defaultTemplateContainer_visits>
+                <div *ngIf="!isInquiry" class="col-12 text-center">
+                    <hr>
+                    <h5 class="text-primary">{{patientVisitsList[0].Message}}</h5>
+                    <hr>
+                </div>
+            </ng-template>
+            <ng-template #patientVisitsContainer_visits>
+
+                <select *ngIf="!isInquiry" class="form-control form-control-sm" [(ngModel)]="invoiceCopyType">
+                    <option *ngFor="let item of invoiceCopyTypeEnum" [value]="item.id">{{item.name}}</option>
+                </select>
+
+                <!-- start::Patient Card in case of Information desc visits popup -->
+                <ng-container *ngIf="patientIDforPatientCard">
+                    <app-patient-basic-info class="bg-light mt-1" [PatientId]="patientIDforPatientCard"
+                        [VisitId]="visitIDforPatientCard"></app-patient-basic-info>
+                </ng-container>
+
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" placeholder="Search Visit" class="form-control form-control-sm"
+                            [(ngModel)]="searchTextVisit" name="searchTextVisit" />
+                    </div>
+                </div>
+                <div class="table-responsive table-container fixed-height-table">
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>Visit No</th>
+                                <th>Visit Date</th>
+                                <th *ngIf="isInquiry">Patient</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!patientVisitsList.length">
+                                <td colspan="3" class="text-center"> <span
+                                        class="text-primary text-center font-weight-bold"> No visit found...</span></td>
+                            </tr>
+                            <tr *ngFor="let v of patientVisitsList| filterByKey: searchTextVisit:['VisitNo', 'PatientName']; let i = index"
+                                (dblclick)="visitRowDoubleClickEvent(v)" (click)="updatePatientCard(v)">
+                                <td>{{v.VisitNo}}</td>
+                                <td>{{v.CreatedOn | date:'dd-MMM-yyyy HH:mm:ss'}}</td>
+                                <td *ngIf="isInquiry">{{v.PatientName}}</td>
+                                <td class="text-right">
+                                    <button *ngIf="(v.InsuranceStatusID == 2 && v.isFirstInsurance) && buttonControlsPermissions.FITBtn"
+                                        class="btn btn-outline-primary btn-mini" (click)="openFITCertificate(v)"
+                                        ngbTooltip="Print FIT Certificate"><i
+                                            class="ti-receipt"></i>FIT</button>
+
+                                    <button *ngIf="buttonControlsPermissions.invoiceBtn "
+                                        class="btn btn-outline-primary btn-mini ml-1" (click)="openInvoice(v)"
+                                        ngbTooltip="Print Registration Invoice"><i
+                                            class="ti-receipt"></i>Invoice</button>
+                                    
+                                    <button *ngIf="v.PanelId === 1714 " class="btn btn-outline-primary btn-mini ml-1"
+                                        (click)="OpenFitToFlyCertificate(v)" ngbTooltip="Fit To Fly Certificate"><i
+                                            class="fa fa-certificate"></i>FIF</button>
+                                    <!-- *ngIf="screenPermissionsObj.invoice" -->
+                                    <!-- *ngIf="screenPermissionsObj.invoice" -->
+                                    <button class="btn btn-outline-primary btn-mini ml-1"
+                                        *ngIf="screenPermissionsObj.barcode_printing || buttonControlsPermissions.barcodeBtn"
+                                        (click)="printBarcode(v)" ngbTooltip="Print Sample Barcode">
+                                        <!-- <i class="fa fa-barcode"></i> -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                            style="height: 16px;"
+                                            fill="#1bc5bd"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                                            <path
+                                                d="M24 32C10.7 32 0 42.7 0 56V456c0 13.3 10.7 24 24 24H40c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H24zm88 0c-8.8 0-16 7.2-16 16V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16zm72 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H184zm96 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H280zM448 56V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H472c-13.3 0-24 10.7-24 24zm-64-8V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16s-16 7.2-16 16z">
+                                            </path>
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                            style="height: 16px;"
+                                            fill="#1bc5bd"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                                            <path
+                                                d="M24 32C10.7 32 0 42.7 0 56V456c0 13.3 10.7 24 24 24H40c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H24zm88 0c-8.8 0-16 7.2-16 16V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16zm72 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H184zm96 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H280zM448 56V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H472c-13.3 0-24 10.7-24 24zm-64-8V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16s-16 7.2-16 16z">
+                                            </path>
+                                        </svg>
+                                        <!-- Barcode -->
+                                    </button>
+                                    <button *ngIf="buttonControlsPermissions.attachDocs"
+                                        class="btn btn-outline-primary btn-mini ml-1" (click)="visitSelectedForDocs(v)"
+                                        ngbTooltip="View/Upload Documents"><i class="fa fa-image"></i></button>
+                                    <button *ngIf="v.IsPrintMOConsent != '' && !isInquiry"
+                                        class="btn btn-outline-primary btn-mini ml-1" (click)="OpenMOConsentForm(v)"
+                                        ngbTooltip="Patient Consent Form"><i aria-hidden="true"
+                                            class="flaticon2-file-1"></i></button>
+
+                                            <button type="button" (click)="openFloroConsentForm()"
+                                            *ngIf="v.IsPrintMOConsent != '' && !isInquiry"
+                                            class="btn btn-outline-primary btn-mini ml-1" >Floro
+                                            Consent
+                                            <i class="fas fa-x-ray"></i></button> &nbsp;
+
+                                    <button *ngIf="buttonControlsPermissions.attachDocs"
+                                        class="btn btn-outline-primary btn-mini ml-1" (click)="getInfoForConscent(v)"
+                                        ngbTooltip="Consent Form"><i aria-hidden="true"
+                                            class="fa fa-check-circle-o"></i>Consent</button>
+                                    <button *ngIf="buttonControlsPermissions.visitSelectBtn"
+                                        class="btn btn-outline-primary btn-mini ml-1"
+                                        (click)="visitRowDoubleClickEvent(v)" ngbTooltip="Select Visit"><i
+                                            class="fa fa-check"></i>select</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </ng-template>
+        </div>
+
+        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.patientVisits" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-dark"
+            (click)="patientVisits.dismiss('close button clicked')">Close</button>
+    </div>
+</ng-template>
+
+
+
+
+
+<ng-template #patientVisitDocs let-patientVisitDocs>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Visit Docs ({{selectedVisit?.VisitID}})</h4>
+        <button type="button" class="close" aria-label="Close" (click)="patientVisitDocs.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="position: relative;">
+        <div class="">
+            <div class="visit-docs-area" *ngIf="selectedVisit && selectedVisit?.VisitID">
+                <span>Visit No: <strong>{{selectedVisit?.VisitID}}</strong></span>
+                <app-visit-docs [propVisitNo]="selectedVisit.VisitID" [layout]="'grid2'"
+                    [layoutButtons]="['compact', 'list', 'grid', 'grid2']" [editing]="{save: true}"></app-visit-docs>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-dark"
+            (click)="patientVisitDocs.dismiss('close button clicked')">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #showSearchTest let-showSearchTest>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="showSearchTest.dismiss('Cross click')">
+        </button>
+    </div>
+    <div class="modal-body" style="position: relative;">
+        <div class="">
+            <div class="visit">
+                <app-test-search (patValueEmit)="getSelectedPatVisitNo($event)"></app-test-search>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-dark"
+            (click)="showSearchTest.dismiss('close button clicked')">Close</button>
+    </div>
+</ng-template>
+
+
+<ng-template #patientDiscountCards let-patientDiscountCards>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Discount Cards</h4>
+        <button type="button" class="close" aria-label="Close" (click)="patientDiscountCards.dismiss('Cross click')">
+            <i aria-hidden="true" class="ti-close"></i>
+        </button>
+    </div>
+    <div class="modal-body" style="position: relative;">
+        <div class="">
+            <div *ngIf="!patientDiscountCardsList.length">
+                <div class="text-center">No Discount Card issued to this patient</div>
+            </div>
+            <div class="table-responsive" *ngIf="patientDiscountCardsList.length">
+                <table class="table table-hover compact cursor-pointer">
+                    <thead>
+                        <tr>
+                            <th>Card No</th>
+                            <th>Card</th>
+                            <th>MRNo</th>
+                            <th>Name</th>
+                            <th class="text-right pr-5">Disc. %</th>
+                            <th>Sold On</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of patientDiscountCardsList" (dblclick)="getValuesFromPopUp(c)">
+                            <td>{{c.CardNo}}</td>
+                            <td>{{c.CardTypeCode}} | {{c.Title}}</td>
+                            <td>{{c.MRNo}}</td>
+                            <td>{{c.PatientName}}</td>
+                            <td class="text-right pr-5">{{c.DiscountInPercent}}</td>
+                            <td>{{c.IssuanceDate | date:'dd-MMM-yyyy HH:mm'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <ngx-spinner class="spinner-warning" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.patientDiscountCards"
+            size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-dark"
+            (click)="patientDiscountCards.dismiss('close button clicked')">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #fitToFlyPopup let-fitToFlyPopup>
+    <!-- <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Fit to Fly Certificate</h4>
+      <button type="button" class="close" aria-label="Close" (click)="fitToFlyPopup.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div> -->
+    <div class="modal-body">
+        <div class="">
+            <div class="row doc-print" id="doc-print">
+                <div class="col-md-12">
+                    <div class="container mt-2">
+                        <h2 class="text-center underline mb-2">Fit to Fly Certificate</h2>
+                        <p>This is to certify that mentioned below candidate is in good health and does NOT suffer from
+                            any acute or
+                            chronic illness/infectious disease, and is fit to travel abroad.</p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="container mt-2">
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Date:</p>
+                            </div>
+                            <div class="col-md-8  border">{{curDate}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Name of Person:</p>
+                            </div>
+                            <div class="col-md-8 border"> <span>{{patientData.Name}} </span> </div>
+                            <!-- patientData.FirstName
+                            patientData.LastName -->
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Date of Birth:</p>
+                            </div>
+                            <div class="col-md-8 border">{{selectedDob}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Family No:</p>
+                            </div>
+                            <div class="col-md-8 border">{{patientData.RefNo}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Passport No:</p>
+                            </div>
+                            <div class="col-md-8 border">{{patientData.PassportNo}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Body Temperature:</p>
+                            </div>
+                            <div class="col-md-8 border">
+                                <div class="row ">
+                                    <div class="col-md-6"><input class="mr-1 mt-2" type="checkbox" value=""> Normal
+                                    </div>
+                                    <div class="col-md-6"> <input class="mr-1 mt-2" type="checkbox" value=""> Abnormal
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Respiratory Illness (Acute Infection):</p>
+                            </div>
+                            <div class="col-md-8 border">
+                                <div class="row ">
+                                    <div class="col-md-6"><input class="mr-1 mt-2" type="checkbox" value=""> Yes</div>
+                                    <div class="col-md-6"> <input class="mr-1 mt-2" type="checkbox" value=""> No</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-md-4 border">
+                                <p>Travel Requirements:</p>
+                                <ul>
+                                    <li>Upon Arrival</li>
+                                    <li class="marginli mt-10">In Flight</li>
+                                    <li class="marginp mt-8">Disability</li>
+                                    <li class="marginp mt-20">Pregnancy</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-8 border">
+                                <div class="row margin mt-6">
+                                    <div class="col-md-4"><input class="mr-1" type="checkbox" value="">Doctor</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Nurse</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Ambulance</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Wheelchair
+                                    </div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Hospitalization
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4 "><input class="mr-1" type="checkbox" value="">Extra Seat</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Strature</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Oxygen</div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4 "><input class="mr-1" type="checkbox" value="">Blind</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Deaf</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Mute</div>
+                                    <p class="ml-3 mt-2">Any Other:__________________________________________</p>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6 "><input class="mr-1" type="checkbox" value="">Yes</div>
+                                    <div class="col-md-6 "> <input class="mr-1" type="checkbox" value="">No</div>
+                                    <p class="ml-3 mt-2">If (Yes) Weeks:__________________________________________</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 border">
+                                <p>Advance and/or Risk Pregnancies:</p>
+                            </div>
+                            <div class="col-md-8 border">
+                                <div class="row">
+                                    <div class="col-md-6 text-center"><input class="mr-1" type="checkbox" value=""> Yes
+                                    </div>
+                                    <div class="col-md-6 text-center"> <input class="mr-1" type="checkbox" value=""> No
+                                    </div>
+                                    <p class="ml-3 margin mt-7">If Yes:
+                                        ___________________________________________________________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-md-4 border">
+                                <p>Vaccinations Verification:</p>
+                            </div>
+                            <div class="col-md-8 border">
+                                <div class="row">
+                                    <div class="col-md-4 "><input class="mr-1" type="checkbox" value="">Polio</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">MMR</div>
+                                    <div class="col-md-4 "> <input class="mr-1" type="checkbox" value="">Chicken Pox
+                                    </div>
+                                    <p class="ml-3 mt-2">If not done, specify the
+                                        reason:__________________________________________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Clinical Comments:</p>
+                            </div>
+                            <div class="col-md-8 border"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 border">
+                                <p>Conclusion:</p>
+                            </div>
+                            <div class="col-md-8 border">
+                                <div class="row">
+                                    <div class="col-md-6 "><input class="mr-1" type="checkbox" value="">Fit to Fly</div>
+                                    <div class="col-md-6 "> <input class="mr-1" type="checkbox" value="">Un Fit </div>
+                                    <p class="ml-3 mt-2">If Un Fit, reason? ________________________________________</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 border">
+                                    <p>Recommendation for additional in-flight support( e.g., Wheelchair,
+                                        OxygenCylinder,
+                                        Stretcher etc.)</p>
+                                </div>
+                                <div class="col-md-8 border">
+                                    <div class="row">
+                                        <div class="col-md-6 text-center"><input class="mr-1" type="checkbox" value="">
+                                            Yes
+                                        </div>
+                                        <div class="col-md-6 text-center"> <input class="mr-1" type="checkbox" value="">
+                                            No
+                                        </div>
+                                        <p class="ml-3 margin mt-7">If Yes:
+                                            ___________________________________________________________</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <div class="mt-5 margin">
+                                    <p> Name of Doctor: _________________________________________________</p>
+                                </div>
+                                <div class="mt-5 margin">
+                                    <p> Signature and Stamp: _________________________________________________</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer p-1">
+        <button type="button" class="btn btn-md btn-outline-primary pull-right ml-2"
+            (click)="printFTFCertificate('doc-print')">Print</button>
+        <button type="button" class="btn btn-md btn-dark"
+            (click)="fitToFlyPopup.dismiss('close button clicked')">Close</button>
+    </div>
+</ng-template>
+
+<!-- <button (click)="openShortcut()">Open Desktop App</button> -->

@@ -1,0 +1,168 @@
+
+<div class="roles-page">
+     <div class="row">
+         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-7">
+             <app-card [title]="'Tests Configuration'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                 <div class="card-body">
+                     <div class="row">
+                         <div class="col-12">
+                             <div class="input-group">
+                                 <input type="text" placeholder="Search Item" class="form-control form-control-sm" (keyup)="filterResults()"  [(ngModel)]="searchText" name="searchText"/>
+                                 <button class="btn btn-mini btn-outline-primary input-group-btn-custom" (click)="getSingleRow(null)"><i class="ti-reload"></i></button>
+                             </div>
+                         </div>
+                         <!-- <div class="col-12">
+                            <span *ngIf="searchText && searchText.length < 5">type more <strong>{{5 - searchText.length}}</strong> character(s) to search</span>
+                        </div> -->
+                     </div>
+                     <div class="table-responsive fixed-height-table">
+                         <ngx-spinner style="background-color: blue;" class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                             <p style="color: white"> Loading... </p>
+                         </ngx-spinner>
+                         <table class="table  compact">
+                             <thead>
+                                 <tr>
+                                     <th>#</th>
+                                     <th>Tests Name</th>
+                                     <th>Tests Type</th>
+                                     <th>Tests Code</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <ng-container *ngIf="!objList.length then noRec else recResult">
+ 
+                                 </ng-container>
+                                 <ng-template #noRec>
+                                     <tr>
+                                         <td colspan="3" *ngIf="!objList.length" style="text-align: center;"> 
+                                             <div class="text-primary">
+                                                 <strong> No record found</strong>
+                                             </div>
+                                         </td>
+                                     </tr>
+                                 </ng-template>
+ 
+                                 <ng-template #recResult >
+                                    <tr class="pointer" *ngFor="let item of pagination.paginatedSearchResults | filterByKey:searchText:['Title','TestProfileName','TestProfileCode']; let i = index;" (click)="getSingleRow(item)" [ngClass]="{'active': objForm.get('TestProfileName').value === item.TestProfileName}">
+                                        
+                               <td>{{i+1}}</td>
+                               <td>{{item.TestProfileName}}</td>
+                               <td>
+                                 {{item.TypeId === 1 ? 'Test' : (item.TypeId === 2 ? 'Package' : 'Profile')}}
+                               </td>
+                               <td><strong>{{item.TestProfileCode}}</strong></td>
+                               <td style="display: none;"><strong>{{item.TPId}}</strong></td>
+                             </tr>
+                            
+                                 </ng-template>
+                             </tbody>
+                         </table>
+                     </div>
+                     <div class="row">
+
+                        <div class="col-12" >
+                            <div class="d-flex justify-content-between p-2">
+                                <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
+                                </ngb-pagination>
+                                <select class="custom-select" style="width: auto" [(ngModel)]="pagination.pageSize" (ngModelChange)="refreshPagination()">
+                                    <!-- <option [ngValue]="5">5 items per page</option>
+                                    <option [ngValue]="10">10 items per page</option> -->
+                                    <option [ngValue]="20">20 items per page</option>
+                                    <option [ngValue]="50">50 items per page</option>
+                                    <option [ngValue]="100">100 items per page</option>
+                                </select>
+                            </div>
+                        </div>
+    
+                    </div>
+                 </div>
+             
+                
+             </app-card>
+         </div>
+         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 col-xl-5">
+             <app-card  [title]="'Update Tests Images'" [cardClass]="'tim-card tim-card tim-card-primary'" >
+                 <div class="card-body">
+                     <!-- <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.formSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                         <p style="color: white"> Please wait... </p>
+                     </ngx-spinner> -->
+                     <form class="" [formGroup]="objForm" >
+                         <div class="row">
+                             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10">
+                                 <div class="form-group">
+                                     <!-- <label for="TestProfileName" class="control-label">Test's Name</label> -->
+                                     <input type="text"  style="display: none;"  class="form-control form-control-sm" formControlName="TestProfileName"
+                                     [ngClass]="{'invalid': objForm.get('TestProfileName').errors && objForm.get('TestProfileName').touched, 'invalid-highlighted': objForm.get('TestProfileName').errors}" [(ngModel)]="TestProfileName" >
+                      
+                              <input type="text"  style="display: none;" class="form-control form-control-sm" formControlName="TestProfileCode"
+                                     [ngClass]="{'invalid': objForm.get('TestProfileCode').errors && objForm.get('TestProfileCode').touched, 'invalid-highlighted': objForm.get('TestProfileCode').errors}" [(ngModel)]="TestProfileCode" >
+                              <input type="text"  style="display: none;" class="form-control form-control-sm" formControlName="TPId"
+                                     [ngClass]="{'invalid': objForm.get('TPId').errors && objForm.get('TPId').touched, 'invalid-highlighted': objForm.get('TPId').errors}" [(ngModel)]="TPId" >
+
+                              <p>{{ TestProfileCode }} - {{ TestProfileName }}</p>
+                                 </div>
+                             </div>
+                            
+                         </div>
+                         <div class="row">
+                              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                   <div class="row">
+                                       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                           <div class="form-group">
+                                               <label for="Image">Image</label>
+                                               <input type="file" name="Image" class="form-control-file" #Image (change)="loadItemsImage($event)" accept="image/png,image/jpg,image/jpeg" required />
+                                             </div>
+                                       </div>
+                                       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                           <div class="form-group" >
+                                            <ngx-spinner 
+                                            style="z-index: 99999;position: absolute; opacity: 1; top: 1px;left: 12px; width: 271px; height: 128px;"
+                                            class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.updatePicture" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                <p style="color: white"> Loading... </p>
+                                            </ngx-spinner>
+                                               <img src="{{ImageUrl!=null?ImageUrl:'assets/images/brand/no-image.png'}}" width="270" height="130" class="image-responsive  mb-2" style="border: 1px solid grey;">
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-12 mt-3">
+                                 <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                 <button
+                                 class="btn btn-sm btn-primary pull-right"
+                                 type="submit"
+                                 (click)="addUpdateTestProfilePic()"
+                                 >
+                                 <i class="fa fa-save"></i> Save<i aria-hidden="true"></i>
+                                </button>
+                                 <!-- <button
+                                     [disabled]="disabledButton"
+                                     class="btn btn-sm btn-primary pull-right"
+                                     title=""
+                                     mwlConfirmationPopover
+                                     [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                     [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                     [confirmText]="confirmationPopoverConfig.confirmText"
+                                     [cancelText]="confirmationPopoverConfig.cancelText"
+                                     [placement]="confirmationPopoverConfig.placements[0]"
+                                     (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                     confirmButtonType="btn btn-sm btn-primary"
+                                     cancelButtonType="btn btn-sm btn-outline-secondary"
+                                     
+                                     (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                     [appendToBody]="true">
+                                     <i 
+                                     [ngClass]="(QuestionClassificationID)?'fa fa-edit':'fa fa-save'"
+                                     ></i>{{actionLabel}}<i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinner" ></i>
+                                 </button> -->
+                             </div>
+                         </div>
+                     </form>
+                 </div>
+             </app-card>
+ 
+         </div>
+     </div>
+ </div>
+ 

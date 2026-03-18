@@ -1,0 +1,33 @@
+<div class="booking-summary-card" *ngIf="hcRegDetail">
+
+    <div class="summary-row">
+        <div class="summary-label">Test(s)</div>
+        <div class="summary-value">{{ hcRegDetail.VisitTPCode || 'na' }}</div>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary-label">Location</div>
+        <div class="summary-value">{{ hcRegDetail.BranchLocation || 'na' }}</div>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary-label">Submitted To</div>
+        <div class="summary-value">{{ hcRegDetail.EmployeeSubmittedTo || 'na' }}</div>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary-label">Panel</div>
+        <div class="summary-value">{{ hcRegDetail.PanelName || 'na' }}</div>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary-label">Amount</div>
+        <div class="summary-value">{{ hcRegDetail.AmountRecieved || 'na' }}</div>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary-label">Discount</div>
+        <div class="summary-value">{{ hcRegDetail.Discount }}</div>
+    </div>
+
+</div>

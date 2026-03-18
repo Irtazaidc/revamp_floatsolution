@@ -1,0 +1,190 @@
+<!--Start::Form-->
+<div class="card card-custom">
+  <div class="card-header" style="min-height: 0px">
+    <div class="card-title">
+      <h3 class="card-label">Pacslink Dashboard</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Bind the form to FormGroup in the component -->
+    <form
+      [formGroup]="pacsParamForm"
+      class="form-horizontal"
+      (ngSubmit)="getPACsCommLog()"
+    >
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label>Date From</label>
+          <input
+            (click)="dateFrom.toggle()"
+            #dateFrom="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateFrom"
+            name="dateFrom"
+            class="form-control mb-4"
+            type="text"
+            (dateSelect)="onDateChange()"
+          />
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label>Date To</label>
+          <input
+            (click)="dateTo.toggle()"
+            #dateTo="ngbDatepicker"
+            placeholder="dd-mm-yyyy"
+            autocomplete="off"
+            ngbDatepicker
+            formControlName="dateTo"
+            name="dateTo"
+            class="form-control mb-4"
+            type="text"
+            (dateSelect)="onDateChange()"
+          />
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-2">
+          <label>PIN</label>
+          <input
+            class="form-control mb-4"
+            placeholder="Search By PIN"
+            formControlName="visitID"
+            (input)="onPinInput()"
+          />
+          <div
+            *ngIf="
+              pacsParamForm.get('visitID')?.invalid &&
+              (pacsParamForm.get('visitID')?.touched ||
+                pacsParamForm.get('visitID')?.dirty)
+            "
+            class="text-danger"
+          >
+            Please enter a valid PIN (numbers and hyphens only).
+          </div>
+        </div>
+
+        <!-- Search button calls getPACsCommLog method -->
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="disabledButton"
+          >
+            <i class="fa fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!--End::Form-->
+
+<!--Start::Table Data-->
+<div class="card card-custom mt-4">
+  <div class="card-body">
+    <ngx-spinner
+      class="spinner-info"
+      bdColor="rgba(0,0,0,0.8)"
+      size="medium"
+      color="#fff"
+      type="square-loader"
+      [fullScreen]="false"
+    >
+      <p style="color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right text-danger"
+          ><strong>Total Records: {{ pacsLogList.length }}</strong></small
+        >
+        <div class="table-responsive" style="min-height: 330px">
+          <table class="table table-hover" cellpadding="0" cellspacing="0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Patient Name</th>
+                <th>Gender</th>
+                <th>Date Of Birth</th>
+                <th>MRNo</th>
+                <th>Service Name</th>
+                <th>Sent On</th>
+                <th>Status</th>
+                <th>Received Time</th>
+                <th>Order ID</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="pacsLogList.length > 0; else noRecord">
+              <tr
+                *ngFor="
+                  let log of pacsLogList;
+                  of: pagination.paginatedSearchResults;
+                  let i = index
+                "
+              >
+                <td>{{ i + 1 }}</td>
+                <td>{{ log.PatientName || "--" }}</td>
+                <td>{{ log.Gender || "--" }}</td>
+                <td>{{ log.DOB ? (log.DOB | date : "yyyy-MM-dd") : "--" }}</td>
+                <td>{{ log.PatientMRNo || "--" }}</td>
+                <td>{{ log.ServiceName || "--" }}</td>
+                <td>{{ log.RegDate ? (log.RegDate | date: "dd MMM, yyyy, h:mm a") : '-' }}</td>
+                <td>{{ log.isPACsReceived === 1 ? 'Received' : log.isPACsReceived === 0 ? 'Not Received' : '--' }}</td>
+                <td>{{ log.ReceivedTime ? (log.ReceivedTime | date: "dd MMM, yyyy, h:mm a") : '-' }}</td>
+                <td>{{ log.OrderID || "--" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <ng-template #noRecord>
+      <div
+        class="no-record-message"
+        style="
+          text-align: center;
+          padding: 1rem;
+          position: absolute;
+          width: 100%;
+          top: 50%;
+          transform: translateY(-50%);
+        "
+      >
+        <strong>No Record Found</strong>
+      </div>
+    </ng-template>
+  </div>
+
+  <!--start::Pagination-->
+  <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+    <div class="col-12">
+      <div class="d-flex justify-content-between p-2">
+        <ngb-pagination
+          [collectionSize]="pagination.collectionSize"
+          [(page)]="pagination.page"
+          [pageSize]="pagination.pageSize"
+          [boundaryLinks]="true"
+          [maxSize]="5"
+          [rotate]="true"
+          (pageChange)="refreshPagination()"
+        >
+        </ngb-pagination>
+        <select
+          class="custom-select"
+          style="width: auto"
+          [(ngModel)]="pagination.pageSize"
+          (ngModelChange)="refreshPagination()"
+        >
+          <option [ngValue]="5">5 items per page</option>
+          <option [ngValue]="10">10 items per page</option>
+          <option [ngValue]="20">20 items per page</option>
+          <option [ngValue]="50">50 items per page</option>
+          <option [ngValue]="100">100 items per page</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!--end::Paginition-->
+</div>
+<!--End::Table Data-->

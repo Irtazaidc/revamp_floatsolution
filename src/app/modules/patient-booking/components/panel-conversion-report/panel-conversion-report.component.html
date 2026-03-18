@@ -1,0 +1,199 @@
+<div class="container-fluid">
+  <div class="card card-custom">
+  <div class="card-body pb-0">
+    <form
+      [formGroup]="filterForm"
+      class="form-horizontal"
+      name="form"
+      role="form"
+    >
+      <div class="row container form-group justify-content-center">
+
+        <!-- Date From -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2">
+          <label class="control-label">Date From:</label>
+          <div class="effective-date-time mt-1 d-flex align-items-center">
+            <input
+              (click)="dateFrom.toggle()"
+              #dateFrom="ngbDatepicker"
+              ngbDatepicker
+              placeholder="dd-mm-yyyy"
+              formControlName="dateFrom"
+              class="form-control"
+              type="text"
+              [maxDate]="maxDate"
+              [ngClass]="{
+                invalid: filterForm.get('dateFrom').errors,
+                'invalid-highlighted':
+                  filterForm.get('dateFrom').errors && isSubmitted
+              }"
+            />
+          </div>
+        </div>
+
+        <!-- Date To -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2">
+          <label class="control-label">Date To:</label>
+          <div class="effective-date-time mt-1 d-flex align-items-center">
+            <input
+              (click)="dateTo.toggle()"
+              #dateTo="ngbDatepicker"
+              ngbDatepicker
+              placeholder="dd-mm-yyyy"
+              formControlName="dateTo"
+              class="form-control"
+              type="text"
+              [maxDate]="maxDate"
+              [ngClass]="{
+                invalid: filterForm.get('dateTo').errors,
+                'invalid-highlighted':
+                  filterForm.get('dateTo').errors && isSubmitted
+              }"
+            />
+          </div>
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 d-flex align-items-end">
+          <button
+            type="button"
+            class="btn btn-primary w-100"
+            (click)="getPanelConversionData()"
+          >
+            Search
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+  <div class="card">
+    <div class="card-body">
+      <ngx-spinner
+        class="spinner-warning"
+        [name]="spinnerRefs.dataTable"
+        bdColor="rgba(0,0,0,0.8)"
+        size="medium"
+        color="#fff"
+        type="square-loader"
+        [fullScreen]="false"
+      >
+        <p style="color: white">Loading...</p>
+      </ngx-spinner>
+       <div class="row justify-content-center mt-3">
+          <div class="col-md-6 col-sm-12">
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="type to filter"
+                class="form-control form-control-sm"
+                (keyup)="filterResults()"
+                [(ngModel)]="searchText"
+                name="searchText"
+              />
+              <button
+                class="btn btn-mini btn-outline-primary input-group-btn-custom"
+                (click)="getPanelConversionData()"
+              >
+                <i class="ti-reload"></i>
+              </button>
+              <button
+                class="btn btn-mini btn-outline-primary input-group-btn-custom ml-1"
+                ngbTooltip="Export To Excel"
+                (click)="exportAsExcel()"
+              >
+                <i class="fa fa-file-excel"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <small class="pull-right text-danger">
+        <strong
+          >Total Records: {{ pagination.filteredSearchResults.length }}</strong
+        >
+      </small>
+      <div class="table-responsive table-container mt-3">
+        <table class="table table-hover compact" style="width: 100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Visit Id</th>
+              <th>Test Name</th>
+              <th>Reg Panel</th>
+              <th>Reg Date</th>
+              <th>Converted Panel</th>
+              <th>Price</th>
+              <th>Converted Price</th>
+              <th>Difference</th>
+              <th>RegBy</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="text-center"
+              *ngIf="!panelConversionDataList || panelConversionDataList == ''"
+            >
+              <td colspan="15">
+                <div class="container-fluid">
+                  <app-no-record-found></app-no-record-found>
+                </div>
+              </td>
+            </tr>
+            <tr 
+              *ngFor="
+                let data of pagination.paginatedSearchResults;
+                let i = index
+              "
+           >
+                 <td>
+                <strong>
+                  {{ (pagination.page - 1) * pagination.pageSize + i + 1 }}
+                </strong>
+              </td>
+              <td>{{ data.VisitId || "-" }}</td>
+              <td>{{ data.TPTitle || "-" }}</td>
+              <td>{{ data.RegPanel || "-" }}</td>
+              <td>{{ data.RegDate || "-" }}</td>
+              <td>{{ data.ConvertedPanel || "-" }} </td>
+              <td>{{ data.Price || "-" }}</td>
+              <td>{{ data.ConvertedPrice || "-" }}</td>
+              <td>{{ data.DiffPrice || "-" }}</td>
+              <td>{{ data.RegBy || "-" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row" *ngIf="pagination.paginatedSearchResults.length">
+        <div class="col-md-6 col-sm-12">
+          <ngb-pagination
+            [collectionSize]="pagination.collectionSize"
+            [(page)]="pagination.page"
+            [pageSize]="pagination.pageSize"
+            [boundaryLinks]="true"
+            [maxSize]="5"
+            [rotate]="true"
+            (pageChange)="refreshPagination()"
+          >
+          </ngb-pagination>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <select
+            class="custom-select pull-right"
+            style="width: auto"
+            [(ngModel)]="pagination.pageSize"
+            (ngModelChange)="refreshPagination()"
+          >
+            <option [ngValue]="5">5 items per page</option>
+            <option [ngValue]="10">10 items per page</option>
+            <option [ngValue]="20">20 items per page</option>
+            <option [ngValue]="50">50 items per page</option>
+            <option [ngValue]="100">100 items per page</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

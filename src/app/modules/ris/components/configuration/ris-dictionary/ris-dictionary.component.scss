@@ -1,0 +1,68 @@
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+::ng-deep .bold {
+    font-weight: bold;
+}
+  
+::ng-deep .italic {
+    font-style: italic;
+}
+  
+::ng-deep .underline {
+    text-decoration: underline;
+}
+// tr td {
+//     padding-top: 3px;
+//     padding-bottom: 0px;
+// }
+.fixed-height-table {
+    max-height: 467px;
+    table thead {
+      background-color: £fff;
+      tr th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        border-bottom: 1px solid #777;
+        z-index: 2;
+      }
+    }
+  }
+
+  ::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+
+    .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #0BB7AF;
+     }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #0BB7AF !important;
+    }
+}
+
+.pointer{   
+    ::ng-deep .tooltip-inner {
+        min-width: 300px !important;
+        max-width: 500px !important;
+
+    }
+}
+::ng-deep #cke_editor1 {
+    width: 7.3in !important;
+  }

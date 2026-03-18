@@ -1,0 +1,296 @@
+/* Page */
+.pa-page {
+  background: #f1f5f9;
+  min-height: calc(100vh - 60px);
+}
+
+.pa-title {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.pa-subtitle {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Card base */
+.pa-card {
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Header sections */
+.pa-card-header {
+  background: #ffffff;
+  border: 0;
+}
+
+.pa-section-title {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+/* Badges */
+.pa-badge-soft {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 6px 10px;
+  font-weight: 900;
+}
+
+.pa-badge-warn {
+  background: #fff7ed;
+  color: #9a3412;
+  padding: 6px 10px;
+  font-weight: 900;
+}
+
+.pa-badge-indigo {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 6px 10px;
+  font-weight: 900;
+}
+
+.pa-badge-dark {
+  background: #334155;
+  color: #ffffff;
+  padding: 8px 12px;
+  font-weight: 900;
+}
+
+/* Table */
+.pa-table-scroll {
+  max-height: 68vh;
+  overflow: auto;
+}
+
+.pa-thead-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8fafc;
+}
+
+.pa-th {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* Rows */
+.pa-row {
+  cursor: pointer;
+}
+
+.pa-row:hover {
+  background: #f8fafc;
+}
+
+/* Later: you will add [class.active]="..." */
+.pa-row.active {
+  background: #eef2ff !important;
+  border-left: 4px solid #4f46e5;
+}
+
+/* Text styles */
+.pa-primary {
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.pa-secondary {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+/* Footer */
+.pa-card-footer {
+  background: #ffffff;
+  border: 0;
+}
+
+.pa-footer-text {
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+}
+
+/* Select sizing */
+.pa-select {
+  max-width: 140px;
+}
+
+/* Detail panel */
+.pa-detail-header {
+  background: #0f172a;
+  color: #ffffff;
+  border: 0;
+}
+
+.pa-detail-title {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.pa-detail-sub {
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0.85;
+}
+
+.pa-detail-body {
+  background: #f8fafc;
+}
+
+/* Empty state */
+.pa-empty {
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 28px;
+  text-align: center;
+}
+
+.pa-empty-title {
+  font-weight: 900;
+  color: #0f172a;
+  font-size: 18px;
+}
+
+.pa-empty-sub {
+  font-weight: 700;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* Inner detail cards (later enable) */
+.pa-inner-card {
+  border: 0;
+  border-radius: 14px;
+}
+
+.pa-minw {
+  min-width: 280px;
+}
+
+.pa-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: #64748b;
+}
+
+.pa-h5 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.pa-strong {
+  font-weight: 900;
+  color: #0f172a;
+}
+
+/* Metrics */
+.pa-metric {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.pa-metric-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: #64748b;
+}
+
+.pa-metric-value {
+  font-size: 16px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.pa-metric-indigo {
+  background: #eef2ff;
+}
+
+.pa-metric-cyan {
+  background: #ecfeff;
+}
+
+.pa-metric-orange {
+  background: #fff7ed;
+}
+
+.pa-metric-green {
+  background: #f0fdf4;
+}
+
+/* Trail */
+.pa-trail {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 800;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+/* Table muted cells */
+.pa-td-muted {
+  width: 40%;
+  color: #64748b;
+  font-weight: 900;
+}
+
+.pa-td-strong {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+/* Utility gap for Bootstrap 4 (since gap-* is Bootstrap 5) */
+.gap-2 > * + * {
+  margin-left: 0.5rem;
+}
+
+.pa-row.active {
+  background: #eef2ff !important;
+  border-left: 4px solid #4f46e5;
+}
+
+.attachment-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.attachment-preview {
+  height: 220px;
+  border-bottom: 1px solid #eef1f4;
+}
+
+.attachment-thumb {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  display: block;
+}
+
+.font-weight-semibold {
+  font-weight: 600;
+}
+
+.pa-clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pa-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}

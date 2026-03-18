@@ -1,0 +1,707 @@
+<mat-card>
+    <mat-card-content >
+        <mat-tab-group (selectedTabChange)="tabSelected($event)">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <!-- <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i> -->
+                    <span class="svg-icon svg-icon-danger svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo1/dist/../src/media/svg/icons/Communication/Chat-check.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <path d="M4.875,20.75 C4.63541667,20.75 4.39583333,20.6541667 4.20416667,20.4625 L2.2875,18.5458333 C1.90416667,18.1625 1.90416667,17.5875 2.2875,17.2041667 C2.67083333,16.8208333 3.29375,16.8208333 3.62916667,17.2041667 L4.875,18.45 L8.0375,15.2875 C8.42083333,14.9041667 8.99583333,14.9041667 9.37916667,15.2875 C9.7625,15.6708333 9.7625,16.2458333 9.37916667,16.6291667 L5.54583333,20.4625 C5.35416667,20.6541667 5.11458333,20.75 4.875,20.75 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                            <path d="M2,11.8650466 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L12.9835977,18 C12.7263047,14.0909841 9.47412135,11 5.5,11 C4.23590829,11 3.04485894,11.3127315 2,11.8650466 Z M6,7 C5.44771525,7 5,7.44771525 5,8 C5,8.55228475 5.44771525,9 6,9 L15,9 C15.5522847,9 16,8.55228475 16,8 C16,7.44771525 15.5522847,7 15,7 L6,7 Z" fill="#000000"/>
+                        </g>
+                    </svg><!--end::Svg Icon--></span>
+                    Active Promotions
+                </ng-template>
+                <!-- sart:: tab1 section -->
+                <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" *matTabContent>
+                    <div class="card-body">
+                        <div class="row">
+                            <!--start:: promotion list section tab1 -->
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText" [ngModelOptions]="{standalone: true}"/>
+                                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom"><i class="ti-search"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive fixed-height-table">
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <table class="table table-hover compact">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Title</th>
+                                                <th>Type</th>
+                                                <th>Thumbnail</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="pointer" *ngFor="let item of ProductsPromotionsList | filterByKey:searchText:['Title']; let i = index" (click)="productPromotion(item.ProductPromotionIDEnc,i)" [ngClass]="{'active-rec-border-left-danger': rowIndex==i}">
+                                                <td>{{i+1}}</td>
+                                                <td><span>{{item.PromotionTitle}} </span></td>
+                                                <td>
+                                                    <span *ngIf="item.PromotionFor==1">Web</span>
+                                                    <span *ngIf="item.PromotionFor==2">Mobile</span>
+                                                    <span *ngIf="item.PromotionFor==3">Both</span>
+                                                    <span *ngIf="item.PromotionFor==4" class="badge badge-purple cursor-pointer ml-2" ngbTooltip="Use For Pop-up Ad" ngbPopover="1 For Web, 2 For Mobile, 3 For Both, 4 For Pop-up Ad" popoverTitle="Promotion Use For"><i aria-hidden="true" class="fa fa-bullhorn text-white" style="font-size: 10px;"></i> <span class="blink-orange"> Pop-up Ad </span></span>    
+                                                </td>
+                                                <td><img src="{{item.PromotionImageThumbnail!=null?item.PromotionImageThumbnail: 'assets/images/brand/no-image.png'}}" alt="Product Promotion Image" style="height: 26px; width: 46px;"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--end:: promotion list section  tab1 -->
+
+                            <!--start:: form section  tab1 -->
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                                <app-card [title]="'Products Promotion'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                                    <div class="row">
+                                        <div class="col-xs-12  col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                            <!-- <div class="card"> -->
+                                                <form #frmPromotion="ngForm" class="form-horizontal" name="form" role="form"
+                                               >
+                                                <!-- <div class="card-body"> -->
+                                                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                            <p style="color: white"> Loading... </p>
+                                                        </ngx-spinner>
+                                                        <div class="row">
+                                                            <!-- form input fields  -->
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                                                                <div class="row">
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label for="title" class="control-label">Title</label>
+                                                                            <input #title="ngModel" 
+                                                                                [ngClass]="{ 'is-invalid': frmPromotion.submitted && title.invalid }"
+                                                                                [(ngModel)]="PromotionTitle" class="form-control" name="PromotionTitle" >
+                                                                        </div>
+                                                                    </div>
+                                                
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label for="url" class="control-label">URL</label>
+                                                                            <input  [ngClass]="{ 'is-invalid': frmPromotion.submitted && url.invalid }"
+                                                                                #url="ngModel" [(ngModel)]="PromotionURL" class="form-control"
+                                                                                value="{{ProductsPromotionsRow.length ? ProductsPromotionsRow[0].PromotionURL : ''}}"
+                                                                                name="PromotionURL" type="text" />
+                                                                                <span  class="text-success">e.g :https://www.google.com/</span>
+                                                                                
+                                                                        </div>
+                                                                    </div>
+                                        
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label>Item list order</label>
+                                                                            <input 
+                                                                                #order="ngModel"  [(ngModel)]="PromotionOrder" class="form-control"
+                                                                                value="{{ProductsPromotionsRow.length ? ProductsPromotionsRow[0].PromotionOrder : 1}}"
+                                                                                name="PromotionOrder" type="number" min="1" (keyup)="stopZero(order.value)" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label>Image For <span class="text-danger">*</span></label>
+                                                                            <select [(ngModel)]="PromotionFor" name="PromotionFor" class="form-control" required (change)="getCitiesConditionally()"
+                                                                            [ngClass]="{'invalid':(!PromotionFor || PromotionFor === ''),'invalid-highlighted':(!PromotionFor || PromotionFor === '') }" 
+                                                                              [attr.disabled]="isDisabledPromotionFor ? 'disabled' : null">
+                                                                              <option value="">--Select Source--</option>
+                                                                              <option value="1">Web</option>
+                                                                              <option value="2">Mobile</option>
+                                                                              <option value="3">Both</option>
+                                                                              <option value="4">Pop-up Ads</option>
+                                                                            </select>
+                                                                          </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <label>Start Date & Time <span class="text-danger">*</span></label>
+                                                                        <div class="effective-date-time mt-1">
+                                                                            <input name="StartDate" 
+                                                                            required
+                                                                            [(ngModel)]="StartDate"
+                                                                            class="mt-1" 
+                                                                            width="50%" 
+                                                                            (click)="dateFrom.toggle()"
+                                                                            #dateFrom="ngbDatepicker"
+                                                                            placeholder="--Select Date--" 
+                                                                            autocomplete="off" 
+                                                                            ngbDatepicker
+                                                                            [ngClass]="{'invalid':!StartDate,'invalid-highlighted':!StartDate }" 
+                                                                            class="form-control date-picker" 
+                                                                            type="text" 
+                                                                            
+                                                                            />
+                                                                            <ngb-timepicker required
+                                                                            #timePicker class="mini-input-field time-picker ml-1" name="StartTime"
+                                                                            [spinners]="false" [(ngModel)]="StartTime"
+                                                                            [ngClass]="{'invalid-highlight':!StartTime }"
+                                                                            >
+                                                                            </ngb-timepicker>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
+                                                                        <label>Validity</label>
+                                                                        <div class="input-group">
+                                                                            <input #age (keypress)="validateNo($event)" type="text" class="form-control"
+                                                                            (change)="ageChange(PromotionAge)" placeholder="Validity"
+                                                                            name="PromotionAge" [(ngModel)]="PromotionAge">
+                                                                            <select  class="form-control"
+                                                                                name="dmy" (change)="dmyChange(dmy)" [(ngModel)]="dmy">
+                                                                                <option *ngFor="let item of dmyEnum" [value]="item.id">
+                                                                                    {{item.name}}</option>
+                                                                            </select>
+                                                                            
+                                                                          </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                                                        <label>End Date & Time <span class="text-danger">*</span></label>
+                                                                        <div class="effective-date-time mt-1">
+                                                                            <input name="EndDate" 
+                                                                            [(ngModel)]="EndDate"
+                                                                            class="mt-1" 
+                                                                            width="50%" 
+                                                                            required
+                                                                            (click)="dateTo.toggle()"
+                                                                            #dateTo="ngbDatepicker"
+                                                                            placeholder="--Select Date--" 
+                                                                            autocomplete="off" 
+                                                                            ngbDatepicker
+                                                                            class="form-control date-picker" 
+                                                                            type="text" 
+                                                                            
+                                                                            [ngClass]="{'invalid':(!EndDate||endDateGreaterValidation),'invalid-highlighted':(!EndDate ||endDateGreaterValidation) }" 
+                                                                            />
+                                                                            <!-- [minDate]="minEndDate" -->
+                                                                            <ngb-timepicker 
+                                                                            #timePicker class="mini-input-field time-picker ml-1" 
+                                                                            [(ngModel)]="EndTime" name="EndTime" required
+                                                                            [spinners]="false"
+                                                                            [ngClass]="{'invalid-highlight':!EndTime }"
+                                                                            >
+                                                                            </ngb-timepicker>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-group">
+                                                                            <label for="lastname" class="control-label">Description</label>
+                                                                                <textarea #description="ngModel"  
+                                                                                [(ngModel)]="PromotionDescription" class="form-control " name="PromotionDescription"  rows="3"
+                                                                                [ngClass]="{ 'is-invalid': frmPromotion.submitted && description.invalid }"></textarea>
+                                                                                <!-- <span *ngIf="description.invalid  && description.touched" class="error">Description is required</span> -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input pointer" type="checkbox" value="1" name="isShowDetail" [(ngModel)]="isShowDetail">
+                                                                            <label class="form-check-label pointer" for="isShowDetail">
+                                                                                <strong>Show Description</strong> 
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <!-- form Image and cities -->
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                                                <div class="row">
+                                                                    <!-- image file input  -->
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-group">
+                                                                            <label for="Image">Image <span class="text-danger">*</span></label>
+                                                                            <input  type="file" name="Image" class="form-control-file" #Image (change)="loadItemsImage($event);" accept="image/png,image/jpg,image/jpeg" required />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Image to show  -->
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-group">
+                                                                            <img src="{{ImageUrl!=null?ImageUrl: (ProductsPromotionsRow.length ? ProductsPromotionsRow[0].PromotionImage : (ImageUrl==null)?'assets/images/brand/no-image.png':ImageUrl )}}" width="245" height="130" class="image-responsive  mb-2" style="border: 1px solid grey;">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- cities area  -->
+                                                                <div class="row">
+                                                                    <!-- search city filter -->
+                                                                    <div class="col-12">
+                                                                        <div class="input-group">
+                                                                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- cities listing area -->
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="table-responsive" style="max-height: 300px;">
+                                                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                                                <p style="color: white"> Loading... </p>
+                                                                            </ngx-spinner>
+                                                                            <table class="table table-hover compact">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th><input type="checkbox"  [ngModelOptions]="{standalone: true}" class="cursor-pointer" (change)="selectAllCities($event)" [disabled]="isFieldDisabled" [(ngModel)]="allCitiesAreChecked"/></th>
+                                                                                        <th>City Name</th>
+                                                                                        <th>&nbsp;</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr class="pointer" *ngFor="let item of citiesList | filterByKey:searchText:['CityName']; let i = index"  [ngClass]="{'disabled-city': item.ProductCount>0 && PromotionFor==4}">
+                                                                                        <ng-template #tooltipContent>
+                                                                                            <ng-container *ngIf="true">
+                                                                                                This city already has a pop-up ad with the title <br>"<strong class="text-primary">{{item.PromotionTitle}}</strong>". If you wish to replace it, please delete the existing one.
+                                                                                            </ng-container>
+                                                                                        </ng-template>
+                                                                                        <td><input
+                                                                                            class="cursor-pointer"
+                                                                                            type="checkbox"
+                                                                                            [(ngModel)]="item.checked"
+                                                                                            [ngModelOptions]="{standalone: true}"
+                                                                                            [disabled]="item.ProductCount>0 && PromotionFor==4"
+                                                                                        /></td>
+                                                                                        <td>{{item.CityName}}</td>
+                                                                                        <td><span *ngIf="item.ProductCount>0 && PromotionFor==4"> <i class="fa fa-info-circle text-danger ml-2" aria-hidden="true" [ngbTooltip]="tooltipContent"></i></span></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- action buttons and checkbox -->
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-12 text-right">
+                                                                <button *ngIf="urlID" type="button" class="btn btn-sm btn-warning ml-2"
+                                                                    [disabled]="!urlID"
+                                                                    mwlConfirmationPopover
+                                                                    [popoverTitle]="'Please Confirm'"
+                                                                    [popoverMessage]="'Are your <strong>sure</strong> want to deactivate the item?'"
+                                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                                    (confirm)="activeDeactiveItem(ProductPromotionID,false)"
+                                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                    confirmButtonType="danger"
+                                                                    cancelButtonType="outline-secondary"
+                                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                    [appendToBody]="true"
+                                                                    >
+                                                                    <i class="fas fa-calendar-times"></i> Deactive<i aria-hidden="true"></i>
+                                                                </button>
+                                                                <button *ngIf="urlID" type="button" class="btn btn-sm btn-danger ml-2"
+                                                                    [disabled]="!urlID"
+                                                                    mwlConfirmationPopover
+                                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                                    (confirm)="deleteProductPromotion(ProductPromotionID,1)"
+                                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                    confirmButtonType="danger"
+                                                                    cancelButtonType="outline-secondary"
+                                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                    [appendToBody]="true"
+                                                                    >
+                                                                    <i class="fa fa-trash"></i> Delete<i aria-hidden="true"></i>
+                                                                </button>
+                                                                <!-- <button type="submit" class="btn btn-sm btn-primary ml-2"><i class="fa fa-save"></i> Save<i aria-hidden="true"></i></button> -->
+                                                                <button 
+                                                                    [disabled]="disabledButton || frmPromotion.invalid"
+                                                                    type="button" class="btn btn-primary btn-sm ml-2" title="Save Role"
+                                                                    mwlConfirmationPopover
+                                                                    [popoverTitle]="'Please Confirm...!'"
+                                                                    [popoverMessage]="'Are you <strong>sure</strong> want to submit the form?'"
+                                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                                    (confirm)="addUpdateProductPromotion(frmPromotion.value);"
+                                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                    [appendToBody]="true"
+                                                                    > 
+                                                                    <i class="fa fa-save m-0"></i> Save <i class="spinner-border-custom"
+                                                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                                                </button>
+                                                                
+                                                                <button type="reset" class="btn btn-sm btn-outline-danger ml-2" (click)="resetForm()" ><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    <!-- </div> -->
+                                                </form>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+                                </app-card>
+                            </div>
+                            <!--end:: form section  tab1 -->
+                        </div>
+                    </div>
+                </app-card>
+                <!-- end:: tab1 section -->
+            </mat-tab>
+        
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <!-- <i class="flaticon2-delete icon-lg text-danger custom-icons mr-2"></i> -->
+                    <span class="svg-icon svg-icon-danger svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo1/dist/../src/media/svg/icons/Communication/Spam.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <path d="M4.5,3 L19.5,3 C20.3284271,3 21,3.67157288 21,4.5 L21,19.5 C21,20.3284271 20.3284271,21 19.5,21 L4.5,21 C3.67157288,21 3,20.3284271 3,19.5 L3,4.5 C3,3.67157288 3.67157288,3 4.5,3 Z M8,5 C7.44771525,5 7,5.44771525 7,6 C7,6.55228475 7.44771525,7 8,7 L16,7 C16.5522847,7 17,6.55228475 17,6 C17,5.44771525 16.5522847,5 16,5 L8,5 Z M10.5857864,14 L9.17157288,15.4142136 C8.78104858,15.8047379 8.78104858,16.4379028 9.17157288,16.8284271 C9.56209717,17.2189514 10.1952621,17.2189514 10.5857864,16.8284271 L12,15.4142136 L13.4142136,16.8284271 C13.8047379,17.2189514 14.4379028,17.2189514 14.8284271,16.8284271 C15.2189514,16.4379028 15.2189514,15.8047379 14.8284271,15.4142136 L13.4142136,14 L14.8284271,12.5857864 C15.2189514,12.1952621 15.2189514,11.5620972 14.8284271,11.1715729 C14.4379028,10.7810486 13.8047379,10.7810486 13.4142136,11.1715729 L12,12.5857864 L10.5857864,11.1715729 C10.1952621,10.7810486 9.56209717,10.7810486 9.17157288,11.1715729 C8.78104858,11.5620972 8.78104858,12.1952621 9.17157288,12.5857864 L10.5857864,14 Z" fill="#000000"/>
+                        </g>
+                    </svg><!--end::Svg Icon--></span>
+                    Inactive Promotions
+                </ng-template>
+                <!-- start:: tab2 section -->
+                <app-card [title]="''" [cardClass]="'tim-card tim-card tim-card-primary'" *matTabContent>
+                    <div class="card-body">
+                        <div class="row">
+                            <!--start:: promotion list section tab2 -->
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText" [ngModelOptions]="{standalone: true}"/>
+                                            <button class="btn btn-mini btn-outline-primary input-group-btn-custom"><i class="ti-search"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive fixed-height-table">
+                                    <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                        <p style="color: white"> Loading... </p>
+                                    </ngx-spinner>
+                                    <table class="table table-hover compact">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Title</th>
+                                                <th>Type</th>
+                                                <th>Thumbnail</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="pointer" *ngFor="let item of ProductsPromotionsList | filterByKey:searchText:['Title']; let i = index" (click)="productPromotion(item.ProductPromotionIDEnc,i)" [ngClass]="{'active-rec-border-left-danger': rowIndex==i}">
+                                                <td>{{i+1}}</td>
+                                                <td><span>{{item.PromotionTitle}} </span></td>
+                                                <td>
+                                                    <span *ngIf="item.PromotionFor==1">Web</span>
+                                                    <span *ngIf="item.PromotionFor==2">Mobile</span>
+                                                    <span *ngIf="item.PromotionFor==3">Both</span>
+                                                    <span *ngIf="item.PromotionFor==4"><i aria-hidden="true" class="fa fa-bullhorn text-white" style="font-size: 10px;"></i> <span class="blink-orange"> Pop-up Ad </span></span>    
+                                                </td>
+                                                <td><img src="{{item.PromotionImageThumbnail!=null?item.PromotionImageThumbnail: 'assets/images/brand/no-image.png'}}" alt="Product Promotion Image" style="height: 26px; width: 46px;"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--end:: promotion list section  tab2 -->
+
+                            <!--start:: form section  tab2 -->
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                                <app-card [title]="'Products Promotion'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                                    <div class="row">
+                                        <div class="col-xs-12  col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                            <!-- <div class="card"> -->
+                                                <form #frmPromotion="ngForm" class="form-horizontal" name="form" role="form"
+                                               >
+                                                <!-- <div class="card-body"> -->
+                                                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                            <p style="color: white"> Loading... </p>
+                                                        </ngx-spinner>
+                                                        <div class="row">
+                                                            <!-- form input fields  -->
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                                                                <div class="row">
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label for="title" class="control-label">Title</label>
+                                                                            <input #title="ngModel" 
+                                                                                [ngClass]="{ 'is-invalid': frmPromotion.submitted && title.invalid }"
+                                                                                [(ngModel)]="PromotionTitle" class="form-control" name="PromotionTitle" >
+                                                                        </div>
+                                                                    </div>
+                                                
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label for="url" class="control-label">URL</label>
+                                                                            <input  [ngClass]="{ 'is-invalid': frmPromotion.submitted && url.invalid }"
+                                                                                #url="ngModel" [(ngModel)]="PromotionURL" class="form-control"
+                                                                                value="{{ProductsPromotionsRow.length ? ProductsPromotionsRow[0].PromotionURL : ''}}"
+                                                                                name="PromotionURL" type="text" />
+                                                                                <span  class="text-success">e.g :https://www.google.com/</span>
+                                                                                
+                                                                        </div>
+                                                                    </div>
+                                        
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label>Item list order</label>
+                                                                            <input 
+                                                                                #order="ngModel"  [(ngModel)]="PromotionOrder" class="form-control"
+                                                                                value="{{ProductsPromotionsRow.length ? ProductsPromotionsRow[0].PromotionOrder : 1}}"
+                                                                                name="PromotionOrder" type="number" min="1" (keyup)="stopZero(order.value)" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="form-group">
+                                                                            <label>Image For <span class="text-danger">*</span></label>
+                                                                            <select [(ngModel)]="PromotionFor" name="PromotionFor" class="form-control" required (change)="getCitiesConditionally()"
+                                                                            [ngClass]="{'invalid':(!PromotionFor || PromotionFor === ''),'invalid-highlighted':(!PromotionFor || PromotionFor === '') }" 
+                                                                              [attr.disabled]="isDisabledPromotionFor ? 'disabled' : null">
+                                                                              <option value="">--Select Source--</option>
+                                                                              <option value="1">Web</option>
+                                                                              <option value="2">Mobile</option>
+                                                                              <option value="3">Both</option>
+                                                                              <option value="4">Pop-up Ads</option>
+                                                                            </select>
+                                                                          </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <label>Start Date & Time <span class="text-danger">*</span></label>
+                                                                        <div class="effective-date-time mt-1">
+                                                                            <input name="StartDate" 
+                                                                            required
+                                                                            [(ngModel)]="StartDate"
+                                                                            class="mt-1" 
+                                                                            width="50%" 
+                                                                            (click)="dateFrom.toggle()"
+                                                                            #dateFrom="ngbDatepicker"
+                                                                            placeholder="--Select Date--" 
+                                                                            autocomplete="off" 
+                                                                            ngbDatepicker
+                                                                            [ngClass]="{'invalid':!StartDate,'invalid-highlighted':!StartDate }" 
+                                                                            class="form-control date-picker" 
+                                                                            type="text" 
+                                                                            
+                                                                            />
+                                                                            <ngb-timepicker required
+                                                                            #timePicker class="mini-input-field time-picker ml-1" 
+                                                                            name="StartTime"
+                                                                            [spinners]="false" [(ngModel)]="StartTime"
+                                                                            [ngClass]="{'invalid-highlight':!StartTime }"
+                                                                            >
+                                                                            </ngb-timepicker>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 mt-1">
+                                                                        <label>Validity</label>
+                                                                        <div class="input-group">
+                                                                            <input #age (keypress)="validateNo($event)" type="text" class="form-control"
+                                                                            (change)="ageChange(PromotionAge)" placeholder="Validity"
+                                                                            name="PromotionAge" [(ngModel)]="PromotionAge">
+                                                                            <select  class="form-control"
+                                                                                name="dmy" (change)="dmyChange(dmy)" [(ngModel)]="dmy">
+                                                                                <option *ngFor="let item of dmyEnum" [value]="item.id">
+                                                                                    {{item.name}}</option>
+                                                                            </select>
+                                                                            
+                                                                          </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                                                        <label>End Date & Time <span class="text-danger">*</span></label>
+                                                                        <div class="effective-date-time mt-1">
+                                                                            <input name="EndDate" 
+                                                                            [(ngModel)]="EndDate"
+                                                                            class="mt-1" 
+                                                                            width="50%" 
+                                                                            required
+                                                                            (click)="dateTo.toggle()"
+                                                                            #dateTo="ngbDatepicker"
+                                                                            placeholder="--Select Date--" 
+                                                                            autocomplete="off" 
+                                                                            ngbDatepicker
+                                                                            class="form-control date-picker" 
+                                                                            type="text" 
+                                                                            
+                                                                            [ngClass]="{'invalid':(!EndDate||endDateGreaterValidation),'invalid-highlighted':(!EndDate ||endDateGreaterValidation) }" 
+                                                                            />
+                                                                            <!-- [minDate]="minEndDate" -->
+                                                                            <ngb-timepicker 
+                                                                            #timePicker class="mini-input-field time-picker ml-1" 
+                                                                            [(ngModel)]="EndTime" name="EndTime" required
+                                                                            [spinners]="false"
+                                                                            [ngClass]="{'invalid-highlight':!EndTime }"
+                                                                            >
+                                                                            </ngb-timepicker>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-group">
+                                                                            <label for="lastname" class="control-label">Description</label>
+                                                                                <textarea #description="ngModel"  
+                                                                                [(ngModel)]="PromotionDescription" class="form-control " name="PromotionDescription"  rows="3"
+                                                                                [ngClass]="{ 'is-invalid': frmPromotion.submitted && description.invalid }"></textarea>
+                                                                                <!-- <span *ngIf="description.invalid  && description.touched" class="error">Description is required</span> -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input pointer" type="checkbox" value="1" name="isShowDetail" [(ngModel)]="isShowDetail">
+                                                                            <label class="form-check-label pointer" for="isShowDetail">
+                                                                                <strong>Show Description</strong> 
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <!-- form Image and cities -->
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                                                <div class="row">
+                                                                    <!-- image file input  -->
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-group">
+                                                                            <label for="Image">Image</label>
+                                                                            <input  type="file" name="Image" class="form-control-file" #Image (change)="loadItemsImage($event);" accept="image/png,image/jpg,image/jpeg" required />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Image to show  -->
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="form-group">
+                                                                            <img src="{{ImageUrl!=null?ImageUrl: (ProductsPromotionsRow.length ? ProductsPromotionsRow[0].PromotionImage : (ImageUrl==null)?'assets/images/brand/no-image.png':ImageUrl )}}" width="245" height="130" class="image-responsive  mb-2" style="border: 1px solid grey;">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- cities area  -->
+                                                                <div class="row">
+                                                                    <!-- search city filter -->
+                                                                    <div class="col-12">
+                                                                        <div class="input-group">
+                                                                            <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- cities listing area -->
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                                        <div class="table-responsive" style="max-height: 300px;">
+                                                                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                                                                <p style="color: white"> Loading... </p>
+                                                                            </ngx-spinner>
+                                                                            <table class="table table-hover compact">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th><input type="checkbox"  [ngModelOptions]="{standalone: true}" class="cursor-pointer" (change)="selectAllCities($event)" [disabled]="isFieldDisabled" [(ngModel)]="allCitiesAreChecked"/></th>
+                                                                                        <th>City Name</th>
+                                                                                        <th>&nbsp;</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr class="pointer" *ngFor="let item of citiesList | filterByKey:searchText:['CityName']; let i = index"  [ngClass]="{'disabled-city': item.ProductCount>0 && PromotionFor==4}">
+                                                                                        <ng-template #tooltipContent>
+                                                                                            <ng-container *ngIf="true">
+                                                                                                This city already has a pop-up ad with the title <br>"<strong class="text-primary">{{item.PromotionTitle}}</strong>". If you wish to replace it, please delete the existing one.
+                                                                                            </ng-container>
+                                                                                        </ng-template>
+                                                                                        <td><input
+                                                                                            class="cursor-pointer"
+                                                                                            type="checkbox"
+                                                                                            [(ngModel)]="item.checked"
+                                                                                            [ngModelOptions]="{standalone: true}"
+                                                                                            [disabled]="item.ProductCount>0 && PromotionFor==4"
+                                                                                        /></td>
+                                                                                        <td>{{item.CityName}}</td>
+                                                                                        <td><span *ngIf="item.ProductCount>0 && PromotionFor==4"> <i class="fa fa-info-circle text-danger ml-2" aria-hidden="true" [ngbTooltip]="tooltipContent"></i></span></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- action buttons and checkbox -->
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-12 text-right">
+                                                                <button *ngIf="urlID" type="button" class="btn btn-sm btn-success ml-2"
+                                                                    [disabled]="!urlID"
+                                                                    mwlConfirmationPopover
+                                                                    [popoverTitle]="'Please Confirm'"
+                                                                    [popoverMessage]="'Are your <strong>sure</strong> want to activate the item?'"
+                                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                                    (confirm)="activeDeactiveItem(ProductPromotionID,true)"
+                                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                    confirmButtonType="danger"
+                                                                    cancelButtonType="outline-secondary"
+                                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                    [appendToBody]="true"
+                                                                    >
+                                                                    <i class="fas fa-check-square"></i> Active<i aria-hidden="true"></i>
+                                                                </button>
+                                                                <button *ngIf="urlID" type="button" class="btn btn-sm btn-danger ml-2"
+                                                                    [disabled]="!urlID"
+                                                                    mwlConfirmationPopover
+                                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                                    [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                                    (confirm)="deleteProductPromotion(ProductPromotionID,1)"
+                                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                    confirmButtonType="danger"
+                                                                    cancelButtonType="outline-secondary"
+                                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                    [appendToBody]="true"
+                                                                    >
+                                                                    <i class="fa fa-trash"></i> Delete<i aria-hidden="true"></i>
+                                                                </button>
+                                                                <!-- <button type="submit" class="btn btn-sm btn-primary ml-2"><i class="fa fa-save"></i> Save<i aria-hidden="true"></i></button> -->
+                                                                <button *ngIf="urlID"
+                                                                    [disabled]="(disabledButton || frmPromotion.invalid) || !urlID"
+                                                                    type="button" class="btn btn-primary btn-sm ml-2" title="Save Role"
+                                                                    mwlConfirmationPopover
+                                                                    [popoverTitle]="'Please Confirm...!'"
+                                                                    [popoverMessage]="'Are you <strong>sure</strong> want to submit the form?'"
+                                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                                    (confirm)="addUpdateProductPromotion(frmPromotion.value);"
+                                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                                    [appendToBody]="true"
+                                                                    > 
+                                                                    <i class="fa fa-save m-0"></i> Save <i class="spinner-border-custom"
+                                                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                                                </button>
+                                                                
+                                                               <!-- <button type="reset" class="btn btn-sm btn-outline-danger ml-2" (click)="reSectForm()" ><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button> -->
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    <!-- </div> -->
+                                                </form>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+                                </app-card>
+                            </div>
+                            <!--end:: form section  tab2 -->
+                        </div>
+                    </div>
+                </app-card>
+                <!-- end:: tab2 section -->
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

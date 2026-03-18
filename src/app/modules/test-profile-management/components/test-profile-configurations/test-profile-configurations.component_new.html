@@ -1,0 +1,1489 @@
+<!-- <div class="container"> -->
+    <div class="test-profile-additional-configs m-3">
+        <div class="row">
+            <!--  -->
+            <div  class="col-md-4" *ngIf="!hasQueryParams && isShowTestTableSection">
+                <app-card [title]="'Worklist'" [cardClass]="'tim-card tim-card tim-card-primary'">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search Item" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText" [ngModelOptions]="{standalone: true}"/>
+                                    <button class="btn btn-mini btn-outline-primary input-group-btn-custom"><i class="ti-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive fixed-height-table">
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <table class="table table-hover compact">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Test Profile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  class="pointer" *ngFor="let item of testProfileList | filterByKey:searchText:['TestCompleteName']; let i = index"
+                                    (click)="getTestProfileDetail(item.TPId,i)"
+                                    [ngClass]="{'active-rec-border-left': ExTPID==item.TPId}"
+                                    >
+                                        <td style="padding-top: 6px; padding-bottom: 6px">{{i+1}}</td>
+                                        <td style="padding-top: 6px; padding-bottom: 6px"><strong>{{item.TestProfileCode}}-</strong> {{item.TestProfileName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </app-card>
+            </div>
+
+            <div class="col-md-8" [ngClass]="{'offset-md-2': hasQueryParams}">
+                <app-card [title]="TPNameCardHeader||'Test Profile Config'">
+                    <mat-tab-group>
+                        <mat-tab label="Test Profile Detail" [disabled]='!ExTPID'>
+                            <form #TestProfileConfig="ngForm" role="form" name="TestProfileConfig"
+                                (ngSubmit)="AddUpdateTP(TestProfileConfig.value,TestProfileConfig);">
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.mainFormSection" size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                                            <p style="color: white"> Loading... </p>
+                                        </ngx-spinner>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Gender: <span class="mandatory-field ">*</span></label>
+                                                <select  #select="ngModel" id="select" [(ngModel)]="Gender"
+                                                [ngClass]="{'has-error':TPConfigForm.get('Gender').errors &&
+                                        (TPConfigForm.get('Gender').touched || TPConfigForm.get('Gender').dirty) || !Gender}"
+                                                    name="Gender" class="form-control">
+                                                    <option value="">Please Select</option>
+                                                    <option value="M">Male</option>
+                                                    <option value="F">Female</option>
+                                                    <option value="B">Both</option>
+                                                </select>
+                                                <!-- <span class="error text-danger"
+                                                    *ngIf="select.invalid && select.touched || !Gender">Gender
+                                                    Required!</span> -->
+                                            </div>
+                                            <!-- <div class="form-group col-md-3 col-12">
+                                            <label>Category:<span class="mandatory-field"> *</span></label>
+                                            <select required #select1="ngModel" id="select1" [multiple]="true" [(ngModel)]="BodyPart"
+                                                name="BodyPart" class="form-control">
+                                                <option value="">Please Select</option>
+                                                <option *ngFor="let bp of BodyParts; let i= index"
+                                                    value="{{BodyParts[i].IBodyPartsID}}">
+                                                    {{BodyParts[i].BodyPartTitle}}</option>
+                                            </select>
+                                            <span class="error text-danger" *ngIf="select1.invalid && select.touched">Category
+                                                Required!</span>
+                                        </div> -->
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Category<span class="mandatory-field"> *</span> </label>
+                                                <ng-select style="width: 100%;" [items]="BodyParts" [multiple]="true"
+                                                    placeholder="Please Select" bindLabel="BodyPartTitle"
+                                                    bindValue="IBodyPartsID" [closeOnSelect]="false"
+                                                    name="BodyPartTitle" [(ngModel)]="selectedBodyparts">
+                                                    <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                                        let-index="index">
+                                                        <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                            type="checkbox" [ngModel]="item$.selected" />
+                                                        {{item.BodyPartTitle}}
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+
+
+
+                                            <!-- -------------------------------------------------------------------------------------------------------------------------- -->
+
+
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Select Diseases:<span class="mandatory-field"> *</span> </label>
+                                                <ng-select style="width: 100%;" [items]="DiseaseTitleList"
+                                                    [multiple]="true" placeholder="Please Select"
+                                                    bindLabel="DiseaseTitle" bindValue="IDiseasesID"
+                                                    [closeOnSelect]="false" name="DiseaseTitle"
+                                                    [(ngModel)]="selectedDiseases">
+                                                    <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                                        let-index="index">
+                                                        <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                            type="checkbox" [ngModel]="item$.selected" />
+                                                        {{item.DiseaseTitle}}
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!---------------------------------------------------------------------------------------------------------------------------------------------------->
+                                            <!-- -------------------------------------------------------------------------------------------------------------------------- -->
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Select Symtoms:</label>
+                                                <ng-select style="width: 100%;" [items]="sysmtomsList" [multiple]="true"
+                                                    placeholder="Please Select" bindLabel="SymptomTitle"
+                                                    bindValue="ISymptomID" [closeOnSelect]="false" name="SymptomTitle"
+                                                    [(ngModel)]="selectedSymptoms">
+                                                    <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                                        let-index="index">
+                                                        <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                            type="checkbox" [ngModel]="item$.selected" />
+                                                        {{item.SymptomTitle}}
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Select Sample Collection Medium:</label>
+                                                <ng-select [(ngModel)]="selectedTestCollectionMedium"
+                                                    style="width: 100%;" [items]="sampleCollectionMedium"
+                                                    placeholder="Please Select" bindLabel="TestSampleMediumTitle"
+                                                    bindValue="ITestSampleMediumID" [closeOnSelect]="false"
+                                                    name="TestSampleMediumTitle1">
+                                                    <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                                        let-index="index">
+                                                        <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                            type="checkbox" [ngModel]="item$.selected" />
+                                                        {{item.TestSampleMediumTitle}}
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div>
+                                            <!-- <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Select Alternate Sample Collection Medium:</label>
+                                                <ng-select [(ngModel)]="selectedAlternateTestCollectionMedium" style="width: 100%;" [items]="altSampleCollectionMedium"
+                                                    placeholder="Please Select" bindLabel="TestSampleMediumTitle"
+                                                    bindValue="ITestSampleMediumID" [closeOnSelect]="false"
+                                                    name="TestSampleMediumTitle"
+                                                    >
+                                                    <ng-template ng-option-tmp let-item="item" let-item$="item$"
+                                                        let-index="index">
+                                                        <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                            type="checkbox" [ngModel]="item$.selected" />
+                                                        {{item.TestSampleMediumTitle}}
+                                                    </ng-template>
+                                                </ng-select>
+                                            </div> -->
+                                            <!---------------------------------------------------------------------------------------------------------------------------------------------------->
+
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12">
+                                                <label>Turnaround Time:<span class="mandatory-field text-danger">
+                                                    </span> </label>
+                                                <textarea [(ngModel)]="manualTAT" name="manualTAT" rows="3"
+                                                    class="form-control" placeholder="Content.."></textarea>
+                                                <!-- required minlength="8" -->
+                                                <!-- <span class="error text-danger invalid">Minimum 8 Characters Required!</span> -->
+                                            </div>
+                                            <div class="form-group col-md-4 col-lg-4 col-sm-12"
+                                                [ngClass]="{'has-error':TPConfigForm.get('PatientInstructions').errors &&
+                                        (TPConfigForm.get('  ').touched || TPConfigForm.get('PatientInstructions').dirty)}">
+                                                <label>Patient Instructions:<span class="mandatory-field text-danger">
+                                                    </span> </label>
+                                                <textarea [(ngModel)]="PatientInstructions" name="PatientInstructions"
+                                                    rows="3" class="form-control" placeholder="Content.."></textarea>
+                                                <!-- required minlength="8" -->
+                                                <!-- <span class="error text-danger invalid">Minimum 8 Characters Required!</span> -->
+                                            </div>
+
+                                            <div class="form-group col-md-4 col-12">
+                                                <label>Test Description:<span class="mandatory-field text-danger">
+                                                    </span></label>
+                                                <textarea [(ngModel)]="TestDescription" name="TestDescription" rows="3"
+                                                    class="form-control" placeholder="Content.."></textarea>
+                                                <!-- required minlength="8" -->
+                                                <!-- <span class="error text-danger invalid">Minimum 8 Characters Required!</span> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="ckeditor-tp">
+                                                    <label>Patient Instructions:</label>
+                                                    <ckeditor name="PatientInstructionsHTML" class="custom-ckeditor2" id="myCkEditor2"
+                                                        [(ngModel)]="PatientInstructionsHTML">
+                                                    </ckeditor>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="ckeditor-tp">
+                                                    <label>Test Description:</label>
+                                                    <ckeditor name="TestDescriptionHTML" [(ngModel)]="TestDescriptionHTML" class="custom-ckeditor" id="myCkEditor">
+                                                    </ckeditor>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isHCTestProfile" name="isHCTestProfile" />
+                                                        <span></span><strong>Allow for Home Sampling?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isOnlineBookingAllowed"
+                                                            name="isOnlineBookingAllowed" />
+                                                        <span></span><strong>Allow for Online Booking?</strong></label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isMedicalOfficerIntervention"
+                                                            name="isMedicalOfficerIntervention" />
+                                                        <span></span><strong>Medical Officer
+                                                            Intervention?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isBypassAssigner" name="isBypassAssigner" />
+                                                        <span></span><strong>Bypass Assigner?</strong></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isFastingReq" name="isFastingReq" />
+                                                        <span></span><strong>Fasting Required?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="isFastingReq"
+                                                class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class=""> <span><strong>Fasting
+                                                                Hours</strong></span></label>
+                                                    <input height="28px" class="form-control form-control-sm"
+                                                        placeholder="Please Enter Fasting Hours" type="number"
+                                                        [(ngModel)]="fastingHours" name="fastingHours" />
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isTechHistoryRequred" name="isTechHistoryRequred" />
+                                                        <span></span><strong>Tech History Requred?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isBypassTech" name="isBypassTech" />
+                                                        <span></span><strong>Bypass Tech?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isService" name="isService" />
+                                                        <span></span><strong>Service?</strong></label>
+                                                </div>
+                                            </div>
+                                             <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 mt-2" *ngIf="isService">
+                                                <select class="form-control form-control-sm" name="serviceType" [(ngModel)]="serviceType" required 
+                                                [ngClass]="{'invalid': !serviceType, 'invalid-highlighted': !serviceType}">
+                                                    <option value="1">Films</option>
+                                                    <option value="2">Contrast</option>
+                                                    <option value="3">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isCancelable" name="isCancelable" />
+                                                        <span></span><strong>Cancelable?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isAdvanceCancellation" name="isAdvanceCancellation" />
+                                                        <span></span><strong>Advance Cancellation?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 mt-2">
+                                                <div class="checkbox-inline">
+                                                    <label class="checkbox">
+                                                        <input class="form-control" type="checkbox"
+                                                            [(ngModel)]="isAIAssistEnable" name="isAIAssistEnable" />
+                                                        <span></span><strong>AI Assistance Enable?</strong></label>
+                                                </div>
+                                            </div>
+                                           
+
+                                            <br />
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mt-2">
+                                                <!-- Select File -->
+                                                <input type="file" name="image" #inputFile accept="image/*"
+                                                    (change)="showPreview($event)" />
+                                                <!-- Image Preview -->
+                                                <div class="imagePreview img" *ngIf="imageURL !== ''" role="button">
+                                                    <i class="fa fa-times-circle icon-close" aria-hidden="true"
+                                                        mwlConfirmationPopover
+                                                        [popoverTitle]="confirmationPopoverConfig.popoverTitle"
+                                                        [popoverMessage]="confirmationPopoverConfig.popoverMessage"
+                                                        [confirmText]="confirmationPopoverConfig.confirmText"
+                                                        [cancelText]="confirmationPopoverConfig.cancelText"
+                                                        [placement]="confirmationPopoverConfig.placements[4]"
+                                                        (confirm)="ImageRemove(TestProfilePicId)"
+                                                        (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                        confirmButtonType="danger" cancelButtonType="outline-secondary"
+                                                        (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                        [appendToBody]="false"></i>
+                                                    <img [src]="imageURL" [alt]="uploadForm.value.name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-right mt-2">
+                                        <div class="input-group " style="display: inline-block;">
+                                            <!-- <button [disabled]="TestProfileConfig.invalid || disabledButton"
+                                                type="submit" class="btn btn-primary btn-sm" title="Save Role"> <i
+                                                    class="fa fa-save m-0"></i> Save <i class="spinner-border-custom"
+                                                    aria-hidden="true" [hidden]="isSpinner"></i></button> -->
+                                                <button *ngIf="ExTPID"
+                                                    [disabled]="TestProfileConfig.invalid || disabledButton"
+                                                    type="button" class="btn btn-primary btn-sm" title="Save Role"
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="'Please Confirm...!'"
+                                                    [popoverMessage]="'Are you <strong>sure</strong> want to submit the form?'"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="AddUpdateTP(TestProfileConfig.value,TestProfileConfig)"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true"
+                                                    > 
+                                                    <i class="fa fa-save m-0"></i> Save <i class="spinner-border-custom"
+                                                    aria-hidden="true" [hidden]="isSpinner"></i>
+                                            </button>
+                                            <button type="reset" class="btn btn-outline-danger btn-sm ml-2"><i
+                                                    class="fa fa-eraser m-0"></i>Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-tab>
+
+
+                        <!----------------------------------------------------------------------------------------------------->
+                        <!----------------------------------------::End of Main Form------------------------------------------->
+                        <!----------------------------------------------------------------------------------------------------->
+
+
+                        <!----------------------------------------------------------------------------------------------------->
+                        <!--------------------------------------start:: Qustions group and questions association--------------->
+                        <!----------------------------------------------------------------------------------------------------->
+                        <!-- [ngClass]="{'invalid': !questionClassificationID, 'invalid-highlighted':!requiredHighlited}" -->
+                        <mat-tab label="Test Questions" [disabled]='!ExTPID'>
+                            <mat-card>
+                                <mat-card-content>
+                                    <mat-tab-group class="demo-tab-group" style="background-color: #fff;" (selectedTabChange)="onTabChanged($event);"> 
+                                        <mat-tab label="MO Questions">
+                                            <div class="row mt-4" style="min-height: 300px;">
+                                                <!-- <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                                    <div class="form-group">
+                                                        <label for="QuestionClassificationCode" class="control-label">Question Classification:</label>
+                                                        <ng-select style="width: 100%;"
+                                                        class="mr-1"
+                                                        [items]="classificationList"
+                                                        bindLabel="QuestionClassificationName" 
+                                                        placeholder="--Select Question Classification--"
+                                                        bindValue="QuestionClassificationID"
+                                                        
+                                                        [(ngModel)]="questionClassificationID"
+                                                        (change)="getQClassificationQuestions($event)"
+                                                        >
+                                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                <span class="ng-value-label"> {{item.QuestionClassificationName}}</span>
+                                                            </div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    </div>
+                                                </div> -->
+                
+                
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                    <label>Question Classification:</label>
+                                                    <ng-select style="width: 100%;" [items]="classificationList" [multiple]="true"
+                                                        placeholder="Please Select" bindLabel="QuestionClassificationName"
+                                                        bindValue="QuestionClassificationID" [closeOnSelect]="false"
+                                                        name="QuestionClassificationName" (change)="getQClassificationQuestions($event)"
+                                                        [(ngModel)]="selectedQuestionClassification">
+                                                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                                            <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                                type="checkbox" [ngModel]="item$.selected" />
+                                                            {{item.QuestionClassificationName}}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+                
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="Question" class="control-label">Extra Question</label>
+                                                        <ng-select style="width: 100%;" class="mr-1" [items]="questionList"
+                                                            bindLabel="Question" placeholder="--Select Question--"
+                                                            bindValue="QuestionID" (change)="addSelectedQuestion($event)">
+                                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                                        aria-hidden="true">×</span>
+                                                                    <span class="ng-value-label">
+                                                                        {{item.Question}}-({{item.QuestionGroupType}})</span>
+                                                                </div>
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table" *ngIf="selectedQuestion.length; else NoRec">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 5%;">#</th>
+                                                                    <th style="width: 5%;"></th>
+                                                                    <th style="width: 75%;" scope="col" class="col-md">Quesetion</th>
+                                                                    <th style="width: 75%;" scope="col" class="col-md">Classification</th>
+                                                                    <th style="width: 5%;" scope="col" class="col-md">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody cdkDropList
+                                                                (cdkDropListDropped)="risOnQuestionPriorityChange($event)">
+                
+                                                                <tr *ngFor="let item of selectedQuestion; let i = index" cdkDrag>
+                                                                    <td style="width: 5%;">{{i+1}}</td>
+                                                                    <th style="width: 5%;" class="col-md">
+                                                                        <div class="drag-handle">
+                                                                            <i class="fa fa-bars text-bar" aria-hidden="true"
+                                                                                ngbTooltip="Holed and drag to set item sort order"></i>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td style="width: 70%;" class="col-md">{{ item.Question }}</td>
+                                                                    <td style="width: 70%;" class="col-md">{{ item.QuestionClassificationName  || extraQuesTxt}}  </td>
+                                                                    <td style="width: 5%;" class="col-md">
+                                                                        <i style="cursor: pointer;" class="fa fa-times text-danger"
+                                                                            ngbTooltip="Remove Item"
+                                                                            (click)="removeItem(item.QuestionID)"></i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <hr>
+                                                        <ng-template #NoRec>
+                                                            <table class="table" *ngIf="!selectedQuestion.length">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="5" class="text-center">
+                                                                            <strong class="text-primary">No question associated</strong>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 text-right mt-2" *ngIf="selectedQuestion.length">
+                                                    <div class="input-group " style="display: inline-block;">
+                                                        <button [disabled]="disabledButton" type="button" class="btn btn-primary"
+                                                            title="" mwlConfirmationPopover
+                                                            [popoverTitle]="confirmationPopoverQuestion.popoverTitle"
+                                                            [popoverMessage]="confirmationPopoverQuestion.popoverMessage"
+                                                            [confirmText]="confirmationPopoverQuestion.confirmText"
+                                                            [cancelText]="confirmationPopoverQuestion.cancelText"
+                                                            [placement]="confirmationPopoverQuestion.placements[0]"
+                                                            (confirm)="insertUpdateTPQuestions()"
+                                                            (cancel)="confirmationPopoverQuestion.confirmPopoverCancel()"
+                                                            confirmButtonType="btn btn-sm btn-primary"
+                                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                            (click)="confirmationPopoverQuestion.confirmClicked = false; confirmationPopoverQuestion.cancelClicked = false"
+                                                            [appendToBody]="true" title="Save Role"> <i class="fa fa-save m-0"></i> Save
+                                                            <i class="spinner-border-custom" aria-hidden="true"
+                                                                [hidden]="isSpinner"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-tab>
+                                        <mat-tab label="Technician Checklist">
+                                            <div class="row mt-4" style="min-height: 300px;">
+                                                <!-- <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                                    <div class="form-group">
+                                                        <label for="QuestionClassificationCode" class="control-label">Question Classification:</label>
+                                                        <ng-select style="width: 100%;"
+                                                        class="mr-1"
+                                                        [items]="classificationList"
+                                                        bindLabel="QuestionClassificationName" 
+                                                        placeholder="--Select Question Classification--"
+                                                        bindValue="QuestionClassificationID"
+                                                        
+                                                        [(ngModel)]="questionClassificationID"
+                                                        (change)="getQClassificationQuestions($event)"
+                                                        >
+                                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                                <span class="ng-value-label"> {{item.QuestionClassificationName}}</span>
+                                                            </div>
+                                                        </ng-template>
+                                                    </ng-select>
+                                                    </div>
+                                                </div> -->
+                
+                
+                                                <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                    <label>Question Classification:</label>
+                                                    <ng-select style="width: 100%;" [items]="classificationList" [multiple]="true"
+                                                        placeholder="Please Select" bindLabel="QuestionClassificationName"
+                                                        bindValue="QuestionClassificationID" [closeOnSelect]="false"
+                                                        name="QuestionClassificationName" (change)="getQClassificationQuestions($event)"
+                                                        [(ngModel)]="selectedQuestionClassification">
+                                                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                                            <input id="item-{{index}}" [ngModelOptions]="{standalone: true}"
+                                                                type="checkbox" [ngModel]="item$.selected" />
+                                                            {{item.QuestionClassificationName}}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div> -->
+                
+                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="Question" class="control-label">Add Question</label>
+                                                        <ng-select style="width: 100%;" class="mr-1" [items]="questionList"
+                                                            bindLabel="Question" placeholder="--Select Question--"
+                                                            bindValue="QuestionID" (change)="addSelectedQuestion($event)">
+                                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                                        aria-hidden="true">×</span>
+                                                                    <span class="ng-value-label">
+                                                                        {{item.Question}}-({{item.QuestionGroupType}})</span>
+                                                                </div>
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="table-responsive">
+                                                        <table class="table" *ngIf="selectedQuestion.length; else NoRec">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 5%;">#</th>
+                                                                    <th style="width: 5%;"></th>
+                                                                    <th style="width: 75%;" scope="col" class="col-md">Quesetion</th>
+                                                                    <th style="width: 75%;" scope="col" class="col-md">Classification</th>
+                                                                    <th style="width: 5%;" scope="col" class="col-md">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody cdkDropList
+                                                                (cdkDropListDropped)="risOnQuestionPriorityChange($event)">
+                
+                                                                <tr *ngFor="let item of selectedQuestion; let i = index" cdkDrag>
+                                                                    <td style="width: 5%;">{{i+1}}</td>
+                                                                    <th style="width: 5%;" class="col-md">
+                                                                        <div class="drag-handle">
+                                                                            <i class="fa fa-bars text-bar" aria-hidden="true"
+                                                                                ngbTooltip="Holed and drag to set item sort order"></i>
+                                                                        </div>
+                                                                    </th>
+                                                                    <td style="width: 70%;" class="col-md">{{ item.Question }}</td>
+                                                                    <td style="width: 70%;" class="col-md">{{ item.QuestionClassificationName  || extraQuesTxt}}  </td>
+                                                                    <td style="width: 5%;" class="col-md">
+                                                                        <i style="cursor: pointer;" class="fa fa-times text-danger"
+                                                                            ngbTooltip="Remove Item"
+                                                                            (click)="removeItem(item.QuestionID)"></i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <hr>
+                                                        <ng-template #NoRec>
+                                                            <table class="table" *ngIf="!selectedQuestion.length">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="5" class="text-center">
+                                                                            <strong class="text-primary">No question associated</strong>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 text-right mt-2" *ngIf="selectedQuestion.length">
+                                                    <div class="input-group " style="display: inline-block;">
+                                                        <button [disabled]="disabledButton" type="button" class="btn btn-primary"
+                                                            title="" mwlConfirmationPopover
+                                                            [popoverTitle]="confirmationPopoverQuestion.popoverTitle"
+                                                            [popoverMessage]="confirmationPopoverQuestion.popoverMessage"
+                                                            [confirmText]="confirmationPopoverQuestion.confirmText"
+                                                            [cancelText]="confirmationPopoverQuestion.cancelText"
+                                                            [placement]="confirmationPopoverQuestion.placements[0]"
+                                                            (confirm)="insertUpdateTPQuestions()"
+                                                            (cancel)="confirmationPopoverQuestion.confirmPopoverCancel()"
+                                                            confirmButtonType="btn btn-sm btn-primary"
+                                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                            (click)="confirmationPopoverQuestion.confirmClicked = false; confirmationPopoverQuestion.cancelClicked = false"
+                                                            [appendToBody]="true" title="Save Role"> <i class="fa fa-save m-0"></i> Save
+                                                            <i class="spinner-border-custom" aria-hidden="true"
+                                                                [hidden]="isSpinner"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-tab>                            
+                                    </mat-tab-group>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-tab>
+                        <!----------------------------------------------------------------------------------------------------->
+                        <!--------------------------------------end:: Qustions group and questions association----------------->
+                        <!----------------------------------------------------------------------------------------------------->
+
+
+                        <!----------------------------------------------------------------------------------------------------->
+                        <!--------------------------------------start:: Test Invertory----------------->
+                        <!----------------------------------------------------------------------------------------------------->
+                        <mat-tab label="Test Inventory" [disabled]='!ExTPID'>
+                            <div class="row mt-4" style="min-height: 370px;">
+
+                                <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                    <div class="form-group">
+                                        <label for="RISStatusID" class="control-label">RIS Status</label>
+                                        <ng-select style="width: 100%;" class="mr-1" 
+                                            [ngClass]="{'invalid': (!StatusId && !RISStatusID && buttonClicked), 'invalid-highlighted': (!StatusId && !RISStatusID && buttonClicked)}"
+                                            [items]="RISStatusList"
+                                            bindLabel="RISStatus" 
+                                            [(ngModel)]="RISStatusID"
+                                            placeholder="--Select RIS Status--"
+                                            bindValue="RISStatusID" 
+                                            (change)="setDropdown(1)">
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div> -->
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                    <div class="form-group">
+                                        <label for="StatusId" class="control-label">Lab Status</label>
+                                        <ng-select style="width: 100%;" class="mr-1" 
+                                            [ngClass]="{'invalid': (!StatusId && !RISStatusID && buttonClicked), 'invalid-highlighted': (!StatusId && !RISStatusID && buttonClicked)}"
+                                            [items]="testStatusList"
+                                            bindLabel="Title" 
+                                            placeholder="--Select Test Lab Status--"
+                                            bindValue="StatusId" 
+                                            [(ngModel)]="StatusId"
+                                            (change)="setDropdown(2)">
+                                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                    <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                    <span class="ng-value-label">
+                                                        {{item.Title}}</span>
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                    <div class="form-group">
+                                        <label for="Test" class="control-label">Product Item <small class="text-info"> (Code-Title [Unit])</small>:</label>
+                                        <input id="typeahead-basic" type="text" class="form-control"  
+                                        name="selectedInventory" 
+                                        [(ngModel)]="selectedInventory" 
+                                        [ngbTypeahead]="search" 
+                                        [editable]='false' 
+                                        [inputFormatter]="formatter" 
+                                        [resultFormatter]="formatter" 
+                                        [disabled]="testFieldEnableDisalbe" 
+                                        (selectItem)="addSelectedItemsTypeHead($event)"
+                                        placeholder="-- Select Store Item --"/>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="StoreItemId" class="control-label">Product Item <small class="text-info"> (Code-Title [Unit])</small></label>
+                                        <ng-select style="width: 100%;" class="mr-1" 
+                                        [items]="storeItemList"
+                                        bindLabel="StoreItemFull" 
+                                        placeholder="--Select Product Item--"
+                                        bindValue="StoreItemId" 
+                                        [(ngModel)]="StoreItemId"
+                                        (change)="addSelectedItems($event)">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                <span class="ng-value-icon right" (click)="clear(item)"
+                                                        aria-hidden="true">×</span>
+                                                <span class="ng-value-label">
+                                                    {{item.StoreItemTitle}}-({{item.MeasuringUnit}})</span>
+                                            </div>
+                                        </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div> -->
+
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table" *ngIf="selectedItems.length; else NoItem">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">#</th>
+                                                    <th style="width: 5%;"><i aria-hidden="true" class="fa fa-sort text-bar-heading"></i></th>
+                                                    <th style="width: 10%;" scope="col" class="col-md">Item Code</th>
+                                                    <th style="width: 50%;" scope="col" class="col-md">Item Name</th>
+                                                    <th style="width: 10%;" scope="col" class="col-md">Unit</th>
+                                                    <th style="width: 10%;" scope="col" class="col-md">Quantity</th>
+                                                    <th style="width: 10%;" scope="col" class="col-md">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody cdkDropList
+                                            (cdkDropListDropped)="risInventoryPriorityChange($event)">
+
+                                                <tr *ngFor="let item of selectedItems; let i = index" cdkDrag>
+                                                    <td style="width: 5%;">{{i+1}}</td>
+                                                    <th style="width: 5%;" class="col-md">
+                                                        <div class="drag-handle">
+                                                            <i class="fa fa-bars text-bar" aria-hidden="true"
+                                                                ngbTooltip="Hold and drag to set item sort order"></i>
+                                                        </div>
+                                                    </th>
+                                                    <td style="width: 10%;" class="col-md">{{item.Code||'NA' }}</td>
+                                                    <td style="width: 50%;" class="col-md">{{item.StoreItemTitle}}  </td>
+                                                    <td style="width: 10%;" class="col-md">{{item.MeasuringUnit}}  </td>
+                                                    <td style="width: 10%;" class="col-md">
+                                                        <input type="number" 
+                                                        [(ngModel)]="item.ConsumeQuantity" 
+                                                        class="form-control form-control-sm"
+                                                        [ngClass]="{'invalid': !item.ConsumeQuantity, 'invalid-highlighted': (!item.ConsumeQuantity && buttonClicked)}"
+                                                        min="1" oninput="this.value =!!this.value && Math.abs(this.value) >= 1 ? Math.abs(this.value) : null"
+                                                        
+                                                        /> 
+                                                    </td>
+                                                    <td style="width: 10%;" class="col-md">
+                                                        <i style="cursor: pointer;" class="fa fa-times text-danger"
+                                                            ngbTooltip="Remove Item"
+                                                            (click)="removeStoreItem(item.StoreItemId)"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <hr>
+                                        <ng-template #NoItem>
+                                            <table class="table" *ngIf="!selectedItems.length">
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="7" class="text-center">
+                                                            <strong class="text-primary">No Item associated</strong>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right" *ngIf="selectedItems.length">
+                                    <div class="input-group " style="display: inline-block;">
+                                        <button [disabled]="disabledButtonInventory" type="button" class="btn btn-primary"
+                                            title="" 
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverInventory.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverInventory.popoverMessage"
+                                            [confirmText]="confirmationPopoverInventory.confirmText"
+                                            [cancelText]="confirmationPopoverInventory.cancelText"
+                                            [placement]="confirmationPopoverInventory.placements[0]"
+                                            (confirm)="InsertUpdateTPInventoryExtended()"
+                                            (cancel)="confirmationPopoverInventory.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-primary"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverInventory.confirmClicked = false; confirmationPopoverInventory.cancelClicked = false"
+                                            [appendToBody]="true" title="Save Items"> <i class="fa fa-save m-0"></i> Save
+                                            <i class="spinner-border-custom" aria-hidden="true"
+                                                [hidden]="isSpinnerInventory"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <!----------------------------------------------------------------------------------------------------->
+                        <!--------------------------------------end:: Test Invertory----------------->
+                        <!----------------------------------------------------------------------------------------------------->
+
+
+                        <mat-tab label="Machine's Associations" [disabled]='!ExTPID'>
+                            <!--------------------- Start::Machine Association---------->
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.machineAssocSection" size="medium" color="#fff" type="square-loader"
+                                [fullScreen]="false">
+                                <p style="color: white"> Please wait... </p>
+                            </ngx-spinner>
+                            <div class="form-row mt-4">
+                                <div class="table-responsive fixed-height-table">
+                                    <table class="table compact">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Parameter Name</th>
+                                                <th>Code</th>
+                                                <th>Machine</th>
+                                                <th width="12%" class="">Associate Machine</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" *ngIf="TPParams && !TPParams.length">
+                                                    <div class="alert alert-info text-center" role="alert">
+                                                        No record available <i
+                                                            class="fa fa-exclamation-triangle text-light"
+                                                            aria-hidden="true"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr *ngFor="let row of TPParams; let i = index">
+                                                <td>{{i+1}}</td>
+                                                <td>
+                                                    <a (click)="showMachineRangesDetail(row.PId,null,row)"
+                                                        class="cursor-pointer td-a-color column-bg-hover"
+                                                        style="font-size: 12px;" ngbTooltip="View Detail"
+                                                        placement="top"> {{row.Title}}</a>
+                                                </td>
+
+                                                <td>
+                                                    <a (click)="showMachineRangesDetail(row.PId,null, row)"
+                                                        class="cursor-pointer td-a-color column-bg-hover"
+                                                        style="font-size: 12px;" ngbTooltip="View Detail"
+                                                        placement="top"> {{row.PCode}}</a>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-inverse-info badge-skill mr-1 mb-1 cursor-pointer column-bg-hover"
+                                                        style="font-size: 100%;"
+                                                        *ngFor="let machine of row.ArrMachineNames; let i = index"
+                                                        (click)="showAddUpdateRangeModalMain(row.PId,machine,'Add Range',null,true)">
+                                                        {{machine.substring(machine.indexOf('^')+1)}}
+                                                    </span>
+                                                </td>
+                                                <td class="">
+                                                    <a (click)="showAssocMachineModal(row.PId,row.MachineID,row.ArrMachineIds)"
+                                                        class="cursor-pointer" style="font-size: 12px;"
+                                                        ngbTooltip="Add a machine" placement="top">
+                                                        <i class="fa fa-link text-primary"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <hr>
+                                </div>
+                            </div>
+                            <!---------------------- End::Machine Association----------->
+                        </mat-tab>
+
+                        <mat-tab label="Machine's Priority" [disabled]='!ExTPID'>
+                            <!--------------------- Start::Machine Priority---------->
+                            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)"
+                                [name]="spinnerRefs.machinePriorityFormSection" size="medium" color="#fff"
+                                type="square-loader" [fullScreen]="false">
+                                <p style="color: white"> Loading... </p>
+                            </ngx-spinner>
+                            <div class="form-row mt-4">
+                                <div class="col-12">
+                                    <div class="container">
+                                        <div class="table-responsive">
+                                            <table class="table" *ngIf="TestMachineList.length; else NoRec">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col"><i class="fa fa-sort text-bar-heading "
+                                                                aria-hidden="true"></i></th>
+                                                        <th scope="col">Machine Name</th>
+                                                        <th scope="col">Machine Code</th>
+                                                        <th scope="col">Priority</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+                                                    <tr *ngFor="let item of TestMachineList; let i = index" cdkDrag
+                                                        cdkDragLockAxis="y">
+                                                        <th>
+                                                            <div class="drag-handle">
+                                                                <!-- <ng-container [ngTemplateOutlet]="dragHandleTmpl">
+                                                                </ng-container> -->
+                                                                <i class="fa fa-bars text-bar" aria-hidden="true"></i>
+                                                            </div>
+                                                        </th>
+                                                        <td>{{ item.MachineName }}</td>
+                                                        <td>{{ item.MachineCode }}</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge badge-pill badge-inverse-success">{{item.MachinePriority}}</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <ng-template #NoRec>
+                                                <table class="table" *ngIf="!TestMachineList.length">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                <div class="alert alert-primary text-center"
+                                                                    role="alert">
+                                                                    No associated machine found for "
+                                                                    {{TestProfileName}} " <i
+                                                                        class="fa fa-exclamation-triangle text-light"
+                                                                        aria-hidden="true"></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </ng-template>
+                                        </div>
+                                        <div class="row mb-2" *ngIf="TestMachineList.length">
+                                            <div class="col-12 mt-3">
+                                                <button [disabled]="disabledButton"
+                                                    class="btn btn-sm btn-primary pull-right" title=""
+                                                    mwlConfirmationPopover
+                                                    [popoverTitle]="confirmationPopoverConfig.popoverTitlePriority"
+                                                    [popoverMessage]="confirmationPopoverConfig.popoverPriorityMessage"
+                                                    [confirmText]="confirmationPopoverConfig.confirmText"
+                                                    [cancelText]="confirmationPopoverConfig.cancelText"
+                                                    [placement]="confirmationPopoverConfig.placements[0]"
+                                                    (confirm)="updateTestMachinePriority()"
+                                                    (cancel)="confirmationPopoverConfig.confirmPopoverCancel()"
+                                                    confirmButtonType="btn btn-sm btn-primary"
+                                                    cancelButtonType="btn btn-sm btn-outline-secondary"
+                                                    (click)="confirmationPopoverConfig.confirmClicked = false; confirmationPopoverConfig.cancelClicked = false"
+                                                    [appendToBody]="true">
+                                                    <i [ngClass]="'fa fa-save'"></i>Save<i class="spinner-border-custom"
+                                                        aria-hidden="true" [hidden]="isSpinner"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---------------------- End::Machine Priority----------->
+                        </mat-tab>
+                    </mat-tab-group>
+                </app-card>
+            </div>
+
+            <!-- <div class="col-12" *ngIf="!loggedIn && !isSubmitted">
+                <div class="container">
+                    <div class="card">
+                        <div class="container mt-2">
+                            <div class="row col-12 mb-5 mt-4">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 mb-2 text-center">
+                                    <div class="alert alert-danger text-center ml-12 col-12"><span
+                                            style="display: inline;">
+                                            <strong>Warning!</strong> You are unauthorized for this operation...!</span>
+                                    </div>
+                                    <div class="row col-12">
+                                        <div class="col-12 ">
+                                            <img src="assets/media/error/unauthorized.svg" class="img-fluid"
+                                                alt="Wrong Credentials" style="height: 330px; Width:432px;" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="col-12" *ngIf="isSubmitted">
+                <div class="card">
+                    <div class="container mt-2">
+                        <div class="row col-12 mb-5 mt-4">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 col-xl-12 mb-2 text-center">
+                                <div class="alert alert-primary text-center ml-12 col-12"><span
+                                        style="display: inline;">
+                                        <strong>Success!</strong> Test Profile has been updated successfully.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<!-- </div> -->
+
+
+<!------begin:: Machine Assocaiting Popup-->
+<ng-template #assocMachineModal let-assocMachineModal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Associate Machine</h5>
+        <button type="button" class="close" aria-label="Close" (click)="assocMachineModal.close()">
+            <span aria-hidden="true" style="display: inline;">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.machineAssocPopup"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default invoice" id="invoice">
+                        <div class="panel-body">
+                            <form [formGroup]="formAssocMachine">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="form-group">
+                                            <label for="MachineID" class="control-label">Machine</label>
+                                            <select formControlName="MachineID" class="form-control form-control-sm"
+                                                [ngClass]="{'invalid': formAssocMachine.get('MachineID').errors && formAssocMachine.get('MachineID').touched, 'invalid-highlighted': formAssocMachine.get('MachineID').errors}">
+                                                <option value="">--Select Machine--</option>
+                                                <option *ngFor="let item of MachineList" [value]="item.MachineID"
+                                                    [selected]="item.MachineID == MachineID"
+                                                    [disabled]="item.MachineID == MachineID">
+                                                    {{item.MachineName}}-[{{item.MachineCode}}-{{item.MachineID}}]
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="Gender" class="control-label">Gender:</label>
+                                            <select formControlName="Gender" class="form-control form-control-sm"
+                                                [ngClass]="{'invalid': formAssocMachine.get('Gender').errors && formAssocMachine.get('Gender').touched, 'invalid-highlighted': formAssocMachine.get('Gender').errors}">
+                                                <option value="">-Select Gender-</option>
+                                                <option value="M">Male</option>
+                                                <option value="F">Female</option>
+                                                <option value="B">Both</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="AgeType" class="control-label">Age Type:</label>
+                                            <select formControlName="AgeType" class="form-control form-control-sm"
+                                                [ngClass]="{'invalid': formAssocMachine.get('AgeType').errors && formAssocMachine.get('AgeType').touched, 'invalid-highlighted': formAssocMachine.get('AgeType').errors}">
+                                                <option value="">-Select Age Type-</option>
+                                                <option value="Y">Year</option>
+                                                <option value="M">Month</option>
+                                                <option value="D">Day</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="AgeFrom" class="control-label">Age From:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="AgeFrom" #AgeFrom
+                                                (blur)="validateMinMaxAge($event.target.value, AgeTo.value)" min="0"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                [ngClass]="{'invalid': formAssocMachine.get('AgeFrom').errors && formAssocMachine.get('AgeFrom').touched, 'invalid-highlighted': formAssocMachine.get('AgeFrom').errors}">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="AgeTo" class="control-label">Age To:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="AgeTo" #AgeTo
+                                                (blur)="validateMinMaxAge(AgeFrom.value, $event.target.value)" min="0"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                [ngClass]="{'invalid': formAssocMachine.get('AgeTo').errors && formAssocMachine.get('AgeTo').touched, 'invalid-highlighted': formAssocMachine.get('AgeTo').errors}">
+                                            <small class="text-danger" *ngIf="AgeLimitError">Age To should be greater
+                                                then Age From</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="RangeFrom" class="control-label">Range From:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="RangeFrom">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="RangeTo" class="control-label">Range To:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="RangeTo">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <label for="RangeText">Description</label>
+                                        <textarea formControlName="RangeText" class="form-control form-control-sm"
+                                            rows="3">
+
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" [disabled]="disabledButton" class="btn btn-sm btn-primary" (click)="associateMachine()">
+            <i class="fa fa-save"></i> Save <i [hidden]="isSpinner" class="spinner-border-custom"
+                aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal"
+            (click)="assocMachineModal.close()">
+            <i class="fa fa-times-circle"></i> Close</button>
+    </div>
+</ng-template>
+
+
+<!------begin::Associated Machines Detail Popup-->
+<ng-template #assocMachineDetailModal let-assocMachineDetailModal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Params Machines Ranges</h5>
+        <button type="button" class="close" aria-label="Close" (click)="assocMachineDetailModal.close()">
+            <span aria-hidden="true" style="display: inline;">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.machineAssocPopup" size="medium"
+            color="#fff" type="square-loader" [fullScreen]="false">
+            <p style="color: white"> Loading... </p>
+        </ngx-spinner>
+        <div *ngIf="ParamMachineRages && !ParamMachineRages.length" class="alert alert-info text-center" role="alert">
+            No record found <i class="fa fa-exclamation-triangle text-light" aria-hidden="true"></i>
+        </div>
+        <ngb-accordion #acc="ngbAccordion">
+            <ngb-panel *ngFor="let item of ParamMachineRages;" title="{{item.MachineName}}">
+                <ng-template ngbPanelContent>
+
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                (click)="showAddUpdateRangeModal(item.ParamID,item.MachineID,item.MachineName,'Add Range',null,false)"
+                                ngbTooltip="Add new range">
+                                <i class="fa fa-plus"></i>Add Range</button>
+                            <button ngbTooltip="Dissociate Machine" [disabled]="disabledButtonRemove"
+                                class="btn btn-sm btn-outline-danger ml-2" mwlConfirmationPopover
+                                [popoverTitle]="confirmationPopoverDissociateMachine.popoverTitle"
+                                [popoverMessage]="confirmationPopoverDissociateMachine.popoverMessage"
+                                [confirmText]="confirmationPopoverDissociateMachine.confirmText"
+                                [cancelText]="confirmationPopoverDissociateMachine.cancelText"
+                                [placement]="confirmationPopoverDissociateMachine.placements[0]"
+                                (confirm)="dissociateMachine(item.ParamID,item.MachineID)"
+                                (cancel)="confirmationPopoverDissociateMachine.confirmPopoverCancel()"
+                                confirmButtonType="btn btn-sm btn-danger"
+                                cancelButtonType="btn btn-sm btn-outline-secondary"
+                                (click)="confirmationPopoverDissociateMachine.confirmClicked = false; confirmationPopoverDissociateMachine.cancelClicked = false"
+                                [appendToBody]="true">
+                                <i class="fa fa-times"></i>Remove Machine <i class="spinner-border-custom"
+                                    aria-hidden="true" [hidden]="isSpinnerRemove"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive fixed-height-table">
+                        <table class="table table-hover compact">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Age Type</th>
+                                    <th>Gender</th>
+                                    <th>Age</th>
+                                    <th>Range</th>
+                                    <th>Range Text</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" *ngIf="!ParamMachineRages.length">
+                                        <div class="alert alert-info text-center" role="alert">
+                                            No record found <i class="fa fa-exclamation-triangle text-light"
+                                                aria-hidden="true"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let range of item.ranges; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{(range.AgeType | uppercase) == 'Y' ? 'Year': (range.AgeType | uppercase)=='M'?
+                                        'Month' :'Day'}}</td>
+                                    <td>{{(range.Gender | uppercase) == 'M' ? 'Male': (range.Gender | uppercase)=='F'?
+                                        'Female' :'Both'}}</td>
+                                    <!-- <td>{{range.AgeFrom}}-{{range.AgeTo}}</td> -->
+                                    <td>{{(range.AgeType | uppercase) == 'D' ?
+                                        (getFormatedStringFromDays(range.AgeFrom)): range.AgeFrom}} - {{(range.AgeType |
+                                        uppercase) == 'D' ? (getFormatedStringFromDays(range.AgeTo)): range.AgeTo}}</td>
+                                    <td>{{range.RangeFrom}} - {{range.RangeTo}}</td>
+                                    <td>{{range.RangeText}}</td>
+                                    <td class="text-right">
+                                        <a (click)="showAddUpdateRangeModal(item.ParamID,item.MachineID,item.MachineName,'Update Range',range,false)"
+                                            class="cursor-pointer" ngbTooltip="Update range">
+                                            <i class="fa fa-edit text-primary"></i>
+                                        </a>
+                                        <a class="cursor-pointer ml-2" ngbTooltip="Delete Range" title=""
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfigDeletion.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfigDeletion.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfigDeletion.confirmText"
+                                            [cancelText]="confirmationPopoverConfigDeletion.cancelText"
+                                            [placement]="confirmationPopoverConfigDeletion.placements[0]"
+                                            (confirm)="deleteParamMachineRangeByID(range.ParamMachineRangeID)"
+                                            (cancel)="confirmationPopoverConfigDeletion.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-danger"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverConfigDeletion.confirmClicked = false; confirmationPopoverConfigDeletion.cancelClicked = false"
+                                            [appendToBody]="true"> <i class="fa fa-trash text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+    <div class="modal-footer">
+        <button type="button" [disabled]="disabledButton" class="btn btn-sm btn-primary"
+            (click)="showAssocMachineModalInner()">
+            <i class="fa fa-link"></i>Associate Machine <i [hidden]="isSpinnerRange" class="spinner-border-custom"
+                aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal"
+            (click)="assocMachineDetailModal.close()">
+            <i class="fa fa-times-circle"></i> Close</button>
+    </div>
+</ng-template>
+
+
+<!------begin::  Add Update machine ranges Popup-->
+<ng-template #addUpdateRangeModal let-addUpdateRangeModal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{ActionLabel||'Add'}} For <span class="text-primary"> [
+                {{MachineName}} ]</span></h5>
+        <button type="button" class="close" aria-label="Close" (click)="addUpdateRangeModal.close()">
+            <span aria-hidden="true" style="display: inline;">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.machineAssocPopup"
+                size="medium" color="#fff" type="square-loader" [fullScreen]="false">
+                <p style="color: white"> Loading... </p>
+            </ngx-spinner>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default invoice" id="invoice">
+                        <div class="panel-body">
+                            <form [formGroup]="formAddUpdateRange">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="Gender" class="control-label">Gender:</label>
+                                            <select formControlName="Gender" class="form-control form-control-sm"
+                                                [ngClass]="{'invalid': formAddUpdateRange.get('Gender').errors && formAddUpdateRange.get('Gender').touched, 'invalid-highlighted': formAddUpdateRange.get('Gender').errors}">
+                                                <option value="">-Select Gender-</option>
+                                                <option value="M">Male</option>
+                                                <option value="F">Female</option>
+                                                <option value="B">Both</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="AgeType" class="control-label">Age Type:</label>
+                                            <select formControlName="AgeType" class="form-control form-control-sm"
+                                                [ngClass]="{'invalid': formAddUpdateRange.get('AgeType').errors && formAddUpdateRange.get('AgeType').touched, 'invalid-highlighted': formAddUpdateRange.get('AgeType').errors}">
+                                                <option value="">-Select Age Type-</option>
+                                                <option value="Y">Year</option>
+                                                <option value="M">Month</option>
+                                                <option value="D">Day</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="AgeFrom" class="control-label">Age From:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="AgeFrom" #AgeFrom
+                                                (blur)="validateMinMaxAge($event.target.value, AgeTo.value)" min="0"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                [ngClass]="{'invalid': formAddUpdateRange.get('AgeFrom').errors && formAddUpdateRange.get('AgeFrom').touched, 'invalid-highlighted': formAddUpdateRange.get('AgeFrom').errors}">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="AgeTo" class="control-label">Age To:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="AgeTo" #AgeTo
+                                                (blur)="validateMinMaxAge(AgeFrom.value, $event.target.value)" min="0"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                [ngClass]="{'invalid': formAddUpdateRange.get('AgeTo').errors && formAddUpdateRange.get('AgeTo').touched, 'invalid-highlighted': formAddUpdateRange.get('AgeTo').errors}">
+                                            <small class="text-danger" *ngIf="AgeLimitError">Age To should be greater
+                                                then Age From</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="RangeFrom" class="control-label">Range From:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="RangeFrom">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="form-group">
+                                            <label for="RangeTo" class="control-label">Range To:</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                formControlName="RangeTo">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <label for="RangeText">Description</label>
+                                        <textarea formControlName="RangeText" class="form-control form-control-sm"
+                                            rows="3">
+
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" [disabled]="disabledButtonRange" class="btn btn-sm btn-primary"
+            (click)="addUpdateRange()">
+            <i class="{{ActionBtnIcon}}"></i> {{ActionBtnText}} <i [hidden]="isSpinnerRange"
+                class="spinner-border-custom" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="newRange()" ngbTooltip="Clear Form">
+            <i class="fa fa-eraser"></i> New </button>
+        <button ngbTooltip="Dissociate Machine" [disabled]="disabledButtonRemove" ngbTooltip="Dissociate Machine"
+            class="btn btn-sm btn-outline-danger ml-2" mwlConfirmationPopover
+            [popoverTitle]="confirmationPopoverDissociateMachine.popoverTitle"
+            [popoverMessage]="confirmationPopoverDissociateMachine.popoverMessage"
+            [confirmText]="confirmationPopoverDissociateMachine.confirmText"
+            [cancelText]="confirmationPopoverDissociateMachine.cancelText"
+            [placement]="confirmationPopoverDissociateMachine.placements[0]"
+            (confirm)="dissociateMachine(ParamID,MachineID)"
+            (cancel)="confirmationPopoverDissociateMachine.confirmPopoverCancel()"
+            confirmButtonType="btn btn-sm btn-danger" cancelButtonType="btn btn-sm btn-outline-secondary"
+            (click)="confirmationPopoverDissociateMachine.confirmClicked = false; confirmationPopoverDissociateMachine.cancelClicked = false"
+            [appendToBody]="true">
+            <i class="fa fa-times"></i>Remove Machine <i class="spinner-border-custom" aria-hidden="true"
+                [hidden]="isSpinnerRemove"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal"
+            (click)="addUpdateRangeModal.close()">
+            <i class="fa fa-times-circle"></i> Close</button>
+    </div>
+    <div class="container" *ngIf="isMachineRangesList">
+        <div class="hr-sect">Reference Ranges of <strong>&nbsp;&nbsp; "{{MachineName}}"</strong></div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive fixed-height-table">
+                    <table class="table table-hover compact">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Age Type</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Range</th>
+                                <th>Range Text</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="TestRanges=='' then  noRec else  showRec">
+
+                            </ng-container>
+                            <ng-template #noRec>
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="alert alert-info text-center" role="alert">
+                                            No record found <i class="fa fa-exclamation-triangle text-light"
+                                                aria-hidden="true"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #showRec>
+                                <tr *ngFor="let range of TestRanges; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{(range.AgeType | uppercase) == 'Y' ? 'Year': (range.AgeType | uppercase)=='M'?
+                                        'Month' :'Day'}}</td>
+                                    <td>{{(range.Gender | uppercase) == 'M' ? 'Male': (range.Gender | uppercase)=='F'?
+                                        'Female' :'Both'}}</td>
+                                    <!-- <td>{{getFormatedStringFromDays(range.AgeFrom)}} - {{getFormatedStringFromDays(range.AgeTo)}}</td> -->
+                                    <td>
+
+
+                                        {{(range.AgeType | uppercase) == 'D' ?
+                                        (getFormatedStringFromDays(range.AgeFrom)): 
+                                        range.AgeFrom }}{{getPostfixForValue(range.AgeType)}}
+                                        - {{(range.AgeType |
+                                        uppercase) == 'D' ? (getFormatedStringFromDays(range.AgeTo)): 
+                                        range.AgeTo}}{{getPostfixForValue(range.AgeType)}}
+                                    
+                                    
+                                    
+                                    </td>
+                                    <td>{{range.RangeFrom}} - {{range.RangeTo}}</td>
+                                    <td><span class="cursor-pointer" ngbTooltip="Click to view details"
+                                            ngbPopover="{{range.RangeText}}"
+                                            popoverTitle="Range Text">{{truncate(range.RangeText,40)}}</span></td>
+                                    <td class="text-right">
+                                        <a (click)="patchExistingRangeRow(ParamMachineRages[0],range)"
+                                            class="cursor-pointer" ngbTooltip="Update Range">
+                                            <i class="fa fa-edit text-primary"></i>
+                                        </a>
+                                        <a class="cursor-pointer ml-2" ngbTooltip="Delete Range" title=""
+                                            mwlConfirmationPopover
+                                            [popoverTitle]="confirmationPopoverConfigDeletion.popoverTitle"
+                                            [popoverMessage]="confirmationPopoverConfigDeletion.popoverMessage"
+                                            [confirmText]="confirmationPopoverConfigDeletion.confirmText"
+                                            [cancelText]="confirmationPopoverConfigDeletion.cancelText"
+                                            [placement]="confirmationPopoverConfigDeletion.placements[0]"
+                                            (confirm)="deleteParamMachineRangeByID(range.ParamMachineRangeID)"
+                                            (cancel)="confirmationPopoverConfigDeletion.confirmPopoverCancel()"
+                                            confirmButtonType="btn btn-sm btn-danger"
+                                            cancelButtonType="btn btn-sm btn-outline-secondary"
+                                            (click)="confirmationPopoverConfigDeletion.confirmClicked = false; confirmationPopoverConfigDeletion.cancelClicked = false"
+                                            [appendToBody]="true"> <i class="fa fa-trash text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!------end:: Add Update machine ranges Popup-->

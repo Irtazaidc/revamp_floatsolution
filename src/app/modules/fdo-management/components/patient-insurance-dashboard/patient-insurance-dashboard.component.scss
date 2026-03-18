@@ -1,0 +1,43 @@
+.container {
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  h2 {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .card {
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .table {
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .table thead {
+    background: #dadada;
+    color: #000000;
+  }
+  
+  // .btn {
+  //   font-weight: bold;
+  //   padding: 10px 15px;
+  //   border-radius: 5px;
+  // }
+  
+  .btn i {
+    margin-right: 5px;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }

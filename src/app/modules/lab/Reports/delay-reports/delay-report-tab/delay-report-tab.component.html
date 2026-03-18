@@ -1,0 +1,28 @@
+<mat-card>
+    <mat-card-content >
+        <mat-tab-group class="demo-tab-group" (selectedTabChange)="onTabChanged($event)" animationDuration="0ms" style="background-color: #fff;"> 
+            <!-- <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon-squares-2 icon-lg text-danger custom-icons mr-2"></i>
+                  Delay Report
+                  </ng-template>
+                  <app-delay-report></app-delay-report>
+
+            </mat-tab> -->
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-search icon-lg text-danger mr-2 custom-icons"></i>
+                  Delay Report Detail
+                  </ng-template>
+                  <app-delay-report-details *ngIf="selectedTabIndex === 0"></app-delay-report-details>
+            </mat-tab>  
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <i class="flaticon2-layers icon-lg text-danger mr-2 custom-icons"></i>
+                    Delay Report Summary
+                  </ng-template>
+                  <app-delay-report-summary *ngIf="selectedTabIndex === 1"></app-delay-report-summary>
+            </mat-tab> 
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
