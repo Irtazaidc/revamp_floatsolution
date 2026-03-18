@@ -13,7 +13,7 @@ export const environment = {
 
  // Data
 // apiUrl: 'https://stgapi.metacubes.net/meta/api/',
-apiUrl: 'https://localhost:57261/api/',
+apiUrl: 'https://localhost:7197/api/',
 
 // LIVE
 // apiUrl: 'https://api.metacubes.net/meta/api/',

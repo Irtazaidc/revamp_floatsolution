@@ -304,6 +304,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       )
       .pipe(first())
       .subscribe((user) => {
+        console.log('LOGIN USER:', user); // ✅ ADD THIS
         if (user) {
           
           let _userObj = this.authService.getUserFromLocalStorage();

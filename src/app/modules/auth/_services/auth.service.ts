@@ -124,13 +124,33 @@ export class AuthService implements OnDestroy {
     }
     return this.http.post(API_ROUTES.LOGIN, params).pipe(
       map((resp: any) => {
-        if (resp && resp.StatusCode == 200 && resp.PayLoad && resp.PayLoad.length) {
-          
-          const user = this.createUSerObj(resp.PayLoad[0]);
+        console.log('FULL RESPONSE:', resp);
+      
+        const statusCode =
+          resp?.statusCode ??
+          resp?.StatusCode ??
+          resp?.status ??
+          resp?.Status;
+      
+        const payload =
+          resp?.payLoad ??
+          resp?.PayLoad ??
+          resp?.payload ??
+          resp?.Payload;
+      
+        console.log('Parsed:', { statusCode, payload });
+      
+        if (statusCode === 200 && Array.isArray(payload) && payload.length > 0) {
+      
+          const user = this.createUSerObj(payload[0]);
+      
           this.setAuthInLocalStorage(this.createAuthObj(user));
           this.setUserInLocalStorage(user);
+      
           return user;
         }
+      
+        console.warn('Login condition failed');
         return undefined;
       }),
       catchError((err) => {
