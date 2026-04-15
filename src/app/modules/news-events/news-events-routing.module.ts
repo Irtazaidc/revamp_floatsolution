@@ -20,7 +20,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'news-events-listing'
+        redirectTo: 'news-events-listing',
+        pathMatch: 'full'
       },
       {
         path: 'news-events-listing',

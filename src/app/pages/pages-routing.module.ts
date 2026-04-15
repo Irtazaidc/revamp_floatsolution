@@ -66,7 +66,7 @@ const routes: Routes = [
         loadChildren: () => import('../modules/marketing/marketing.module').then(m => m.MarketingModule)
       },
       {
-        path: 'marketing',
+        path: 'news-events',
         canActivate: [AuthGuard],
         loadChildren: () => import('../modules/news-events/news-events.module').then(m => m.NewsEventsModule)
       },
@@ -227,11 +227,6 @@ const routes: Routes = [
           ),
       },
 
-      {
-        path: 'reports',
-        canActivate: [AuthGuard],
-        loadChildren: () => import('../modules/gen-reports/gen-reports-routing.module').then(m => m.GenReportsRoutingModule)
-      },
       // NOTE: demo module removed from routing during migration (Angular 21 compat)
       // {
       //   path: 'ngbootstrap',

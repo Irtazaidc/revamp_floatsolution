@@ -47,7 +47,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'recruitment'
+        redirectTo: 'recruitment',
+        pathMatch: 'full'
       },
       {
         path: 'post-job',

@@ -42,7 +42,8 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'hc-requests'
+                redirectTo: 'hc-requests',
+                pathMatch: 'full'
             },
             {
                 path: 'hc-requests',

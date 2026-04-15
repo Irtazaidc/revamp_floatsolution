@@ -23,6 +23,7 @@ const routes: Routes = [
         {
             path: '',
             redirectTo: 'oladoc-rpt',
+            pathMatch: 'full',
           },
             {
             path: 'sample-trnsprt-TAT',

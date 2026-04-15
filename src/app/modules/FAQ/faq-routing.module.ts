@@ -18,7 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'faqs-list'
+        redirectTo: 'faqs-list',
+        pathMatch: 'full'
       },
       {
         path: 'faqs-list',

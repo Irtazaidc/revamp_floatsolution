@@ -18,7 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: 'notice-board',
-        redirectTo: 'nb-config'
+        redirectTo: 'nb-config',
+        pathMatch: 'full'
       },
       {
         path: 'nb-config',

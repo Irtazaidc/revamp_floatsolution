@@ -167,7 +167,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.showTestingBadge = true;
     }
 
-    this.getAppVersion();
+    // Trigger after initial change detection to avoid NG0100 in dev mode.
+    setTimeout(() => this.getAppVersion());
 
     this.setupActivityBroadcast();
     this.userActivitySubscription();
@@ -216,82 +217,76 @@ export class AppComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  getAppVersion(openingSource = "") {
-    this.spinner.show(this.spinnerRefs.appVersionLoading);
-    this.lookupService.getAppVersion({}).subscribe(
-      (res: any) => {
-        this.spinner.hide(this.spinnerRefs.appVersionLoading);
-        if (res && res.StatusCode == 200) {
-          if (res.PayLoad && res.PayLoad.length) {
-            // console.log('app Version:  Server: ', res.PayLoad[0].AppVersion, '   Local: '+  CONSTANTS.APP_VERSION.version);
-            // this.appVersion = `L: ${(CONSTANTS.APP_VERSION || 'v.x.x.x')}    G: ${res.PayLoad[0].AppVersion}`;
-            this.appVersion_new = {
-              version: res.PayLoad[0].AppVersion,
-              versionId: res.PayLoad[0].AppVersionID,
-            };
-            if (this.appVersion.versionId < this.appVersion_new.versionId) {
-              let versionClass = "";
-              versionClass =
-                this.appVersion.version == this.appVersion_new.version
-                  ? "text-primary"
-                  : "text-danger";
-              this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
-                this.appVersionUpdatesPopup,
-                { backdrop: "static", keyboard: false, size: "md" }
-              );
-              this.appUpdatesPopupBody = `<div>Application Updates are available</div>
-            <br>
-            <div>
-              Current Version: <strong class=${versionClass}>${this.appVersion.version}</strong>
-              <br>
-              New Version: <strong class=${versionClass}>${this.appVersion_new.version}</strong>
-              <br>
-              <br>
-              Note: you can check for update any time by clicking at version number at bottom right corner of the screen, or you can press <strong class="text-danger"> Ctrl + Shift + R </strong> for latest update Or if you are using mobile please clear mobile browser caches for updates.
-              <!-- Note: application will be refreshed during updates. kindly save your work before update. -->
-            </div>`;
-            } else {
-              if (openingSource == "user-click") {
-                this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
-                  this.appVersionUpdatesPopup,
-                  { size: "md" }
-                );
-                this.appUpdatesPopupBody =
-                  this.getAppVersionPopupDefaultMessage();
-              }
-            }
-          } else {
-            if (openingSource == "user-click") {
-              this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
-                this.appVersionUpdatesPopup,
-                { size: "md" }
-              );
-              this.appUpdatesPopupBody =
-                this.getAppVersionPopupDefaultMessage();
-            }
-          }
-        } else {
-          if (openingSource == "user-click") {
-            this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
-              this.appVersionUpdatesPopup,
-              { size: "md" }
-            );
-            this.appUpdatesPopupBody = this.getAppVersionPopupDefaultMessage();
-          }
-        }
-      },
-      (err) => {
-        this.spinner.hide(this.spinnerRefs.appVersionLoading);
-        if (openingSource == "user-click") {
-          this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
-            this.appVersionUpdatesPopup,
-            { size: "md" }
-          );
-          this.appUpdatesPopupBody = this.getAppVersionPopupDefaultMessage();
-        }
-      }
-    );
-  }
+  // getAppVersion(openingSource = "") {
+  //   this.spinner.show(this.spinnerRefs.appVersionLoading);
+  //   this.lookupService.getAppVersion({}).subscribe(
+  //     (res: any) => {
+  //       // Defer UI mutations to the next tick to avoid NG0100 when API resolves synchronously.
+  //       setTimeout(() => {
+  //         this.spinner.hide(this.spinnerRefs.appVersionLoading);
+  //         if (res && res.StatusCode == 200) {
+  //           if (res.PayLoad && res.PayLoad.length) {
+  //             this.appVersion_new = {
+  //               version: res.PayLoad[0].AppVersion,
+  //               versionId: res.PayLoad[0].AppVersionID,
+  //             };
+  //             if (this.appVersion.versionId < this.appVersion_new.versionId) {
+  //               const versionClass =
+  //                 this.appVersion.version == this.appVersion_new.version
+  //                   ? "text-primary"
+  //                   : "text-danger";
+  //               this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
+  //                 this.appVersionUpdatesPopup,
+  //                 { backdrop: "static", keyboard: false, size: "md" }
+  //               );
+  //               this.appUpdatesPopupBody = `<div>Application Updates are available</div>
+  //             <br>
+  //             <div>
+  //               Current Version: <strong class="${versionClass}">${this.appVersion.version}</strong>
+  //               <br>
+  //               New Version: <strong class="${versionClass}">${this.appVersion_new.version}</strong>
+  //               <br>
+  //               <br>
+  //               Note: you can check for update any time by clicking at version number at bottom right corner of the screen, or you can press <strong class="text-danger"> Ctrl + Shift + R </strong> for latest update Or if you are using mobile please clear mobile browser caches for updates.
+  //             </div>`;
+  //             } else if (openingSource == "user-click") {
+  //               this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
+  //                 this.appVersionUpdatesPopup,
+  //                 { size: "md" }
+  //               );
+  //               this.appUpdatesPopupBody =
+  //                 this.getAppVersionPopupDefaultMessage();
+  //             }
+  //           } else if (openingSource == "user-click") {
+  //             this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
+  //               this.appVersionUpdatesPopup,
+  //               { size: "md" }
+  //             );
+  //             this.appUpdatesPopupBody =
+  //               this.getAppVersionPopupDefaultMessage();
+  //           }
+  //         } else if (openingSource == "user-click") {
+  //           this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
+  //             this.appVersionUpdatesPopup,
+  //             { size: "md" }
+  //           );
+  //           this.appUpdatesPopupBody = this.getAppVersionPopupDefaultMessage();
+  //         }
+  //         this.cd.detectChanges();
+  //       });
+  //     },
+  //     (err) => {
+  //       this.spinner.hide(this.spinnerRefs.appVersionLoading);
+  //       if (openingSource == "user-click") {
+  //         this.appVersionUpdatesPopupRef = this.appPopupService.openModal(
+  //           this.appVersionUpdatesPopup,
+  //           { size: "md" }
+  //         );
+  //         this.appUpdatesPopupBody = this.getAppVersionPopupDefaultMessage();
+  //       }
+  //     }
+  //   );
+  // }
   getAppVersionPopupDefaultMessage() {
     return `<div>Application is Up to Date</div>
     <br>

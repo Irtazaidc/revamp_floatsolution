@@ -18,7 +18,8 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'Patient Appointments'
+                redirectTo: 'Patient Appointments',
+                pathMatch: 'full'
             },
             {
                 path: 'pat-appointments',

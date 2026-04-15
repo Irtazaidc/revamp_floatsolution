@@ -18,7 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'pat-rpts'
+        redirectTo: 'pat-rpts',
+        pathMatch: 'full'
       },
      
       {

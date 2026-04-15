@@ -28,7 +28,8 @@ const routes: Routes = [
       children: [
           {
               path: '',
-              redirectTo: 'my-cash-tally'
+              redirectTo: 'my-cash-tally',
+              pathMatch: 'full'
           },
           {
               path: 'my-cash-tally',

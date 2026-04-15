@@ -18,7 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'lab-res-entry'
+        redirectTo: 'lab-res-entry',
+        pathMatch: 'full'
       },
       {
         path: 'lab-res-entry',

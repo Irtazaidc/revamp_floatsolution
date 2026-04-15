@@ -18,7 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'racking-routing'
+        redirectTo: 'racking-routing',
+        pathMatch: 'full'
       },
       {
         path: 'racking-routing',

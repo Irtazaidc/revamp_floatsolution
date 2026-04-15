@@ -24,7 +24,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'complaint-feedback-dashboard'
+        redirectTo: 'complaint-feedback-dashboard',
+        pathMatch: 'full'
       },
       {
         path: 'manage-cms-request', 

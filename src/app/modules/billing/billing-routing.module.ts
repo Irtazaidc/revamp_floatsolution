@@ -31,7 +31,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'manage-billing'
+        redirectTo: 'manage-billing',
+        pathMatch: 'full'
       },
       {
         path: 'manage-billing',

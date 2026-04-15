@@ -19,7 +19,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'machine-mgt'
+        redirectTo: 'machine-mgt',
+        pathMatch: 'full'
       },
       {
         path: 'machine-mgt',

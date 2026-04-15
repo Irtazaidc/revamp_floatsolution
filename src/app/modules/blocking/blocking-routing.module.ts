@@ -19,7 +19,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'blocked-process'
+        redirectTo: 'blocked-process',
+        pathMatch: 'full'
       },
       {
         path: 'blocked-process', 

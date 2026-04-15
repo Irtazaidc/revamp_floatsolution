@@ -62,7 +62,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'questionnaire'
+        redirectTo: 'questionnaire',
+        pathMatch: 'full'
       },
       {
         path: 'questionnaire',

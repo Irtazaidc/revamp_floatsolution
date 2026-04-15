@@ -24,7 +24,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'rolespermissions'
+        redirectTo: 'rolespermissions',
+        pathMatch: 'full'
       },
       {
         path: 'rolespermissions',

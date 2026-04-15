@@ -308,7 +308,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
 
   }
   registerOutsourcePatients(outPatData) {
-    this.router.navigate(['#/pat-reg/reg']).then(result => {
+    this.router.navigate(['pat-reg/reg']).then(result => {
       window.open('#/pat-reg/reg?' + 'ousourcePatients=' + btoa(JSON.stringify(outPatData)) + '&ousourcePatientsTP=' +
         btoa(JSON.stringify(outPatData.ONLINEBOOKEDTPDATA)), '_blank');
     });

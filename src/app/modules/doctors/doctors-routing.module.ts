@@ -17,7 +17,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'b2b-doctors'
+        redirectTo: 'b2b-doctors',
+        pathMatch: 'full'
       },
       {
         path: 'b2b-doctors',

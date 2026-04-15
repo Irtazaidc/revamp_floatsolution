@@ -29,7 +29,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'feedback'
+        redirectTo: 'feedback',
+        pathMatch: 'full'
       },
       {
         path: 'feedback',

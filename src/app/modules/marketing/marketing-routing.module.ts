@@ -26,7 +26,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'products-promotion'
+        redirectTo: 'products-promotion',
+        pathMatch: 'full'
       },
       {
         path: 'products-promotion',
@@ -116,7 +117,8 @@ const routes: Routes = [
       /*
       {
         path: '',
-        redirectTo: 'news-events-listing'
+        redirectTo: 'news-events-listing',
+        pathMatch: 'full'
       },
       {
         path: 'news-events-listing',

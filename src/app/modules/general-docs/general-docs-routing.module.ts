@@ -10,7 +10,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'g-docs'
+        redirectTo: 'g-docs',
+        pathMatch: 'full'
       },
       {
         path: 'g-docs',

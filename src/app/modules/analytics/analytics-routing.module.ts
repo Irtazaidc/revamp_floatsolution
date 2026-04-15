@@ -17,7 +17,8 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'sales'
+                redirectTo: 'sales',
+                pathMatch: 'full'
             },
             {
                 path: 'sales',

@@ -12,19 +12,19 @@ export const environment = {
   deployedAppName: '',
 
  // Data
-// apiUrl: 'https://stgapi.metacubes.net/meta/api/',
-apiUrl: 'https://localhost:7197/api/',
+ apiUrl: 'https://stgapi.metacubes.net/meta/api/',
+//apiUrl: 'https://localhost:7197/api/',
 
 // LIVE
 // apiUrl: 'https://api.metacubes.net/meta/api/',
 
 
-patientReportsPortalUrl: 'http://localhost:4500/',
-// patientReportsPortalUrl: 'https://stgapi.metacubes.net/p/api/',
+//patientReportsPortalUrl: 'http://localhost:4500/',
+patientReportsPortalUrl: 'https://stgapi.metacubes.net/p/api/',
 // patientReportsPortalUrl: 'https://reports.idc.net.pk/PatientReportsPortalStg/',
 vimsApiUrl: 'https://reports.idc.net.pk/vimsService/api/',
-// patientPortalApiUrl: 'https://stgapi.metacubes.net/p/api/',
-patientPortalApiUrl: 'http://localhost:51780/api/',
+ patientPortalApiUrl: 'https://stgapi.metacubes.net/p/api/',
+//patientPortalApiUrl: 'http://localhost:51780/api/',
 pushNotificationsApiUrl: 'https://localhost:44304/api/',
 fbrApiUrl: 'http://localhost:8524/api/IMSFiscal/',
 smartReportApiUrl: 'https://stgapi.metacubes.net/sr/api/',

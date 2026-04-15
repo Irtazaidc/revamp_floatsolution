@@ -23,7 +23,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'test-profile-configurations'
+        redirectTo: 'test-profile-configurations',
+        pathMatch: 'full'
       },
       {
         path: 'test-profile-configurations',

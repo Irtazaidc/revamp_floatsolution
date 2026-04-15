@@ -17,7 +17,8 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'branch-config'
+                redirectTo: 'branch-config',
+                pathMatch: 'full'
             },
             {
                 path: 'branch-config',

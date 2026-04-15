@@ -18,7 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'info-desk'
+        redirectTo: 'info-desk',
+        pathMatch: 'full'
       },
       {
         path: 'info-desk',

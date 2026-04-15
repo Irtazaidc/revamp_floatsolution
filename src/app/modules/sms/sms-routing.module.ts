@@ -14,7 +14,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'sending-sms-status'
+        redirectTo: 'sending-sms-status',
+        pathMatch: 'full'
       },
       {
         path: 'sending-sms-status',

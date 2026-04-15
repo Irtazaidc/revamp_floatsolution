@@ -36,7 +36,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'search'
+        redirectTo: 'search',
+        pathMatch: 'full'
       },
       {
         path: 'search',
