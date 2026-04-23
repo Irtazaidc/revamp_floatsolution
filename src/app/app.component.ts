@@ -167,9 +167,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     // Trigger after initial change detection to avoid NG0100 in dev mode.
-    setTimeout(() => {
-      this.getAppVersion();
-    }, 1000);
+    // setTimeout(() => {
+    //   this.getAppVersion();
+    // }, 1000);
 
     this.setupActivityBroadcast();
     this.userActivitySubscription();

@@ -52,9 +52,11 @@ export class TestProfileRatesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getPanelList();
-    this.getLocationList();
-    this.getTestProfileList();
+    setTimeout(() => {
+      this.getPanelList();
+      this.getLocationList();
+      this.getTestProfileList();
+    });
   }
 
   branchListChanged(e) {
@@ -419,19 +421,22 @@ export class TestProfileRatesComponent implements OnInit {
     });
   }
   getLocationList() {
-    this.branchList = [];
     const _param = {};
-    this.lookupService.GetBranches().subscribe((res: any) => {
-      if (res && res.StatusCode == 200 && res.PayLoad) {
-        let data = res.PayLoad;
-        try {
-          data = JSON.parse(data);
-        } catch (ex) { }
-        this.branchList = data || [];
-      }
-    }, (err) => {
-      console.log(err);
-    });
+  
+    this.lookupService.GetBranches().subscribe(
+      (res: any) => {
+        if (res && res.StatusCode == 200 && res.PayLoad) {
+          let data = res.PayLoad;
+  
+          try {
+            data = JSON.parse(data);
+          } catch (ex) {}
+  
+          this.branchList = data || [];
+        }
+      },
+      (err) => console.log(err)
+    );
   }
   getTestProfileList() {
     this.testList = [];
