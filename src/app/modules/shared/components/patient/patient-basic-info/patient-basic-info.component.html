@@ -82,7 +82,7 @@
           >
           <span *ngIf="
               _patientData.Emails &&
-              _patientData.Emails != ''
+              _patientData.Emails !== ''
             " class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
             <i class="text-primary flaticon2-email mr-2 font-size-lg"></i
             >{{ _patientData.Emails || "" }}</span
@@ -91,7 +91,7 @@
           <span
             *ngIf="
               _patientData.VisitPatientType &&
-              _patientData.VisitPatientType != ''
+              _patientData.VisitPatientType !== ''
             "
             class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2"
           >
@@ -103,7 +103,7 @@
           >
 
           <span
-            *ngIf="_patientData.VisitRefBy && _patientData.VisitRefBy != ''"
+            *ngIf="_patientData.VisitRefBy && _patientData.VisitRefBy !== ''"
             class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2"
           >
             <i
@@ -115,7 +115,7 @@
 
           <span
             *ngIf="
-              _patientData.VisitPanelName && patientData.VisitPanelName != ''
+              _patientData.VisitPanelName && patientData.VisitPanelName !== ''
             "
             class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2"
           >
@@ -127,7 +127,7 @@
           >
         </div>
         <span 
-          *ngIf="_patientData.HomeAddress && patientData.HomeAddress != '' && _patientData.HomeAddress != ''"
+          *ngIf="_patientData.HomeAddress && patientData.HomeAddress !== '' && _patientData.HomeAddress !== ''"
           class="text-dark-75 font-size-lg"
           style="margin-top: -7px; word-break: break-word;" 
           ><i class="text-primary fas fa-map-marker-alt mr-2 font-size-lg"  ngbTooltip="Home Address"></i
@@ -135,7 +135,7 @@
         <span
           *ngIf="
             _patientData.RegistrationLocation &&
-            patientData.RegistrationLocation != ''
+            patientData.RegistrationLocation !== ''
           "
           class="text-dark-75 font-size-lg"
           style="margin-top: -4px"

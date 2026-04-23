@@ -40,7 +40,7 @@ export class AccessioningComponent implements OnInit {
   });
   SampleIfoInRackList: any = [];
   @ViewChild('SampleReceivingInfoModal') SampleReceivingInfoModal;
-  isReleasedBtnDisabled: boolean = true;
+  isReleasedBtnDisabled = true;
   subSectionList = [];
   labDeptID = -1;
   locationID = -1;
@@ -66,13 +66,13 @@ export class AccessioningComponent implements OnInit {
   RackNoToShow: any;
   RackSectionToShow: any;
   SectionID: any=null;
-  SampleCount: number=0;
-  isTLA: boolean = false;
+  SampleCount=0;
+  isTLA = false;
   TransferRackNo:number=null;
   RackRow: any[];
   AccessioningRackID: any;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   constructor(
       private spinner: NgxSpinnerService,
       private fb: FormBuilder,
@@ -109,12 +109,12 @@ export class AccessioningComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID
     }    
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response || [];
       this.subSectionList.push({SubSectionId: -1, SubSectionCode: 'TLASamples', SubSectionTitle: 'TLASamples', SubSectionShortName: 'TLASamples'})
       console.log('Subsection list is: ',this.subSectionList)
@@ -125,9 +125,9 @@ export class AccessioningComponent implements OnInit {
 
   getSmapleInfoByRackNo() {
     this.SampleIfoInRackList=[]
-    let sampleInfoFormVal = this.sampleInfoForm.getRawValue();
+    const sampleInfoFormVal = this.sampleInfoForm.getRawValue();
     if (sampleInfoFormVal.RackNo) {
-      let params = {
+      const params = {
         "RackNo": sampleInfoFormVal.RackNo,
         "Screen": 'Accessioning'
       }
@@ -154,7 +154,7 @@ export class AccessioningComponent implements OnInit {
   }
 
   lockRackByRackBarcode() {
-    let sampleInfoFormVal = this.sampleInfoForm.getRawValue();
+    const sampleInfoFormVal = this.sampleInfoForm.getRawValue();
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // console.log('sampleInfoForm:________________',sampleInfoFormVal,this.TransferRackNo);return;
@@ -165,7 +165,7 @@ export class AccessioningComponent implements OnInit {
         return;
       }
       this.RackRow = []
-      let params={
+      const params={
         RackNo : this.TransferRackNo, 
         BranchID :  null
       }
@@ -309,7 +309,7 @@ export class AccessioningComponent implements OnInit {
     this.sectionObj = data;
     if(this.sectionObj){
       this.spinner.show(this.spinnerRefs.listSection);
-      let objParm = {
+      const objParm = {
         BranchID: this.loggedInUser.locationid,
         SubSectionID: this.sectionObj.SubSectionId||null,
         Screen: "Accessioning"
@@ -360,7 +360,7 @@ export class AccessioningComponent implements OnInit {
   // }
 
   transferSampleToMachine(LabId){
-    let objParm = {
+    const objParm = {
       SampleBarcode: LabId,
       CreatedBy: this.loggedInUser.userid || -99,
       Remarks: null
@@ -383,7 +383,7 @@ export class AccessioningComponent implements OnInit {
 
   getRackInformationByRackNo(rackNo){
     this.ScannedRackInfo = []
-    let params={
+    const params={
       RackNo : rackNo, 
 	    BranchID :  null
     }
@@ -394,7 +394,7 @@ export class AccessioningComponent implements OnInit {
         if(this.ScannedRackInfo){
           this.RackNoToShow = this.ScannedRackInfo['RackNo'];
           this.RackSectionToShow = (this.ScannedRackInfo['Section']==null)?'TLASample': this.ScannedRackInfo['Section'];
-          let rack_sample_code = this.RackNoToShow.substring(0,5)
+          const rack_sample_code = this.RackNoToShow.substring(0,5)
           if(rack_sample_code.toLowerCase() == 'tlara'){
             this.RackSectionToShow ='TLA'
             this.isTLA = true;
@@ -419,9 +419,9 @@ export class AccessioningComponent implements OnInit {
     this.sampleList=[];
     this.disabledButton = true;
     this.isSpinner = false; 
-    let formValues = this.worklistForm.getRawValue();
+    const formValues = this.worklistForm.getRawValue();
     this.spinner.show(this.spinnerRefs.listSection);
-    let objParm = {
+    const objParm = {
       BranchID: this.loggedInUser.locationid,
       SubSectionID: formValues.SectionID||null,
       Screen: "Accessioning",
@@ -454,9 +454,9 @@ export class AccessioningComponent implements OnInit {
     // this.archievedSampleList =[]
     this.disabledButton = true;
     this.isSpinner = false; 
-    let formValues = this.archievedForm.getRawValue();
+    const formValues = this.archievedForm.getRawValue();
     this.spinner.show(this.spinnerRefs.listSection);
-    let objParm = {
+    const objParm = {
       BranchID: this.loggedInUser.locationid,
       SubSectionID: formValues.SectionID||null,
       Screen: "Accessioning",

@@ -17,8 +17,8 @@ import { ComplaintDashboardService } from "src/app/modules/complaints-feedback/s
   styleUrls: ["./request-comparison.component.scss"],
 })
 export class RequestComparisonComponent implements OnInit {
-  isSpinner: boolean = true;
-  disabledButton: boolean = false;
+  isSpinner = true;
+  disabledButton = false;
 
   requestComparisonForm: FormGroup;
   requestComparisonList: any = [];
@@ -76,7 +76,7 @@ export class RequestComparisonComponent implements OnInit {
   }
 
   getRequestComparison() {
-    let formValues = this.requestComparisonForm.getRawValue();
+    const formValues = this.requestComparisonForm.getRawValue();
     if (!formValues.EmpId) {
       this.toastr.warning("Please select a user first");
       return;
@@ -88,7 +88,7 @@ export class RequestComparisonComponent implements OnInit {
       ? Conversions.formatDateObject(formValues.dateTo)
       : null;
 
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
       ResponsibleUserID: formValues.EmpId || -1,
@@ -122,7 +122,7 @@ export class RequestComparisonComponent implements OnInit {
   getEmployeesData() {
     this.employeesList = [];
 
-    let objParam = {
+    const objParam = {
       DepartmentId: -1,
       DesignationId: -1,
       locId: -1,

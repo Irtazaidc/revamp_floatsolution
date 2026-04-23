@@ -574,9 +574,9 @@ export class FormfieldComponent implements OnInit {
     });
 
     this.options2 = fb.group({
-      // tslint:disable-next-line:object-literal-key-quotes
+     
       color: 'primary',
-      // tslint:disable-next-line:object-literal-key-quotes
+     
       fontSize: [16, Validators.min(10)],
     });
   }

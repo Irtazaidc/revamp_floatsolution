@@ -16,15 +16,15 @@ import { ActivatedRoute } from '@angular/router';
 export class ResetPasswordComponent implements OnInit {
 
 
-  showOldPassword: boolean = false;
-  Password: string = '';
-  ConfrimPassword: string = '';
+  showOldPassword = false;
+  Password = '';
+  ConfrimPassword = '';
   loggedInUserID: any = "";
   OldPassword: any = "";
-  isSpinner: boolean = true;//Hide Loader
-  isDisabled: boolean = false;  //[By default Enabled]
-  showResetForm: boolean = true;
-  isSubmitted: boolean = false;
+  isSpinner = true;//Hide Loader
+  isDisabled = false;  //[By default Enabled]
+  showResetForm = true;
+  isSubmitted = false;
   userIdEncryptes =  null;
 
   constructor(
@@ -40,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
 
     
     
-      let Bdata = {
+      const Bdata = {
         UserID: decodeURI(this.route.snapshot.paramMap.get('id')),
         ResetDateTime: decodeURI(this.route.snapshot.paramMap.get('datetime'))
       }
@@ -99,7 +99,7 @@ export class ResetPasswordComponent implements OnInit {
       return
     }
 
-    let paramObj = {
+    const paramObj = {
       UserIDEnc: this.userIdEncryptes.UserID,
       OldPassword:null,
       NewPassword: this.ConfrimPassword || null,

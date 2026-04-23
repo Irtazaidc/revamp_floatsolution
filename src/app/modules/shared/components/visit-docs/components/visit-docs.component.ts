@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Attribute, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild, } from "@angular/core";
+import { Attribute, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild, AfterViewInit, OnChanges, OnDestroy, } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NgbModalOptions, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NgxSpinnerService } from "ngx-spinner";
@@ -19,8 +19,8 @@ import { NonNullAssert } from "@angular/compiler";
 import { ActivatedRoute } from "@angular/router";
 
 // import  * as ImgPreviewer from '../image-viewer.js';
-declare var $: any;
-declare var window: any;
+declare let $: any;
+declare let window: any;
 @Component({
   standalone: false,
 
@@ -29,22 +29,22 @@ declare var window: any;
   styleUrls: ["./visit-docs.component.scss"],
   // providers: [MultiAppService]
 })
-export class VisitDocsComponent implements OnInit {
+export class VisitDocsComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild("documentPopup") documentPopup;
   documentPopupRef: NgbModalRef;
   defaultEditing = { save: false, select: true, camera: true, insert: false };
-  @Input("propVisitNo") propVisitNo = "";
-  @Input("isLoadByDefault") isLoadByDefault = true;
+  @Input() propVisitNo = "";
+  @Input() isLoadByDefault = true;
   @Input("layout") attachmentLayout = "grid2"; // compact | list | grid | grid2
-  @Input("layoutButtons") layoutButtons = ["compact", "list", "grid", "grid2"]; // ['compact', 'list', 'grid', 'grid2']
-  @Input("editing") editing = this.defaultEditing; // {save: true, select: true, camera: true, scan: true}
-  @Input("inputDocs") inputDocs = [];
-  @Input("allowRemove") allowRemove = false;
-  @Input("forFilterComp") forFilterComp = 0;
-  @Input("CMSrequestID") CMSrequestID = 0;
-  @Input("sectionHead") sectionHead = "Visit";
-  @Input("module") module = ""; // 'general-docs'
-  @Input("refByDocID") refByDocID;
+  @Input() layoutButtons = ["compact", "list", "grid", "grid2"]; // ['compact', 'list', 'grid', 'grid2']
+  @Input() editing = this.defaultEditing; // {save: true, select: true, camera: true, scan: true}
+  @Input() inputDocs = [];
+  @Input() allowRemove = false;
+  @Input() forFilterComp = 0;
+  @Input() CMSrequestID = 0;
+  @Input() sectionHead = "Visit";
+  @Input() module = ""; // 'general-docs'
+  @Input() refByDocID;
   @Output() outputDocs = new EventEmitter();
   @ViewChild("videoElement") videoElement: ElementRef;
   @ViewChild("canvas") public canvas: ElementRef;
@@ -228,7 +228,7 @@ export class VisitDocsComponent implements OnInit {
     this.isLoadClick = true;
 
     this.setVisitDocsArray([], true);
-    let params = {
+    const params = {
       visitId: this.propVisitNo,
       withDocs: true,
     };
@@ -242,7 +242,7 @@ export class VisitDocsComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.visitDocs);
         if (res && res.StatusCode == 200) {
           if (res.PayLoad && res.PayLoad.length) {
-            let _data = this.helper.addPrefixToDocs(res.PayLoad);
+            const _data = this.helper.addPrefixToDocs(res.PayLoad);
             this.setVisitDocsArray(_data, true);
             // this.outputDocs.emit(this.visitAttachments);
             // this.visitAttachments = res.PayLoad;
@@ -266,7 +266,7 @@ export class VisitDocsComponent implements OnInit {
     this.selectedImg = null;
     this.resetZoom();
     this.imageRotation = 0;
-    let params = {
+    const params = {
       DocId: docId,
       ForFilter: this.forFilterComp,
     };
@@ -289,7 +289,7 @@ export class VisitDocsComponent implements OnInit {
         this.ngbModalOptions
       );
     if (this.module == "general-docs") {
-      let params2 = {
+      const params2 = {
         docId: docId,
       };
       if (isdownload === 0) this.getGeneralDocById(params2);
@@ -299,7 +299,7 @@ export class VisitDocsComponent implements OnInit {
     }
   }
   deleteDocById(docId) {
-    let params = {
+    const params = {
       DocId: docId,
     };
     if (!params.DocId) {
@@ -332,7 +332,7 @@ export class VisitDocsComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.selectedDoc);
         if (res && res.StatusCode == 200) {
           if (res.PayLoad && res.PayLoad.length) {
-            let data = this.helper.addPrefixToDocs(res.PayLoad);
+            const data = this.helper.addPrefixToDocs(res.PayLoad);
 
             // data[0].docId = data[0].DocId || '__';
             // data[0].uniqueIdentifier = (+new Date());
@@ -364,7 +364,7 @@ export class VisitDocsComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.selectedDoc);
         if (res && res.StatusCode == 200) {
           if (res.PayLoad && res.PayLoad.length) {
-            let data = this.helper.addPrefixToDocs(res.PayLoad);
+            const data = this.helper.addPrefixToDocs(res.PayLoad);
             // console.log("docsService.getGeneralDocumentsByDocId ~ data:", data);
             this.selectedImg = data[0];
           }
@@ -404,11 +404,11 @@ export class VisitDocsComponent implements OnInit {
           this.toastr.error("No valid document found to download.");
           if (res && res.StatusCode == 200) {
             if (res.PayLoad && res.PayLoad.length) {
-              let data = this.helper.addPrefixToDocs(res.PayLoad);
+              const data = this.helper.addPrefixToDocs(res.PayLoad);
               // console.log("docsService.getGeneralDocumentsByDocId ~ data:", data);
               this.selectedImg = data[0];
 
-              let base64Data = "data:image/png;" + data[0].data;
+              const base64Data = "data:image/png;" + data[0].data;
 
               // this.downloadBase64Image(base64Data, "download.png");
             }
@@ -439,7 +439,7 @@ export class VisitDocsComponent implements OnInit {
   // Derive MIME type from file extension
   getMimeType(fileName: string): string {
     const extension = fileName.split('.').pop()?.toLowerCase();
-    const mimeTypes: { [key: string]: string } = {
+    const mimeTypes: Record<string, string> = {
       jpg: "image/jpeg",
       jpeg: "image/jpeg",
       png: "image/png",
@@ -482,8 +482,8 @@ export class VisitDocsComponent implements OnInit {
       (res: any) => {
         this.spinner.hide(this.spinnerRefs.selectedDoc);
         if (res && res.StatusCode == 200) {
-          let fetchedDocs = res.PayLoad || [];
-          let docArr = [];
+          const fetchedDocs = res.PayLoad || [];
+          const docArr = [];
           fetchedDocs.forEach((a) => {
             let docImg = a.GDocBase64 || a.Doc || "";
             if (docImg && docImg.indexOf("data:") == -1) {
@@ -491,7 +491,7 @@ export class VisitDocsComponent implements OnInit {
               docImg =
                 "data:" + (a.GDocType || "image/png") + ";base64," + docImg;
             }
-            let _obj: IVisitDocs = {
+            const _obj: IVisitDocs = {
               // = new VisitDocs();
               docId: a.DocId,
               // visitId: null,
@@ -532,7 +532,7 @@ export class VisitDocsComponent implements OnInit {
   }
 
   saveVisitDocs() {
-    let params = {
+    const params = {
       UserId: this.loggedInUser.userid,
       Docs: this.getVisitAttachmentsData(),
     };
@@ -620,7 +620,7 @@ export class VisitDocsComponent implements OnInit {
 
   /*  start - camera */
   initCamera(config: any) {
-    var browser = <any>navigator;
+    const browser = navigator as any;
 
     browser.getUserMedia =
       browser.getUserMedia ||
@@ -667,7 +667,7 @@ export class VisitDocsComponent implements OnInit {
       .clearRect(0, 0, this.videoDimensions.width, this.videoDimensions.height);
   }
   capture() {
-    var context = this.canvas.nativeElement
+    const context = this.canvas.nativeElement
       .getContext("2d")
       .drawImage(
         this.video,
@@ -680,7 +680,7 @@ export class VisitDocsComponent implements OnInit {
     this.stopCamera();
   }
   captureDocument() {
-    var context = this.canvas.nativeElement
+    const context = this.canvas.nativeElement
       .getContext("2d")
       .drawImage(
         this.video,
@@ -689,9 +689,9 @@ export class VisitDocsComponent implements OnInit {
         this.videoDimensions.width,
         this.videoDimensions.height
       );
-    let imageURL = this.canvas.nativeElement.toDataURL("image/png");
-    let _fileName = "capture_" + +new Date();
-    let _fileObject = {
+    const imageURL = this.canvas.nativeElement.toDataURL("image/png");
+    const _fileName = "capture_" + +new Date();
+    const _fileObject = {
       docId: null,
       uniqueIdentifier: +new Date(),
       fileName: _fileName,
@@ -738,7 +738,7 @@ export class VisitDocsComponent implements OnInit {
     let count = 1;
     mediaDevices.forEach((mediaDevice) => {
       if (mediaDevice.kind === "videoinput") {
-        let obj = {
+        const obj = {
           id: mediaDevice.deviceId,
           name: mediaDevice.label || `Camera ${count++}`,
         };
@@ -792,16 +792,16 @@ export class VisitDocsComponent implements OnInit {
     if (!file) {
       return 
     }
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
+        const imageURL = reader.result as string;
         let _fileName = file.name || fileName || "";
         if (_fileName.length > 50) {
           _fileName = (_fileName || "").toString().substring(0, 50);
         }
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           docId: null,
           uniqueIdentifier: +new Date(),
           fileName: _fileName,
@@ -871,7 +871,7 @@ export class VisitDocsComponent implements OnInit {
     };
 
     try {
-      var browser = <any>navigator;
+      const browser = navigator as any;
       browser.getUserMedia =
         browser.getUserMedia ||
         browser.webkitGetUserMedia ||
@@ -912,7 +912,7 @@ export class VisitDocsComponent implements OnInit {
     this.enableRenameVisitAttachmentField = -1;
     if (action == "show") {
       this.renameFileExt = "";
-      let fileNameWithoutExt = attachment.fileName.replace(/\.[^/.]+$/, ""); // attachment.fileName.split('.').splice(0,attachment.fileName.split('.').length-1).join();
+      const fileNameWithoutExt = attachment.fileName.replace(/\.[^/.]+$/, ""); // attachment.fileName.split('.').splice(0,attachment.fileName.split('.').length-1).join();
       if (attachment.fileName) {
         this.renameFileExt = attachment.fileName.split(".").pop(); // attachment.fileName.split('.')[attachment.fileName.split('.').length-1]; // attachment.fileName.split('.').splice(-1,1)[0]
       }
@@ -954,7 +954,7 @@ export class VisitDocsComponent implements OnInit {
     base64Data = ""
   ) {
     const self = this;
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       if (!file && !base64Data) {
         resolve("");
       }
@@ -965,7 +965,7 @@ export class VisitDocsComponent implements OnInit {
       let blob = null;
 
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = "hiddenCanvas_" + +new Date();
+      const canvas_id = "hiddenCanvas_" + +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;
@@ -1077,7 +1077,7 @@ export class VisitDocsComponent implements OnInit {
   }
 
   getVisitAttachmentsData() {
-    let docs = [];
+    const docs = [];
     /*
     public class DocumentsModelForVisit
     {
@@ -1094,7 +1094,7 @@ export class VisitDocsComponent implements OnInit {
     */
 
     this.visitAttachments.forEach((a) => {
-      let obj = {
+      const obj = {
         VisitDocumentID: a.docId,
         VisitID: a.visitId || this.propVisitNo,
         VisitDocTitle: a.fileName,
@@ -1182,7 +1182,7 @@ export class VisitDocsComponent implements OnInit {
     });
   }
   subscribeForScannedDoc() {
-    let sub = this.multiApp.scannedDoc.subscribe((doc) => {
+    const sub = this.multiApp.scannedDoc.subscribe((doc) => {
       if (doc) {
         this.updateVisitDocsArray(doc, true);
       } else {
@@ -1196,7 +1196,7 @@ export class VisitDocsComponent implements OnInit {
     if (this.visitAttachments.length == 0) {
       isocr = 1;
     }
-    let obj = {
+    const obj = {
       user: this.loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href),
@@ -1249,7 +1249,7 @@ export class VisitDocsComponent implements OnInit {
 
   // }
   printDocument(param) {
-    let styleSheet = `
+    const styleSheet = `
       <style>
         body {
           width: 21cm;
@@ -1261,15 +1261,15 @@ export class VisitDocsComponent implements OnInit {
       </style>`;
   
     setTimeout(() => {
-      let element = document.getElementById(param);
+      const element = document.getElementById(param);
       if (!element) {
         console.error("Element not found:", param);
         return;
       }
       
-      let data = element.innerHTML;
+      const data = element.innerHTML;
   
-      let documentWindow = window.open("", "_blank");
+      const documentWindow = window.open("", "_blank");
       if (!documentWindow) {
         alert("Pop-up blocked! Allow pop-ups for printing.");
         return;
@@ -1299,11 +1299,11 @@ export class VisitDocsComponent implements OnInit {
   }
 
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.visitAttachments
       .filter((a) => !a.docId)
       .forEach((a) => {
-        let d = {
+        const d = {
           DocId: null,
           Title: a.fileName,
           Remarks: "",
@@ -1321,14 +1321,14 @@ export class VisitDocsComponent implements OnInit {
   }
 
   insertCMSDocuments() {
-    let docsToSave =
+    const docsToSave =
       this.formatUploadedDocsData().filter((a) => !a.docId) || [];
     if (!docsToSave.length) {
       this.toastr.warning("No documents to save");
       return;
     }
 
-    let params = {
+    const params = {
       UserId: this.loggedInUser.userid,
       Docs: docsToSave,
     };
@@ -1356,7 +1356,7 @@ export class VisitDocsComponent implements OnInit {
   }
   getCMSDocuments() {
     this.isLoadClick = true;
-    let params = {
+    const params = {
       refId: this.CMSrequestID,
       docTypeIds: this.forFilterComp,
     };
@@ -1368,7 +1368,7 @@ export class VisitDocsComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.visitDocs);
         if (res && res.StatusCode == 200) {
           this.isLoadClick = true;
-          let docData = this.helper.addPrefixToDocs(res.PayLoad);
+          const docData = this.helper.addPrefixToDocs(res.PayLoad);
           this.visitAttachments = docData;
           // console.log("this.docsService.getGeneralDocumentsByRefIdDocTypeId ~ this.visitAttachments:", this.visitAttachments)
           // this.outputDocs.emit(docData);
@@ -1382,9 +1382,9 @@ export class VisitDocsComponent implements OnInit {
     );
   }
 
-  translateX: number = 0;
-  translateY: number = 0;
-  imageRotation: number = 0;
+  translateX = 0;
+  translateY = 0;
+  imageRotation = 0;
   zoomFactor = 1; // Initial zoom factor
   isDragging = false;
   prevX = 0;

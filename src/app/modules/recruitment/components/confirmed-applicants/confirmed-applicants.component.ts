@@ -50,11 +50,11 @@ export class ConfirmedApplicantsComponent implements OnInit {
     confirmPopoverCancel: () => {}
   }
 
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerShortListed: boolean = true;//Hide Loader
-  isSpinnerRejected: boolean = true;//Hide Loader
-  isSpinnerConfirmed: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerShortListed = true;//Hide Loader
+  isSpinnerRejected = true;//Hide Loader
+  isSpinnerConfirmed = true;//Hide Loader
 
   formUpdateStatus = this.fb.group({
     StatusRemarks: ['', Validators.compose([Validators.required])]
@@ -108,12 +108,12 @@ export class ConfirmedApplicantsComponent implements OnInit {
   getApplicantList(){
     this.spinner.show(this.spinnerRefs.applicantListSection);
     this.ApplicantList =[];
-    let formValues = this.formGetApplicant.getRawValue();
-    let objParm = {
+    const formValues = this.formGetApplicant.getRawValue();
+    const objParm = {
       ApplicantStatusID:  5
     }
     this.recruitment.getApplicantList(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.ApplicantList = resSearchJob||[];
         // this.ApplicantList = this.ApplicantList.filter( a=> (a.ApplicantStatusID == 5));
@@ -136,7 +136,7 @@ export class ConfirmedApplicantsComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.applicantDetailModal);
     this.JobApplicantID = applicantID;
     this.ApplicantDetailRow = []
-    let paramObj = {
+    const paramObj = {
       JobApplicantID:this.JobApplicantID
     }
     
@@ -196,10 +196,10 @@ export class ConfirmedApplicantsComponent implements OnInit {
       alertMessage = 'Something went wrong';
     }
     this.loadingProcess('show',statusID);
-     let formValues = this.formUpdateStatus.getRawValue();
+     const formValues = this.formUpdateStatus.getRawValue();
      this.formUpdateStatus.markAllAsTouched();
     if(this.formUpdateStatus.valid) {
-      let objParam = {
+      const objParam = {
         CreatedBy : this.loggedInUser.userid || -99,
         tblJobApplicantStatus: [{
           "JobApplicantID": this.JobApplicantID,
@@ -212,7 +212,7 @@ export class ConfirmedApplicantsComponent implements OnInit {
        }
        console.log('Action data is: ',objParam);
       this.recruitment.updateJobApplicantStatusWithRemarks(objParam).subscribe((data: any) => {
-        let res =  JSON.parse(data.PayLoadStr);
+        const res =  JSON.parse(data.PayLoadStr);
         if (res && res.length) {
           if (data.StatusCode == 200) {
             this.toastr.success(alertMessage);
@@ -262,7 +262,7 @@ export class ConfirmedApplicantsComponent implements OnInit {
   applicantProcess(){
     this.loadingProcess('show',0);
     this.spinner.show(this.spinnerRefs.applicantListSection); 
-    let jobListChecked = this.ApplicantList.filter( a=> a.checked);
+    const jobListChecked = this.ApplicantList.filter( a=> a.checked);
     let isValidStatus = true;
     let isValidRemarks = true;
     jobListChecked.forEach(a => {
@@ -283,7 +283,7 @@ export class ConfirmedApplicantsComponent implements OnInit {
     } else {
       // console.warn('applicant fiter list is: ',jobListChecked)
       if(jobListChecked.length){
-        let objParam = {
+        const objParam = {
           CreatedBy: this.loggedInUser.userid || -99,
           tblJobApplicantStatus: jobListChecked.map( a => {
             return {

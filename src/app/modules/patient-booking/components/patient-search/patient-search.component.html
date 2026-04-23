@@ -517,13 +517,13 @@
                                     <button *ngIf="buttonControlsPermissions.attachDocs"
                                         class="btn btn-outline-primary btn-mini ml-1" (click)="visitSelectedForDocs(v)"
                                         ngbTooltip="View/Upload Documents"><i class="fa fa-image"></i></button>
-                                    <button *ngIf="v.IsPrintMOConsent != '' && !isInquiry"
+                                    <button *ngIf="v.IsPrintMOConsent !== '' && !isInquiry"
                                         class="btn btn-outline-primary btn-mini ml-1" (click)="OpenMOConsentForm(v)"
                                         ngbTooltip="Patient Consent Form"><i aria-hidden="true"
                                             class="flaticon2-file-1"></i></button>
 
                                             <button type="button" (click)="openFloroConsentForm()"
-                                            *ngIf="v.IsPrintMOConsent != '' && !isInquiry"
+                                            *ngIf="v.IsPrintMOConsent !== '' && !isInquiry"
                                             class="btn btn-outline-primary btn-mini ml-1" >Floro
                                             Consent
                                             <i class="fas fa-x-ray"></i></button> &nbsp;

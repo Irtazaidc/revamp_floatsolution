@@ -29,16 +29,16 @@ export class RadiologistComponent implements OnInit {
   departmentsList = [];
   selectedRadiologist:number = null;
 
-  maxVal:number = 0;
-  minVal:number = 0;
+  maxVal = 0;
+  minVal = 0;
 
   branchesList = [];
   QuestionID:any = null;
   searchText = '';
   searchTextSection = '';
   searchTextTest = '';
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
 
   checkedSectionIDs: any[] = [];
   checkedTestsIDs: any[] = [];  
@@ -48,8 +48,8 @@ export class RadiologistComponent implements OnInit {
   sectionChecked
   testChecked
   subSectionList:any = [];
-  showHideEditBtn:boolean = true;
-  showHideCancelBtn:boolean = false;
+  showHideEditBtn = true;
+  showHideCancelBtn = false;
   
   spinnerRefs = {
     listSection: "listSection",
@@ -140,7 +140,7 @@ export class RadiologistComponent implements OnInit {
     this.selectedRadiologist = EmpID;
     this.selectedRefByDoctors = [];
     this.isAdd = false;
-    let params = {
+    const params = {
       EmpID: EmpID
     };
     if(params.EmpID){
@@ -220,14 +220,14 @@ export class RadiologistComponent implements OnInit {
   
   getEmployeePic(EmpID){
     this.spinner.show(this.spinnerRefs.drPic);
-    let params = {
+    const params = {
       EmpID:EmpID
     }
     this.questionnaireSrv.getEmployeePic(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.drPic);
       if (res.StatusCode == 200) {
         if(res.PayLoad.length && res.PayLoad[0].EmployeePic){
-          let resp = this.helper.formateImagesData(res.PayLoad,'EmployeePic');
+          const resp = this.helper.formateImagesData(res.PayLoad,'EmployeePic');
           this.radiologistPic = resp[0].EmployeePic;
         }else{
           this.radiologistPic=null;
@@ -283,13 +283,13 @@ export class RadiologistComponent implements OnInit {
     this.showHideCancelBtn=true;
     this.hideToggle=true;
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2,
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
       if(resp && resp.PayLoad){
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
         this.subSectionList = this.subSectionList.filter(id => id.SubSectionId !== 62);
         this.radiologiestSectionsList = [...this.radiologiestSections, ...this.subSectionList];
@@ -309,12 +309,12 @@ export class RadiologistComponent implements OnInit {
     })
   }
   getTestProfile(subSectionId) {
-    let objParm = {
+    const objParm = {
       SubSectionID: subSectionId,
     }
     this.questionnaireSrv.getTestProfileforRadWorklist(objParm).subscribe((resp: any) => {
       if(resp && resp.PayLoad){
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         const testProfileList = _response;
         this.radiologiestTestsList = [...testProfileList, ...this.radoiologistListTestsSelected];
         const combinedList = [
@@ -363,7 +363,7 @@ export class RadiologistComponent implements OnInit {
   }
 
   saveRadiologistWorklist() {
-    let selectedSections = this.radiologiestSectionsList.filter(a => a.checked == true);
+    const selectedSections = this.radiologiestSectionsList.filter(a => a.checked == true);
     // selectedSections.forEach(section => {
     //   const minValue = parseFloat(section.Min);
     //   const maxValue = parseFloat(section.Max);
@@ -371,9 +371,9 @@ export class RadiologistComponent implements OnInit {
     //     this.toastr.error(`Min is greater than Max for SubSectionId: ${section.SubSectionId}`);
     //   }
     // });
-    let selectedTests = this.radiologiestTestsList.filter(a => a.checked == true);
+    const selectedTests = this.radiologiestTestsList.filter(a => a.checked == true);
     if(this.showHideEditBtn == false ){ //&& (selectedTests.length || selectedSections.length)
-      let params = {
+      const params = {
         EmpID: this.selectedRadiologist,
         CreatedBy: this.loggedInUser?.userid,           
         tblSectionTestProfile : selectedTests.map((row) => ({  
@@ -440,7 +440,7 @@ export class RadiologistComponent implements OnInit {
   refByDoctors = []
   getRefByDoctors() {
     this.refByDoctors = [];
-    let _params = {};
+    const _params = {};
     this.spinner.show(this.spinnerRefs.refBylistSection);
     this.lookupSrv.getRefByDoctors(_params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.refBylistSection);
@@ -470,20 +470,20 @@ export class RadiologistComponent implements OnInit {
   selectedRefByDoctors = []
   insertUpdateRefByRadiologistMapping() {
     let margedArray = [];
-    let myArr = this.selectedRefByDoctors.map(id => ({
+    const myArr = this.selectedRefByDoctors.map(id => ({
       Name:'',
       RefByListID: id,
       RefByRadiologistMappingID:null
       
   }));
   margedArray = [...this.radoiologistListRefBy, ...myArr];
-  let dataMerged = margedArray.map(id => {return id.RefByListID})
+  const dataMerged = margedArray.map(id => {return id.RefByListID})
     if (!this.selectedRefByDoctors.length) {
       this.toastr.warning("Please select RefBy doctor!");
       this.isSubmitted = true;
       return;
     } else {
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid,
         tblRefByRadioMapping: [{
           EmpID: this.EmpIDActiveClass,
@@ -497,7 +497,7 @@ export class RadiologistComponent implements OnInit {
         this.isSpinner = true;
         if (JSON.parse(data.PayLoadStr).length) {
           if (data.StatusCode == 200) {
-            let res = JSON.parse(data.PayLoadStr)
+            const res = JSON.parse(data.PayLoadStr)
             if(res[0].Result == 1){
               this.toastr.success(data.Message);
               // if(this.removeRefBy == 1){return;}
@@ -525,7 +525,7 @@ export class RadiologistComponent implements OnInit {
   removeRefBy = null;
   removeRefByRadiologistMapping(refBy){
    
-    let objParam = {
+    const objParam = {
         CreatedBy: this.loggedInUser.userid,
         RefByRadiologistMappingID:refBy.RefByRadiologistMappingID,  
       }
@@ -536,7 +536,7 @@ export class RadiologistComponent implements OnInit {
         this.isSpinner = true;
         if (JSON.parse(data.PayLoadStr).length) {
           if (data.StatusCode == 200) {
-            let res = JSON.parse(data.PayLoadStr)
+            const res = JSON.parse(data.PayLoadStr)
             if(res[0].Result == 1){
               this.toastr.success(data.Message);
               this.radoiologistListRefBy = this.radoiologistListRefBy.filter(id => {

@@ -70,7 +70,7 @@ export class LabTestingDateComponent implements OnInit {
 
 
  getlabtestformDataList(){
-   let formValues  = this.labtestformData.getRawValue();
+   const formValues  = this.labtestformData.getRawValue();
    
    if (this.labtestformData.invalid) {
      this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -78,7 +78,7 @@ export class LabTestingDateComponent implements OnInit {
      return;
    }
 
-   let objParams = {
+   const objParams = {
      DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
      DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
      LocID : formValues.locID || null,
@@ -129,7 +129,7 @@ export class LabTestingDateComponent implements OnInit {
   getSubSection() {
     
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: -1,
     }    

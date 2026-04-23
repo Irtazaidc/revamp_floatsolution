@@ -67,9 +67,9 @@ export class RefbyMappingComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.listSection);
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_REFBYLIST_MAPPING, {}).subscribe((data: any) => {
       if (data.StatusCode == 200) {
-        let resp = data.PayLoad || [];
+        const resp = data.PayLoad || [];
         this.radoiologistList = resp.map(a => {
-          let refByIDs = a.RefByListIDs ? a.RefByListIDs.split(',').map(id => parseInt(id, 10)) : [];
+          const refByIDs = a.RefByListIDs ? a.RefByListIDs.split(',').map(id => parseInt(id, 10)) : [];
           return {
             EmpId: a.EmpId,
             FullName: a.FullName,
@@ -100,7 +100,7 @@ export class RefbyMappingComponent implements OnInit {
  
   getRefByDoctors() {
     this.refByDoctors = [];
-    let _params = {};
+    const _params = {};
     this.spinner.show(this.spinnerRefs.refBylistSection);
     this.lookupSrv.getRefByDoctors(_params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.refBylistSection);
@@ -118,7 +118,7 @@ export class RefbyMappingComponent implements OnInit {
   }
 
   insertUpdateRefByRadiologistMapping() {
-    let checkedItems = this.radoiologistList.filter(a => a.checked);
+    const checkedItems = this.radoiologistList.filter(a => a.checked);
     let isInValidData = false;
     if (!checkedItems.length) {
       this.toastr.warning("Please select doctor to save mapping", "Warning!");
@@ -136,7 +136,7 @@ export class RefbyMappingComponent implements OnInit {
       this.isSubmitted = true;
       return;
     } else {
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid,
         tblRefByRadioMapping: checkedItems.map(a => {
           return {
@@ -154,7 +154,7 @@ export class RefbyMappingComponent implements OnInit {
         this.buttonClicked = false;
         if (JSON.parse(data.PayLoadStr).length) {
           if (data.StatusCode == 200) {
-            let date = JSON.parse(data.PayLoadStr)
+            const date = JSON.parse(data.PayLoadStr)
             if(date[0].Result == 1){
               this.toastr.success('Saved');
               this.buttonClicked = false;

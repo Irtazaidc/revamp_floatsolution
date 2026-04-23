@@ -30,7 +30,7 @@ export class ChatService {
         this.hub.onreconnected(async () => {
             console.warn('SignalR reconnected');
             // REJOIN GROUPS
-            for (let id of this.joinedBookings) {
+            for (const id of this.joinedBookings) {
                 await this.joinBooking(id);
             }
         });

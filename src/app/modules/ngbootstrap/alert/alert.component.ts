@@ -238,12 +238,12 @@ export class NgbdAlertConfig {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertComponent implements OnInit {
-  @Input() alerts: Array<IAlert> = [];
-  // tslint:disable-next-line:variable-name
+  @Input() alerts: IAlert[] = [];
+ 
   private _success = new Subject<string>();
   staticAlertClosed = false;
   successMessage: string;
-  private backup: Array<IAlert>;
+  private backup: IAlert[];
 
   exampleBasicAlert: any;
   exampleCloseableAlert: any;

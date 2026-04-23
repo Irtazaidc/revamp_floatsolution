@@ -27,9 +27,9 @@ import { VisitService } from '../../../patient-booking/services/visit.service';
   styleUrls: ['./visit-tracking.component.scss']
 })
 export class VisitTrackingComponent implements OnInit {
-  @Input('actionsPermission') actionsPermission: any = [];
+  @Input() actionsPermission: any = [];
 
-  @Input('buttonControls') buttonControls = [''];
+  @Input() buttonControls = [''];
 
   @ViewChild('visitInfoArea') private visitInfoArea: ElementRef;
 
@@ -177,7 +177,7 @@ export class VisitTrackingComponent implements OnInit {
 
 
   getVisitDetails(visitID) {
-    let params = { VisitId: visitID };
+    const params = { VisitId: visitID };
     this.visitDetails = {
       pateintInfo: null,
       visitInfo: null,
@@ -238,7 +238,7 @@ export class VisitTrackingComponent implements OnInit {
   }
   getPaymentModes(filter = null) {
     this.paymentModes = [];
-    let params = { filter: filter };
+    const params = { filter: filter };
     this.spinner.show();
     this.lookupService.getPaymentModes(params).subscribe((res: any) => {
       this.spinner.hide();
@@ -257,7 +257,7 @@ export class VisitTrackingComponent implements OnInit {
   cancelVisit(visit) {
     return;
     console.log(visit);
-    let params = {
+    const params = {
       VisitID: visit.VisitID
     }
     this.spinner.show();
@@ -363,7 +363,7 @@ export class VisitTrackingComponent implements OnInit {
     setTimeout(() => {
 
       let amountToRefund = 0;
-      let testsAmountAfterRefund = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).filter(a => !a.checked).map(a => a.DiscountedPrice || 0).reduce((acu, a) => { return acu + a; }, 0);
+      const testsAmountAfterRefund = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).filter(a => !a.checked).map(a => a.DiscountedPrice || 0).reduce((acu, a) => { return acu + a; }, 0);
       if (this.visitDetails.tpInfo.filter(a => a.checked).length) {
         // subtract Rewart Points amount
         amountToRefund = testsAmountAfterRefund - (this.visitDetails.billingInfo[0].ReceivedAmount - this.visitDetails.billingInfo[0].RewardPointsAmount); // this.visitDetails.paymentInfo.filter(a => a.ModeId == 5).map(a => a.Amount).reduce((acu, a) => {return acu+a;}, 0));
@@ -416,7 +416,7 @@ export class VisitTrackingComponent implements OnInit {
   refundAmountValueChangeEvent() {
     let cancellationAmount = 0; // this.visitDetails.tpInfo.filter( a => a.checked).map(a=>a.DiscountedPrice || 0).reduce((acu, a) => {return acu+a;}, 0)
     let amountToRefund = 0;
-    let testsAmountAfterRefund = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).filter(a => !a.checked).map(a => a.DiscountedPrice || 0).reduce((acu, a) => { return acu + a; }, 0)
+    const testsAmountAfterRefund = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).filter(a => !a.checked).map(a => a.DiscountedPrice || 0).reduce((acu, a) => { return acu + a; }, 0)
     if (this.visitDetails.tpInfo.filter(a => a.checked).length) {
       amountToRefund = testsAmountAfterRefund - this.visitDetails.billingInfo[0].ReceivedAmount;
       if (amountToRefund > 0) {
@@ -462,7 +462,7 @@ export class VisitTrackingComponent implements OnInit {
   saveCancellationPopup(cancellationStatusId) {
     //here 
 
-    var ismob = this.detectMob();
+    const ismob = this.detectMob();
 
     this.tpCancellationFormSubmitted = true;
 
@@ -488,10 +488,10 @@ export class VisitTrackingComponent implements OnInit {
     //   TypeId: [1],
     //   ClosingId: [0]
     // });
-    let cancellationFormValues = this.tpCancellationForm.getRawValue();
+    const cancellationFormValues = this.tpCancellationForm.getRawValue();
 
-    let paymentArr = [];
-    let payObj: Payment = {
+    const paymentArr = [];
+    const payObj: Payment = {
       VisitID: this.selectedVisit.VisitID,
       Amount: this.tpCancellationForm.getRawValue().refundAmount || 0,
       ModeId: cancellationFormValues.paymentMode || 1,
@@ -516,7 +516,7 @@ export class VisitTrackingComponent implements OnInit {
       paymentArr.push(_payObj);
     });
     */
-    let dataToPost = {
+    const dataToPost = {
       createdBy: this.loggedInUser.userid,
       VisitID: this.selectedVisit.VisitID,
       Remarks: cancellationFormValues.remarks || '',
@@ -536,7 +536,7 @@ export class VisitTrackingComponent implements OnInit {
       return;
     }
 
-    let fbrRequestData: any = this.formatDataForFBR(arrayOfTests);
+    const fbrRequestData: any = this.formatDataForFBR(arrayOfTests);
     if (fbrRequestData.TotalSaleValue
       || fbrRequestData.TotalTaxCharged
       || fbrRequestData.Discount
@@ -577,10 +577,10 @@ export class VisitTrackingComponent implements OnInit {
 
   /* start - FBR - function */
   formatDataForFBR(arrayOfTests) {
-    let testsData = arrayOfTests.filter(a => a.checked) || [];
+    const testsData = arrayOfTests.filter(a => a.checked) || [];
     // let visitData = this.visitDetails.visitInfo.length ? this.visitDetails.visitInfo[0] : {};
     let paymentModeSelected = 1;
-    let fbrPaymentModes = {
+    const fbrPaymentModes = {
       cash: 1, // Cash
       card: 2, // Card
       giftVoucher: 3, // Gift Voucher
@@ -588,7 +588,7 @@ export class VisitTrackingComponent implements OnInit {
       mixed: 5, // Mixes
       cheque: 6 // cheque
     }
-    let cancellationFormVal = this.tpCancellationForm.getRawValue();
+    const cancellationFormVal = this.tpCancellationForm.getRawValue();
 
     switch (cancellationFormVal.paymentMode) {
       case 1:
@@ -638,7 +638,7 @@ export class VisitTrackingComponent implements OnInit {
     if (testsData && testsData.length) {
       taxRate = (testsData[0].TaxRateFBR || 0);
     }
-    let valueWithAndWithoutTax = this.helperService.calculateTaxValue(cancelAmountWithoutDiscount, taxRate);
+    const valueWithAndWithoutTax = this.helperService.calculateTaxValue(cancelAmountWithoutDiscount, taxRate);
 
     let calculatedTax = valueWithAndWithoutTax.taxValue;
     let totalSale = valueWithAndWithoutTax.fullValue - valueWithAndWithoutTax.taxValue;
@@ -654,7 +654,7 @@ export class VisitTrackingComponent implements OnInit {
       calculatedTax = 0;
     }
 
-    let params = {
+    const params = {
       "InvoiceNumber": "",
       "POSID": 0, // 966130
       "USIN": this.selectedVisit.VisitID, // VisitId
@@ -677,13 +677,13 @@ export class VisitTrackingComponent implements OnInit {
     testsData.forEach(tp => {
       tp.TaxRate = (tp.TaxRateFBR || 0);
 
-      let tpValueWithAndWithoutTax = this.helperService.calculateTaxValue((tp.Price || 0) - (tp.Discount || 0), tp.TaxRate);
+      const tpValueWithAndWithoutTax = this.helperService.calculateTaxValue((tp.Price || 0) - (tp.Discount || 0), tp.TaxRate);
 
-      let taxCharged = tpValueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
-      let saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
-      let totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
+      const taxCharged = tpValueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
+      const saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
+      const totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
 
-      let item = {
+      const item = {
         "ItemCode": tp.TPId,
         "ItemName": tp.Test,
         "PCTCode": tp.PCTCode || '98160000', // {radiology: '98179000', lab: '98160000'} , // "98173000", // "11001010", https://download1.fbr.gov.pk/Docs/2021101313103753401chapte-98&99.pdf // page 4
@@ -728,7 +728,7 @@ export class VisitTrackingComponent implements OnInit {
   }
 
   getMACAddress(loggedInUser: UserModel) {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -789,7 +789,7 @@ export class VisitTrackingComponent implements OnInit {
   }
 
   installmentAllowed() {
-    let res = {
+    const res = {
       allowed: true,
       reason: []
     }
@@ -806,7 +806,7 @@ export class VisitTrackingComponent implements OnInit {
 
   openInstallmentForm() {
     this.getPaymentModes('visit-installment');
-    let totalDueAmount = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).map(a => a.DiscountedPrice || 0).reduce((acu, a) => { return acu + a; }, 0)
+    const totalDueAmount = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).map(a => a.DiscountedPrice || 0).reduce((acu, a) => { return acu + a; }, 0)
     this.visitInstallmentForm.patchValue({
       totalCharges: totalDueAmount, // (this.visitDetails.billingInfo[0].NetAmount || 0),
       // alreadyReceivedAmount: this.visitDetails.billingInfo[0].ReceivedAmount || 0,
@@ -815,7 +815,7 @@ export class VisitTrackingComponent implements OnInit {
     });
     // let testsAmountAfterRefund = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).filter( a => !a.checked).map(a=>a.DiscountedPrice || 0).reduce((acu, a) => {return acu+a;}, 0)
 
-    let installmentAllowed = this.installmentAllowed();
+    const installmentAllowed = this.installmentAllowed();
     if (1) {// installmentAllowed.allowed) {
       this.visitInstallmentForm.controls.receivingAmount.enable();
       this.visitInstallmentForm.controls.paymentMode.enable();
@@ -833,8 +833,8 @@ export class VisitTrackingComponent implements OnInit {
       return;
     }
 
-    let formValues = this.visitInstallmentForm.getRawValue();
-    let payObj = {
+    const formValues = this.visitInstallmentForm.getRawValue();
+    const payObj = {
       VisitID: formValues.visitId,
       Amount: this.helperService.parseNumbericValues(formValues.receivingAmount || 0),
       ModeId: formValues.paymentMode,
@@ -847,8 +847,8 @@ export class VisitTrackingComponent implements OnInit {
       LocId: this.loggedInUser.locationid || 0,
       OnlinePaymentReferenceID:null,
     }
-    let paymentArr = [payObj];
-    let dataToPost = {
+    const paymentArr = [payObj];
+    const dataToPost = {
       createdBy: this.loggedInUser.userid || -99,
       payment: paymentArr,
     }
@@ -916,7 +916,7 @@ export class VisitTrackingComponent implements OnInit {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + 
         btoa(JSON.stringify({ VisitID: Number(visitNo), TPID: row.TPId }));
 
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
         // winRef.close();
     }, 1000);

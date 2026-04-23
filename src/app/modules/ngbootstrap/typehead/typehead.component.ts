@@ -767,7 +767,7 @@ export class TypeheadComponent implements OnInit {
     this.exampleGlobalConfigurationOfTypeaheads = globalConfigurationOfTypeaheads;
   }
 
-  // tslint:disable-next-line:variable-name
+ 
   constructor(private _service: WikipediaService, config: NgbTypeaheadConfig) {}
 
   search6 = (text$: Observable<string>) =>
@@ -783,7 +783,7 @@ export class TypeheadComponent implements OnInit {
               )
               .splice(0, 10)
       )
-      // tslint:disable-next-line:semicolon
+     
     );
 
   search5 = (text$: Observable<string>) =>
@@ -798,7 +798,7 @@ export class TypeheadComponent implements OnInit {
               )
               .slice(0, 10)
       )
-      // tslint:disable-next-line:semicolon
+     
     );
 
   formatter3 = (result: string) => result.toUpperCase();
@@ -819,7 +819,7 @@ export class TypeheadComponent implements OnInit {
         )
       ),
       tap(() => (this.searching = false))
-      // tslint:disable-next-line:semicolon
+     
     );
 
   search3 = (text$: Observable<string>) =>
@@ -833,7 +833,7 @@ export class TypeheadComponent implements OnInit {
               .filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
               .slice(0, 10)
       )
-      // tslint:disable-next-line:semicolon
+     
     );
 
   search2 = (text$: Observable<string>) => {
@@ -856,7 +856,7 @@ export class TypeheadComponent implements OnInit {
         ).slice(0, 10)
       )
     );
-    // tslint:disable-next-line:semicolon
+   
   };
 
   search = (text$: Observable<string>) =>
@@ -870,6 +870,6 @@ export class TypeheadComponent implements OnInit {
               .filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
               .slice(0, 10)
       )
-      // tslint:disable-next-line:semicolon
+     
     );
 }

@@ -119,7 +119,7 @@ export class PatientInsuranceComponent implements OnInit {
     this.activeCases = 0;
     this.inactiveCases = 0;
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -198,10 +198,10 @@ export class PatientInsuranceComponent implements OnInit {
         return;
       }
     }
-    let locationid = formValues.locationid;
+    const locationid = formValues.locationid;
     !locationid ? (this.showLocColumn = true) : (this.showLocColumn = false);
 
-    let objParams = {
+    const objParams = {
       DateFrom: DateFrom,
       DateTo: DateTo,
       LocIds:
@@ -286,7 +286,7 @@ export class PatientInsuranceComponent implements OnInit {
 
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -327,7 +327,7 @@ export class PatientInsuranceComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.patientTypeList = _response.Table6 || [];
         },
         (err) => {
@@ -338,7 +338,7 @@ export class PatientInsuranceComponent implements OnInit {
   panelsList = [];
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       branchId: null,
     };
     this.spinner.show(this.spinnerRefs.panelsDropdown);
@@ -407,7 +407,7 @@ export class PatientInsuranceComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -420,7 +420,7 @@ export class PatientInsuranceComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = [
+    const cols = [
       "PatientMRNo",
       "PatientName",
       "Cell",

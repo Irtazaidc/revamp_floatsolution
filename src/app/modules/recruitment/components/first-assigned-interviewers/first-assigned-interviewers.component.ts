@@ -61,13 +61,13 @@ export class FirstAssignedInterviewersComponent implements OnInit {
     confirmPopoverCancel: () => {}
   }
 
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonModal: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerModal: boolean = true;//Hide Loader
-  isSpinnerShortListed: boolean = true;//Hide Loader
-  isSpinnerRejected: boolean = true;//Hide Loader
-  isSpinnerConfirmed: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonModal = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerModal = true;//Hide Loader
+  isSpinnerShortListed = true;//Hide Loader
+  isSpinnerRejected = true;//Hide Loader
+  isSpinnerConfirmed = true;//Hide Loader
 
   formSetInterviewerSingle = this.fb.group({
     EmpId: ['', Validators.compose([Validators.required])],
@@ -138,14 +138,14 @@ export class FirstAssignedInterviewersComponent implements OnInit {
   getOpenJobsList(){
     this.spinner.show(this.spinnerRefs.OpenJobsListSection);
     this.OpenJobsList =[];
-    let objParm = {
+    const objParm = {
       InterviewerStage:  1
       // LocID:  formValues.branchIds,
       // DepartmentID:  formValues.departmentIds,
       // JobStatusID:  formValues.JobStatus?formValues.JobStatus:null
     }
     this.recruitment.getOpenJobsList(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.OpenJobsList = resSearchJob||[];
         // this.OpenJobsList = this.OpenJobsList.filter( a=> (a.ApplicantStatusID == 5));
@@ -163,17 +163,17 @@ export class FirstAssignedInterviewersComponent implements OnInit {
   getOpenJobsListWithInterviewers(){
     this.spinner.show(this.spinnerRefs.OpenJobsListWithInterviewersSection);
     this.OpenJobsListWithInterviewers =[];
-    let objParm = {
+    const objParm = {
       InterviewerStage:  1
     }
     this.recruitment.getOpenJobsListWithInterviewers(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.OpenJobsListWithInterviewers = [];
-      let newArr = [];
+      const newArr = [];
       resSearchJob.forEach(a => {
-          let _obj = JSON.parse(JSON.stringify(a));
-          let alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
+          const _obj = JSON.parse(JSON.stringify(a));
+          const alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
           if(alreadyAddedIndex > -1) {
               newArr[alreadyAddedIndex].empIds.push(_obj.InterviewerID);
           } else {
@@ -200,11 +200,11 @@ export class FirstAssignedInterviewersComponent implements OnInit {
 
   getEmployees() {
     this.InterviewersList = [];
-    let params = {};
+    const params = {};
     this.sharedService.getEmployees(params).subscribe( (res: any) => {
       this.spinner.hide();
       if(res && res.StatusCode == 200) {
-        let empList = JSON.parse(res.PayLoadStr);
+        const empList = JSON.parse(res.PayLoadStr);
         this.InterviewersList = empList.map(a => ({EmpId:a.EmpId, EmpNo:a.EmpNo,EmployeeName:a.EmployeeName,UserId:a.UserId, FullName: '[IDC-'+a.EmpNo.padStart(4, '0')+'] '+a.EmployeeName }));
       }else{
         this.InterviewersList = []
@@ -230,7 +230,7 @@ export class FirstAssignedInterviewersComponent implements OnInit {
     this.JobRequestID = id;
     this.ExistingRow = [];
     this.ExistingRowRemarks =[];
-    let paramObj = {
+    const paramObj = {
       JobRequestID:this.JobRequestID
     }
     
@@ -261,7 +261,7 @@ export class FirstAssignedInterviewersComponent implements OnInit {
           this.Skills= this.ExistingRow["SkillsRequiredHTML"];
           let skillRec = this.ExistingRow["SkillsRequired"];
           skillRec = skillRec.replaceAll("\n", "").replaceAll("\r", "");
-          let string  = skillRec.split(',');
+          const string  = skillRec.split(',');
           [...string];
           Array.from(string);
           this.SkillsArray = Object.assign([], string);
@@ -278,10 +278,10 @@ export class FirstAssignedInterviewersComponent implements OnInit {
   setJobInterviewersBulk(){
     this.loadingProcess('show',1);
     this.spinner.show(this.spinnerRefs.OpenJobsListSection); 
-    let jobListChecked = this.OpenJobsList.filter( a=> a.checked);
+    const jobListChecked = this.OpenJobsList.filter( a=> a.checked);
     let isValidEmp = true;
     let isValidStartDate = true;
-    let isValidEndDate = true;
+    const isValidEndDate = true;
     jobListChecked.forEach(a => {
       if(!a.empIds) {
         isValidEmp = false;
@@ -305,7 +305,7 @@ export class FirstAssignedInterviewersComponent implements OnInit {
       return;
     } else {
       if(jobListChecked.length){
-        let objDataTemp = 
+        const objDataTemp = 
           jobListChecked.map( a => (
             {
               JobRequestID : a.JobRequestID, 
@@ -315,7 +315,7 @@ export class FirstAssignedInterviewersComponent implements OnInit {
             }
           ));
          
-          let objData = {
+          const objData = {
             CreatedBy : this.loggedInUser.userid || -99,
             InterviewerStage:  1,
             tblJobRequestInterviewers: objDataTemp
@@ -349,10 +349,10 @@ export class FirstAssignedInterviewersComponent implements OnInit {
   updateJobInterviewersBulk(){
     this.loadingProcess('show',1);
     this.spinner.show(this.spinnerRefs.OpenJobsListSection); 
-    let jobListChecked = this.OpenJobsListWithInterviewers.filter( a=> a.checked);
+    const jobListChecked = this.OpenJobsListWithInterviewers.filter( a=> a.checked);
     let isValidEmp = true;
     let isValidStartDate = true;
-    let isValidEndDate = true;
+    const isValidEndDate = true;
     jobListChecked.forEach(a => {
       if(!a.empIds) {
         isValidEmp = false;
@@ -376,7 +376,7 @@ export class FirstAssignedInterviewersComponent implements OnInit {
       return;
     } else {
       if(jobListChecked.length){
-        let objDataTemp = 
+        const objDataTemp = 
           jobListChecked.map( a => (
             {
               JobRequestID : a.JobRequestID, 
@@ -386,7 +386,7 @@ export class FirstAssignedInterviewersComponent implements OnInit {
             }
           ));
          
-          let objData = {
+          const objData = {
             CreatedBy : this.loggedInUser.userid || -99,
             InterviewerStage:  1,
             tblJobRequestInterviewers: objDataTemp
@@ -418,12 +418,12 @@ export class FirstAssignedInterviewersComponent implements OnInit {
   }
 
   setJobInterviewersSingle(){
-    let formValues = this.formSetInterviewerSingle.getRawValue();
+    const formValues = this.formSetInterviewerSingle.getRawValue();
     this.loadingProcess('show',2) 
     // this.spinner.show(this.spinnerRefs.JobRequestDetailSectionModal);
     this.formSetInterviewerSingle.markAllAsTouched();
     if(this.formSetInterviewerSingle.valid) {
-      let objParam = {
+      const objParam = {
         CreatedBy : this.loggedInUser.userid || -99,
         InterviewerStage:  1,
         tblJobRequestInterviewers: [{

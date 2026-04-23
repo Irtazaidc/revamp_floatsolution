@@ -19,8 +19,8 @@ export class ReportingV2Component implements OnInit {
 
   @ViewChild('questionnaireModal') questionnaireModal;
   @ViewChild('modalExistingAccountsList') modalExistingAccountsList;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
 
   constructor(
     private appPopupService: AppPopupService, 

@@ -74,7 +74,7 @@ export class ViewSalesDepositSlipsComponent implements OnInit {
 
 
   getSalesDepositSlipReportData(){
-    let formValues = this.searchDepositSlipsForm.getRawValue();
+    const formValues = this.searchDepositSlipsForm.getRawValue();
     this.SalesSlipDataList = [];
 
     if (this.searchDepositSlipsForm.invalid) {
@@ -83,7 +83,7 @@ export class ViewSalesDepositSlipsComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       SaleDate: Conversions.formatDateObject(formValues.Salesdate) || null,
       LocIds: formValues.BranchId.join(',') || null,
     };

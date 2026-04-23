@@ -135,11 +135,11 @@ handleKeyboardEvent(event: KeyboardEvent) {
 }
 
 getRadioShareSummary() {
-  let formValues = this.searchSlipForm.getRawValue();
+  const formValues = this.searchSlipForm.getRawValue();
   this.DoctorShareSummaryList = [];
   this.uniqueSubSections = [];
   this.DoctorName = null;
-  let params = {
+  const params = {
     DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
     DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
     DocId: this.AdminAccessPermission ? formValues.doctorID : this.loggedInUser.userid,
@@ -174,10 +174,10 @@ clearGroupedSections(){
 
 getRadioShareDetails(){
   this.ifDetail = true;
-  let formValues = this.searchSlipForm.getRawValue();
+  const formValues = this.searchSlipForm.getRawValue();
   this.DoctorShareDetalList = [];
   this.clearGroupedSections();
-  let params = {
+  const params = {
     DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
     DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
     DocId: this.AdminAccessPermission ? formValues.doctorID : this.loggedInUser.userid,
@@ -227,7 +227,7 @@ getRadioShareDetails(){
 // }
 getRadiologistInfoDetail() {
   this.radoiologistList = [];
-  let params = {
+  const params = {
     EmpID: null,
   };
   this.questionnaireSrv.getRadiologistInfoDetail(params).subscribe(
@@ -468,12 +468,12 @@ calculateGrandTotal(): number {
 subSectionList =[]
  getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -484,11 +484,11 @@ subSectionList =[]
     isPINGenerated = false;
     isPINAuthinticated = false;
     getScreenPINByUserID() {
-      let paramObj = {
+      const paramObj = {
         UserID: this.loggedInUser.userid
       }
       this.sharedService.getData(API_ROUTES.GET_SCREEN_PIN_BY_USER_ID, paramObj).subscribe((data: any) => {
-        let response = data.PayLoad;
+        const response = data.PayLoad;
         console.log("response is ", response)
         this.isPINGenerated = response.some(item => item.ScreenPINID == 1 && item.AppUserScreenPINID);
         // if (this.isPINGenerated) {
@@ -706,7 +706,7 @@ subSectionList =[]
 
  screenPermissionsObj
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     console.log("User Screen Permsions___",this.screenPermissionsObj);
     this.AdminAccessPermission = this.screenPermissionsObj?.admin_share_accessV2 ? true : false;
@@ -714,10 +714,10 @@ subSectionList =[]
   }
 
   filterResults() {
-     let cols = ['PIN','PatientName','TPName','SubSectionTitle'];
+     const cols = ['PIN','PatientName','TPName','SubSectionTitle'];
      let results: any = this.groupedSections;
      if (this.searchTextShareDetail && this.searchTextShareDetail.length > 1) {
-       let pipe_filterByKey = new FilterByKeyPipe();
+       const pipe_filterByKey = new FilterByKeyPipe();
        results = pipe_filterByKey.transform(this.DoctorShareDetalList, this.searchTextShareDetail, cols, this.DoctorShareDetalList);
      }
      this.DoctorShareDetalList = results;

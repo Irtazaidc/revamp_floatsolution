@@ -117,12 +117,12 @@ export class CmsContactbackTrackingComponent implements OnInit {
       this.toastr.warning("Please Fill the required Fields");
       return;
     }
-    let formValues = this.InsertCMSContactBackTrackingForm.getRawValue();
+    const formValues = this.InsertCMSContactBackTrackingForm.getRawValue();
     console.log("InsertCMSContactBackTracking ~ formValues:", formValues)
     const contactBackDateTime = Conversions.mergeDateTime(formValues.ContactBackDate, formValues.ContactBackTime);
     console.log("mergeDateAndTime", contactBackDateTime);
 
-    let objParm = {
+    const objParm = {
       ContactBackStatusID: formValues.contactBackStatus || null,
       ContactBackDateTime: contactBackDateTime,
       CMSRequestID: this.CMSRequestID,
@@ -159,7 +159,7 @@ export class CmsContactbackTrackingComponent implements OnInit {
       : source;
   }
   getHistoryOfCMSContactBackTracking() {    
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.CMSRequestID,
     };
     this.complaintDashboardService
@@ -197,7 +197,7 @@ export class CmsContactbackTrackingComponent implements OnInit {
 
   getCMSrequestInquiry() {  
     this.cmsInquiryList = [];
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.CMSRequestID,
     };
     this.complaintDashboardService.getCMSinquiryDetails(objParm).subscribe(

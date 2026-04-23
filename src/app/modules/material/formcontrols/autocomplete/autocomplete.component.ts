@@ -677,8 +677,7 @@ export class AutocompleteComponent implements OnInit {
       map((val) => this.filter44(val))
     );
 
-    // tslint:disable-next-line:no-non-null-assertion
-    this.stateGroupOptions = this.stateForm
+       this.stateGroupOptions = this.stateForm
       .get('stateGroup')!
       .valueChanges.pipe(
         startWith(''),

@@ -39,7 +39,7 @@ export class HcAdminDashboardComponent implements OnInit {
   }
 
   getAdminDashboardcounts() {
-    let params = {
+    const params = {
       "UserId": this.loggedInUser.userid
     }
     this.HCService.getHCAdminDashboardCounts(params).subscribe((resp: any) => {

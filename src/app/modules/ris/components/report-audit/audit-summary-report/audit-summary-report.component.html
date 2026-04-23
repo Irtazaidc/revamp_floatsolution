@@ -23,7 +23,7 @@
     <div class="card-body">
         <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='radiologist-audit-findings'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='radiologist-audit-findings'">
                     <label for="RadiologistID" class="control-label">Radiologst:</label>
                     <ng-select style="width: 100%;"  
                         class="mr-1"
@@ -183,7 +183,7 @@
                                     <span  *ngIf="screenIdentity==='audit-findings'"><i class="far fa-share-square"></i>Share <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerShare" ></i></span>
                                     </button> -->
 
-                                    <button *ngIf="screenIdentity!='radiologist-audit-findings' && RadiologistAuditID && AuditStatusID==6 && screenIdentity==='audit-summary-report'" 
+                                    <button *ngIf="screenIdentity!=='radiologist-audit-findings' && RadiologistAuditID && AuditStatusID==6 && screenIdentity==='audit-summary-report'" 
                                 [disabled]="disabledButtonShare" 
                                 type="button" 
                                 class="btn btn-sm btn-danger pull-right ml-2" 
@@ -238,7 +238,7 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th *ngIf="screenIdentity=='audit-findings'" style="width: 1%;"><input type="checkbox" class="cursor-pointer" (change)="selectAllReports($event)" [disabled]="isFieldDisabled" ngbTooltip="{{checkboxTooltip}}" /></th>
+                                                <th *ngIf="screenIdentity==='audit-findings'" style="width: 1%;"><input type="checkbox" class="cursor-pointer" (change)="selectAllReports($event)" [disabled]="isFieldDisabled" ngbTooltip="{{checkboxTooltip}}" /></th>
                                                 <th style="width: 11%;" scope="col" >PIN Number</th>
                                                 <th style="width: 10%;" scope="col" >PatientName</th>
                                                 <th style="width: 10%;" scope="col" >Section</th>
@@ -250,7 +250,7 @@
                                         <tbody>
                                             <tr *ngFor="let row of risWorklist | filterByKey:searchText:['PIN','TPCode','TPName','PatientName','Section']; let i = index" class="cursor-pointer" 
                                             [ngClass]="{'active': i==rowIndex}">
-                                            <td style="width: 1%;" *ngIf="screenIdentity=='audit-findings'"> 
+                                            <td style="width: 1%;" *ngIf="screenIdentity==='audit-findings'"> 
                                                 <input
                                                     type="checkbox"
                                                     class="cursor-pointer"
@@ -269,9 +269,9 @@
                                             </td>
                                                 <td style="width: 10%;">{{ row.PatientName }}</td>
                                                 <td style="width: 10%;">{{ row.Section }}</td>
-                                                <td style="width: 15%;">{{ row.TPCode }}<br *ngIf="screenIdentity!='radiologist-audit-findings'">
+                                                <td style="width: 15%;">{{ row.TPCode }}<br *ngIf="screenIdentity!=='radiologist-audit-findings'">
                                                 <!-- <small class="text-danger" *ngIf="row.isShared && screenIdentity!='radiologist-audit-findings'">(Shared)</small><br> -->
-                                                <small *ngIf="screenIdentity!='radiologist-audit-findings'" class="text-danger">({{ row.AuditStatus }})</small><br>
+                                                <small *ngIf="screenIdentity!=='radiologist-audit-findings'" class="text-danger">({{ row.AuditStatus }})</small><br>
                                                     <ng-container *ngFor="let element of starRatingElementsInner" class="text-right">
                                                         <tr data-th="Star Rating">
                                                             <td>

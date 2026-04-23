@@ -82,14 +82,14 @@ export class DoctorPresConfigComponent implements OnInit {
 
 
   getDoctorPrescRpt() {
-    let formValues = this.medicForm.getRawValue();
+    const formValues = this.medicForm.getRawValue();
 
     if (this.medicForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       RefByListID: formValues.radID || null,
@@ -99,7 +99,7 @@ export class DoctorPresConfigComponent implements OnInit {
       console.log("res:", res)
       this.spinner.hide(this.spinnerRefs.doctorPresTable);
       if (res.StatusCode == 200) {
-        let dataSet = JSON.parse(res.PayLoadStr);
+        const dataSet = JSON.parse(res.PayLoadStr);
         this.dotcorPrescriptionList = dataSet['Table'] || [];
         console.log("🚀dotcorPrescriptionList:", this.dotcorPrescriptionList)
       }
@@ -121,16 +121,16 @@ export class DoctorPresConfigComponent implements OnInit {
       this.toasrt.warning("Document ID isn't available");
       return;
     }
-    let objParams = {
+    const objParams = {
       DoctorPrescriptionID: this.DocumentID || null,
     }
     this.spinner.show(this.spinnerRefs.doctorPres);
     this.tpservice.GetDoctorPrescription(objParams).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.doctorPres);
       if (res.StatusCode == 200) {
-        let dataSet = JSON.parse(res.PayLoadStr);
+        const dataSet = JSON.parse(res.PayLoadStr);
         this.dotcorPrescription = dataSet['Table'] || [];
-        let resp = this.helper.formateImagesData(this.dotcorPrescription, 'PrescriptionImage');
+        const resp = this.helper.formateImagesData(this.dotcorPrescription, 'PrescriptionImage');
         this.OCRImg = resp[0].PrescriptionImage;
         this.spinner.hide(this.spinnerRefs.doctorPresTable);
         this.showDocument();
@@ -150,7 +150,7 @@ export class DoctorPresConfigComponent implements OnInit {
   radoiologistList
 
   getRadiologistInfoDetail() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.questionnaireSrv.getRadiologistInfoDetail(params).subscribe((res: any) => {

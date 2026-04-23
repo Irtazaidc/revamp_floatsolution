@@ -82,9 +82,9 @@ export class PostDengueDataComponent implements OnInit {
     this.getTehsils();
   }
   getDengueDataToPost() {
-    let formValues = this.GetDenPortal.getRawValue();
+    const formValues = this.GetDenPortal.getRawValue();
 
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObjectToString(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObjectToString(formValues.dateTo) || null,
       LocID: formValues.locID || null,
@@ -136,9 +136,9 @@ export class PostDengueDataComponent implements OnInit {
 
       }
       else {
-        let curcnic1 = cur.CNIC.substring(0, 5);
-        let curcnic2 = cur.CNIC.substring(5, 12);
-        let curcnic3 = cur.CNIC.substring(12, 13);
+        const curcnic1 = cur.CNIC.substring(0, 5);
+        const curcnic2 = cur.CNIC.substring(5, 12);
+        const curcnic3 = cur.CNIC.substring(12, 13);
         cur.CNIC = curcnic1 + '-' + curcnic2 + '-' + curcnic3;
       }
 
@@ -280,7 +280,7 @@ export class PostDengueDataComponent implements OnInit {
     }, [])
     console.log("resultresultresultresultresult", result);
     for (let i = 0; i < result.length; i++) {
-      let params = {
+      const params = {
         t: this.Token,
         patient: result[i],
         // visitid: a.VisitId,
@@ -404,7 +404,7 @@ export class PostDengueDataComponent implements OnInit {
   
 
   updateDengueDataToPost(){
-    let params = {
+    const params = {
       PatientId:this.selectedRow.PatientID,
       VisitId: this.selectedRow.VisitId, 
       // PermanentTehsilID: this.selectedRow.PermanentTehsilID || null, 

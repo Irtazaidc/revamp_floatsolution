@@ -16,7 +16,7 @@ export class SampleTrnsprtTabComponent implements OnInit {
   }
 
   
-  selectedTabIndex: number = 0; 
+  selectedTabIndex = 0; 
 
   onTabChanged(event): void {
     this.selectedTabIndex = event.index;

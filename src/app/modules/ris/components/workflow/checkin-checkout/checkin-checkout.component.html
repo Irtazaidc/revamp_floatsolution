@@ -337,9 +337,9 @@
                 <ng-template #popContent>
                     <ng-container *ngIf="objJson !==null && objJson.length">
                         <div *ngFor="let h of objJson; let i = index">
-                            <span *ngIf="h.technicianHitory || h.technicianHitory!=''" class="text-primary">
+                            <span *ngIf="h.technicianHitory || h.technicianHitory!==''" class="text-primary">
                                 {{h.unserName}} | {{h.savedOn}} </span>
-                            <p *ngIf="h.technicianHitory || h.technicianHitory!=''"
+                            <p *ngIf="h.technicianHitory || h.technicianHitory!==''"
                                 style="border-bottom: 1px dashed #cccdd3;">{{h.technicianHitory}}</p>
                         </div>
 
@@ -362,7 +362,7 @@
                     </mat-checkbox>
                 <textarea [(ngModel)]="TechnicianHistory" cols="" rows="" class="form-control form-control-sm"
                     [disabled]="isFieldDisabled"
-                    [ngClass]="{'invalid': isTechHistoryRequred && TechnicianHistory=='', 'invalid-highlighted': buttonClicked && techHistoryValidityCheck && TechnicianHistory=='' }"></textarea>
+                    [ngClass]="{'invalid': isTechHistoryRequred && TechnicianHistory==='', 'invalid-highlighted': buttonClicked && techHistoryValidityCheck && TechnicianHistory==='' }"></textarea>
             </div>
         </div>
     </div>
@@ -438,7 +438,7 @@
                             <select name="ModalityID" class="form-control form-control-sm"
                                 [(ngModel)]="MachineModalityID" style="height: 37px;"
                                 [disabled]="isDisabledMachineModalityDropdown"
-                                [ngClass]="{'invalid': !MachineModalityID || MachineModalityID == '', 'invalid-highlighted': techHistoryModalityCheck && (!MachineModalityID || MachineModalityID == '')}">
+                                [ngClass]="{'invalid': !MachineModalityID || MachineModalityID === '', 'invalid-highlighted': techHistoryModalityCheck && (!MachineModalityID || MachineModalityID === '')}">
                                 <option value="">--Select Modality--</option>
                                 <option *ngFor="let item of modalities" [value]="item.MachineModalityID">
                                     {{item.MachineTitle}}

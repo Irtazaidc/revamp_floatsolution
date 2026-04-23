@@ -100,7 +100,7 @@ export class UpdateRefByComponent implements OnInit {
     }
   
     try {
-      let formValue = this.VisitInfoForm.getRawValue();
+      const formValue = this.VisitInfoForm.getRawValue();
       this.visitId = formValue.VisitID;
     } catch (error) {
       console.error("Error during search:", error);
@@ -118,8 +118,8 @@ export class UpdateRefByComponent implements OnInit {
       return;
     }
   
-    let formValues = this.updateForm.getRawValue();
-    let refByDoc = formValues.RefDoc?.Name;
+    const formValues = this.updateForm.getRawValue();
+    const refByDoc = formValues.RefDoc?.Name;
   
     if (!refByDoc) {
       this.toastr.warning("Invalid Doctor Name");
@@ -131,7 +131,7 @@ export class UpdateRefByComponent implements OnInit {
       return;
     }
   
-    let objParams = {
+    const objParams = {
       VisitID: this.visitId,
       RefBy: refByDoc,
       ModifiedBy: this.loggedInUser?.userid,
@@ -143,7 +143,7 @@ export class UpdateRefByComponent implements OnInit {
       (res: any) => {
         this.spinner.hide(this.spinnerRefs.loadForm);
         if (res.StatusCode === 200) {
-          let data = JSON.parse(res.PayLoadStr);
+          const data = JSON.parse(res.PayLoadStr);
           if (data[0].Result === 1) {
             this.toastr.success(res.Message);
             // this.updateForm.reset();
@@ -176,7 +176,7 @@ export class UpdateRefByComponent implements OnInit {
   
   getRefByDoctors() {
     this.refByDocList = [{ Name: 'Self' }];
-    let _params = {};
+    const _params = {};
     this.spinner.show(this.spinnerRefs.refByDocField);
     this.lookupService.getRefByDoctors(_params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.refByDocField);
@@ -217,12 +217,12 @@ export class UpdateRefByComponent implements OnInit {
   
 
   getVisitInfoByVisitID(VisitID) {
-    let Params = {
+    const Params = {
       VisitID: VisitID || null,
     }
     this.patientService.getVisitInfoByVisitID(Params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let data = JSON.parse(res.PayLoadStr);
+        const data = JSON.parse(res.PayLoadStr);
         // this.getRefNo = data[0].RefNo || null;
         this.getRefBy = data[0].RefBy || null;
 

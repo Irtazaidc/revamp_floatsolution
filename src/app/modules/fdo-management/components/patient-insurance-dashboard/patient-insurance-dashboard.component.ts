@@ -35,7 +35,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
   maxDate: any;
   searchText = "";
   showLocColumn = false;
-  isActive: number = -1;
+  isActive = -1;
   activeCases = 0;
   inactiveCases = 0;
   isSubmitted = false;
@@ -166,7 +166,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
     this.activeCases = 0;
     this.inactiveCases = 0;
 
-    let formValues = this.dashboardDataForm.getRawValue();
+    const formValues = this.dashboardDataForm.getRawValue();
 
     if (this.dashboardDataForm.invalid) {
       this.toastr.warning("Please Select Mandatory Fields");
@@ -174,7 +174,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.date) || null,
       DateTo: Conversions.formatDateObject(formValues.date) || null,
       LocIds: formValues.locationid || null,
@@ -247,8 +247,8 @@ export class PatientInsuranceDashboardComponent implements OnInit {
     if (this.chart) {
       this.chart.update();
     }
-    let inactive = this.inactiveCases;
-    let active = this.activeCases;
+    const inactive = this.inactiveCases;
+    const active = this.activeCases;
     this.pieChartData = [{ data:[active, inactive]}];
   }
 
@@ -262,7 +262,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.patientTypeList = _response.Table6 || [];
         },
         (err) => {
@@ -322,7 +322,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
 
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       branchId: null,
     };
     this.spinner.show(this.spinnerRefs.panelsDropdown);
@@ -346,7 +346,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -359,7 +359,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = [
+    const cols = [
       "PatientMRNo",
       "PatientName",
       "Cell",
@@ -369,7 +369,7 @@ export class PatientInsuranceDashboardComponent implements OnInit {
     ];
     let results: any = this.insuranceDataList;
     if (this.searchText && this.searchText.length > 1) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(
         this.insuranceDataList,
         this.searchText,

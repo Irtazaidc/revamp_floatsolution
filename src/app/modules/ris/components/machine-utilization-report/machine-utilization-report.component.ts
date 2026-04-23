@@ -33,13 +33,13 @@ export class MachineUtilizationReportComponent implements OnInit {
   };
 
   machineUtilizationForm: FormGroup = this.formBuilder.group(this.Fields);
-  disabledButton: boolean = false;
+  disabledButton = false;
   MachineList = [];
   RISMachineID: any = null;
   BranchesList: any = [];
   utilizationList: any = [];
   isSubmitted = false;
-  isSpinner: boolean = true;
+  isSpinner = true;
   isDisable = false;
   spinnerRefs = {
     listSection: "listSection",
@@ -71,7 +71,7 @@ export class MachineUtilizationReportComponent implements OnInit {
     this.BranchesList = [];
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -85,7 +85,7 @@ export class MachineUtilizationReportComponent implements OnInit {
   }
 
   getUtilizationReport() {
-    let formValues = this.machineUtilizationForm.getRawValue();
+    const formValues = this.machineUtilizationForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom
       ? Conversions.formatDateObject(formValues.dateFrom)
       : null;
@@ -118,7 +118,7 @@ export class MachineUtilizationReportComponent implements OnInit {
       this.isDisable = true;
     }
 
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(formValues.date),
       DateTo: Conversions.formatDateObject(formValues.date),
       RISMachineID: formValues.machineId,
@@ -194,7 +194,7 @@ export class MachineUtilizationReportComponent implements OnInit {
 
   searchText = "";
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

@@ -102,7 +102,7 @@ export class ManagePanelUsersComponent implements OnInit {
 
   getPanelUsersData() {
     this.panelUsersDataList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.searchTable)
     this.Billing.GetPanelUsers(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.searchTable)
@@ -134,7 +134,7 @@ export class ManagePanelUsersComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       PanelUserId: this.PanelUserId
     };
     this.spinner.show(this.spinnerRefs.insertForm)
@@ -166,7 +166,7 @@ export class ManagePanelUsersComponent implements OnInit {
       this.toastr.warning("Please Provide Panel UserId");
       return;
     }
-    let params = {
+    const params = {
       PanelUserId: this.PanelUserId,
       IsDeleted: 1,
       CreatedBy: this.loggedInUser.userid || -1,
@@ -190,13 +190,13 @@ export class ManagePanelUsersComponent implements OnInit {
 
   InsertUpdatePanelUser() {
    
-    let formValues = this.userCreationForm.getRawValue();
+    const formValues = this.userCreationForm.getRawValue();
     if (this.userCreationForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let params = {
+    const params = {
       PanelUserId: this.PanelUserId || null,
       Username: formValues.Username || null,
       Password: formValues.Password || null,

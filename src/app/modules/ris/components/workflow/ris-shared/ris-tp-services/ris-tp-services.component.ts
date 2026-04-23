@@ -26,15 +26,15 @@ export class RisTpServicesComponent implements OnInit {
   RISServices = []
   getRISServicesByVisitIDAll() {
     this.RISServices = [];
-    let params = {
+    const params = {
       VisitID: this.VisitId,
       isShowAllService:1
     };
     this.sharedService.getData(API_ROUTES.GET_RISSERVICES_BY_VISITID, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let services = res.PayLoad || [];
-        let result = services.reduce((re, o) => {
-          let existObj = re.find(
+        const services = res.PayLoad || [];
+        const result = services.reduce((re, o) => {
+          const existObj = re.find(
             obj => obj.TPID === o.TPID
           )
 

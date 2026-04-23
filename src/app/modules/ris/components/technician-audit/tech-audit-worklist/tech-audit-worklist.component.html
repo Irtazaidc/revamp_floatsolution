@@ -73,7 +73,7 @@
             </div>
         </div>
         <!--end::Search Filter-->
-        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!='assign-bulk-test'">
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!=='assign-bulk-test'">
             <div class="col-12">
                 <img class="img-fluid" src="assets/images/brand/no-data-found-orange.svg" style="height: 178px;" alt="No Data Found image">
                 <p class="text-salmon" style="margin-top: -20px;">
@@ -81,7 +81,7 @@
                 </p>
             </div>
         </div>
-        <div class="row" *ngIf="screenIdentity!='assign-bulk-test'">
+        <div class="row" *ngIf="screenIdentity!=='assign-bulk-test'">
             <div class="col-md-12">
                 <div class="table-responsive" style="min-height: 330px;">
                     <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
@@ -90,14 +90,14 @@
                                 <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
                                     <ng-container>
                                         <th style="cursor: pointer" [ngStyle]="{ width: header === 'VisitNo' ? '15%' : '' }"
-                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='DeliveryDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy' && header!='InitBy' && header!='TechnologistVisitTPAuditID' && header!='AuditStatusID' && header!='TechRemarks'
-                                            && header!='FeedBackBy'
-                                            && header!='FeedBackOn'
-                                            && header!='FeedBackRemarks'
-                                            && header!='FeedBackDetailRemarks'
-                                            && header!='FBHLocCode'
-                                            && header!='isMetal'
-                                            && header!='isPreMedical'
+                                            *ngIf="(header !== 'RISWorkListID' && header !== 'TPId' && header !== 'PatientId' && header !== 'StatusId' && header !=='RISStatusID' && header !=='ProcessId' && header !=='MOBy' && header !=='StatusBadgeClass' && header !=='isMedicalOfficerIntervention' && header !=='EmpId' && header !=='PhoneNumber' && header !=='DeliveryDate' && header !=='isConsentRead' && header !=='TPCode' && header !=='isTechHistoryRequred' && header !=='TestStatus' && header !=='InitializedOn' && header!=='TranscribedBy' && header!=='InitBy' && header!=='TechnologistVisitTPAuditID' && header!=='AuditStatusID' && header!=='TechRemarks'
+                                            && header!=='FeedBackBy'
+                                            && header!=='FeedBackOn'
+                                            && header!=='FeedBackRemarks'
+                                            && header!=='FeedBackDetailRemarks'
+                                            && header!=='FBHLocCode'
+                                            && header!=='isMetal'
+                                            && header!=='isPreMedical'
                                             )">
                                             {{header}}</th>
                                     </ng-container>
@@ -126,14 +126,14 @@
                                         <span class="cursor-pointer" *ngIf="objKey == 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
                                     </td> -->
                                     <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy' && objKey!='InitBy' && objKey!='TechnologistVisitTPAuditID'  && objKey!='AuditStatusID' && objKey!='TechRemarks'
-                                        && objKey!='FeedBackBy'
-                                        && objKey!='FeedBackOn'
-                                        && objKey!='FeedBackRemarks'
-                                        && objKey!='FeedBackDetailRemarks'
-                                        && objKey!='FBHLocCode'
-                                        && objKey!='isMetal'
-                                        && objKey!='isPreMedical'
+                                        *ngIf="(objKey !== 'RISWorkListID' && objKey !== 'TPId' && objKey !== 'PatientId' && objKey !== 'StatusId' && objKey !=='RISStatusID' && objKey !=='ProcessId' && objKey !=='MOBy' && objKey!=='StatusBadgeClass' && objKey!=='isMedicalOfficerIntervention' && objKey!=='EmpId' && objKey!=='PhoneNumber' && objKey!=='DeliveryDate' && objKey!=='isConsentRead' && objKey!=='TPCode' && objKey!=='isTechHistoryRequred' && objKey!=='TestStatus'  && objKey!=='InitializedOn' && objKey!=='TranscribedBy' && objKey!=='InitBy' && objKey!=='TechnologistVisitTPAuditID'  && objKey!=='AuditStatusID' && objKey!=='TechRemarks'
+                                        && objKey!=='FeedBackBy'
+                                        && objKey!=='FeedBackOn'
+                                        && objKey!=='FeedBackRemarks'
+                                        && objKey!=='FeedBackDetailRemarks'
+                                        && objKey!=='FBHLocCode'
+                                        && objKey!=='isMetal'
+                                        && objKey!=='isPreMedical'
                                         )">
 
                                         <ng-template #popFeedbackContent>
@@ -150,24 +150,24 @@
                                                         </li>
                                                         </ul>
                                                     </ng-container>
-                                                    <p *ngIf="row.FeedBackRemarks || row.FeedBackRemarks!=''" style="border-top: 1px dashed #cccdd3;"><strong>Remarks:</strong>{{row.FeedBackRemarks||'NA'}}</p>
+                                                    <p *ngIf="row.FeedBackRemarks || row.FeedBackRemarks!==''" style="border-top: 1px dashed #cccdd3;"><strong>Remarks:</strong>{{row.FeedBackRemarks||'NA'}}</p>
                                                 </div>
                                                
                                             </ng-container>
                                         </ng-template>
 
-                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                             <i [ngClass]="returnCopyClasses(i)"
                                             class="ti-files"
                                             ngbPopover="copied"
                                             triggers="click:mouseleave"
                                             (click)="copyText(row,i)">&nbsp;</i>
                                         </span>
-                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')">{{ row[objKey] || '--' }}</span>
-                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate')">{{ row[objKey] || 'Registered' }}</span>
-                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer">{{ row[objKey] || 'Registered' }}</label>
-                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'" class="badge badge-primary badge-border-white cursor-pointer">{{ row[objKey] }}</label>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'">
+                                        <span class="cursor-pointer" *ngIf="(objKey === 'InitializedBy')">{{ row[objKey] || '--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey !== 'Workflow Status' && objKey !== 'TestStatus' && objKey !== 'InitializedBy' && objKey !== 'TPCode' && objKey !== 'PatientName' && objKey !== 'RegistrationDate')">{{ row[objKey] || 'Registered' }}</span>
+                                        <label *ngIf="(objKey === 'Workflow Status' && (objKey!=null || objKey!=='') && objKey !== 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer">{{ row[objKey] || 'Registered' }}</label>
+                                        <label *ngIf="objKey === 'TestStatus' && objKey !== 'InitializedBy'" class="badge badge-primary badge-border-white cursor-pointer">{{ row[objKey] }}</label>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'PatientName'">
                                             {{ row[objKey] }}
                                             <i style="font-size: 12px;" 
                                                *ngIf="row.isMetal" 
@@ -189,13 +189,13 @@
                                             ></i>
                                         </span>
                                         <i style="font-size: 15px;"
-                                            *ngIf="row.isPreMedical && objKey == 'TPName'" 
+                                            *ngIf="row.isPreMedical && objKey === 'TPName'" 
                                             class="fas fa-notes-medical text-danger ml-1" 
                                             [ngClass]="{'text-white': i==rowIndex}"
                                             [ngbTooltip]="'Study for Medical Fitness'" 
                                             placement="top" >
                                         </i>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'RegistrationDate'">{{ row[objKey] | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'RegistrationDate'">{{ row[objKey] | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
                                     </td>
                                 </ng-container>
                                 <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'reporting-worklist'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
@@ -236,7 +236,7 @@
                                                 <span (click)="getRowActive(i)">
                                                     <app-dicom-dropdown-button  [btnPayload]="{TPID:row.TPId,VisitID:row.VisitNo, styleClass:'dropdown-item',iconClass:'fas fa-x-ray text-primary cursor-pointer', btnText:'DICOM'}"></app-dicom-dropdown-button>
                                                 </span>
-                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistory(row)" class="dropdown-item">
                                                     <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
                                                         History</span>
@@ -247,12 +247,12 @@
                                                     <span><i class="fas fa-clipboard-check text-primary cursor-pointer"></i> Tech Atudit</span>
                                                 </button>
 
-                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                <button *ngIf="screenIdentity==='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-qrcode text-primary cursor-pointer"></i>
                                                         Print Radio Lable</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistoryReport(row)" class="dropdown-item">
                                                     <span><i class="fa fa-file text-primary cursor-pointer"></i>
                                                         MO History Report </span>

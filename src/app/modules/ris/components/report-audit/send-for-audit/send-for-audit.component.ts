@@ -92,12 +92,12 @@ export class SendForAuditComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -122,7 +122,7 @@ export class SendForAuditComponent implements OnInit {
   }
 
   getRadiologist() {
-    let objParams = {
+    const objParams = {
       isAuditor: null
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST, objParams).subscribe((resp: any) => {
@@ -138,7 +138,7 @@ export class SendForAuditComponent implements OnInit {
   }
   auditorRadoiologistList = []
   getAuditorRadiologist() {
-    let objParams = {
+    const objParams = {
       isAuditor: 1
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST, objParams).subscribe((resp: any) => {
@@ -239,12 +239,12 @@ export class SendForAuditComponent implements OnInit {
     this.mainChk = false;
     this.checkedItemCount = 0;
     this.risWorklist = [];
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     this._form.markAllAsTouched();
     if (this._form.invalid) {
       this.toastr.warning('Please select any radiologist!'); return false;
     } else {
-      let params = {
+      const params = {
         RadiologistEmpID: formValues.RadiologistID,
         SubSectionIDs: formValues.subSectionIDs ? formValues.subSectionIDs.join(",") : null,
         DateFrom: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : '',
@@ -277,7 +277,7 @@ export class SendForAuditComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -381,7 +381,7 @@ export class SendForAuditComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.VisitID && this.TPId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -414,7 +414,7 @@ export class SendForAuditComponent implements OnInit {
     this.mainChk = false;
   }
   countCheckedItems() {
-    let checkedItems = this.risWorklist.filter(item => item.checked);
+    const checkedItems = this.risWorklist.filter(item => item.checked);
     this.checkedItemCount = checkedItems.length;
     this.mainChk = this.risWorklist.length == this.checkedItemCount ? true : false;
   }
@@ -442,7 +442,7 @@ export class SendForAuditComponent implements OnInit {
 
   listTosend = [];
   addToList() {
-    let checkedItems = this.risWorklist.filter(a => a.checked);
+    const checkedItems = this.risWorklist.filter(a => a.checked);
     if (!checkedItems.length) {
       this.toastr.warning("Please select any test to add to send list for audit", "No Test Selection");
       return;
@@ -492,7 +492,7 @@ export class SendForAuditComponent implements OnInit {
   insertUpdateRadiologistVisitTPAudit() {
     this.isSubmitClicked = true;
     // let checkedItems = this.risWorklist.filter(a => a.checked);
-    let checkedItems = this.listTosend;
+    const checkedItems = this.listTosend;
     if (!this.AuditorRadiologistID) {
       this.toastr.warning("Please select any Doctor", "No Doctor selected");
       return;
@@ -501,7 +501,7 @@ export class SendForAuditComponent implements OnInit {
       this.toastr.warning("Please select any test to send", "No Test Selection");
       return;
     } else {
-      let objParam = {
+      const objParam = {
         AuditorRadiologistID: this.AuditorRadiologistID,
         RadiologistID: this._form.getRawValue().RadiologistID,
         RadiologistName: this.RadiologistName,

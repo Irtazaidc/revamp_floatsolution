@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, UserModel } from 'src/app/modules/auth';
@@ -13,7 +13,7 @@ import { SharedService } from 'src/app/modules/shared/services/shared.service';
   templateUrl: './visit-tp-inventory.component.html',
   styleUrls: ['./visit-tp-inventory.component.scss']
 })
-export class VisitTpInventoryComponent implements OnInit {
+export class VisitTpInventoryComponent implements OnInit, OnChanges {
   spinnerRefs = {
     inventorySection: 'inventorySection'
   }
@@ -27,8 +27,8 @@ export class VisitTpInventoryComponent implements OnInit {
     cancelClicked: false,
     confirmPopoverCancel: () => { }
   }
-  disabledButtonInventory: boolean = false;
-  isSpinnerInventory: boolean = true;
+  disabledButtonInventory = false;
+  isSpinnerInventory = true;
   VisitID: any = null;
   TPID: any = null;
   StatusID: any = null;
@@ -84,7 +84,7 @@ export class VisitTpInventoryComponent implements OnInit {
 
   getVisitTPInventory() {
     this.TPItemsList = []
-    let params = {
+    const params = {
       VisitID: this.VisitID,
       TPID: this.TPID,
       StatusID: 7,
@@ -133,7 +133,7 @@ export class VisitTpInventoryComponent implements OnInit {
   isValidInventoryQty = false;
   insertUpdateVisitTPInventory(saveFrom) {
     this.isValidInventoryQty = false;
-    let checkedItems = this.TPItemsList.filter(a => a.checked);
+    const checkedItems = this.TPItemsList.filter(a => a.checked);
     if (!checkedItems.length) {
       if (saveFrom == 1) {
         this.toastr.warning("Please select store item(s) to save", "Warning");
@@ -171,7 +171,7 @@ export class VisitTpInventoryComponent implements OnInit {
       this.isDoneTPInventory = 0;
       return
     } else {
-      let objParam = {
+      const objParam = {
         TPID: this.TPID,
         VisitID: Number(this.VisitID),
         CreatedBy: this.VerifiedUserID ? this.VerifiedUserID : this.loggedInUser.userid,

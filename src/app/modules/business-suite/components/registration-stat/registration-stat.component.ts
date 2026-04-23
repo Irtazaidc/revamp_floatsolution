@@ -233,7 +233,7 @@ export class RegistrationStatComponent implements OnInit {
       this.chartType = 2;
     }
     this.branchName = "- Comparative Graph";
-    let filterBranches = this.regCountList.filter(aa => aa.isBranchSelected)
+    const filterBranches = this.regCountList.filter(aa => aa.isBranchSelected)
     console.log("length chart branch", filterBranches.length, filterBranches);
     if (filterBranches.length == 0) {
       this.toastr.show("No Branch Selected");
@@ -246,11 +246,11 @@ export class RegistrationStatComponent implements OnInit {
 
     let arGraphData = JSON.parse(JSON.stringify(filterBranches));
 
-    let newData = arGraphData.map(a => {
-      let obja = Object.values(a);
+    const newData = arGraphData.map(a => {
+      const obja = Object.values(a);
       obja.shift();
       obja.shift();
-      let nObj = { data: obja, label: a.BranchName }
+      const nObj = { data: obja, label: a.BranchName }
       return nObj;
     })
 
@@ -267,7 +267,7 @@ export class RegistrationStatComponent implements OnInit {
 
     // regCountListData = Object.values(arGraphData);
     arGraphData = arGraphData.map(aa => {
-      let newObj = aa
+      const newObj = aa
       delete newObj.isBranchSelected;
       return newObj;
     })
@@ -305,7 +305,7 @@ export class RegistrationStatComponent implements OnInit {
       this.chartType = 2;
     }
     this.branchName = "- Comparative Graph";
-    let filterSectionTest = this.testRegCountList.filter(aa => aa.isTSSelected)
+    const filterSectionTest = this.testRegCountList.filter(aa => aa.isTSSelected)
     // let filterSectionTest1 =  JSON.parse(JSON.stringify(filterSectionTest)) ;
     filterSectionTest.map(v => {
       delete v.isTSSelected;
@@ -324,12 +324,12 @@ export class RegistrationStatComponent implements OnInit {
 
     let arGraphData = JSON.parse(JSON.stringify(filterSectionTest));
     // console.log("length chart Section arGraphData", arGraphData);
-    let newData = arGraphData.map(a => {
-      let obja = Object.values(a);
+    const newData = arGraphData.map(a => {
+      const obja = Object.values(a);
       // console.log("length chart Section obja", obja);
       obja.shift();
       // obja.shift();
-      let nObj = { data: obja, label: a.Section || a.TPCode }
+      const nObj = { data: obja, label: a.Section || a.TPCode }
       return nObj;
     })
 
@@ -347,7 +347,7 @@ export class RegistrationStatComponent implements OnInit {
 
     // regCountListData = Object.values(arGraphData);
     arGraphData = arGraphData.map(aa => {
-      let newObj = aa
+      const newObj = aa
       delete newObj.isBranchSelected;
       return newObj;
     })
@@ -381,11 +381,11 @@ export class RegistrationStatComponent implements OnInit {
 
   searchBranchWiseRegistrationCount() {
 
-    let a = moment(this.fromDate);
-    let b = moment(this.toDate);
-    let totalYear = b.diff(a, 'years');
-    let c = a.add(totalYear, 'year');
-    let totalD = b.diff(c, 'd');
+    const a = moment(this.fromDate);
+    const b = moment(this.toDate);
+    const totalYear = b.diff(a, 'years');
+    const c = a.add(totalYear, 'year');
+    const totalD = b.diff(c, 'd');
     console.log("totalYear", totalYear, c, totalD);
     if (totalYear >= 1) {
       if (totalD > 0) {
@@ -630,7 +630,7 @@ export class RegistrationStatComponent implements OnInit {
     this.regCountList = [];
 
     // let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(this.fromDate),
       DateTo: Conversions.formatDateObject(this.toDate),
       GroupBy: this.groupBy,
@@ -643,7 +643,7 @@ export class RegistrationStatComponent implements OnInit {
     console.log("date obje", objParm, this.fromDate);
     this.bussinesSuite.getBranchWiseVisitCountAnalytics(objParm).subscribe((res: any) => {
       this.regCountList = [];
-      let resRegCount = res.PayLoad || [];
+      const resRegCount = res.PayLoad || [];
       this.RegMonths = Object.keys(resRegCount[0]).filter(key => key !== 'LocID' && key !== 'BranchName' && key !== 'isBranchSelected');
       this.RegMonths.forEach(month => {
         const sum = resRegCount.reduce((acc, branch) => {
@@ -699,7 +699,7 @@ export class RegistrationStatComponent implements OnInit {
     // this.spinner.show('GetBranches');
     this.lookupService.GetBranches().subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre', 'IDC ');
       });
@@ -722,14 +722,14 @@ export class RegistrationStatComponent implements OnInit {
   getSubSection() {
 
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID
     }
     // this.spinner.show('GetBranches');
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
 
       this.subSectionList = _response;
 
@@ -740,9 +740,9 @@ export class RegistrationStatComponent implements OnInit {
   }
 
   getTestProfile() {
-    let subSectIDs = this.subSectionIDs.join(",");
+    const subSectIDs = this.subSectionIDs.join(",");
     this.testProfileList = [];
-    let objParm = {
+    const objParm = {
       TPID: null,
       TestProfileCode: null,
       TestProfileName: null,
@@ -753,7 +753,7 @@ export class RegistrationStatComponent implements OnInit {
     // this.spinner.show('GetBranches');
     this.testProfileService.getTestsProfileForAnalytics(objParm).subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
 
       this.testProfileList = _response;
       // console.log("Test Profile List",this.testProfileList);
@@ -799,10 +799,10 @@ export class RegistrationStatComponent implements OnInit {
     // this.subSectionIDs = [];
     // this.testProfileIDs = [];
     this.labDeptID = null;
-    let locID = rowSelect.LocID;
-    let vTPIDs = this.testProfileIDs;
-    let vLabDeptID = -1;
-    let vSubSectionIDs = this.subSectionIDs;
+    const locID = rowSelect.LocID;
+    const vTPIDs = this.testProfileIDs;
+    const vLabDeptID = -1;
+    const vSubSectionIDs = this.subSectionIDs;
 
     this.branchName = "for " + rowSelect.BranchName;
 
@@ -817,10 +817,10 @@ export class RegistrationStatComponent implements OnInit {
     this.subSectionIDs = [];
     // this.testProfileIDs = [];
     this.labDeptID = null;
-    let locID = rowSelect.LocID;
-    let vTPIDs = this.testProfileIDs;
-    let vLabDeptID = -1;
-    let vSubSectionIDs = [];
+    const locID = rowSelect.LocID;
+    const vTPIDs = this.testProfileIDs;
+    const vLabDeptID = -1;
+    const vSubSectionIDs = [];
 
     this.branchName = "for " + rowSelect.BranchName;
 
@@ -847,7 +847,7 @@ export class RegistrationStatComponent implements OnInit {
   }
 
   sortByHeader(tHeader) {
-    let newRegCountList = this.regCountList;
+    const newRegCountList = this.regCountList;
     console.log("not sort Header", this.regCountList);
     if (this.sortOrder == 1) {
       if (tHeader == "BranchName") {
@@ -908,7 +908,7 @@ export class RegistrationStatComponent implements OnInit {
 
     this.testRegCountList = [];
     // let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(this.fromDate),
       DateTo: Conversions.formatDateObject(this.toDate),
       GroupBy: this.groupBy,
@@ -921,7 +921,7 @@ export class RegistrationStatComponent implements OnInit {
     console.log("objParm", objParm);
     // console.log("date obje",this.branchIds.join(','));
     this.bussinesSuite.getSectionWiseVisitCountAnalyticsByLocID(objParm).subscribe((res: any) => {
-      let resRegCount = res.PayLoad || [];
+      const resRegCount = res.PayLoad || [];
 
       if (resRegCount.length && res.StatusCode == 200) {
         this.testRegCountList = resRegCount || [];
@@ -944,7 +944,7 @@ export class RegistrationStatComponent implements OnInit {
 
     this.testRegCountList = [];
     // let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(this.fromDate),
       DateTo: Conversions.formatDateObject(this.toDate),
       GroupBy: this.groupBy,
@@ -957,7 +957,7 @@ export class RegistrationStatComponent implements OnInit {
     console.log("objParm", objParm);
     // console.log("date obje",this.branchIds.join(','));
     this.bussinesSuite.getTPCodeWiseVisitCountAnalyticsByLocID(objParm).subscribe((res: any) => {
-      let resRegCount = res.PayLoad || [];
+      const resRegCount = res.PayLoad || [];
 
       if (resRegCount.length && res.StatusCode == 200) {
         this.testRegCountList = resRegCount || [];
@@ -979,10 +979,10 @@ export class RegistrationStatComponent implements OnInit {
       this.chartType = 2;
     }
 
-    let arGraphData = JSON.parse(JSON.stringify(rowSelect));
+    const arGraphData = JSON.parse(JSON.stringify(rowSelect));
     if (arGraphData["LocID"]) {
-      let locID = arGraphData["LocID"];
-      let arLocation = this.branchesList.filter(aa => aa.LocId == locID)
+      const locID = arGraphData["LocID"];
+      const arLocation = this.branchesList.filter(aa => aa.LocId == locID)
 
       this.branchName = "for " + arLocation[0]["Title"];
     }
@@ -1040,7 +1040,7 @@ export class RegistrationStatComponent implements OnInit {
         this.excel.push(row);
       });
       this.excel = this.excel.map(aa => {
-        let objD = aa;
+        const objD = aa;
         delete objD.isBranchSelected;
         return objD;
       })
@@ -1052,7 +1052,7 @@ export class RegistrationStatComponent implements OnInit {
         this.excel.push(row);
       });
       this.excel = this.excel.map(aa => {
-        let objD = aa;
+        const objD = aa;
         delete objD.isBranchSelected;
         return objD;
       })

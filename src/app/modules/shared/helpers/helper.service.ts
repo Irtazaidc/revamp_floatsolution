@@ -17,9 +17,9 @@ export class HelperService {
     // private toastr: ToastrService
   ) { }
   addImagesData(data) { // add patient image, either from DB or clipart according to gender
-    let imaagesAddedData = [];
+    const imaagesAddedData = [];
     data.forEach(element => {
-        let obj = {...element};
+        const obj = {...element};
         if(!element['PatientImage']) {
             obj['PatientImage'] = ((element['Gender'] || element["GENDER"]) == 'F' ? CONSTANTS.USER_IMAGE.FEMALE : (element['Gender'] || element["GENDER"]) == 'M' ? CONSTANTS.USER_IMAGE.MALE : CONSTANTS.USER_IMAGE.UNSPECIFIED);
         } else {
@@ -33,9 +33,9 @@ export class HelperService {
   }
 
   promotionImagesData(data) { 
-    let imaagesAddedData = [];
+    const imaagesAddedData = [];
     data.forEach(element => {
-        let obj = {...element};
+        const obj = {...element};
         if(element['PromotionImage']!=null){
           if(element['PromotionImage'].indexOf('data:image') <= -1) { // check if image prefix is already appended
             obj['PromotionImage'] = CONSTANTS.IMAGE_PREFIX.PNG + element['PromotionImage'];
@@ -47,9 +47,9 @@ export class HelperService {
     return imaagesAddedData;
   }
   promotionThumbnailImagesData(data) { 
-    let imaagesAddedData = [];
+    const imaagesAddedData = [];
     data.forEach(element => {
-        let obj = {...element};
+        const obj = {...element};
         if(element['PromotionImageThumbnail']!=null){
           if(element['PromotionImageThumbnail'].indexOf('data:image') <= -1) { // check if image prefix is already appended
             obj['PromotionImageThumbnail'] = CONSTANTS.IMAGE_PREFIX.PNG + element['PromotionImageThumbnail'];
@@ -61,10 +61,10 @@ export class HelperService {
     return imaagesAddedData;
   }
   addPrefixToDocs(data) { 
-    let docsData = [];
+    const docsData = [];
     data.forEach( (doc, i) => {
-        let obj = {...doc};
-        let _obj:IVisitDocs = new VisitDocs();
+        const obj = {...doc};
+        const _obj:IVisitDocs = new VisitDocs();
         _obj.data = (obj.VisitDocBase64 || obj.Doc || obj.VisitDocBase64Thumbnail || obj.GDocBase64 || obj.DocBase64 || '' );
 
         _obj.docId = (obj.DocId);
@@ -140,7 +140,7 @@ export class HelperService {
    //new code comentd  // valueWithoutTax = fullValue * (1 + taxRate / 100)
 
 
-    let obj = {
+    const obj = {
       fullValue: fullValue,
       taxRate: taxRate,
       taxValue: fullValue - valueWithoutTax,
@@ -155,7 +155,7 @@ export class HelperService {
 
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = { ...{
+    const _settings = { ...{
         // relativeTo: this.route,
         replaceUrl: true,
         queryParams: params,
@@ -227,7 +227,7 @@ export class HelperService {
         }
       }
     }
-    let hashes = encryptedQueryString.split('&'); // atob
+    const hashes = encryptedQueryString.split('&'); // atob
     for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split(/=(.+)/); //.split('=');
       //vars.push(hash[0]);
@@ -238,9 +238,9 @@ export class HelperService {
   }
 
   formateImagesData(data,imageColumnName) { 
-    let imaagesAddedData = [];
+    const imaagesAddedData = [];
     data.forEach(element => {
-        let obj = {...element};
+        const obj = {...element};
         if(element[imageColumnName]!=null){
           if(element[imageColumnName].indexOf('data:image') <= -1) {
             obj[imageColumnName] = CONSTANTS.IMAGE_PREFIX.PNG + element[imageColumnName];

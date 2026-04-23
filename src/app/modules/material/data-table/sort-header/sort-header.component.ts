@@ -294,7 +294,7 @@ export class SortHeaderComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort2;
   }
 
-  // tslint:disable-next-line:variable-name
+ 
   sortData(_sort: Sort) {
     const data = this.desserts.slice();
     if (!_sort.active || _sort.direction === '') {

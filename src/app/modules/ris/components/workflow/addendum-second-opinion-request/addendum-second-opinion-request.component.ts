@@ -16,7 +16,7 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
 })
 export class AddendumSecondOpinionRequestComponent implements OnInit {
 
-  @Input('buttonControls') buttonControls = [''];
+  @Input() buttonControls = [''];
 
 
   loggedInUser: UserModel;
@@ -37,8 +37,8 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
   pageSize = 5;
   collectionSize = 0;
   selectedVisit: any = null;
-  disabledButton: boolean = false;
-  isSpinner: boolean = true;
+  disabledButton = false;
+  isSpinner = true;
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Confirmation Alert', // 'Are you sure?',
@@ -91,7 +91,7 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
 
   getTPByVisitIDForAddendum(VisitID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID
     };
     this.spinner.show(this.spinnerRefs.listSection);
@@ -147,7 +147,7 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
   }
   clickSubmitBtn = false;
   insertUpdateVisitTestAddendum() {
-    let checkedTests = this.visitTests.filter(a => a.checked);
+    const checkedTests = this.visitTests.filter(a => a.checked);
 
     // if (this.AddendumRemarks.length < 15) {
     //   this.clickSubmitBtn=true;
@@ -169,8 +169,8 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
         return;
       } else {
         this.clickSubmitBtn = false;
-        let TPIDs = checkedTests.map(obj => obj.TPID).join(",")
-        let formData = {
+        const TPIDs = checkedTests.map(obj => obj.TPID).join(",")
+        const formData = {
           VisitID: this.VisitID,
           TPIDs: TPIDs,
           // Remarks: this.AddendumRemarks,
@@ -246,7 +246,7 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
       this.disabledPhysician = false;
     }
   }
-  RequestType: string = '1'; // RISAddendumTypeID Selects 'Addendum' by default, 1:Addendum, 2:Second Opinion 
+  RequestType = '1'; // RISAddendumTypeID Selects 'Addendum' by default, 1:Addendum, 2:Second Opinion 
   noticeBoardHeading = "Addendum";
   noticeBoardText = "Addendum can be done by the primary reporting doctor.";
 
@@ -262,7 +262,7 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
 
   radoiologistList = [];
   getRadiologistInfo() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_INFO, params).subscribe((res: any) => {
@@ -274,7 +274,7 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
   }
   addendumReviewSources = [];
   getRISAddendumReviewSource() {
-    let params = {};
+    const params = {};
     this.sharedService.getData(API_ROUTES.GET_RIS_ADDENDUM_REVIEW_SOURCE, params).subscribe((res: any) => {
       this.addendumReviewSources = res.PayLoad || [];
     }, (err) => {
@@ -285,12 +285,12 @@ export class AddendumSecondOpinionRequestComponent implements OnInit {
 
   showHideBtnSubmit = false;
   onAddenSecondOpinCheckboxChange() {
-    let checkedTests = this.visitTests.filter(a => a.checked);
+    const checkedTests = this.visitTests.filter(a => a.checked);
     this.showHideBtnSubmit = (checkedTests.length) ? true : false;
   }
 
   revertAddendum(tp) {
-    let objParm = {
+    const objParm = {
       TPID: tp.TPID,
       VisitID: this.VisitID,
       CreatedBy: this.loggedInUser.userid || -1

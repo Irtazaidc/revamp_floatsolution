@@ -74,7 +74,7 @@ export class QuickPeerReviwComponent implements OnInit {
   searchText = '';
   ngOnInit(): void {
     this.loadLoggedInUserInfo();
-    let risFilterParams = this.storageService.getObject('risFilterParams');
+    const risFilterParams = this.storageService.getObject('risFilterParams');
     if (risFilterParams) {
       this.branchIDs = risFilterParams.branch;
       this.subSectionIDs = risFilterParams.subSectionIDs
@@ -114,12 +114,12 @@ export class QuickPeerReviwComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -147,7 +147,7 @@ export class QuickPeerReviwComponent implements OnInit {
     this.validateBranch = true;
   }
   getAllLocationByUserID() {
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid
     }
     this.lookupSrv.getAllLocationByUserID(param).subscribe((resp: any) => {
@@ -159,8 +159,8 @@ export class QuickPeerReviwComponent implements OnInit {
 
   validateBranch = false;
   searchByVisit() {
-    let visitID = this.risParamsForm.getRawValue().visitID;
-    let branch = this.risParamsForm.getRawValue().branch;
+    const visitID = this.risParamsForm.getRawValue().visitID;
+    const branch = this.risParamsForm.getRawValue().branch;
     // let branchField = this.risParamsForm.get('branch');
     if (visitID) {
       this.risParamsForm.patchValue({
@@ -176,7 +176,7 @@ export class QuickPeerReviwComponent implements OnInit {
     }
   }
   checkBranch(e) {
-    let visitID = this.risParamsForm.getRawValue().visitID;
+    const visitID = this.risParamsForm.getRawValue().visitID;
     if (!e.length && visitID)
       this.validateBranch = true;
     else
@@ -194,9 +194,9 @@ export class QuickPeerReviwComponent implements OnInit {
   _object = Object;
   getPeerReviewData() {
     // this.searchByVisit();
-    let formValues = this.risParamsForm.getRawValue();
-    let visitID = formValues.visitID;
-    let branch = formValues.branch;
+    const formValues = this.risParamsForm.getRawValue();
+    const visitID = formValues.visitID;
+    const branch = formValues.branch;
     if ((!formValues.dateFrom || !formValues.dateTo) && !visitID) {
       this.toastr.error('Please Select Date Range');
       this.isValidDateRange = false;
@@ -236,7 +236,7 @@ export class QuickPeerReviwComponent implements OnInit {
     this.cd.detectChanges();
 
 
-    let storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : formValues;
+    const storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : formValues;
     this.storageService.setObject('risFilterParams', formValues);
 
     // if (formValues.visitID) {
@@ -248,7 +248,7 @@ export class QuickPeerReviwComponent implements OnInit {
       // this.filterResults();
       this.risWorkist = [];
       this.spinner.show(this.spinnerRefs.listSection);
-      let params = {
+      const params = {
         VisitID: formValues.visitID ? formValues.visitID.replaceAll("-", '') : null,
         BranchIDs: formValues.branch ? formValues.branch.join(",") : null,
         DateFrom: formValues.visitID ? null : formValues.dateFrom,
@@ -259,7 +259,7 @@ export class QuickPeerReviwComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.listSection);
         if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
           this.orignaRisList = resp.PayLoad
-          let dataset = resp.PayLoad;
+          const dataset = resp.PayLoad;
           // console.log("dataset: ", dataset)
           this.risWorkist = dataset.map(a => ({
             BranchCode: a.BranchCode,
@@ -292,9 +292,9 @@ export class QuickPeerReviwComponent implements OnInit {
           }));
           // this.risWorkist = resp.PayLoad;
           // ['VisitNo', 'PatientName', 'TPCode', 'TestStatus']
-          let newris = [];
+          const newris = [];
           this.risWorkist = this.risWorkist.map((a, i) => {
-            let _obj = {};
+            const _obj = {};
             this.colNamesForMOScreen.forEach(b => { _obj[b] = a[b] }); return _obj
           })
           this.filterResults();
@@ -392,10 +392,10 @@ export class QuickPeerReviwComponent implements OnInit {
   filterResults() {
     // this.clearVariables(0);
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorkist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorkist, this.searchText, cols, this.risWorkist);
     }
     this.pagination.filteredSearchResults = results;
@@ -406,11 +406,11 @@ export class QuickPeerReviwComponent implements OnInit {
   }
   refreshPagination_() {
     // this.clearVariables(0);
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;;
   }
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -433,7 +433,7 @@ export class QuickPeerReviwComponent implements OnInit {
   isCoppied = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -603,7 +603,7 @@ export class QuickPeerReviwComponent implements OnInit {
   }
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -622,7 +622,7 @@ export class QuickPeerReviwComponent implements OnInit {
   getPACSServers(visitID, TPID, rowIndex) {
     this.rowIndex = rowIndex;
     // this.toastr.info("Working in progress", "Success");
-    let VisitID = visitID.replaceAll("-", "");
+    const VisitID = visitID.replaceAll("-", "");
     this.SysInfo = this.auth.getSystemInfoFromStorage();
     // 240301044020,@TPId INT=926--2123
     // let objParams = {
@@ -636,7 +636,7 @@ export class QuickPeerReviwComponent implements OnInit {
       VisitID: VisitID,
       TPID: TPID
     }];
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail
@@ -808,7 +808,7 @@ export class QuickPeerReviwComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -850,11 +850,11 @@ export class QuickPeerReviwComponent implements OnInit {
   }
   isActive = null;
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -865,7 +865,7 @@ export class QuickPeerReviwComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -893,15 +893,15 @@ export class QuickPeerReviwComponent implements OnInit {
   openMOHistoryReport(row) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(row.VisitNo.replaceAll("-", "")), TPID: row.TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
   }
-  isSpinnerAssign: boolean = true;//Hide Loader
-  isSpinnerUnAssign: boolean = true;//Hide Loader
-  disabledButtonAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonUnAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerAssign = true;//Hide Loader
+  isSpinnerUnAssign = true;//Hide Loader
+  disabledButtonAssign = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonUnAssign = false; // Button Enabled / Disables [By default Enabled]
   VisitId = null;
   assigneeName = null;
   rowGlobal: any = null;

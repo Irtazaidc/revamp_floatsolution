@@ -196,7 +196,7 @@
                     <tr>
                       <ng-container *ngFor="let header of _object.keys(regCountList[0]); let i = index ">
                         <ng-container>
-                          <th *ngIf="header != 'LocID'">{{header}}</th>
+                          <th *ngIf="header !== 'LocID'">{{header}}</th>
                         </ng-container>
                       </ng-container>
                       <th class="text-right"> Section Detail </th>
@@ -207,7 +207,7 @@
                     <tr *ngFor="let row of regCountList; let i = index ">
   
                       <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
-                        <td *ngIf="objKey != 'LocID'">{{ row[objKey] }} </td>
+                        <td *ngIf="objKey !== 'LocID'">{{ row[objKey] }} </td>
                       </ng-container>
                       <td class="text-right">
                         <span (click)="showSectionWiseRegCount(row)" class="cursor-pointer" style="font-size: 17px;"

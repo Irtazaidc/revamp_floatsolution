@@ -37,8 +37,7 @@ import { SharedService } from "./modules/shared/services/shared.service";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet } from "@angular/router";
 @Component({
-  // tslint:disable-next-line:component-selector
-  selector: "body[root]",
+   selector: "body[root]",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
   // changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,9 +64,9 @@ export class AppComponent implements OnInit, OnDestroy {
   locationInfo: any;
   error: string | null = null;
 
-  inactivityDuration: number = 20; // Default to 20 minutes
-  warningDuration: number = 1; // Default to 1 minute
-  countdown: number = 60;
+  inactivityDuration = 20; // Default to 20 minutes
+  warningDuration = 1; // Default to 1 minute
+  countdown = 60;
 
   appVersionUpdatesPopupRef: NgbModalRef;
   LogOutSettings = null;
@@ -168,7 +167,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     // Trigger after initial change detection to avoid NG0100 in dev mode.
-    setTimeout(() => this.getAppVersion());
+    setTimeout(() => {
+      this.getAppVersion();
+    }, 1000);
 
     this.setupActivityBroadcast();
     this.userActivitySubscription();

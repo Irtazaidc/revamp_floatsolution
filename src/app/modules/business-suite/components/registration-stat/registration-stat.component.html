@@ -173,9 +173,9 @@
                     <th>Select</th>
                     <ng-container *ngFor="let header of _object.keys(regCountList[0]); let i = index">
                       <ng-container>
-                        <th style="cursor: pointer" (click)="sortByHeader(header)" *ngIf="header != 'LocID' && header != 'isBranchSelected'">
+                        <th style="cursor: pointer" (click)="sortByHeader(header)" *ngIf="header !== 'LocID' && header !== 'isBranchSelected'">
                           <span>
-                            <span *ngIf="header != 'BranchName'" class="text-danger d-block d-sm-inline">
+                            <span *ngIf="header !== 'BranchName'" class="text-danger d-block d-sm-inline">
                               ({{ monthSums[header] || '-' }})
                             </span>
                             {{ header }}
@@ -198,7 +198,7 @@
                         <input type="checkbox" [(ngModel)]='row.isBranchSelected'>
                       </td>
                       <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
-                        <td *ngIf="objKey != 'LocID' && objKey != 'isBranchSelected'">
+                        <td *ngIf="objKey !== 'LocID' && objKey !== 'isBranchSelected'">
                           {{ row[objKey] || '--'}} 
                         </td>
                       </ng-container>
@@ -355,7 +355,7 @@
                         <tr>
                           <th> select</th>
                           <ng-container *ngFor="let header of _object.keys(testRegCountList[0]); let i = index ">
-                            <ng-container *ngIf="header != 'isTSSelected'">
+                            <ng-container *ngIf="header !== 'isTSSelected'">
                               <th>{{header}} </th>
                             </ng-container>
                           </ng-container>
@@ -369,7 +369,7 @@
                             <input type="checkbox" [(ngModel)]='row.isTSSelected'>
                           </td>
                           <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
-                            <td *ngIf="objKey != 'isTSSelected'">{{ row[objKey] }} </td>
+                            <td *ngIf="objKey !== 'isTSSelected'">{{ row[objKey] }} </td>
                           </ng-container>
                           <!-- <td class="text-right">
                                         <span   (click)="showTestWiseRegCount(row)" class="cursor-pointer" style="font-size: 17px;" placement="top" ngbTooltip="View Detail"> 

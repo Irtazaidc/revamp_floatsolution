@@ -31,7 +31,7 @@ export class OnlineHcRequestsComponent implements OnInit {
     this.SelOnlineBookkings = [];
     this.SelBookingData = [];
 
-    let params = {
+    const params = {
 
     }
     // this.spinner.show(this.spinnerRep.fileterspinner);
@@ -117,7 +117,7 @@ export class OnlineHcRequestsComponent implements OnInit {
       return acc;
     }, []);
     result.forEach((a, i) => {
-      let _obj = JSON.parse(JSON.stringify(a));
+      const _obj = JSON.parse(JSON.stringify(a));
       _obj.CSTP = _obj.TPDetail.map(a => { return a.TPName }).join(',');
       result[i].CM = _obj.TPDetail.map(a => { return a.TPName }).join(',');
       result[i].tpCodes = _obj.TPDetail.map(a => { return a.TPCode }).join(',');
@@ -252,11 +252,11 @@ export class OnlineHcRequestsComponent implements OnInit {
 
     InProgressPreFormatedData.forEach((a, i) => {
 
-      let finalResult = [];
+      const finalResult = [];
       a.bookingDetail.forEach((b, ti) => {
-        let _obj = JSON.parse(JSON.stringify(b));
-        let tpObj = { TPName: b.TPName, SampleType: b.SampleType }
-        let idx = finalResult.findIndex((c, ii) => { return c.BookingPatientID == b.BookingPatientID });
+        const _obj = JSON.parse(JSON.stringify(b));
+        const tpObj = { TPName: b.TPName, SampleType: b.SampleType }
+        const idx = finalResult.findIndex((c, ii) => { return c.BookingPatientID == b.BookingPatientID });
         a.CommSepTP = Array.prototype.map.call(InProgressPreFormatedData[i].bookingDetail, function (item) { return item.TPName; }).join(",");
         a.commSepBIDs = Array.prototype.map.call(InProgressPreFormatedData[i].bookingDetail, function (item) { return item.BookingPatientID; }).join(",");
         a.commSepBIDs = a.commSepBIDs.split(',')

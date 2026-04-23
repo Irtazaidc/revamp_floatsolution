@@ -50,9 +50,9 @@ export class GenerateHcShareComponent implements OnInit {
   RidersDetailList: any = [];
   unproccessedShareData: any = [];
   proccessedShareData: any = [];
-  IsMasterDisable: boolean = false;
-  masterSelected: boolean = false;
-  ReqIDsMasterSelected: boolean = false;
+  IsMasterDisable = false;
+  masterSelected = false;
+  ReqIDsMasterSelected = false;
   currFiscalYearData: any = [];
   UnproccessesShareSum: any = 0;
   seluproccessedData: any = [];
@@ -60,7 +60,7 @@ export class GenerateHcShareComponent implements OnInit {
   recommendedShareData: any = [];
   selRecommendedData: any = [];
   unproccessedSpecificRiderShareData: any = [];
-  isDiscardShareBtnEnable: boolean = false;
+  isDiscardShareBtnEnable = false;
   searchInUnprocessedShareData: any = ""
   searchInUnprocessedShareOfSelriderData: any = ""
   searchIprocessedShareData: any = "";
@@ -68,8 +68,8 @@ export class GenerateHcShareComponent implements OnInit {
   masterSelectedApproved: any = false;
   isProcessed: any = false;
   isDiscard: any = false
-  isProcess: boolean = false;
-  discard: boolean = false;
+  isProcess = false;
+  discard = false;
   HCTestCountsOfAlRiders: any = [];
   HCTestCountsOfSelRider: any = [];
   constructor(private auth: AuthService,
@@ -119,14 +119,14 @@ export class GenerateHcShareComponent implements OnInit {
 
     // Helper to set fiscal dates
   setFiscalDates(date: Date) {
-    let year = date.getFullYear();
-    let month = date.getMonth(); // 0=Jan, 11=Dec
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0=Jan, 11=Dec
 
     // DateFrom = 26th of current month
-    let dateFrom = new Date(year, month, 26);
+    const dateFrom = new Date(year, month, 26);
 
     // DateTo = 25th of next month
-    let dateTo = new Date(year, month + 1, 25);
+    const dateTo = new Date(year, month + 1, 25);
 
     this.unProcessShareform.patchValue({
       dateFrom: this.toNgbDate(dateFrom),
@@ -150,7 +150,7 @@ export class GenerateHcShareComponent implements OnInit {
   }
 
   RidersDetail() {
-    let params = {
+    const params = {
       RiderID: null
     }
     this.HCService.GetRiders(params).subscribe((resp: any) => {
@@ -198,11 +198,11 @@ export class GenerateHcShareComponent implements OnInit {
   }
   getUnProccessedShareData(riderinfo) {
     this.getHCTestCounts(riderinfo);
-    let formData = this.unProcessShareform.getRawValue();
+    const formData = this.unProcessShareform.getRawValue();
     this.ClearSerchFilters();
     console.log(this.RidersDetailList, "RidersDetailList")
     // if (!this.isGetRiderInfoOnce) {
-    let formValues = this.unProcessShareform.getRawValue();
+    const formValues = this.unProcessShareform.getRawValue();
     this.spinner.show(this.spinnerRefs.processSection);
     let params = {};
     if (riderinfo) {
@@ -232,14 +232,14 @@ export class GenerateHcShareComponent implements OnInit {
       if (resp && resp.PayLoad && resp.StatusCode == 200) {
         console.log("resp.PayLoad", resp.PayLoad)
         if (riderinfo) {
-          let find = "-"
+          const find = "-"
           this.unproccessedSpecificRiderShareData = resp.PayLoad;
           this.unproccessedSpecificRiderShareData.map(a => {
             a.isSelected = false;
             // let reqid = 0
             if (a.ShareAmount.toString().includes(find)) {
               a.status = "Cancelled";
-              let reqid = a.HCRequestID;
+              const reqid = a.HCRequestID;
               this.unproccessedSpecificRiderShareData.map(b => {
                 if (b.HCRequestID == reqid) {
                   b.status = "Cancelled"
@@ -271,10 +271,10 @@ export class GenerateHcShareComponent implements OnInit {
   discardHCShare() {
 
     this.ClearSerchFilters();
-    let aa = this.unproccessedSpecificRiderShareData.filter(a => { return a.isSelected == true });
-    let shareIdsToDiscard = aa.map(a => { return a.HCShareID }).join(',');
+    const aa = this.unproccessedSpecificRiderShareData.filter(a => { return a.isSelected == true });
+    const shareIdsToDiscard = aa.map(a => { return a.HCShareID }).join(',');
     if (shareIdsToDiscard) {
-      let params = {
+      const params = {
         "RiderID": aa[0].RiderID,
         "HCShareIDs": shareIdsToDiscard, 
         "DiscardedBy": this.loggedInUser.userid
@@ -300,7 +300,7 @@ generateHCShareData() {
   this.spinner.show();
   this.ClearSerchFilters();
 
-  let tblHCShareProcess  = this.unproccessedShareData
+  const tblHCShareProcess  = this.unproccessedShareData
     .filter(a => a.isSelected).flatMap(a => {
       // Split if HCShareIDs is comma-separated
       return a.HCShareIDs.split(',').map(id => id.trim()).filter(id => id)
@@ -312,10 +312,10 @@ generateHCShareData() {
 
 
     // 🔹 tblHCShareOtherAllowance → pick only ONE HCShareID from each row
-  let tblHCShareOtherAllowance = this.unproccessedShareData
+  const tblHCShareOtherAllowance = this.unproccessedShareData
     .filter(a => a.isSelected)
     .map(a => {
-      let firstId = a.HCShareIDs.split(',').map(id => id.trim()).filter(id => id)[0];
+      const firstId = a.HCShareIDs.split(',').map(id => id.trim()).filter(id => id)[0];
       return {
         HCShareID: Number(firstId),
         OtherAllowance: a.otherAllowance || 0
@@ -325,7 +325,7 @@ generateHCShareData() {
     console.log("tblHCShareProcess::: ",tblHCShareProcess)
     console.log("tblHCShareOtherAllowance::: ", tblHCShareOtherAllowance)
     
-  let params = {
+  const params = {
     PeriodID: this.currFiscalYearData.PeriodId,
     tblHCShareProcess: tblHCShareProcess , 
     tblHCShareOtherAllowance: tblHCShareOtherAllowance
@@ -350,7 +350,7 @@ generateHCShareData() {
   getProccessedShareData() {
     this.ClearSerchFilters();
     this.spinner.show(this.spinnerRefs.recommendSection)
-    let params = {
+    const params = {
       PeriodID: this.currFiscalYearData.PeriodId,
     }
     this.proccessedShareData = [];
@@ -376,9 +376,9 @@ generateHCShareData() {
 
   reccommendHCShareData() {
     this.ClearSerchFilters();
-    let recommenedShare = [];
+    const recommenedShare = [];
     this.selproccessedData.forEach(a => {
-      let data = {
+      const data = {
         HCFinalShareID: null,
         RiderID: a.RiderID,
         RiderUserID: null,
@@ -398,7 +398,7 @@ generateHCShareData() {
       recommenedShare.push(data);
     })
 
-    let params = {
+    const params = {
       PeriodID: this.currFiscalYearData.PeriodId,
       HCShareStatus: this.FinalShareStatus.RecommendStaus,
       CreatedBy: this.loggedInUser.userid,
@@ -418,7 +418,7 @@ generateHCShareData() {
     this.ClearSerchFilters();
     this.recommendedShareData = [];
     this.spinner.show(this.spinnerRefs.approveSection)
-    let params = {
+    const params = {
       PeriodID: this.currFiscalYearData.PeriodId,
     }
     this.shareService.getRecemmendedShareData(params).subscribe((resp: any) => {
@@ -441,10 +441,10 @@ generateHCShareData() {
 
   approveHCShareData() {
     this.ClearSerchFilters();
-    let approveShare = [];
+    const approveShare = [];
     this.spinner.show(this.spinnerRefs.approveSection)
     this.selRecommendedData.forEach(a => {
-      let data = {
+      const data = {
         HCFinalShareID: a.HCFinalShareID,
         RiderID: a.RiderID,
         RiderUserID: null,
@@ -465,7 +465,7 @@ generateHCShareData() {
       approveShare.push(data);
     })
 
-    let params = {
+    const params = {
       PeriodID: this.currFiscalYearData.PeriodId,
       HCShareStatus: this.FinalShareStatus.ApprovedStatus,
       CreatedBy: this.loggedInUser.userid,
@@ -487,16 +487,16 @@ generateHCShareData() {
   }
 
   recommendedPercentageChanged(selRidershareData) {
-    let objIndex = this.proccessedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
-    let netPayable = selRidershareData.ShareAmount + (selRidershareData.OtherAllowance || 0);
+    const objIndex = this.proccessedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
+    const netPayable = selRidershareData.ShareAmount + (selRidershareData.OtherAllowance || 0);
 
     this.proccessedShareData[objIndex].pRecommendedShareAmount = (selRidershareData.recommendedPercentage / 100) * netPayable
     console.log(selRidershareData.ShareAmount);
   }
 
 recommendedShareAmountChanged(selRidershareData) {
-    let objIndex = this.proccessedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
-     let netPayable = selRidershareData.ShareAmount + (selRidershareData.OtherAllowance || 0);
+    const objIndex = this.proccessedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
+     const netPayable = selRidershareData.ShareAmount + (selRidershareData.OtherAllowance || 0);
     this.proccessedShareData[objIndex].recommendedPercentage = (selRidershareData.pRecommendedShareAmount / netPayable) * 100
     this.proccessedShareData[objIndex].pRecommendedShareAmount = selRidershareData.pRecommendedShareAmount;
     console.log(selRidershareData);
@@ -504,21 +504,21 @@ recommendedShareAmountChanged(selRidershareData) {
   }
 
   approvedPercentageChanged(selRidershareData) {
-    let objIndex = this.recommendedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
+    const objIndex = this.recommendedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
     this.recommendedShareData[objIndex].pApprovedShareAmount = (selRidershareData.approvedPercentage / 100) * selRidershareData.GeneratedShareAmount
     console.log(selRidershareData.GeneratedShareAmount);
   }
 
   approvededShareAmountChanged(selRidershareData) {
-    let objIndex = this.recommendedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
+    const objIndex = this.recommendedShareData.findIndex((obj => obj.RiderID == selRidershareData.RiderID));
     this.recommendedShareData[objIndex].approvedPercentage = (Number(selRidershareData.pApprovedShareAmount) / selRidershareData.GeneratedShareAmount) * 100
     console.log(selRidershareData.GeneratedShareAmount);
   }
 
   getSumOfUnProcShare_SelRider(selRider) {
-    let selReqIDs = this.unproccessedSpecificRiderShareData.filter(a => { return a.isSelected == true });
-    let ShareSum = selReqIDs.reduce((prev, next) => { return prev + next.ShareAmount }, 0)
-    let objIndex = this.unproccessedShareData.findIndex((obj => obj.RiderID == selRider.RiderID));
+    const selReqIDs = this.unproccessedSpecificRiderShareData.filter(a => { return a.isSelected == true });
+    const ShareSum = selReqIDs.reduce((prev, next) => { return prev + next.ShareAmount }, 0)
+    const objIndex = this.unproccessedShareData.findIndex((obj => obj.RiderID == selRider.RiderID));
     this.unproccessedShareData[objIndex].ShareAmount = ShareSum;
     this.unproccessedShareData[objIndex].HCShareIDs = this.unproccessedSpecificRiderShareData.filter(a => { return a.isSelected == true }).map(a => { return a.HCShareID }).join(',');
     console.log("UnproccessesShareSum", this.UnproccessesShareSum);
@@ -526,7 +526,7 @@ recommendedShareAmountChanged(selRidershareData) {
 
   checkUncheckUproccessedAll() {
     console.log("Hehe");
-    for (var i = 0; i < this.unproccessedShareData.length; i++) {
+    for (let i = 0; i < this.unproccessedShareData.length; i++) {
       this.unproccessedShareData[i].isSelected = this.masterSelected;
     }
     // this.getUpProccessedSelData()
@@ -542,13 +542,13 @@ recommendedShareAmountChanged(selRidershareData) {
 
   getProccessedSelData() {
     this.selproccessedData = this.proccessedShareData.filter(a => { return a.isSelected == true });
-    let aa = 0;
+    const aa = 0;
     console.log("UnproccessesShareSum", this.selproccessedData);
   }
 
   checkUncheckproccessedAll() {
     console.log("Hehe");
-    for (var i = 0; i < this.proccessedShareData.length; i++) {
+    for (let i = 0; i < this.proccessedShareData.length; i++) {
       this.proccessedShareData[i].isSelected = this.masterSelected;
     }
     this.getProccessedSelData()
@@ -563,8 +563,8 @@ recommendedShareAmountChanged(selRidershareData) {
 
 
   getHCTestCounts(riderinfo) {
-    let formData = this.unProcessShareform.getRawValue();
-    let params = {
+    const formData = this.unProcessShareform.getRawValue();
+    const params = {
       RiderIDs: riderinfo ? riderinfo.RiderID : String(this.RidersDetailList.map(a => { return a.RiderID }).join(',')),
       DateFrom: Conversions.formatDateObject(formData.dateFrom),
       DateTo: Conversions.formatDateObject(formData.dateTo)
@@ -586,7 +586,7 @@ recommendedShareAmountChanged(selRidershareData) {
 
   checkUncheckRecommendAll() {
     console.log("Hehe");
-    for (var i = 0; i < this.recommendedShareData.length; i++) {
+    for (let i = 0; i < this.recommendedShareData.length; i++) {
       this.recommendedShareData[i].isSelected = this.masterSelectedApproved;
     }
     this.getRecommendSelData();

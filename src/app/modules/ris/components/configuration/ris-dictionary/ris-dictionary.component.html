@@ -2,7 +2,7 @@
 <div class="roles-page">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
-            <app-card [title]="screenIdentity=='ris-dictionary' ? 'Worklist (Default Dictionary)': 'Worklist (My Dictionary)'" [cardClass]="'tim-card tim-card tim-card-primary'">
+            <app-card [title]="screenIdentity==='ris-dictionary' ? 'Worklist (Default Dictionary)': 'Worklist (My Dictionary)'" [cardClass]="'tim-card tim-card tim-card-primary'">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
@@ -15,7 +15,7 @@
                     </div>
                     <div class="row-12">
                         <small *ngIf="dataList.length" class="text-danger">Total records:  <strong>{{countAll}}</strong></small>
-                        <div class="row" *ngIf="dataList.length && screenIdentity=='ris-user-dictionary'">
+                        <div class="row" *ngIf="dataList.length && screenIdentity==='ris-user-dictionary'">
                             <div class="col-12 mb-2">
                                 <button (click)="dictionaryFilter(1);"  class="btn btn-mini mr-3" [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"><i class="fa fa-th" aria-hidden="true"></i> All Shortcuts <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAll}}</span></button>
                                
@@ -117,7 +117,7 @@
                             </div>
                             <div class="col-12 mt-3">
                                 <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm()"><i class="fa fa-eraser"></i>Clear<i aria-hidden="true"></i></button>
-                                <button *ngIf="(RISDictionaryID && CategoryID==1 && screenIdentity=='ris-dictionary') || (CategoryID==2 && screenIdentity=='ris-user-dictionary') RISDictionaryID"
+                                <button *ngIf="(RISDictionaryID && CategoryID==1 && screenIdentity==='ris-dictionary') || (CategoryID==2 && screenIdentity==='ris-user-dictionary') RISDictionaryID"
                                     [disabled]="disabledButtonDelete || !RISDictionaryID"
                                     class="btn btn-sm btn-danger pull-right ml-2"
                                     mwlConfirmationPopover
@@ -134,7 +134,7 @@
                                     [appendToBody]="true">
                                     <i class="fa fa-times"></i>Remove <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerDelete" ></i>
                                 </button>
-                                <button *ngIf="(RISDictionaryID && CategoryID==1 && screenIdentity=='ris-dictionary') || (CategoryID==2 && screenIdentity=='ris-user-dictionary') || !RISDictionaryID"
+                                <button *ngIf="(RISDictionaryID && CategoryID==1 && screenIdentity==='ris-dictionary') || (CategoryID==2 && screenIdentity==='ris-user-dictionary') || !RISDictionaryID"
                                     [disabled]="disabledButton || _form.invalid"
                                     class="btn btn-sm btn-primary pull-right"
                                     mwlConfirmationPopover

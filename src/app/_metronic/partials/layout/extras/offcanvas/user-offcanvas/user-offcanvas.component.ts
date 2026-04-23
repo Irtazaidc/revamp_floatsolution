@@ -47,7 +47,7 @@ export class UserOffcanvasComponent implements OnInit {
     // document.location.reload();
     this.loadLoggedInUserInfo();
 
-    let params = {
+    const params = {
       ActionLogObj: {
         ActionId: 4,
         FormName: "Float Solution (Metacubes) logout",

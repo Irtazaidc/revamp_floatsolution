@@ -46,7 +46,7 @@
         <!--end::Search Filter-->
 
         <!--start::Table and rows section-->
-        <div class="row text-center" *ngIf="!risWorklist.length && screenIdentity!='assign-bulk-test'">
+        <div class="row text-center" *ngIf="!risWorklist.length && screenIdentity!=='assign-bulk-test'">
             <div class="col-12">
                 <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
                 <p class="text-primary" style="margin-top: -20px;">
@@ -54,7 +54,7 @@
                 </p>
             </div>
         </div>
-        <div class="row" *ngIf="screenIdentity!='assign-bulk-test'">
+        <div class="row" *ngIf="screenIdentity!=='assign-bulk-test'">
             <div class="col-md-12">
                 <div class="table-responsive" style="min-height: 330px;">
                     <table *ngIf="risWorklist.length" class="table table-hover" cellpadding=0 cellspacing=0>
@@ -63,7 +63,7 @@
                                 <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
                                     <ng-container>
                                         <th style="cursor: pointer"
-                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='DeliveryDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='ServiceType')">
+                                            *ngIf="(header !== 'RISWorkListID' && header !== 'TPId' && header !== 'PatientId' && header !== 'StatusId' && header !=='RISStatusID' && header !=='ProcessId' && header !=='MOBy' && header !=='StatusBadgeClass' && header !=='isMedicalOfficerIntervention' && header !=='EmpId' && header !=='PhoneNumber' && header !=='DeliveryDate' && header !=='isConsentRead' && header !=='TPCode' && header !=='isTechHistoryRequred' && header !=='TestStatus' && header !=='ServiceType')">
                                             {{header}}</th>
                                     </ng-container>
                                 </ng-container>
@@ -75,20 +75,20 @@
                             <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index " (dblclick)="verifyUserBiomatericForService(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
                                 <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
                                     <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey !='ServiceType')">
-                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        *ngIf="(objKey !== 'RISWorkListID' && objKey !== 'TPId' && objKey !== 'PatientId' && objKey !== 'StatusId' && objKey !=='RISStatusID' && objKey !=='ProcessId' && objKey !=='MOBy' && objKey!=='StatusBadgeClass' && objKey!=='isMedicalOfficerIntervention' && objKey!=='EmpId' && objKey!=='PhoneNumber' && objKey!=='DeliveryDate' && objKey!=='isConsentRead' && objKey!=='TPCode' && objKey!=='isTechHistoryRequred' && objKey !=='ServiceType')">
+                                        <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                             <i 
                                                 [ngClass]="returnCopyClasses(i)"
                                                 class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
                                                 (click)="copyText(row,i)">&nbsp;</i>
                                         </span>
-                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
-                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate')" >{{ row[objKey]||'Registered' }}</span>
-                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+                                        <span class="cursor-pointer" *ngIf="(objKey === 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey !== 'Workflow Status' && objKey !== 'TestStatus' && objKey !== 'InitializedBy' && objKey !== 'TPCode' && objKey !== 'PatientName' && objKey !== 'RegistrationDate')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey === 'Workflow Status' && (objKey!=null || objKey!=='') && objKey !== 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
             
-                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
+                                        <label *ngIf="objKey === 'TestStatus' && objKey !== 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
                                     </td>
                                 </ng-container>
                                 <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'ris-worklist-service'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
@@ -101,12 +101,12 @@
                                                 <i class="fas fa-ellipsis-h cursor-pointer"></i>
                                             </button>
                                             <div class="dropdown-menu pb-2" ngbDropdownMenu>
-                                                <button *ngIf="actionsPermission[0]=='ques'" (click)="openPopupModal(row,i)"
+                                                <button *ngIf="actionsPermission[0]==='ques'" (click)="openPopupModal(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-user-circle text-primary cursor-pointer"></i>
                                                     Verify User</span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                <button *ngIf="screenIdentity==='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-barcode text-primary cursor-pointer"></i>
                                                         Print Radio Lable</span>
@@ -132,7 +132,7 @@
         <!--end::Table and rows section-->
 
         <!--start::Pagination-->
-        <div class="row" *ngIf="risWorklist.length && screenIdentity!='assign-bulk-test'">
+        <div class="row" *ngIf="risWorklist.length && screenIdentity!=='assign-bulk-test'">
             <div class="col-12">
                 <div class="d-flex justify-content-between p-2">
                     <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">

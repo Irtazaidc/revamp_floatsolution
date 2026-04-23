@@ -73,12 +73,12 @@ SubSectionList = [];
   }
   getSection() {
     this.SectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
     };
     this.lookupService.getSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.SectionList = _response.filter((a) => a.SectionId != 7);
       },
       (err) => {
@@ -89,13 +89,13 @@ SubSectionList = [];
 
     getSubSectionByParent(SectionID) {
     this.SubSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: SectionID,
       LabDeptID: this.LabDeptID,
     };
     this.lookupService.getSubSectionByParent(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.SubSectionList = _response;
       },
       (err) => {
@@ -111,7 +111,7 @@ SubSectionList = [];
   getTestProfileList() {
     this.pagination.paginatedSearchResults = [];
 
-    let formValues = this.getTestProfileData.getRawValue();
+    const formValues = this.getTestProfileData.getRawValue();
 
     if (this.getTestProfileData.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -119,7 +119,7 @@ SubSectionList = [];
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocID: formValues.locID || null,
@@ -194,7 +194,7 @@ SubSectionList = [];
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

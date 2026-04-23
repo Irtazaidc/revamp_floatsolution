@@ -127,10 +127,10 @@ export class MyServicesShareComponent implements OnInit {
   }
 
   getRadioShareSummary() {
-    let formValues = this.searchSlipForm.getRawValue();
+    const formValues = this.searchSlipForm.getRawValue();
     this.DoctorShareSummaryList = [];
     this.DoctorName = null;
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       DocId: this.AdminAccessPermission ? formValues.doctorID : this.loggedInUser.userid,
@@ -156,9 +156,9 @@ export class MyServicesShareComponent implements OnInit {
   }
 
   getRadioShareDetails() {
-    let formValues = this.searchSlipForm.getRawValue();
+    const formValues = this.searchSlipForm.getRawValue();
     this.DoctorShareDetalList = [];
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       DocId: this.AdminAccessPermission ? formValues.doctorID : this.loggedInUser.userid,
@@ -205,7 +205,7 @@ export class MyServicesShareComponent implements OnInit {
   }
   getRadiologistInfoDetail() {
     this.radoiologistList = [];
-    let params = {
+    const params = {
       EmpID: null,
     };
     this.questionnaireSrv.getRadiologistInfoDetail(params).subscribe(
@@ -360,7 +360,7 @@ export class MyServicesShareComponent implements OnInit {
   }
 
   printMyShareReport() {
-    let formValues = this.searchSlipForm.getRawValue();
+    const formValues = this.searchSlipForm.getRawValue();
     if (this.reportType == 1) {
       const url =
         environment.patientReportsPortalUrl +
@@ -374,7 +374,7 @@ export class MyServicesShareComponent implements OnInit {
             DocId: this.loggedInUser.userid,
           })
         );
-      let winRef = window.open(url.toString(), "_blank");
+      const winRef = window.open(url.toString(), "_blank");
     }
     if (this.reportType == 2) {
       const url =
@@ -391,17 +391,17 @@ export class MyServicesShareComponent implements OnInit {
             LocId: this.loggedInUser.locationid,
           })
         );
-      let winRef = window.open(url.toString(), "_blank");
+      const winRef = window.open(url.toString(), "_blank");
     }
   }
   isPINGenerated = false;
   isPINAuthinticated = false;
   getScreenPINByUserID() {
-    let paramObj = {
+    const paramObj = {
       UserID: this.loggedInUser.userid
     }
     this.sharedService.getData(API_ROUTES.GET_SCREEN_PIN_BY_USER_ID, paramObj).subscribe((data: any) => {
-      let response = data.PayLoad;
+      const response = data.PayLoad;
       console.log("response is ", response)
       this.isPINGenerated = response.some(item => item.ScreenPINID == 1 && item.AppUserScreenPINID);
       // if (this.isPINGenerated) {
@@ -618,7 +618,7 @@ export class MyServicesShareComponent implements OnInit {
   }
   screenPermissionsObj
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     console.log("User Screen Permsions___",this.screenPermissionsObj);
     this.AdminAccessPermission = this.screenPermissionsObj?.admin_share_access ? true : false;

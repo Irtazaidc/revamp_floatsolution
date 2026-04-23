@@ -15,7 +15,7 @@ export class DueReportTabComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  selectedTabIndex: number = 0; 
+  selectedTabIndex = 0; 
 
   onTabChanged(event): void {
     this.selectedTabIndex = event.index;

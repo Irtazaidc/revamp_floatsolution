@@ -95,7 +95,7 @@ export class NgbDateCustomParserFormatter extends NgbDateParserFormatter {
   parse(value: string): NgbDateStruct | null {
     // console.log('parse =>', value);
     if (value) {
-      let date = value.split(this.DELIMITER);
+      const date = value.split(this.DELIMITER);
       return {
         day : parseInt(date[0], 10),
         month : parseInt(date[1], 10),

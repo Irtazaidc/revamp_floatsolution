@@ -15,8 +15,8 @@ import { AuthService, UserModel } from "src/app/modules/auth";
 })
 export class KbsServicesConfigComponent implements OnInit {
   ActionLabel = "Save";
-  disabledButton: boolean = false; 
-  isSpinner: boolean = true; 
+  disabledButton = false; 
+  isSpinner = true; 
   Services: any;
   searchBranchText = "";
   loggedInUser: UserModel;

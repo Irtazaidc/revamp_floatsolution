@@ -51,11 +51,11 @@ export class SampleReceivingComponent implements OnInit {
   // Rider Assignment Properties
   selectedRiderId: number = null;
   selectedBatchForRider: any = null;
-  showRiderError: boolean = false;
+  showRiderError = false;
 
   // Batch Receiving Properties - NEW
-  showReceivingSection: boolean = true;
-  receivingRemarks: string = '';
+  showReceivingSection = true;
+  receivingRemarks = '';
   batchReceiving = {
     hasSpillage: false,
     hasDamage: false,
@@ -189,7 +189,7 @@ export class SampleReceivingComponent implements OnInit {
 
   riders: any[] = [];
   loadRiders() {
-    let params = {
+    const params = {
       RiderID: 0,
       LocID: null
     }
@@ -479,7 +479,7 @@ export class SampleReceivingComponent implements OnInit {
     // BatchStatus('BATCHSTATUS', 'BATCH')
     // ItemStatus('ITEMSTATUS', 'ITEM')
     // IssueType('ISSUETYPE', 'ISSUE')
-    let objParams = {
+    const objParams = {
       LookupName: 'ISSUETYPE',
       Id: null
     };
@@ -697,5 +697,5 @@ export class SampleReceivingComponent implements OnInit {
   }
 
   // Add processing flag
-  isProcessing: boolean = false;
+  isProcessing = false;
 }

@@ -115,7 +115,7 @@
                                                                 <tbody>
                                                                     <tr *ngFor="let v of visitDetails.paymentInfo; let i=index;">
                                                                         <td>{{v.Title||'--'}}</td>
-                                                                        <td>{{v.BranchCode||'--'}} <small class="text-primary">{{v.ReceivedBy}} | {{v.ReceivedOn|date:'dd-MMM-yyyy HH:mm:ss'}}</small><small *ngIf="v.Remarks && v.Remarks!=''" ngbTooltip="Click to view remarks"  class="cursor-pointer" ngbPopover="{{v.Remarks||''}}" popoverTitle="Remarks"><br/><strong>Rem:</strong><span [innerHTML]="truncate(v.Remarks || '',40)"></span></small></td>
+                                                                        <td>{{v.BranchCode||'--'}} <small class="text-primary">{{v.ReceivedBy}} | {{v.ReceivedOn|date:'dd-MMM-yyyy HH:mm:ss'}}</small><small *ngIf="v.Remarks && v.Remarks!==''" ngbTooltip="Click to view remarks"  class="cursor-pointer" ngbPopover="{{v.Remarks||''}}" popoverTitle="Remarks"><br/><strong>Rem:</strong><span [innerHTML]="truncate(v.Remarks || '',40)"></span></small></td>
                                                                         <td class="text-right">{{helperService.formatNumericValues(v.Amount || 0)||0}}</td>
                                                                         <td>{{v.InstInvoiceNo||'--'}}</td>
                                                                         <td>{{v.InstNo||'--'}}</td>

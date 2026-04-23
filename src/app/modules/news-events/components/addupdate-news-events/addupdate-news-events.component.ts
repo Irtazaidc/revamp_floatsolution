@@ -24,8 +24,8 @@ export class AddupdateNewsEventsComponent implements OnInit {
   NewsAndEventsRow: any = [];
   ImageToUpload: File = null
   ImageUrl: any;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   pageHeader : any='';
   urlID:any=null;
   NewsAndEventsID:any=null;
@@ -83,7 +83,7 @@ export class AddupdateNewsEventsComponent implements OnInit {
     this.NewsAndEventsIDEnc=id;
     // this.spinner.show();;
     let response = [];
-    let Params = {
+    const Params = {
       NewsAndEventsIDEnc: id
     }
     if(!Params.NewsAndEventsIDEnc) {
@@ -111,7 +111,7 @@ export class AddupdateNewsEventsComponent implements OnInit {
     this.ImageToUpload = file.item(0);
     this.ImageMaxSize = this.ImageToUpload.size;
     // Show image preview
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = (event: any) => {
       this.ImageUrl = event.target.result;
     }
@@ -124,8 +124,8 @@ export class AddupdateNewsEventsComponent implements OnInit {
 
   //Add Update News and Events
   addUpdateNewsAndEvents(data) { 
-    let bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
-    var fileExtension = "";
+    const bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
+    let fileExtension = "";
     let image=null;
     if(this.ImageToUpload !=null){
       if(bytesToMegaBytes > 2){
@@ -201,15 +201,15 @@ export class AddupdateNewsEventsComponent implements OnInit {
     }
   }
   loadImage(file, fileName = 'file') {
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
+        const imageURL = reader.result as string;
         this.ImageUrl_temp = imageURL;
         //.replace('data:'+file.type+';base64,','');
-        let _fileName = file.name || '';
+        const _fileName = file.name || '';
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
           filtType: file.type || '',
@@ -236,7 +236,7 @@ export class AddupdateNewsEventsComponent implements OnInit {
 
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = '', base64Data = '') {
     const self = this;
-    let promise = new Promise( (resolve, reject) => {
+    const promise = new Promise( (resolve, reject) => {
       if(!file && !base64Data) {
         resolve('');
       }
@@ -247,7 +247,7 @@ export class AddupdateNewsEventsComponent implements OnInit {
       let blob = null;
   
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_'+ +new Date();
+      const canvas_id = 'hiddenCanvas_'+ +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;

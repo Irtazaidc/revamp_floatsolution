@@ -65,9 +65,9 @@ export class SendSmsComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let formValues = this.formForSendingSMS.getRawValue();
+    const formValues = this.formForSendingSMS.getRawValue();
 
-    let params = {
+    const params = {
       PhoneNumber: formValues.cellNumber, 
       OperatorId: formValues.MobileOperatorID,
       Message: formValues.Message,

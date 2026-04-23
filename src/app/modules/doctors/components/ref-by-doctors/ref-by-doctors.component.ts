@@ -145,7 +145,7 @@ export class RefByDoctorsComponent implements OnInit {
     // this.pagination.filteredSearchResults = [];
     this.searchText = '';
     this.filterResults();
-    let _params = {
+    const _params = {
       refId: refId
     };
     this.spinner.show();
@@ -176,7 +176,7 @@ export class RefByDoctorsComponent implements OnInit {
     if(this.doctorForm.valid) {
       this.insertUpdate(this.doctorForm.value);
     } else {
-      let invalidFieldNames = [];
+      const invalidFieldNames = [];
       Object.keys(this.doctorForm.controls).forEach((a,i) => {
         if(this.doctorForm.controls[a].errors) {
              invalidFieldNames.push(a);
@@ -187,7 +187,7 @@ export class RefByDoctorsComponent implements OnInit {
   }
 
   insertUpdate(values) {
-    let params = values;
+    const params = values;
     this.spinner.show();
     this.doctorService.insertUpdateRefByDoctor(params).subscribe( (res:any) => {
       this.spinner.hide();
@@ -218,7 +218,7 @@ export class RefByDoctorsComponent implements OnInit {
 
   delete(doctor) {
       doctor.IsDeleted = 1;
-      let params = doctor;
+      const params = doctor;
       this.spinner.show();
       this.doctorService.deleteRefByDoctor(params).subscribe( (res:any) => {
         this.spinner.hide();
@@ -266,7 +266,7 @@ export class RefByDoctorsComponent implements OnInit {
   // }
   
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -275,10 +275,10 @@ export class RefByDoctorsComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = ['RefByName', 'PMDCRegNo', 'ContactNo', 'City', 'EMail'];
+    const cols = ['RefByName', 'PMDCRegNo', 'ContactNo', 'City', 'EMail'];
     let results:any = this.refByDoctorsList;
     if(this.searchText && this.searchText.length > 4) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.refByDoctorsList, this.searchText, cols, this.refByDoctorsList);
     }
     this.pagination.filteredSearchResults = results;
@@ -321,7 +321,7 @@ openExcelPopUP(){
 }
 
 getrefDrDataList(){
-  let formValues  = this.getrefDrData.getRawValue();
+  const formValues  = this.getrefDrData.getRawValue();
     
   if (this.getrefDrData.invalid) {
     this.toastr.warning("Please Fill The Mandatory Fields");
@@ -329,7 +329,7 @@ getrefDrDataList(){
     return;
   }
   this.refDrDataList = [];
-  let objParams = {
+  const objParams = {
     DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
     DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
   }

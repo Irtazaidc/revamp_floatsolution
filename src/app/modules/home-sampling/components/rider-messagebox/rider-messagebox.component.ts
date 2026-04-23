@@ -62,7 +62,7 @@ export class RiderMessageboxComponent implements OnInit {
       this.toastr.error("Title and Message must be at least 15 characters long");
       return;
     }
-    let params = {
+    const params = {
       Title: title,
       MessageBody: message,
       CreatedBy: this.loggedInUser?.userid || -99,
@@ -88,7 +88,7 @@ export class RiderMessageboxComponent implements OnInit {
 
   RidersDetailList = [];
   RidersDetail() {
-    let params = {
+    const params = {
       RiderID: 0,
       // LocID:-1,
     }

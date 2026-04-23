@@ -141,7 +141,7 @@ export class TestProfileRatesComponent implements OnInit {
   // }
 
   updateSelectedTPIDsList() {
-    let updatedTPIDs = [];
+    const updatedTPIDs = [];
     let matchTest = {};
     let unmatchTest = {};
   
@@ -171,7 +171,7 @@ export class TestProfileRatesComponent implements OnInit {
     this.totalTPPrice = this.selectedTPIDs.reduce((pv, cv) => pv + cv.TestProfilePrice, 0);
     this.discountAmount = this.selectedTPIDs.reduce((pv, cv) => pv + (cv.itemDiscount || 0), 0);
     this.calculateDiscountedCharges(this.discountPercentage);
-    let latestTestList = this.testList.filter(x => !updatedTPIDs.find(y => y.TPId === x.TPId));
+    const latestTestList = this.testList.filter(x => !updatedTPIDs.find(y => y.TPId === x.TPId));
     this.testList = latestTestList;
     this.testList.forEach(element => {
       element.itemDiscount = element.IsDiscountable == 1
@@ -210,7 +210,7 @@ export class TestProfileRatesComponent implements OnInit {
 
   getPackageList(e){
 
-      let _params = {
+      const _params = {
         packageId: e.TPId,
         branchId: this.selectedLocId || null,
         panelId: (this.selectedPanelId || ''),
@@ -228,8 +228,8 @@ export class TestProfileRatesComponent implements OnInit {
             data.forEach(element => {
               element.forPkg = e.TPId;
             });
-            let sameTestProfiles = data.forEach(a => { // if test/profile is in package then remove already added test/profile and use test/profile that is part of package
-              let exist = this.selectedTPIDs.find(b => b.TPId == a.TPId);
+            const sameTestProfiles = data.forEach(a => { // if test/profile is in package then remove already added test/profile and use test/profile that is part of package
+              const exist = this.selectedTPIDs.find(b => b.TPId == a.TPId);
               if (exist) {
                 this.selectedTPIDs = this.selectedTPIDs.filter(b => b.TPId != a.TPId);
               }
@@ -246,13 +246,13 @@ export class TestProfileRatesComponent implements OnInit {
   testListChanged(e) {
     console.log("🚀 testListChanged ~ e:", e)
     // this.selectedTPID=e.TPID;
-    let newTest = this.testList.find(x => x.TPId == this.selectedTPID)
+    const newTest = this.testList.find(x => x.TPId == this.selectedTPID)
     this.spinner.show(this.spinnerRefs.TestSection);
     if (newTest) {
       // console.log("Test ID", this.testList.find(x => x.TPId == this.selectedTPID));
       this.selectedTPIDs.push(newTest);
       if (e.AssociatedTPIDs) {
-        let comm = e.AssociatedTPIDs.split(',');
+        const comm = e.AssociatedTPIDs.split(',');
         try {
           comm.forEach(a => {
             if (!this.selectedTPIDs.find(c => c.TPId == a)) {
@@ -260,7 +260,7 @@ export class TestProfileRatesComponent implements OnInit {
                 if (b.TPId == Number(a)) {
                   this.selectedTPIDs.push(b);
                   if (b.TypeId == 1 || b.TypeId == 3) {
-                    let profilesIds = this.selectedTPIDs.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
+                    const profilesIds = this.selectedTPIDs.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
                   } else if (b.TypeId == 2) {
                   }
                 }
@@ -294,7 +294,7 @@ export class TestProfileRatesComponent implements OnInit {
       //    });
       // });
       // // if you want to be more clever...
-      let latestTestList = this.testList.filter(o1 => !this.selectedTPIDs.some(o2 => o1.TPId === o2.TPId));
+      const latestTestList = this.testList.filter(o1 => !this.selectedTPIDs.some(o2 => o1.TPId === o2.TPId));
       // let latestTestList = this.testList.filter(x => x.TPId != this.selectedTPID)
 
      
@@ -331,8 +331,8 @@ export class TestProfileRatesComponent implements OnInit {
     if(tp.SubSectionID){
       if (targetIDs.includes(tp.SubSectionID.toString())) {
         console.log('true')
-          let TestProfileCode = tp.TestProfileCode;
-          let TestProfileName = tp.TestProfileName;
+          const TestProfileCode = tp.TestProfileCode;
+          const TestProfileName = tp.TestProfileName;
           this.tpParametersForPopover = [{ Code: TestProfileCode, Name: TestProfileName }];
           return;
       }
@@ -351,7 +351,7 @@ export class TestProfileRatesComponent implements OnInit {
     //   this.tpParametersForPopover = [{ Code: 'server error', Name: '' }];
     //   console.log(err);
     // })
-    let params = {
+    const params = {
       TPId: tp.TPId
     }
     this.tpParametersForPopover = [{ Code: 'Loading...', Name: '' }];
@@ -369,7 +369,7 @@ export class TestProfileRatesComponent implements OnInit {
   patientInstruction = null;
   getTestProfileProtocolAndPatientInstruction(TPId) {
     this.protocol = null;
-    let params = {
+    const params = {
       TPId: TPId
     }
     this.testProfileService.getTestProfileProtocolAndPatientInstruction(params).subscribe((res: any) => {
@@ -385,7 +385,7 @@ export class TestProfileRatesComponent implements OnInit {
 
   showTPProtocol(TPId) {
     this.tpParametersForPopover = [];
-    let params = {
+    const params = {
       profileIds: TPId
     }
     this.tpParametersForPopover = [{ Code: 'Loading...', Name: '' }];
@@ -405,7 +405,7 @@ export class TestProfileRatesComponent implements OnInit {
 
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -420,7 +420,7 @@ export class TestProfileRatesComponent implements OnInit {
   }
   getLocationList() {
     this.branchList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.GetBranches().subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -435,7 +435,7 @@ export class TestProfileRatesComponent implements OnInit {
   }
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: this.selectedLocId,
       TestProfileCode: null,
       TestProfileName: null,
@@ -497,8 +497,8 @@ export class TestProfileRatesComponent implements OnInit {
   calculateDiscountedCharges(_discPercentage) {
     let discChargesWithDiscount = 0
 
-    let totalPriceWithDiscount = this.selectedTPIDs.filter(x => x.IsDiscountable).reduce((pv, cv) => pv + cv.TestProfilePrice, 0);
-    let totalDiscChargesWithoutDiscount = this.selectedTPIDs.filter(x => x.IsDiscountable == 0).reduce((pv, cv) => pv + cv.TestProfilePrice, 0);
+    const totalPriceWithDiscount = this.selectedTPIDs.filter(x => x.IsDiscountable).reduce((pv, cv) => pv + cv.TestProfilePrice, 0);
+    const totalDiscChargesWithoutDiscount = this.selectedTPIDs.filter(x => x.IsDiscountable == 0).reduce((pv, cv) => pv + cv.TestProfilePrice, 0);
     this.discountAmount = this.selectedTPIDs.reduce((pv, cv) => pv + cv.itemDiscount, 0);
 
 
@@ -509,7 +509,7 @@ export class TestProfileRatesComponent implements OnInit {
   }
   removeItem(TPID) {
     //remove the selected Test item by tpid
-    let newSelectTPIDs = [];
+    const newSelectTPIDs = [];
     // this.testList.push(this.selectedTPIDs.find(x => x.TPId == TPID ));
     this.testList = this.testList.concat(this.selectedTPIDs.find(x => x.TPId == TPID));
 

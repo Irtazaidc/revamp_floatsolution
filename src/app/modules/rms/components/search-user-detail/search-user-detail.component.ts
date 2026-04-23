@@ -21,7 +21,7 @@ import { FeedbackService } from '../../service/feedback.service';
 export class SearchUserDetailComponent implements OnInit {
 
   GetPatientPortalUserDetailByFilters: FormGroup;
-  isSubmitted:boolean=false;
+  isSubmitted=false;
   @Output() UserDetails = new EventEmitter<any>();
 
   spinnerRefs = {
@@ -52,8 +52,8 @@ export class SearchUserDetailComponent implements OnInit {
   PPuserID:number;
   GetPatientPortalUserDetail(){
     this.isSubmitted=true;
-    let formValues= this.GetPatientPortalUserDetailByFilters.getRawValue();
-    let objParm = {
+    const formValues= this.GetPatientPortalUserDetailByFilters.getRawValue();
+    const objParm = {
       UserName: formValues.UserName || null, 
       Email:  formValues.Email || null, 
       CellNumber: formValues.CellNumber || null, 

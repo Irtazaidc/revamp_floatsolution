@@ -22,7 +22,7 @@ import { VisitService } from '../../services/visit.service';
 })
 export class DelayedApprovalsComponent implements OnInit {
 
-  @Input('buttonControls') buttonControls = ['visits'];
+  @Input() buttonControls = ['visits'];
   @ViewChild('cancellationPopup') cancellationPopup;
   cancellationPopupRef: NgbModalRef;
 
@@ -127,7 +127,7 @@ export class DelayedApprovalsComponent implements OnInit {
   }
 
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissionsObj = this.storageService.getLoggedInUserProfilePermissionsObj(_activatedroute);
     console.log(this.screenPermissionsObj);
   }
@@ -135,7 +135,7 @@ export class DelayedApprovalsComponent implements OnInit {
   /* Lookups */
   getBranches() {
         this.branchesList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -187,8 +187,8 @@ export class DelayedApprovalsComponent implements OnInit {
   getCancellationRequests() {
     this.selectedVisit = null;
     this.cancellationRequests = [];
-    let formValues = this.searchVisitsForm.getRawValue();
-    let params = {
+    const formValues = this.searchVisitsForm.getRawValue();
+    const params = {
       locationIds: (formValues.branchIds || [this.loggedInUser.locationid]).join(','),
       fromDate: formValues.fromDate ? Conversions.formatDateObject(formValues.fromDate) : '',
       toDate: formValues.toDate ? Conversions.formatDateObject(formValues.toDate, 'end') : ''
@@ -230,7 +230,7 @@ export class DelayedApprovalsComponent implements OnInit {
     if(!visit || !visit.VisitId) {
       return;
     }
-    let params = {
+    const params = {
       visitId: visit.VisitId,
       CancellationRequestId: visit.RequestIDs
     };
@@ -308,7 +308,7 @@ private combineVisits(visits: any[]): any {
       return;
     }
     */
-    let params = {
+    const params = {
       UserID: this.loggedInUser.userid,
       VisitID: this.selectedVisit.VisitId,
       CancellationRequestIDs: this.selectedVisits.RequestId,

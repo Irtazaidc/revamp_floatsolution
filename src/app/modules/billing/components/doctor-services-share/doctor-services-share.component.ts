@@ -178,7 +178,7 @@ export class DoctorServicesShareComponent implements OnInit {
   }
 
   getRadioShareSummary(){
-    let formValues = this.searchSlipForm.getRawValue();
+    const formValues = this.searchSlipForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -202,7 +202,7 @@ export class DoctorServicesShareComponent implements OnInit {
     }
     this.DoctorShareSummaryList = []
     this.DoctorName = null
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       DocId: this.loggedInUser.userid,
@@ -224,7 +224,7 @@ export class DoctorServicesShareComponent implements OnInit {
   }
 
   getRadioShareDetails(){
-    let formValues = this.searchSlipForm.getRawValue();
+    const formValues = this.searchSlipForm.getRawValue();
     const dateFrom = formValues.dateFrom; 
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -247,7 +247,7 @@ export class DoctorServicesShareComponent implements OnInit {
       return;
     }
     this.DoctorShareDetalList = [];
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       RadiologistUserIDs: Array.isArray(formValues.EmpIds) && formValues.EmpIds.length > 0 ? formValues.EmpIds.join(",") : this.radoiologistList.map(a => a.UserId).join(","),
@@ -273,7 +273,7 @@ export class DoctorServicesShareComponent implements OnInit {
   }
 
   getRadioShareMonthly(){
-    let formValues = this.searchSlipForm.getRawValue();
+    const formValues = this.searchSlipForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -296,7 +296,7 @@ export class DoctorServicesShareComponent implements OnInit {
       return;
     }
     this.DoctorShareMonthlyList = [];
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
     };
@@ -317,7 +317,7 @@ export class DoctorServicesShareComponent implements OnInit {
   getSubSection() {
 
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     }
@@ -332,7 +332,7 @@ export class DoctorServicesShareComponent implements OnInit {
 
   getRadiologistInfoDetail() {
     this.radoiologistList = [];
-    let params = {
+    const params = {
       EmpID: null
     };
     this.questionnaireSrv.getRadiologistInfoDetail(params).subscribe((res: any) => {
@@ -428,7 +428,7 @@ calculateGrandTotal(): number {
 
 
 printMyShareReport() {
-  let formValues = this.searchSlipForm.getRawValue();
+  const formValues = this.searchSlipForm.getRawValue();
   if(this.reportType == 1){
     const url = environment.patientReportsPortalUrl + 'my-services-share?p=' + btoa(JSON.stringify({
       // DoctorShareSummaryList: this.DoctorShareSummaryList,
@@ -437,7 +437,7 @@ printMyShareReport() {
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       DocId: this.loggedInUser.userid,
     }));
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
   }
   if(this.reportType == 2){
     const url = environment.patientReportsPortalUrl + 'my-services-share?p=' + btoa(JSON.stringify({
@@ -449,7 +449,7 @@ printMyShareReport() {
       HeadId:formValues.testHeadID || -1,
       LocId: this.loggedInUser.locationid,
     }));
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
   }
  
 }

@@ -17,9 +17,9 @@ import { PermissionsService } from '../../services/permissions.service';
   templateUrl: './permissions.component.html',
   styleUrls: ['./permissions.component.scss']
 })
-export class PermissionsComponent implements OnChanges {
+export class PermissionsComponent implements OnChanges, OnInit {
 
-  @Input('Role') Role: any;
+  @Input() Role: any;
   @Input('ParentName') parentName: any;
   @Output() roleSelectedEvent = new EventEmitter<any>();
   selectedRole: any;
@@ -90,7 +90,7 @@ export class PermissionsComponent implements OnChanges {
 
 
   loadPermissions() {
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.screenCheckBox);
     this.permissions.getPermissions(params).subscribe( (res:any) => {
       this.spinner.hide(this.spinnerRefs.screenCheckBox);
@@ -102,7 +102,7 @@ export class PermissionsComponent implements OnChanges {
         this.permissionsList.forEach((element,i) => {
           element['Checked'] = false;
         });
-        let allPermissions = JSON.parse(JSON.stringify(this.permissionsList));
+        const allPermissions = JSON.parse(JSON.stringify(this.permissionsList));
         this.items = this.formatTreeData(allPermissions);
       }
     }, (err) => {
@@ -122,7 +122,7 @@ export class PermissionsComponent implements OnChanges {
     // ];
   }
   loadRolePermissions(roleId) {
-    let params = {
+    const params = {
       RoleID: roleId
     };
     this.spinner.show(this.spinnerRefs.screenCheckBox);
@@ -130,7 +130,7 @@ export class PermissionsComponent implements OnChanges {
       this.spinner.hide(this.spinnerRefs.screenCheckBox);
       // console.log('Role Permissions ===> ', res);
       if(res && res.PayLoad) {
-        let allPermissions = JSON.parse(JSON.stringify(this.permissionsList));
+        const allPermissions = JSON.parse(JSON.stringify(this.permissionsList));
         allPermissions.forEach(element => {
           element['Checked'] = false;
         });
@@ -152,7 +152,7 @@ export class PermissionsComponent implements OnChanges {
   }
 
   saveRolePermissions() {
-    let params = {
+    const params = {
       RoleID: this.selectedRole.UserRoleID,
       PermissionIDs: this.checkedPermissionIDs.join(','),
       CreatedBy: this.loggedInUser.userid,
@@ -186,12 +186,12 @@ export class PermissionsComponent implements OnChanges {
   }
 
   formatTreeData(data): TreeviewItem[] {
-    let allowedScreenIDs = [...new Set(data.map( (a,i)=> {
+    const allowedScreenIDs = [...new Set(data.map( (a,i)=> {
       return a.ScreenID;
     }))];
-    let c = [];
+    const c = [];
     allowedScreenIDs.forEach( (a,i)=> {
-      let currentScreenPermission = data.filter(b=>b.ScreenID == a).map(a => {
+      const currentScreenPermission = data.filter(b=>b.ScreenID == a).map(a => {
         return {
           text: a.ScreenDetailTitle,
           value: a.ScreenDetailID,
@@ -201,7 +201,7 @@ export class PermissionsComponent implements OnChanges {
           checked: a.Checked
         }
         });
-        let obj = {
+        const obj = {
             text: currentScreenPermission[0].screenTitle,
             value: (a + '_' + i), // (+new Date() + i),
             children: currentScreenPermission

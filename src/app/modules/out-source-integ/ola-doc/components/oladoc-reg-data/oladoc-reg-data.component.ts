@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
 import { Conversions } from 'src/app/modules/shared/helpers/conversions';
 import { SharedService } from 'src/app/modules/shared/services/shared.service';
@@ -11,7 +11,7 @@ import { SharedService } from 'src/app/modules/shared/services/shared.service';
   templateUrl: './oladoc-reg-data.component.html',
   styleUrls: ['./oladoc-reg-data.component.scss']
 })
-export class OladocRegDataComponent implements OnInit {
+export class OladocRegDataComponent implements OnInit, OnChanges {
 
   @Input() formParams: object = {}
   OlaRptData: any = [];
@@ -26,7 +26,7 @@ export class OladocRegDataComponent implements OnInit {
     this.getOlaDocRegData(this.formParams);
   }
   getOlaDocRegData(formParams) {
-    let params = {
+    const params = {
       "DateFrom": Conversions.formatDateObject(formParams.dateFrom),
       "DateTo": Conversions.formatDateObject(formParams.dateTo),
       "MobileNo": formParams.mobileno ? formParams.mobileno : null,

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as signalR from '@microsoft/signalr';
@@ -31,8 +31,8 @@ import { ChatService } from '../../services/ChatService.service';
   templateUrl: './hcrequests.component.html',
   styleUrls: ['./hcrequests.component.scss']
 })
-export class HCRequestsComponent implements OnInit, OnDestroy {
-  private destroy: Subject<'T'> = new Subject();
+export class HCRequestsComponent implements OnInit, OnDestroy, AfterViewInit {
+  private destroy = new Subject<'T'>();
   destroy$ = new Subject<void>();
   private searchEventSubscription: Subscription;
   advancedSearchEnabled = false;
@@ -44,7 +44,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   CitiesList: any = [];
   HomeCollectionCites: any = [];
   SearchVisitNo: any = "";
-  isAllowFullScreen: boolean = false;
+  isAllowFullScreen = false;
   RiderStatusList: any = [];
   HCBranchesList: any;
   selBranchid: any;
@@ -97,7 +97,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   HCInProgressRequests: any = [];
   gMultipleMarlers: any = [];
   HCBranchesZones: any = [];
-  HCAdminCloseRequestRemarks: string = "";
+  HCAdminCloseRequestRemarks = "";
   InProgressReqcollectionSize: any = [];
   InProgressRequests: any = [];
   HCUrgentRequestList: any = [];
@@ -162,40 +162,40 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   ChangedRiderID: any;
   RiderScheduleDisplayedColumns = ['PatientName', 'HCDateTime', 'HCBookingStatus', 'PatientAddress']; //HCBookingStatusID
   minDate_hcdatetime_bs = { day: moment(new Date()).get('date'), month: (moment(new Date()).get('month') + 1), year: moment(new Date()).get('year') };
-  page: number = 1;
-  pageSize: number = 10;
-  InProgpage: number = 1;
-  InProgpageSize: number = 10;
-  compPage: number = 1;
-  compPageSize: number = 10;
-  urgentPage: number = 1;
-  urgentPageSize: number = 10;
-  cancelledPage: number = 1;
-  cancellationPage: number = 1;
-  cancelledPageSize: number = 10;
-  cancellationPageSize: number = 10;
+  page = 1;
+  pageSize = 10;
+  InProgpage = 1;
+  InProgpageSize = 10;
+  compPage = 1;
+  compPageSize = 10;
+  urgentPage = 1;
+  urgentPageSize = 10;
+  cancelledPage = 1;
+  cancellationPage = 1;
+  cancelledPageSize = 10;
+  cancellationPageSize = 10;
   selcancelledReq: any = [];
   HCCancelledRequests: any = [];
   HCDelayedRequests: any = [];
   DelayedReqcollectionSize: any;
   FilteredDelyedHCRequests: any = [];
-  delayedPage: number = 1;
-  delayedPageSize: number = 10;
+  delayedPage = 1;
+  delayedPageSize = 10;
   HCMissedRequests: any = [];
   PendingBookingVisits: any = [];
   MissedReqcollectionSize: any;
   FilteredMissedHCRequests: any = [];
-  missedPage: number = 1;
-  missedPageSize: number = 10;
-  CanRemarksClass: string = "";
-  reqComRemarksClass: string = "";
-  hcBookingTxtMsg: string = "";
+  missedPage = 1;
+  missedPageSize = 10;
+  CanRemarksClass = "";
+  reqComRemarksClass = "";
+  hcBookingTxtMsg = "";
   HCBookingMessages: any = [];
-  IsSendChatBtnDisabled: boolean = false;
+  IsSendChatBtnDisabled = false;
   registredTestInfoByBookingID: any = [];
-  chatNoticount: number = 0;
+  chatNoticount = 0;
   SelDataForHCBookingChat: any = {};
-  appName: string = "";
+  appName = "";
 
   selectedEmoji = {
     value: '',
@@ -227,17 +227,17 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   isShareGenerated: any = false;
   VisitTPDetail: any = [];
   VisitPatDetail: any = [];
-  selVisit: string = "";
+  selVisit = "";
   ZonesList: any = [];
-  isShowMessageDetail: boolean = false;
+  isShowMessageDetail = false;
   visitCreatedByName: any = "";
   JSON: JSON;
   hcPerformedby: any = "";
   HCOnlineRequestList: any = [];
-  enabaleEditOnlineRequestBtn: boolean = false;
+  enabaleEditOnlineRequestBtn = false;
   BookingIDToEdit: any = "";
   VisitHomeSamplingTest: any;
-  isShareGenerationDecision: boolean = true;
+  isShareGenerationDecision = true;
   branchList: any = [];
   RidersDetailListInParam: any = [];
   techList: any = [];
@@ -250,7 +250,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   CommaSepBIdsToSeeDetail: any = "";
   getCMSVisitID = null;
   docsPopupRef: NgbModalRef;
-  hscReqCount: number = 0;
+  hscReqCount = 0;
   maxDate: any;
 
 
@@ -451,7 +451,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       }
     }
 
-    let params = {
+    const params = {
       BookingID: reqData.BookingPatientID,
       RiderStatusID: 2,
       ModifiedBy: this.loggedInUser.userid,
@@ -482,12 +482,12 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
         //}, 4000);
         // this.spinner.show(); 
         setTimeout(() => {
-          let updatedData = this.HCRequestList.filter(a => { return a.HCRequestID == reqData.HCRequestID });
+          const updatedData = this.HCRequestList.filter(a => { return a.HCRequestID == reqData.HCRequestID });
           this.commaseparatedBookingIds = updatedData.length ? updatedData.map(a => a.BookingPatientID).join(',') : '';
           this.SelPatientPhoneNumber = updatedData.length ? updatedData[0].PatientMobileNumber : null
           this.PatientMobileOperatorID = updatedData.length ? updatedData[0].PatientMobileOperatorID : null;
           this.SelPatientFullName = updatedData.length ? updatedData[0].PatientFullName : null;
-          let changedRider = this.RidersDetailList.filter(a => { return a.RiderID == this.ChangedRiderID });
+          const changedRider = this.RidersDetailList.filter(a => { return a.RiderID == this.ChangedRiderID });
           this.AssignRider(changedRider, 'rider')
         }, 5000);
         // this.spinner.hide(); 
@@ -512,7 +512,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     this.SelOnlineBookkings = [];
     this.SelBookingData = [];
     this.enabaleAssignRiderBtn = false;
-    let formValues = this.HCForm.getRawValue();
+    const formValues = this.HCForm.getRawValue();
     if (this.HCForm.invalid) {
       this.toastr.warning("Please fill the mandatory field")
       this.isSubmitted = true;
@@ -521,7 +521,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     // let formattedFlightDate = `${_flightDetails.FlightDate.year}-${_flightDetails.FlightDate.month}-${_flightDetails.FlightDate.day}`;
     // let F = `${this.HCForm.controls["dateFrom"].value.year}-${this.HCForm.controls["dateFrom"].value.month}-${this.HCForm.controls["dateFrom"].value.day}`;
     // let T = `${this.HCForm.controls["dateTo"].value.year}-${this.HCForm.controls["dateTo"].value.month}-${this.HCForm.controls["dateTo"].value.day}`;
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom),
       DateTo: Conversions.formatDateObject(formValues.dateTo),
       BookingID: this.HCForm.controls["bookingid"].value,
@@ -639,7 +639,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       return acc;
     }, []);
     result.forEach((a, i) => {
-      let _obj = JSON.parse(JSON.stringify(a));
+      const _obj = JSON.parse(JSON.stringify(a));
       _obj.CSTP = _obj.TPDetail.map(a => { return a.TPName }).join(',');
       result[i].CM = _obj.TPDetail.map(a => { return a.TPName }).join(',');
       result[i].tpCodes = _obj.TPDetail.map(a => { return a.TPCode }).join(',');
@@ -781,11 +781,11 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
     InProgressPreFormatedData.forEach((a, i) => {
 
-      let finalResult = [];
+      const finalResult = [];
       a.bookingDetail.forEach((b, ti) => {
-        let _obj = JSON.parse(JSON.stringify(b));
-        let tpObj = { TPName: b.TPName, SampleType: b.SampleType }
-        let idx = finalResult.findIndex((c, ii) => { return c.BookingPatientID == b.BookingPatientID });
+        const _obj = JSON.parse(JSON.stringify(b));
+        const tpObj = { TPName: b.TPName, SampleType: b.SampleType }
+        const idx = finalResult.findIndex((c, ii) => { return c.BookingPatientID == b.BookingPatientID });
         a.CommSepTP = Array.prototype.map.call(InProgressPreFormatedData[i].bookingDetail, function (item) { return item.TPName; }).join(",");
         a.commSepBIDs = Array.prototype.map.call(InProgressPreFormatedData[i].bookingDetail, function (item) { return item.BookingPatientID; }).join(",");
         a.commSepBIDs = a.commSepBIDs.split(',')
@@ -821,7 +821,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
     // this.HCInProgressRequests = InProgressPreFormatedData.filter(a => { return a.HCBookingStatusID > 10 }).map(a => ({ ...a, "ChangeRiderByAdminDisabled": true, }));
     // this.HCInProgressRequests = InProgressPreFormatedData.find(a => { return a.HCBookingStatusID == 12  }).map(a => ({ ...a, "AdminCloseTaskBtnDisabled": false, }));
-    for (var i in this.HCInProgressRequests) {
+    for (const i in this.HCInProgressRequests) {
       if (this.HCInProgressRequests[i].HCBookingStatusID == 12) {
         this.HCInProgressRequests[i].AdminCloseTaskBtnDisabled = false;
         // break; //Stop this loop, we found it!
@@ -940,7 +940,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       return acc;
     }, []);
     result.forEach((a, i) => {
-      let _obj = JSON.parse(JSON.stringify(a));
+      const _obj = JSON.parse(JSON.stringify(a));
       _obj.CSTP = _obj.TPDetail.map(a => { return a.TPName }).join(',');
       result[i].CM = _obj.TPDetail.map(a => { return a.TPName }).join(',');
       result[i].tpCodes = _obj.TPDetail.map(a => { return a.TPCode }).join(',');
@@ -972,7 +972,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   }
 
   CloseHCRequest(Reqdata) {
-    let params = {
+    const params = {
       // BookingID: null,
       HCBookingStatusID: 14,
       HCRequestID: Reqdata.HCRequestID,
@@ -989,8 +989,8 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     // window.open(url, '_blank');
   }
   RidersDetail() {
-    let formValues = this.HCForm.getRawValue();
-    let params = {
+    const formValues = this.HCForm.getRawValue();
+    const params = {
       RiderID: 0,
       LocID: this.selBranchid
     }
@@ -1006,8 +1006,8 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     }, (err) => { console.log(err) })
   }
   RidersDetailF() {
-    let formValues = this.HCForm.getRawValue();
-    let params = {
+    const formValues = this.HCForm.getRawValue();
+    const params = {
       RiderID: 0,
       LocID: formValues.branchid
     }
@@ -1106,7 +1106,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     // else {
     console.log(this.SelTechIDToAssign, this.SelDoctorIDToAssign, this.SelhelpingStaffIDToAssign);
     // return;
-    let params = {
+    const params = {
       "BookingID": this.commaseparatedBookingIds,
       "RiderID": event == 'rider' ? Number(rider.RiderID) || rider[0].RiderID : null,
       "ModifiedBy": this.loggedInUser.userid,
@@ -1129,7 +1129,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       this.spinner.hide();
       this.PendingHCRequests.map(a => ({ "SelRiderName": rider.RiderFirstName || rider[0].RiderFirstName })
       );
-      let notiType = rider.RiderID ? 'indvidual' : 'broadcast'
+      const notiType = rider.RiderID ? 'indvidual' : 'broadcast'
       // console.log(this.SelBookkings.le);
       // this.SendNotificationsToRider(rider.LocId, rider.RiderID, notiType, rider.HCZoneID);
       this.HCRequests();
@@ -1148,7 +1148,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   }
   SendNotificationsToRider(locid, RiderID, notiType, HCZoneID) {
 
-    let param = {
+    const param = {
       "RiderLocID": notiType == "broadcast" ? locid : null,
       "RiderZoneID": notiType == "broadcast" ? HCZoneID : null,
       "NotificationData": this.SelBookkings,
@@ -1327,7 +1327,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     this.getCheckedItemList();
   }
   checkUncheckOnlineReq() {
-    for (var i = 0; i < this.PendingHCRequests.length; i++) {
+    for (let i = 0; i < this.PendingHCRequests.length; i++) {
       this.PendingHCRequests[i].isSelected = this.masterSelected;
     }
     this.getCheckedOnlineReqItemList()
@@ -1349,7 +1349,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       this.enabaleEditOnlineRequestBtn = false;
     }
     this.selCommaSepBookingIds = this.SelOnlineBookkings.map(a => { return a.BookingPatientID }).join(',');
-    let isradio = this.SelOnlineBookkings.find(a => { return a.IsHCRadioSrv === true });
+    const isradio = this.SelOnlineBookkings.find(a => { return a.IsHCRadioSrv === true });
     if (isradio) {
       this.enableRadioServicesActions = true;
     }
@@ -1367,8 +1367,8 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     console.log("🚀 ~ checkUncheckAll ~ this.PendingHCRequests :", this.PendingHCRequests)
     console.log("🚀 ~ getCheckedItemList ~ this.HSUrgentRequests:", this.HSUrgentRequests)
 
-    let getPendingBookingId = this.PendingHCRequests.filter(request => request.isSelected);
-    let getUrgentBookingId = this.HSUrgentRequests.filter(request => request.isSelected);
+    const getPendingBookingId = this.PendingHCRequests.filter(request => request.isSelected);
+    const getUrgentBookingId = this.HSUrgentRequests.filter(request => request.isSelected);
     if (getPendingBookingId.length) {
       this.SelBookkings = getPendingBookingId;
     }
@@ -1396,7 +1396,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     else {
       this.enabaleAssignRiderBtn = false;
     }
-    let isradio = this.SelBookkings.find(a => { return a.IsHCRadioSrv === true });
+    const isradio = this.SelBookkings.find(a => { return a.IsHCRadioSrv === true });
     //here
     this.selCommaSepBookingIds = this.SelBookkings.map(a => { return a.BookingPatientID }).join(',');
     console.log("selCommaSepBookingIds", this.selCommaSepBookingIds);
@@ -1508,7 +1508,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     this.SelRider.selRiderID = Riderdata.RiderID;
     this.SelRider.selRiderName = Riderdata.RiderFirstName + ' ' + Riderdata.RiderLastName;
     this.SelRider.selRiderContactNumber = Riderdata.ReferenceContactNo;
-    let params = {
+    const params = {
       "RiderID": Riderdata.RiderID || Riderdata
     }
     this.HCService.GetRiderScheduleByRiderID(params).subscribe((resp: any) => {
@@ -1531,8 +1531,8 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   }
 
   CheckHCTime(event) {
-    let SelHCDateTime = this.HCDateTime.year + "-" + this.HCDateTime.month + "-" + this.HCDateTime.day; + ' ' + this.HCtime.hour + ':' + this.HCtime.minute;
-    let outputDate = new Date(SelHCDateTime);
+    const SelHCDateTime = this.HCDateTime.year + "-" + this.HCDateTime.month + "-" + this.HCDateTime.day; + ' ' + this.HCtime.hour + ':' + this.HCtime.minute;
+    const outputDate = new Date(SelHCDateTime);
 
     outputDate.setHours(event.hour || this.HCtime.hour);
     outputDate.setMinutes(event.minute || this.HCtime.minute);
@@ -1566,7 +1566,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       // this.HCDateTime = '';
       this.InvalidHCTime = true;
     }
-    let sametimeExist = this.RiderScheduleData.filter(a => { return new Date(a.HCDateTime).getTime() == outputDate.getTime() });
+    const sametimeExist = this.RiderScheduleData.filter(a => { return new Date(a.HCDateTime).getTime() == outputDate.getTime() });
     if (sametimeExist.length) {
       this.toastr.warning("Booking With Same Date Time Already Exist");
     }
@@ -1592,7 +1592,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   }
   openRiderAssignWithScheduleModal() {
     console.log("🚀 this.PendingHCRequests: ", this.PendingHCRequests)
-    let RiderID = this.PendingHCRequests.find(a => a.isSelected)?.RiderID || null;
+    const RiderID = this.PendingHCRequests.find(a => a.isSelected)?.RiderID || null;
     // this.RidersDetail();
     this.selRiderToAssign = RiderID;
     this.selBranchid = null;
@@ -1618,7 +1618,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     this.appPopupService.openModal(this.RegDetailInfoModal);
   }
   getRegisterdInfoData(BID) {
-    let params = {
+    const params = {
       "BookingID": BID
     }
     this.HCService.registredTestDetailByBookingID(params).subscribe((resp: any) => {
@@ -1634,7 +1634,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     this.appPopupService.openModal(this.CancelledMoreInfoModal);
   }
   getSelBookingMoreInfo(selBookingData) {
-    let arr = []
+    const arr = []
     this.SelBookingData = [...arr, selBookingData]  //this.PendingHCRequests.filter(a => { return a.BookingPatientID == selBookingData.BookingPatientID })
   }
   getInProgSelBookingMoreInfo(selBookingData) {
@@ -1647,7 +1647,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
   }
   getRidersByZoneID(zoneDetail) {
-    let param = {
+    const param = {
       "HCZoneID": zoneDetail.HCZoneID
     }
     this.HCService.GetRiderByZoneID(param).subscribe((resp: any) => {
@@ -1669,15 +1669,15 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   }
   editRequest(selData) {
 
-    let selbookingData = this.PendingHCRequests.filter(a => { return a.BookingPatientID == selData.BookingPatientID })
-    let selbookingID = btoa(selbookingData[0].BookingPatientID);
-    let URL = "#/hc/update-hcbooking?BID=" + selbookingID;
+    const selbookingData = this.PendingHCRequests.filter(a => { return a.BookingPatientID == selData.BookingPatientID })
+    const selbookingID = btoa(selbookingData[0].BookingPatientID);
+    const URL = "#/hc/update-hcbooking?BID=" + selbookingID;
     window.open(URL, '_blank');
 
   }
   editInProgRequest(selData) {
 
-    let selbookingData = this.HCInProgressRequests.filter(a => { return a.BookingPatientID == selData.BookingPatientID })
+    const selbookingData = this.HCInProgressRequests.filter(a => { return a.BookingPatientID == selData.BookingPatientID })
     console.log("🚀 ~ editInProgRequest ~ selbookingData:", selbookingData)
     // let selbookingID = btoa(selbookingData[0].bookingDetail[0].BookingPatientID);
 
@@ -1691,7 +1691,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
   }
   getSelRider() {
-    let selRiderInfo = this.RidersDetailList.filter(a => { return a.RiderID == this.selRiderToAssign });
+    const selRiderInfo = this.RidersDetailList.filter(a => { return a.RiderID == this.selRiderToAssign });
     if (selRiderInfo.length) {
       this.AssignRider(selRiderInfo, 'rider');
       setTimeout(() => {
@@ -1711,7 +1711,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
   getZonesByHCCityId(hccity) {
     console.log("SelBookingData", this.SelBookingData);
     if (hccity) {
-      let params = {
+      const params = {
         HCCityID: hccity
       }
       this.HCService.GetZonesByHCCityID(params).subscribe((resp: any) => {
@@ -1755,7 +1755,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
     this.visitCreatedByName = "";
     this.hcPerformedby = "";
     this.selVisit = visitid.VisitId || this.SearchVisitNo;
-    let params = {
+    const params = {
       VisitID: visitid.VisitId || this.SearchVisitNo
     }
     this.spinner.show(this.spinnerRep.RequestDetailSpinner);
@@ -1818,7 +1818,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
   }
   getHCBookingChatMsgs() {
-    let params = {
+    const params = {
       "BookingID": this.SelDataForHCBookingChat.BookingPatientID
     }
     this.spinner.show(this.spinnerRep.chatBoxSpiiner);
@@ -1905,7 +1905,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
     //   // this.HCService.hcBookingChatResp.sub
     //   this.IsSendChatBtnDisabled = true;
-      let params = {
+      const params = {
         BookingID: String(this.SelDataForHCBookingChat.BookingPatientID),
         HCRequestID: null,
         isUrgent: Number(this.isHCMsgUrgent),
@@ -2003,7 +2003,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
 
   getRegTPDetailByHCReqID(reqid) {
     this.isShareGenerationDecision = true;
-    let params = {
+    const params = {
       HCRequestID: reqid
     }
     this.HCService.getRegTPDetailByHCReqID(params).subscribe((resp: any) => {
@@ -2012,7 +2012,7 @@ export class HCRequestsComponent implements OnInit, OnDestroy {
       if (this.VisitHomeSamplingTest.length) {
         if (resp && resp.PayLoad.length && resp.StatusCode == 200) {
           resp.PayLoad.map(a => {
-            let isHC = this.VisitHomeSamplingTest.filter(b => { return a.TPId == b.TPId });
+            const isHC = this.VisitHomeSamplingTest.filter(b => { return a.TPId == b.TPId });
             if (isHC.length && a.StatusId == -1) {
               this.isShareGenerationDecision = false;
             }

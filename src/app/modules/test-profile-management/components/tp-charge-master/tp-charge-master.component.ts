@@ -124,10 +124,10 @@ export class TpChargeMasterComponent implements OnInit {
       this.getChargeMastersListPromise()
     ]).then((responses: any) => {
       this.spinner.hide();
-      let branchesData = responses[0];
+      const branchesData = responses[0];
       this.branchesList = branchesData;
 
-      let chargeMastersList = responses[1];
+      const chargeMastersList = responses[1];
       this.chargeMastersList = chargeMastersList;
       /**/
       this.chargeMastersList.forEach(cm => {
@@ -156,7 +156,7 @@ export class TpChargeMasterComponent implements OnInit {
     this.branchRegions = [];
     this.testsList = [];
   
-    let promisesArray = [
+    const promisesArray = [
       this.getBranchesPromise(),
       // this.getBranchesPromise(1),
       this.getTestProfileListPromise(),
@@ -171,19 +171,19 @@ export class TpChargeMasterComponent implements OnInit {
       // let allBranchesData = responses[0];
 
       // Unassigned Branches
-      let branchesData = responses[0];//[1];
+      const branchesData = responses[0];//[1];
       this.branchesListFiltered = branchesData.filter(b => !b.ChargeMasterID || b.ChargeMasterID == chargeMasterId); //commented for new html view
       // this.branchesListFiltered = branchesData//branchesData.filter(b => !b.ChargeMasterID || b.ChargeMasterID == chargeMasterId); //added for new html view
       this.branchRegions = [...new Set(this.branchesListFiltered.filter(a => a.RegId).map(a => a.RegId))].map(a => { return {RegId: a, RegName: this.branchesListFiltered.find(b=>b.RegId == a).RegName, RegCode: this.branchesListFiltered.find(b=>b.RegId == a).RegCode} } )
 
       // Test Profiles
-      let testsData = responses[1];//[2];
+      const testsData = responses[1];//[2];
       this.testsList = testsData;
       this.testTypeChangedEvent({ target: { value: this.filters.testType } });
 
       // Charge Master Test Profiles
       if(chargeMasterId) {
-        let chargeMasterTPData = responses[2];//[3];
+        const chargeMasterTPData = responses[2];//[3];
         /*
         let currentChargeMasterBranches = [];
         chargeMasterTPData.Table1.map(a => a.BranchID).forEach(bId => {
@@ -202,14 +202,14 @@ export class TpChargeMasterComponent implements OnInit {
         });
   
         (chargeMasterTPData.Table1 || []).forEach(cm => {
-          let selectedTestIndex = this.filteredTestsList.findIndex(t => t.TPId == cm.TPID);
+          const selectedTestIndex = this.filteredTestsList.findIndex(t => t.TPId == cm.TPID);
           if (selectedTestIndex > -1) {
-            let _price = cm.Price || cm.RegTestProfilePrice || 0;
-            let _newPrice = cm.NewPrice || 0;
-            let _discountRs = cm.DiscountRs || (_price - _newPrice);
-            let _discountPct = this.parseNumbericValues((cm.DiscountPct || ((100 - (_newPrice / _price * 100)))), 2);
-            let _effectiveDate = cm.EffectiveDate ? Conversions.getDateObjectByGivenDate(cm.EffectiveDate) : null;
-            let _effectiveTime = cm.EffectiveDate ? Conversions.getTimeObjectByGivenDate(cm.EffectiveDate) : null;
+            const _price = cm.Price || cm.RegTestProfilePrice || 0;
+            const _newPrice = cm.NewPrice || 0;
+            const _discountRs = cm.DiscountRs || (_price - _newPrice);
+            const _discountPct = this.parseNumbericValues((cm.DiscountPct || ((100 - (_newPrice / _price * 100)))), 2);
+            const _effectiveDate = cm.EffectiveDate ? Conversions.getDateObjectByGivenDate(cm.EffectiveDate) : null;
+            const _effectiveTime = cm.EffectiveDate ? Conversions.getTimeObjectByGivenDate(cm.EffectiveDate) : null;
 
             this.filteredTestsList[selectedTestIndex] = {
               ...this.filteredTestsList[selectedTestIndex],
@@ -367,9 +367,9 @@ export class TpChargeMasterComponent implements OnInit {
 
   /* API Calls */
   getBranchesPromise(filter = null) {
-    let promise = new Promise( (resolve, reject) => {
+    const promise = new Promise( (resolve, reject) => {
       this.chargeMasterService.getLookupBranchesForChargeMaster({filter:filter}).subscribe((resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
         });
@@ -382,7 +382,7 @@ export class TpChargeMasterComponent implements OnInit {
   }
   getChargeMastersListPromise(chargeMasterId = null) {
     this.spinner.show(this.spinnerRefs.listSection);
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       this.chargeMasterService.getChargeMaster({ChargeMasterID: chargeMasterId}).subscribe((res: any) => {
         let returnedData = [];
         if (res && res.StatusCode == 200 && res.PayLoadDS) {
@@ -402,12 +402,12 @@ export class TpChargeMasterComponent implements OnInit {
   }
   
   getTestProfileListPromise() {
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       // if(this.cachedData.testList.length) {
       //   resolve(JSON.parse(JSON.stringify(this.cachedData.testList)));
       //   return promise;
       // }
-      let _param = {
+      const _param = {
         // branchId: this.loggedInUser.locationid, // this.selectedLocId,
         // TestProfileCode: null,
         // TestProfileName: null,
@@ -441,8 +441,8 @@ export class TpChargeMasterComponent implements OnInit {
     return promise;
   }
   getChargeMastersListByIdPromise(chargeMasterId) {
-    let promise = new Promise((resolve, reject) => {
-      let params = {
+    const promise = new Promise((resolve, reject) => {
+      const params = {
         ChargeMasterID: chargeMasterId
       }
       this.chargeMasterService.getChargeMaster(params).subscribe((res: any) => {
@@ -462,8 +462,8 @@ export class TpChargeMasterComponent implements OnInit {
     return promise;
   }
   updateChargeMasterLocationMappingPromise(chargeMasterId, branchIDs) {
-    let promise = new Promise((resolve, reject) => {
-      let params = {
+    const promise = new Promise((resolve, reject) => {
+      const params = {
         ChargeMasterID: chargeMasterId,
         BranchIDs: branchIDs
       }
@@ -482,8 +482,8 @@ export class TpChargeMasterComponent implements OnInit {
     return promise;
   }
   setChargeMasterAsDefaultPromise(chargeMasterId) {
-    let promise = new Promise((resolve, reject) => {
-      let params = {
+    const promise = new Promise((resolve, reject) => {
+      const params = {
         ChargeMasterID: chargeMasterId
       }
       this.chargeMasterService.setChargeMasterAsDefault(params).subscribe((res: any) => {
@@ -549,7 +549,7 @@ export class TpChargeMasterComponent implements OnInit {
       }
       this.insertUpdateChargeMaster(this.form.getRawValue());
     } else {
-      let invalidFieldNames = [];
+      const invalidFieldNames = [];
       Object.keys(this.form.controls).forEach((a,i) => {
         if(this.form.controls[a].errors) {
              invalidFieldNames.push(a);
@@ -560,7 +560,7 @@ export class TpChargeMasterComponent implements OnInit {
   }
   insertUpdateChargeMaster(values) {
     this.formSubmitted = true;
-    let params = values;
+    const params = values;
     params.IsDefault = params.IsDefault ? 1 : 0;
     params.BranchIDs = (params.BranchIDs || []).join(',');
     params.TPChargeMasterData = this.getFormatChargeMasterData();
@@ -633,7 +633,7 @@ export class TpChargeMasterComponent implements OnInit {
       a.isDefault = false;
     });
     cm.isDefault = true;
-    let ChargeMasterID = cm.ChargeMasterID;
+    const ChargeMasterID = cm.ChargeMasterID;
     if(!ChargeMasterID) {
       this.toastr.warning('Charge Master ID not provided');
       return;
@@ -697,7 +697,7 @@ export class TpChargeMasterComponent implements OnInit {
     this.deleteChargeMasterById(cm.ChargeMasterID);
   }
   deleteChargeMasterById(chargeMasterId) {
-    let params = {
+    const params = {
       ChargeMasterID: chargeMasterId
     }
     this.spinner.show();

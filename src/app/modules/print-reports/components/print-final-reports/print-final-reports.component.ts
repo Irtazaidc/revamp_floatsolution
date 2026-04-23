@@ -34,29 +34,29 @@ export class PrintFinalReportsComponent implements OnInit {
   VisitsDetailList: any = [];
   paginatedSearchResults: any = [];
   PatientInfo: any = [];
-  masterSelected: boolean = false;
-  collectionSize: number = 0;
-  page: number = 1;
-  pageSize: number = 5;
+  masterSelected = false;
+  collectionSize = 0;
+  page = 1;
+  pageSize = 5;
   checklist: any = [];
   SelectedTPs: any = [];
   checkedList: any = [];
   commaseparatedTPIds: any = [];
-  disableViewTestRow: boolean = false;
+  disableViewTestRow = false;
   visitDetailsList: any = [];
   selVisit: any = "";
   searchInVisitList: any = "";
   isLetterHead: any = "";
   isHistoryReq: any = "";
   searchInTestDetail: any = "";
-  isDueBalance: boolean = false;
+  isDueBalance = false;
   DueBalanceAmount: any = 0;
-  IsMasterDisable: boolean = false;
+  IsMasterDisable = false;
   patientReportUrl: any = "";
-  isScreen: number = 0;
-  isTPDetailScreen: boolean = false;
+  isScreen = 0;
+  isTPDetailScreen = false;
   isChild = false;
-  isDeliverButtonAllowed: boolean = false;
+  isDeliverButtonAllowed = false;
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Confirmation Alert', // 'Are you sure?',
@@ -67,7 +67,7 @@ export class PrintFinalReportsComponent implements OnInit {
     cancelClicked: false,
     confirmPopoverCancel: () => {}
   }
-  deliverRptTitle: string = "Deliver Reports";
+  deliverRptTitle = "Deliver Reports";
   SelRow: any;
   HighlightRow: any;
   spinnerRefs = {
@@ -77,7 +77,7 @@ export class PrintFinalReportsComponent implements OnInit {
     inquiryListSection: "inquiryListSection",
   };
   loggedInUser: UserModel;
-  invoiceCopyType: number = 1;
+  invoiceCopyType = 1;
   constructor(
     private toastr: ToastrService,
     private printRptService: PrintReportService,
@@ -130,7 +130,7 @@ export class PrintFinalReportsComponent implements OnInit {
     if (!this.SelectedTPs.length) {
       this.toastr.error("Please Select Test(s)/Profile(s) to deliver");
     } else {
-      let check = this.SelectedTPs.filter((a) => {
+      const check = this.SelectedTPs.filter((a) => {
         return (
           a.STATUS == "Cancel Req." ||
           a.STATUS == "Cancelled" ||
@@ -152,7 +152,7 @@ export class PrintFinalReportsComponent implements OnInit {
           "Some Selected Tests/Profiles Are Not Allowed To Be Deliver"
         );
       } else {
-        let params = {
+        const params = {
           VisitIdBig: this.SelectedTPs[0].ACCOUNTNO,
           TPIds: this.commaseparatedTPIds,
           StatusId: 12,
@@ -188,7 +188,7 @@ export class PrintFinalReportsComponent implements OnInit {
     this.rowIndex = null;
     console.log(visit);
 
-    let params = {
+    const params = {
       AccountNo: visit.EncVisitID,
       branchID: 1,
       SampleRefNo: "",
@@ -601,7 +601,7 @@ export class PrintFinalReportsComponent implements OnInit {
       if (this.isLetterHead) pakageTP[0].headerImage = 1;
       else pakageTP[0].headerImage = 0;
 
-      let patientReportWinRef: any = this.openReportWindow();
+      const patientReportWinRef: any = this.openReportWindow();
 
       this.printRptService.getPatientReportUrl(pakageTP[0]).subscribe(
         (res: any) => {
@@ -637,7 +637,7 @@ export class PrintFinalReportsComponent implements OnInit {
       if (this.isLetterHead) chemistryTP[0].headerImage = 1;
       else chemistryTP[0].headerImage = 0;
 
-      let patientReportWinRef: any = this.openReportWindow();
+      const patientReportWinRef: any = this.openReportWindow();
 
       this.printRptService.getPatientReportUrl(chemistryTP[0]).subscribe(
         (res: any) => {
@@ -673,7 +673,7 @@ export class PrintFinalReportsComponent implements OnInit {
       if (this.isLetterHead) radioTP[0].headerImage = 1;
       else radioTP[0].headerImage = 0;
 
-      let patientReportWinRef: any = this.openReportWindow();
+      const patientReportWinRef: any = this.openReportWindow();
 
       this.printRptService.getPatientReportUrl(radioTP[0]).subscribe(
         (res: any) => {
@@ -709,7 +709,7 @@ export class PrintFinalReportsComponent implements OnInit {
       if (this.isLetterHead) grphicalTP[0].headerImage = 1;
       else grphicalTP[0].headerImage = 0;
 
-      let patientReportWinRef: any = this.openReportWindow();
+      const patientReportWinRef: any = this.openReportWindow();
 
       this.printRptService.getPatientReportUrl(grphicalTP[0]).subscribe(
         (res: any) => {
@@ -757,7 +757,7 @@ export class PrintFinalReportsComponent implements OnInit {
     } else {
       this.SelectedTPs.forEach((element) => {
         console.log(element);
-        let _item = { ...element };
+        const _item = { ...element };
         console.log("_item", _item);
         if (_item.permission_ViewGraphicalReportIcon) {
           _item.ReportType = "grf";
@@ -766,7 +766,7 @@ export class PrintFinalReportsComponent implements OnInit {
         }
         _item.ItemType = itemType;
         _item.AppName = "medicubes";
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(_item).subscribe(
           (res: any) => {
             try {
@@ -791,13 +791,13 @@ export class PrintFinalReportsComponent implements OnInit {
   }
 
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open("", "_blank");
+    const patientVisitInvoiceWinRef = window.open("", "_blank");
     // patientVisitInvoiceWinRef.opener = null;
 
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split("?");
+    const reportSegments = reportUrl.split("?");
     if (reportSegments.length > 1) {
       reportUrl =
         reportSegments[0] +
@@ -814,7 +814,7 @@ export class PrintFinalReportsComponent implements OnInit {
     if (!queryParams) {
       return reportUrl;
     }
-    let reportSegments = reportUrl.split("?");
+    const reportSegments = reportUrl.split("?");
     if (reportSegments.length > 1) {
       reportUrl =
         reportSegments[0] + "?" + btoa(atob(reportSegments[1]) + queryParams);
@@ -833,7 +833,7 @@ export class PrintFinalReportsComponent implements OnInit {
     );
   }
   checkUncheckAll() {
-    for (var i = 0; i < this.checklist.length; i++) {
+    for (let i = 0; i < this.checklist.length; i++) {
       if (this.checklist[i].isDisabled === false) {
         this.checklist[i].isSelected = this.masterSelected;
       }
@@ -844,12 +844,12 @@ export class PrintFinalReportsComponent implements OnInit {
   getCheckedItemList() {
     this.SelectedTPs = [];
     this.checkedList = [];
-    for (var i = 0; i < this.checklist.length; i++) {
+    for (let i = 0; i < this.checklist.length; i++) {
       if (this.checklist[i].isSelected) {
         this.checkedList.push(this.checklist[i]);
       }
     }
-    let decision = this.CheckIFCheckedItemsContainDeliverStatus();
+    const decision = this.CheckIFCheckedItemsContainDeliverStatus();
     if (decision.length > 0) {
       this.isDeliverButtonAllowed = true;
       this.deliverRptTitle = "Some tests are not allowed to deliver";
@@ -887,7 +887,7 @@ export class PrintFinalReportsComponent implements OnInit {
    
   isAllSmartReport = false;
   CheckIFCheckedItemsContainDeliverStatus() {
-    let aa = this.checkedList.filter((a) => {
+    const aa = this.checkedList.filter((a) => {
       return a.permission_ViewDeliverReportIcon == false;
     });
     return aa;
@@ -1001,7 +1001,7 @@ export class PrintFinalReportsComponent implements OnInit {
   screenPermissionsObj
   SmartReportAccessPermission = false
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     // console.log("User Screen Permsions___",this.screenPermissionsObj);
     this.SmartReportAccessPermission = this.screenPermissionsObj?.smart_report ? true : false;
@@ -1015,7 +1015,7 @@ export class PrintFinalReportsComponent implements OnInit {
     }
     else {
       
-      let ObjParam = {
+      const ObjParam = {
         VisitID: this.SelectedTPs[0].ACCOUNTNO,
         TPIDs: this.SelectedTPs.map(a => a.PROFILETESTID).join(','),
         CreatedBy: this.loggedInUser.userid || -99,
@@ -1024,7 +1024,7 @@ export class PrintFinalReportsComponent implements OnInit {
        this.spinner.show(this.spinnerRefs.testSectionTable);
       this.printRptService.getVisitDetailsForSmartReportData(ObjParam).subscribe((res: any) => {
         if(res.StatusCode == 200 && res?.PayLoadDS?.Table1 && res?.PayLoadDS?.Table1.length > 0){
-        let data = res.PayLoadDS;
+        const data = res.PayLoadDS;
         const patientRow = data.Table[0];
         this.API_KEY = patientRow.APIKEY
           const payload = {

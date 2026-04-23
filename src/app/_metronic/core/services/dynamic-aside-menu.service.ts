@@ -24,7 +24,7 @@ export class DynamicAsideMenuService {
   // Here you able to load your menu from server/data-base/localStorage
   // Default => from DynamicAsideMenuConfig
   private loadMenu() {
-    let menu: any = this.setPermissionsBasedMenu(AppMenu);
+    const menu: any = this.setPermissionsBasedMenu(AppMenu);
     this.setMenu(menu);
   }
 
@@ -40,16 +40,16 @@ export class DynamicAsideMenuService {
 
   setPermissionsBasedMenu(AppMenu) {
 
-    let perms_allowed = this.authService.getUserPermissionsFromLocalStorage() || []; // allowedPermissoin;//AppSettings.screen_permissions.permissions;
-    let _AppMenu = JSON.parse(JSON.stringify(AppMenu));
-    let menu = [];
+    const perms_allowed = this.authService.getUserPermissionsFromLocalStorage() || []; // allowedPermissoin;//AppSettings.screen_permissions.permissions;
+    const _AppMenu = JSON.parse(JSON.stringify(AppMenu));
+    const menu = [];
     _AppMenu.items.filter(a => a.ignoreAuth).forEach(element => {
       menu.push(element);
     });
     _AppMenu.items.forEach(element => {
-      let parent = JSON.parse(JSON.stringify(element));
+      const parent = JSON.parse(JSON.stringify(element));
       // parent.submenu = [];
-      let child = [];
+      const child = [];
       (element.submenu || []).forEach(c => {
         let pageState = (c.page || '');
         pageState = pageState.split('/')[(pageState.split('/').length - 1)];
@@ -72,7 +72,7 @@ export class DynamicAsideMenuService {
 
 
     menu.forEach( (a, i) => { // to remove section headings that don't have its menu items
-      let nextIdx = i+1;
+      const nextIdx = i+1;
       if (menu[i].section) {
         if(!(menu[nextIdx] && menu[nextIdx].page)) {
           a.section = '';

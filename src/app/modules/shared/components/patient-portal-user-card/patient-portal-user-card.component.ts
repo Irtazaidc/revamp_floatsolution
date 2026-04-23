@@ -21,7 +21,7 @@ import { AppPopupService } from '../../helpers/app-popup.service';
 })
 export class PatientPortalUserCardComponent implements OnInit {
 
-  @Input('PPUserId') PPUserId: number;
+  @Input() PPUserId: number;
 
   defaultPatientPic = CONSTANTS.USER_IMAGE.UNSPECIFIED;
 
@@ -51,7 +51,7 @@ export class PatientPortalUserCardComponent implements OnInit {
 
   GetPatientPortalUserDetail(PPUserId){
     
-    let objParm = {
+    const objParm = {
       UserName:  null, 
       Email:  null,
       CellNumber: null, 

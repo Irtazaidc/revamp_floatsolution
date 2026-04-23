@@ -51,7 +51,7 @@ export class InsuranceSummaryComponent implements OnInit {
 
   searchText = "";
   maxDate: any;
-  isActive: number = 1;
+  isActive = 1;
   filterForm: FormGroup = this.formBuilder.group(this.Fields);
 
   constructor(
@@ -96,7 +96,7 @@ export class InsuranceSummaryComponent implements OnInit {
     this.active = null;
     // this.activeCases = 0;
     // this.inactiveCases = 0;
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(
@@ -125,7 +125,7 @@ export class InsuranceSummaryComponent implements OnInit {
       this.isSubmitted = false;
       return;
     }
-    let locationid = formValues.locationid
+    const locationid = formValues.locationid
     !locationid ? this.showLocColumn = true : this.showLocColumn = false;
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -133,7 +133,7 @@ export class InsuranceSummaryComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocIds: Array.isArray(formValues.locationid) && formValues.locationid.length > 0
@@ -147,12 +147,12 @@ export class InsuranceSummaryComponent implements OnInit {
         // this.isActive = -1;
         if (res.StatusCode == 200) {
           if (res.PayLoad.length) {
-            let dataSet = res.PayLoad.map(item => ({
+            const dataSet = res.PayLoad.map(item => ({
               ...item,
               ActiveInsurancePercentage: item.VisitCount > 0 ? ((item.ActiveInsuranceCount / item.VisitCount) * 100).toFixed(2) : "0.00",
               InActiveInsurancePercentage: item.VisitCount > 0 ? ((item.InActiveInsuranceCount / item.VisitCount) * 100).toFixed(2) : "0.00",
           }));
-         let sortedData = [...dataSet].sort((a, b) => b.ActiveInsuranceCount - a.ActiveInsuranceCount);
+         const sortedData = [...dataSet].sort((a, b) => b.ActiveInsuranceCount - a.ActiveInsuranceCount);
             this.insuranceSummaryDataList = dataSet;
             this.insuranceSummaryDataListMain = dataSet;
           //   this.insuranceDataList.forEach(patient => {
@@ -193,7 +193,7 @@ export class InsuranceSummaryComponent implements OnInit {
 
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99
     }
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -253,7 +253,7 @@ export class InsuranceSummaryComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           // this.paymentModesList = _response.Table5 || [];
           this.patientTypeList = _response.Table6 || [];
         },
@@ -265,7 +265,7 @@ export class InsuranceSummaryComponent implements OnInit {
   panelsList = [];
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       branchId: null,
     };
     // if (!this.loggedInUser.locationid) {
@@ -343,7 +343,7 @@ export class InsuranceSummaryComponent implements OnInit {
   
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -374,10 +374,10 @@ export class InsuranceSummaryComponent implements OnInit {
 
   filterResults() {
      this.pagination.page = 1;
-     let cols = ['LocCode'];
+     const cols = ['LocCode'];
      let results: any = this.insuranceSummaryDataList;
      if (this.searchText && this.searchText.length > 1) {
-       let pipe_filterByKey = new FilterByKeyPipe();
+       const pipe_filterByKey = new FilterByKeyPipe();
        results = pipe_filterByKey.transform(this.insuranceSummaryDataList, this.searchText, cols, this.insuranceSummaryDataList);
      }
      this.pagination.filteredSearchResults = results;

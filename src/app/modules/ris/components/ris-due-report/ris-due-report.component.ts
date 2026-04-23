@@ -50,7 +50,7 @@ pagination = {
   maxDate: any;
 
   filterForm: FormGroup = this.formBuilder.group(this.Fields)
-  ViistCounts: number = 0;
+  ViistCounts = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -87,7 +87,7 @@ pagination = {
     // console.log("loggedInUser", this.loggedInUser)
   }
   getDueReportData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -95,7 +95,7 @@ pagination = {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocIDs: formValues.locID ? formValues.locID.join(",") : null,
@@ -123,7 +123,7 @@ pagination = {
     })
   }
   countTotalVisitIds(data: any[]): number {
-    const uniqueVisitIds: { [key: number]: boolean } = {};
+    const uniqueVisitIds: Record<number, boolean> = {};
     data.forEach(item => {
       uniqueVisitIds[item.VisitID] = true;
     });
@@ -169,7 +169,7 @@ pagination = {
   getSubSection() {
 
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     }
@@ -185,7 +185,7 @@ pagination = {
   getTestStatus() {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.testStatusList = _response;
     }, (err) => {
     })
@@ -206,7 +206,7 @@ pagination = {
   panelList = []
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -251,7 +251,7 @@ pagination = {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

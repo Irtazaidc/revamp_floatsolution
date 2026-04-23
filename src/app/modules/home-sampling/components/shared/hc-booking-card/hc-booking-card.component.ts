@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { HcBookingInquiryService } from '../../../services/hc-booking-inquiry.service';
@@ -14,13 +14,13 @@ import { HCBookingDetail } from '../../../models/HCBooking';
   templateUrl: './hc-booking-card.component.html',
   styleUrls: ['./hc-booking-card.component.scss']
 })
-export class HcBookingCardComponent implements OnInit {
+export class HcBookingCardComponent implements OnInit, OnChanges {
 
-  @Input('bookingid') bookingid: number;
-  @Input('requestid') requestid: number;
-  @Input('multipleBookingIds') multipleBookingIds: any = "";
-  @Input('hcBookingInfoDT') hcBookingInfoDT: any = [];
-  @Input('selBookingID') selBookingID: any = null;
+  @Input() bookingid: number;
+  @Input() requestid: number;
+  @Input() multipleBookingIds: any = "";
+  @Input() hcBookingInfoDT: any = [];
+  @Input() selBookingID: any = null;
   // hcBookingInfo: any = [];
   bookedTestNames: any = "";
   hcBookingInfo: HCBookingDetail;

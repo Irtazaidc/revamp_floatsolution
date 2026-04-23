@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/modules/auth';
@@ -7,7 +7,7 @@ import { PrintReportService } from 'src/app/modules/print-reports/services/print
 import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
 import { SharedService } from 'src/app/modules/shared/services/shared.service';
 import Swal from 'sweetalert2';
-declare var $: any;
+declare let $: any;
 
 @Component({
   standalone: false,
@@ -16,12 +16,12 @@ declare var $: any;
   templateUrl: './pacs.component.html',
   styleUrls: ['./pacs.component.scss']
 })
-export class PacsComponent implements OnInit {
+export class PacsComponent implements OnInit, OnChanges {
   spinnerRefs = {
     PACsStudiesList: 'PACsStudiesList'
   }
 
-  @Input('PIN') PIN: any = {};
+  @Input() PIN: any = {};
   constructor(
     private toastr: ToastrService,
     private printRptService: PrintReportService,
@@ -54,7 +54,7 @@ export class PacsComponent implements OnInit {
   spinnerText = "Loading..."
   PACSStudiesList: any = [];
   getPACSStudies(pin) {
-    let params = {
+    const params = {
       "visitno":  this.PIN //'2302-01-000072' //this.PIN// '2302-01-000072' //this.PIN //'2111-01-056227'//pin 2307-01-000055 2111-01-056227
     }
     this.spinner.show(this.spinnerRefs.PACsStudiesList);
@@ -63,7 +63,7 @@ export class PacsComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.PACsStudiesList);
       }, 200);
       if (resp && resp.StatusCode == 200) {
-        let parserResp = JSON.parse(resp.PayLoadStr);
+        const parserResp = JSON.parse(resp.PayLoadStr);
         this.PACSStudiesList = parserResp;
         // console.log("Studies list is : ", this.PACSStudiesList)
       }
@@ -111,10 +111,10 @@ export class PacsComponent implements OnInit {
 
       }).then((result) => {
         if (result.value) {
-          var e = document.getElementById("selectedType");
-          let ee = $("#selectedType :selected").text();
+          const e = document.getElementById("selectedType");
+          const ee = $("#selectedType :selected").text();
           this.selectedType = $("#selectedType").val();
-          let params = {
+          const params = {
             pacsData: {
               "visitno": '2302-01-000072' // decodeURI(pin),
             },
@@ -155,8 +155,8 @@ export class PacsComponent implements OnInit {
             // const url = window.URL.createObjectURL(blob);
             // window.open(url);
             if (data && data.byteLength) {
-              var a = document.createElement('a');
-              var blob = new Blob([data], { 'type': "application/octet-stream" });
+              const a = document.createElement('a');
+              const blob = new Blob([data], { 'type': "application/octet-stream" });
               a.href = URL.createObjectURL(blob);
               // a.download = this.patient.PIN + ".zip";
               a.click();
@@ -196,7 +196,7 @@ export class PacsComponent implements OnInit {
 
   downloadPacsData(pacsStudiesData, pin, type) {
     this.spinnerText = "We're preparing for your download. Thank you for your patience.";
-    let params = {
+    const params = {
       pacsData: {
         "visitno": pin //'2302-01-000072'
       },
@@ -236,8 +236,8 @@ export class PacsComponent implements OnInit {
       // const url = window.URL.createObjectURL(blob);
       // window.open(url);
       if (data && data.byteLength) {
-        var a = document.createElement('a');
-        var blob = new Blob([data], { 'type': "application/octet-stream" });
+        const a = document.createElement('a');
+        const blob = new Blob([data], { 'type': "application/octet-stream" });
         a.href = URL.createObjectURL(blob);
         a.download = "zip.zip";
          a.click();

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnInit, Output, SimpleChanges, ViewChild, OnDestroy, OnChanges, AfterViewInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RisWorklistService } from 'src/app/modules/ris/services/ris-worklist.service';
 import { AppPopupService } from '../../../../../shared/helpers/app-popup.service';
@@ -29,13 +29,13 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./ris-worklist-service.component.scss']
 })
 
-export class RisWorklistServiceComponent implements OnInit {
+export class RisWorklistServiceComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   private refreshSubscription: Subscription;
-  @Input('paramsValuesForWorkList') paramsValuesForWorkList: any;
-  @Input('colNamesForMOScreen') colNamesForMOScreen = [];
-  @Input('actionsPermission') actionsPermission: any = [];
-  @Input('isStatusChanged') isStatusChanged: any = [];
-  @Input('isSaved') isSaved: any = [];
+  @Input() paramsValuesForWorkList: any;
+  @Input() colNamesForMOScreen = [];
+  @Input() actionsPermission: any = [];
+  @Input() isStatusChanged: any = [];
+  @Input() isSaved: any = [];
   @Output() paramFormHeaderInfo = new EventEmitter<any>();
   @Output() selectedValueChange = new EventEmitter<any>();
   @ViewChild('vitalsServiceModal') vitalsServiceModal;
@@ -54,8 +54,8 @@ export class RisWorklistServiceComponent implements OnInit {
   visitInfo: any = {};
   PatientPhoneNumber: any = "";
   screenIdentity = null; //1 for MO Worklist, 2 for Tech Worklist
-  disabledButtonVerify: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerVerify: boolean = true;//Hide Loader
+  disabledButtonVerify = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerVerify = true;//Hide Loader
 
 
   techUsername = "";
@@ -78,7 +78,7 @@ export class RisWorklistServiceComponent implements OnInit {
   loggedInUser: UserModel;
 
   sub: Subscription;
-  count: number = 0;
+  count = 0;
   currow: any;
   constructor(
     private worklistSrv: RisWorklistService,
@@ -145,7 +145,7 @@ export class RisWorklistServiceComponent implements OnInit {
               this.toastr.warning("The device is not connected or closed, so please log in with your credentials.", "Device Connection Error")
               this.appPopupService.openModal(this.userVerificationServiceModal, { backdrop: 'static', size: 'md' });
             } else {
-              let data = this.multiApp.getTDate();
+              const data = this.multiApp.getTDate();
               // this.rowIndex = data.value.rowIndex;
               this.TPId = data.value.TPId;
               this.VisitID = data.value.VisitNo.replaceAll("-", "");
@@ -293,7 +293,7 @@ export class RisWorklistServiceComponent implements OnInit {
         return
       } else {
         this.count = this.count + 1;
-        let obj = {
+        const obj = {
           user: 1,
           timestamp: +new Date(),
           screen: encodeURIComponent(window.location.href)
@@ -361,7 +361,7 @@ export class RisWorklistServiceComponent implements OnInit {
   contrastCount = 0;
   otherCount = 0;
   getRisworkList(val) {
-    let storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : val;
+    const storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : val;
     this.storageService.setObject('risFilterParams', val);
     if (val.visitID) {
       this.showAllTab = true;
@@ -378,7 +378,7 @@ export class RisWorklistServiceComponent implements OnInit {
       this.searchText = '';
       this.risWorklist = [];
       this.spinner.show(this.spinnerRefs.listSection);
-      let params = {
+      const params = {
         VisitID: val.visitID ? val.visitID.replaceAll("-", '') : null,
         BranchIDs: val.branch ? val.branch.join(",") : null,
         FilterBy: val.filterBy,
@@ -392,7 +392,7 @@ export class RisWorklistServiceComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.listSection);
         if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
           this.orignaRisList = resp.PayLoad
-          let dataset = resp.PayLoad;
+          const dataset = resp.PayLoad;
           this.risWorklist = dataset.map(a => ({
             BranchCode: a.BranchCode,
             MOBy: a.MOBy,
@@ -420,9 +420,9 @@ export class RisWorklistServiceComponent implements OnInit {
             SubSectionId: a.SubSectionId,
             ServiceType: a.ServiceType
           }));
-          let newris = [];
+          const newris = [];
           this.risWorklist = this.risWorklist.map((a, i) => {
-            let _obj = {};
+            const _obj = {};
             this.colNamesForMOScreen.forEach(b => { _obj[b] = a[b] }); return _obj
           });
           this.filmCount = this.risWorklist.filter(f => f.ServiceType == 1).length;
@@ -667,7 +667,7 @@ export class RisWorklistServiceComponent implements OnInit {
   }
   searchText = '';
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .slice((this.pagination.page - 1) * this.pagination.pageSize, (this.pagination.page - 1) * this.pagination.pageSize + this.pagination.pageSize);
@@ -675,10 +675,10 @@ export class RisWorklistServiceComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorklist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorklist, this.searchText, cols, this.risWorklist);
     }
     this.pagination.filteredSearchResults = results;
@@ -695,13 +695,13 @@ export class RisWorklistServiceComponent implements OnInit {
   isSpinnerAccept = true;
 
   verifyUserSrv() {
-    let formValues = this.userVerificationForm.getRawValue();
+    const formValues = this.userVerificationForm.getRawValue();
     this.userVerificationForm.markAllAsTouched();
     if (this.userVerificationForm.invalid) {
       this.toastr.warning('Please fill the required fields...!'); return false;
     } else {
       ///////START::VERIFY USER /////////////////////////////
-      let params = {
+      const params = {
         UserName: formValues.techUsername,
         Password: formValues.techPassword
       }
@@ -749,7 +749,7 @@ export class RisWorklistServiceComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -815,7 +815,7 @@ export class RisWorklistServiceComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -828,10 +828,10 @@ export class RisWorklistServiceComponent implements OnInit {
 
 
   /////////////////////////////Assigner Section////////////
-  isSpinnerAssign: boolean = true;//Hide Loader
-  isSpinnerUnAssign: boolean = true;//Hide Loader
-  disabledButtonAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonUnAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerAssign = true;//Hide Loader
+  isSpinnerUnAssign = true;//Hide Loader
+  disabledButtonAssign = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonUnAssign = false; // Button Enabled / Disables [By default Enabled]
   VisitId = null;
   assigneeName = null;
   rowGlobal: any = null;
@@ -863,7 +863,7 @@ export class RisWorklistServiceComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -891,7 +891,7 @@ export class RisWorklistServiceComponent implements OnInit {
   }
   ////////////////////////////Update VisitTPStatus///////////////////
   updateVisitTPStatus() {
-    let objParam = {
+    const objParam = {
       VisitID: this.VisitID,
       TPID: this.TPId,
       StatusID: 12,
@@ -931,12 +931,12 @@ export class RisWorklistServiceComponent implements OnInit {
   subSectionList = []
   getSubSection() {
     this.subSectionList = [];
-    let objParam = {
+    const objParam = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.sharedService.getData(API_ROUTES.LOOKUP_GET_SUBSECTION_SECTIONID, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -972,14 +972,14 @@ export class RisWorklistServiceComponent implements OnInit {
   RISWorklistRow = []
   getRISWorklistRow(VisitID, TPID) {
     this.RISWorklistRow = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       TPID: TPID
     };
     this.sharedService.getData(API_ROUTES.GET_RIS_WORKLIST_ROW, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
         this.RISWorklistRow = res.PayLoad || [];
-        let row = this.RISWorklistRow[0];
+        const row = this.RISWorklistRow[0];
         if (row.RISStatusID) {
           this.EmpID = row.EmpId;
           this.StatusId = row.StatusId;
@@ -1035,13 +1035,13 @@ export class RisWorklistServiceComponent implements OnInit {
     confirmPopoverCancel: () => { }
   }
   TPItemsList = [];
-  isSpinnerInventory: boolean = true;
+  isSpinnerInventory = true;
   isFieldDisabled = false;
   disabledButtonInventory = false;
   buttonClicked = false;
   getVisitTPInventory() {
     this.TPItemsList = []
-    let params = {
+    const params = {
       VisitID: this.VisitID,
       TPID: this.TPId,
       RISStatusID: null,
@@ -1099,7 +1099,7 @@ export class RisWorklistServiceComponent implements OnInit {
   insertUpdateVisitTPServiceInventory() {
     this.buttonserviceInventoryClicked = true;
     let isValidItem = true;
-    let filteredItems =  this.TPItemsList.filter(a => a.checked);
+    const filteredItems =  this.TPItemsList.filter(a => a.checked);
     if(this.TPItemsList.length && !filteredItems.length){
       this.toastr.warning("Please select any item to consume","No Item Selected");
       return;
@@ -1116,9 +1116,9 @@ export class RisWorklistServiceComponent implements OnInit {
     }, 200);
   }
   checkValidationForServiceInventory(data) {
-    let filteredItems = data;
+    const filteredItems = data;
     let isValid = true;
-    for (let item of filteredItems) {
+    for (const item of filteredItems) {
         if (
             (item.DamagedQuantity && item.DamagedQuantity > 0 && !item.Remarks) ||
             ((item.DamagedQuantity || 0) + item.ConsumedQuantity > item.RecQuantity && !item.Remarks)
@@ -1130,8 +1130,8 @@ export class RisWorklistServiceComponent implements OnInit {
     return isValid;
   }
   updateVisitServiceStatus(data){
-    let filteredServices = data;
-      let obj = {
+    const filteredServices = data;
+      const obj = {
         TPIDs: this.TPId,
         VisitID: this.VisitID,
         StatusID: 12,
@@ -1165,8 +1165,8 @@ export class RisWorklistServiceComponent implements OnInit {
       })
   }
   insertServiceInventory(data){
-    let filteredServices = data;
-    let objParam = {
+    const filteredServices = data;
+    const objParam = {
       TPID: this.TPId,
       VisitID: this.VisitID,
       CreatedBy: this.VerifiedUserID || -99,

@@ -28,7 +28,7 @@ export class ManageMyCmsComponent implements OnInit {
   
   @ViewChild('showComplaintDataOnclick') showComplaintDataOnclick;
   @ViewChild('createCmsRequestForm') createCmsRequestForm;
-  @Input('SectionToShowMyCMS') SectionToShowMyCMS = { showGraph: true, showAction: true };
+  @Input() SectionToShowMyCMS = { showGraph: true, showAction: true };
 
   user$: Observable<UserModel>;
   loggedInUser: UserModel;
@@ -41,7 +41,7 @@ export class ManageMyCmsComponent implements OnInit {
   patientId:number;
   isSubmitted = false;
   selectedComplaint: any;
-  rowIndex: number = 0;
+  rowIndex = 0;
   complaintDetailsList: any;
   getRemarksValue: any;
   getStatusValue: number;
@@ -51,7 +51,7 @@ export class ManageMyCmsComponent implements OnInit {
   filteredItems: any;
   filteredComplaintList: any[];
   advancedSearchEnabled=false;
-  filtercomp:number = 26;
+  filtercomp = 26;
   screenIdentity='CMS'
   maxDate;
   pagination = {
@@ -183,7 +183,7 @@ export class ManageMyCmsComponent implements OnInit {
     this.getEmployeesData();
     this.getCMSrequestInquiry();
     this.getHistoryOfCMSContactBackTracking();
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getCMSRequest(objParm).subscribe((resp: any) => {
@@ -227,10 +227,10 @@ export class ManageMyCmsComponent implements OnInit {
   }
 
   setCMSRequestStatus(Status) {
-    let formValues= this.getRemarksStatusForm.getRawValue();
+    const formValues= this.getRemarksStatusForm.getRawValue();
     // let multpleUserIdsForAssign=formValues.assignedEmpName || null
-    let multpleUserIdsForResponiblePerson=formValues.responsibleEmpName || null
-    let meauresTaken=formValues.measuresTaken || null
+    const multpleUserIdsForResponiblePerson=formValues.responsibleEmpName || null
+    const meauresTaken=formValues.measuresTaken || null
 
     if(formValues.assignedEmpName){
       formValues.assignedEmpName = parseInt(formValues.assignedEmpName.substring(4));
@@ -242,7 +242,7 @@ export class ManageMyCmsComponent implements OnInit {
     }
     this.getStatusValue = Status;
     this.getRemarksValue = this.getRemarksStatusForm.get('getRemarks').value;
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
       CMSStatusID: this.getStatusValue,
       CMSStatusRemarks: this.getRemarksValue,
@@ -301,11 +301,11 @@ export class ManageMyCmsComponent implements OnInit {
 
    getCMSrequestCountStats() {
     this.countList=[];
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null;
     formValues.dateTo = formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null;
 
-    let objParm = {
+    const objParm = {
       UserID: this.loggedInUser.userid,
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
@@ -327,7 +327,7 @@ export class ManageMyCmsComponent implements OnInit {
     });
   }
   getCMSstatus() {
-    let param={
+    const param={
       isShowCMSAdmin: null, 
       isShowMyCMS:1,
     }
@@ -346,10 +346,10 @@ filteredFeedBackList=[];
 
   getCMSrequestDeatil() {
     this.complaintInitialList=[];    
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null;
     formValues.dateTo = formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null;
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom || null,
       DateTo: formValues.dateTo || null,
       CMSRequestID: formValues.reqNumber || null,
@@ -383,7 +383,7 @@ filteredFeedBackList=[];
 
     if(this.complaintInitialList.length){
       this.pagination.filteredSearchResults = this.complaintInitialList;
-      let dataToPaginate = this.pagination.filteredSearchResults;
+      const dataToPaginate = this.pagination.filteredSearchResults;
       this.pagination.collectionSize = dataToPaginate.length;
       this.pagination.paginatedSearchResults = dataToPaginate
         .map((item, i) => ({ id: i + 1, ...item }))
@@ -408,8 +408,8 @@ filteredFeedBackList=[];
   
     cmsSubCategoryList:any;
     getCMSsubCategoryData() {
-      let formValues=this.getRemarksStatusForm.getRawValue();
-      let params={
+      const formValues=this.getRemarksStatusForm.getRawValue();
+      const params={
         CMSCategoryID: formValues.cmsCategoryID,
       }
       this.getfeedback.getCMSsubCategory(params).subscribe((resp: any) => {
@@ -510,9 +510,9 @@ filteredFeedBackList=[];
   employeesList = [];
   getEmployeesData() {
     this.employeesList = [];
-    let formValues= this.getRemarksStatusForm.getRawValue();
+    const formValues= this.getRemarksStatusForm.getRawValue();
 
-    let objParam = {
+    const objParam = {
       DepartmentId: formValues.DepartmentId || -1, 
       DesignationId: -1,
       locId: formValues.BranchID || -1,
@@ -553,7 +553,7 @@ filteredFeedBackList=[];
   branchList = [];
   getLocationList() {
     this.branchList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.GetBranches().subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -582,12 +582,12 @@ filteredFeedBackList=[];
   }
   contactBackFormValues
   submitContactBackRequest(){
-    let formValues= this.contactBackFormValues;
+    const formValues= this.contactBackFormValues;
      
     formValues.ContactBackDate = formValues.ContactBackDate ? Conversions.formatDateObject(formValues.ContactBackDate) : null;
     const contactBackDateTime = Conversions.mergeDateAndTime(formValues.ContactBackDate,formValues.ContactBackTime);
 
-    let objParm = {
+    const objParm = {
       ContactBackStatusID: formValues.contactBackStatus,
       ContactBackDateTime: contactBackDateTime,
       CMSRequestID: this.getCMSrequestID,
@@ -608,7 +608,7 @@ filteredFeedBackList=[];
   }
   responsiblePersonLIST: any;
   getResponsiblePerson() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.sharedService
@@ -638,7 +638,7 @@ filteredFeedBackList=[];
   }
   MeasuresTakenLIST: any;
   getMeasuresTakenData() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.sharedService
@@ -683,7 +683,7 @@ filteredFeedBackList=[];
   getCMSrequestInquiry() {
     this.cmsInquiryList = [];
 
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getCMSinquiryDetails(objParm).subscribe((resp: any) => {
@@ -712,7 +712,7 @@ filteredFeedBackList=[];
   }
   contactBackHistory = [];
   getHistoryOfCMSContactBackTracking() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getHistoryOfCMSContactBack(objParm).subscribe((resp: any) => {

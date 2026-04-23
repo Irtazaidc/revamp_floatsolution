@@ -25,7 +25,7 @@ export class RadiologyStatsComponent implements OnInit {
   maxDate: any;
   branchList = [];
   radiologyStatsList: any = [];
-  isSpinner: boolean = true;
+  isSpinner = true;
   isDisable = false;
   
 
@@ -176,7 +176,7 @@ export class RadiologyStatsComponent implements OnInit {
   }
 
   getRadiologyStatsData() {
-    let formValues = this.statsForm.getRawValue();
+    const formValues = this.statsForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -208,7 +208,7 @@ export class RadiologyStatsComponent implements OnInit {
       return;
     } 
 
-    let objParm = {
+    const objParm = {
       DateFrom:Conversions.formatDateObject(formValues.dateFrom),
       DateTo: Conversions.formatDateObject(formValues.dateTo),
       LocID: formValues.locID,
@@ -242,7 +242,7 @@ export class RadiologyStatsComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -255,7 +255,7 @@ export class RadiologyStatsComponent implements OnInit {
 
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(

@@ -24,7 +24,7 @@ export class DispMobDeviceInfoComponent implements OnInit {
   }
 
   getMobileDeviceTokenByPatientID() {
-    let params = {
+    const params = {
       "PatientID": this.patientId || 65239405
     }
     this.lookupSrv.getMobileDeviceTokensByPatientID(params).subscribe((resp: any) => {

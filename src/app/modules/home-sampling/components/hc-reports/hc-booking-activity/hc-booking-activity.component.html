@@ -93,18 +93,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr scope="row" *ngFor="let hcRpt of hcBookingAuditSummary | filterByKey: searchTextSUMMARY:['PKValue','PatientName','MobileNO','ChangeCount']; let i = index">
-                        <td scope="row"> {{i + 1}}</td>
-                        <td scope="row"> {{hcRpt.PKValue }}</td>
-                        <td scope="row"> {{hcRpt.PatientName }}</td>
-                        <td scope="row"> {{hcRpt.MobileNO }}</td>
+                    <tr *ngFor="let hcRpt of hcBookingAuditSummary | filterByKey: searchTextSUMMARY:['PKValue','PatientName','MobileNO','ChangeCount']; let i = index">
+                        <td> {{i + 1}}</td>
+                        <td> {{hcRpt.PKValue }}</td>
+                        <td> {{hcRpt.PatientName }}</td>
+                        <td> {{hcRpt.MobileNO }}</td>
 
-                        <td scope="row"> {{hcRpt.FirstChange | date : "dd MMM, yyyy, h:mm a"}}</td>
-                        <td scope="row"> {{hcRpt.LastChange | date : "dd MMM, yyyy, h:mm a"}}</td>
+                        <td> {{hcRpt.FirstChange | date : "dd MMM, yyyy, h:mm a"}}</td>
+                        <td> {{hcRpt.LastChange | date : "dd MMM, yyyy, h:mm a"}}</td>
 
-                        <td scope="row"> {{hcRpt.ChangeCount}}</td>
+                        <td> {{hcRpt.ChangeCount}}</td>
                         
-                        <td scope="row">
+                        <td>
                              <button class="btn btn-link p-0 view-details-btn" (click)="openAuditDetails(hcRpt)">
                           <i class="ti-receipt me-1 text-primary"></i>
                           <span>

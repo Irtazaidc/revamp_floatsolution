@@ -14,9 +14,9 @@ import { TabsSwitchingService } from 'src/app/modules/doctors/services/tabs-swit
 })
 export class InformationDeskComponent implements OnInit {
   screenPermissionsObj;
-  selectedTabIndex: number = 0;
-  inquiryReportPermission: boolean = false;
-  tabIndex: number = 0;
+  selectedTabIndex = 0;
+  inquiryReportPermission = false;
+  tabIndex = 0;
   ParamID: any;
 
 
@@ -38,7 +38,7 @@ export class InformationDeskComponent implements OnInit {
 
   getPermissions() {
     this.screenPermissionsObj = this.auth.getUserPermissionsFromLocalStorage();
-    let data = this.screenPermissionsObj.find(i=>i.state ==='inquiry-report');
+    const data = this.screenPermissionsObj.find(i=>i.state ==='inquiry-report');
     this.inquiryReportPermission = data ? true:false;
   }
 

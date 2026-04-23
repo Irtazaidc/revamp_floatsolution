@@ -96,7 +96,7 @@ export class PendingInvoiceCostComponent implements OnInit {
   }
 
   setSearchFilter() {
-    let batchNo = this.paramsForm.getRawValue().batchNo;
+    const batchNo = this.paramsForm.getRawValue().batchNo;
     if (batchNo) {
       this.paramsForm.patchValue({
         dateFrom: "",

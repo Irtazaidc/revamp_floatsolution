@@ -32,7 +32,7 @@
                                     <td>{{i+1}}</td>
                                     <td>{{item.NoticeCode}} <label *ngIf="item.PendNotice==1" class="badge badge-inverse-danger">Pend</label></td>
                                     <td>
-                                        <label [ngClass]="(item.Name|lowercase) == 'normal' ? 'badge badge-success': ((item.Name|lowercase)=='high'? 'badge badge-danger' : ((item.Name|lowercase)=='low'? 'badge badge-warning':((item.Name|lowercase)=='medium'? 'badge badge-primary':'badge badge-info')))">{{item.Name}}</label>
+                                        <label [ngClass]="(item.Name|lowercase) === 'normal' ? 'badge badge-success': ((item.Name|lowercase)==='high'? 'badge badge-danger' : ((item.Name|lowercase)==='low'? 'badge badge-warning':((item.Name|lowercase)==='medium'? 'badge badge-primary':'badge badge-info')))">{{item.Name}}</label>
                                     </td>
                                     <!-- <td class="text-right">
                                         <a (click)="getNotificationDetailByID(item.NoticeId)" class="cursor-pointer" style="font-size: 17px;"  ngbTooltip="View Detail"> 

@@ -15,11 +15,11 @@ import { HcSharedService } from '../../../services/hc-shared.service';
 })
 export class HcRegistrationDetailsComponent implements OnInit {
 
-  @Input('visitID') visitID: any;
-  @Input('bookingid') bookingid: number;
-  @Input('requestid') requestid: number;
-  @Input('multipleBookingIds') multipleBookingIds: any = "";
-  @Input('selBookingID') selBookingID: any = null;
+  @Input() visitID: any;
+  @Input() bookingid: number;
+  @Input() requestid: number;
+  @Input() multipleBookingIds: any = "";
+  @Input() selBookingID: any = null;
   hcRegInfo: any = [];
   bookedTestNames: any = [];
   constructor(private toastr: ToastrService,
@@ -34,7 +34,7 @@ export class HcRegistrationDetailsComponent implements OnInit {
   getRegDetailByBookingID() {
     this.spinner.show();
     if (this.bookingid) {
-      let params = {
+      const params = {
         "HCBookingPatientID": this.selBookingID || this.bookingid || this.multipleBookingIds
       }
       this.shared.bookingDetailByBookingID(params).subscribe((resp: any) => {

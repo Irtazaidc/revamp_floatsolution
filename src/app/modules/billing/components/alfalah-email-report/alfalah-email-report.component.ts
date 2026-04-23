@@ -77,7 +77,7 @@ export class AlfalahEmailReportComponent implements OnInit {
     this.pagination.paginatedSearchResults = [];
     this.searchText = "";
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -114,7 +114,7 @@ export class AlfalahEmailReportComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       FilterBy: this.allEmails,
@@ -158,7 +158,7 @@ export class AlfalahEmailReportComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -171,7 +171,7 @@ export class AlfalahEmailReportComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = [
+    const cols = [
       "VisitId",
       "EmailTo",
       "RegDate",

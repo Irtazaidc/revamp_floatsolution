@@ -26,7 +26,7 @@ import { HelperService } from 'src/app/modules/shared/helpers/helper.service';
 export class CmsEmployeeCardComponent implements OnInit  {
 
   @Input('PatientData') patientData: any = {};
-  @Input('UserID') UserID: number;
+  @Input() UserID: number;
 
   defaultPatientPic = CONSTANTS.USER_IMAGE.UNSPECIFIED;
 
@@ -71,7 +71,7 @@ export class CmsEmployeeCardComponent implements OnInit  {
   getEmployeeData(UserID) {
     // this.spinner.show(this.spinnerRefs.listSection);
     this.empList = [];
-    let objParm = {
+    const objParm = {
       UserID: UserID
     }
     this.complaintService.getEmplyoyeeCardInfo(objParm).subscribe((res: any) => {
@@ -90,14 +90,14 @@ export class CmsEmployeeCardComponent implements OnInit  {
     // var ageDifMs = Date.now() - birthday.getTime();
     // var ageDate = new Date(ageDifMs); // miliseconds from epoch
     // return Math.abs(ageDate.getUTCFullYear() - 1970);
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
@@ -142,7 +142,7 @@ export class CmsEmployeeCardComponent implements OnInit  {
   empUserPicture
   getEmpPicByUserId(UserID){
     this.spinner.show(this.spinnerRefs.empPic);
-    let paramObj = {
+    const paramObj = {
       UserID:UserID
     }
     this.empService.getEmpPicByUserId(paramObj).subscribe((resp: any) => {

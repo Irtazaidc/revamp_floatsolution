@@ -32,8 +32,8 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
 
   @ViewChild('techAuditModal') techAuditModal;
   screenIdentity = null;
-  public starRatingElements: Array<ratingElement> = [];
-  public starRatingElementsInner: Array<ratingElement> = [];
+  public starRatingElements: ratingElement[] = [];
+  public starRatingElementsInner: ratingElement[] = [];
   subSectionList: any = [];
   technologistList = [];
   risWorklist = [];
@@ -142,7 +142,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
     this.getTechnologistByLocIDs();
     this.getAuditQA();
     this.getBranches();
-    let _ratingElement = new ratingElement();
+    const _ratingElement = new ratingElement();
     _ratingElement.readonly = true;
     _ratingElement.checkedcolor = "red";
     _ratingElement.uncheckedcolor = "black";
@@ -177,7 +177,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
 
   getTechnologistByLocIDs() {
     this.technologistList = [];
-    let objParam = {
+    const objParam = {
       LocIDs: this.loggedInUser.locationid || -1,
     }
     this.sharedService.getData(API_ROUTES.GET_TECHNOLOGISTS_BY_LOCIDS, objParam).subscribe((res: any) => {
@@ -243,14 +243,14 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
   getRISTechnologistAuditSummary() {
     this.isCheckboxChecked = false;
     this.risWorklist = [];
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     this.BranchID = formValues.BranchID || null;
     this.TechnologistID = formValues.TechnologistID || null;
     this._form.markAllAsTouched();
     if (this._form.invalid) {
       this.toastr.warning('Please provide the required information!'); return false;
     } else {
-      let objParams = {
+      const objParams = {
         TechnologistID: formValues.TechnologistID,
         // AuditorTechnologistID: formValues.AuditorTechnologistID,
         DateFrom: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
@@ -268,15 +268,15 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
       this.sharedService.getData(API_ROUTES.GET_RIS_TECHNOLOGIST_AUDIT_SUMMARY, objParams).subscribe((resp: any) => {
         this.spinner.hide(this.spinnerRefs.listSection);
         if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
-          let response = resp.PayLoad || [];
+          const response = resp.PayLoad || [];
           this.orignaRisList = resp.PayLoad
           this.risWorklistForExport = response || []
           this.rowCount = response.length || 0;
           // console.log("risworklist before formate: ", response);
           //////////////////////begin:: Reformat Array////////////////////
           this.GetRISTechInitSummary();
-          let res = response.reduce((re, o) => {
-            let existObj = re.find(obj => obj.TechnologistID === o.TechnologistID);
+          const res = response.reduce((re, o) => {
+            const existObj = re.find(obj => obj.TechnologistID === o.TechnologistID);
             if (existObj) {
               existObj.techData.push({
                 AuditStatusID: o.AuditStatusID,
@@ -385,7 +385,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
 
           setTimeout(() => {
             this.starRatingElements.splice(0, this.starRatingElements.length);
-            let _ratingElement = new ratingElement();
+            const _ratingElement = new ratingElement();
             _ratingElement.readonly = true;
             _ratingElement.checkedcolor = "red";
             _ratingElement.uncheckedcolor = "black";
@@ -442,9 +442,9 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
     // end of plan array
 
     // new code for calculated the mistakes for chat
-    let chartData = this.risWorklist.reduce((acc, technologist) => {
+    const chartData = this.risWorklist.reduce((acc, technologist) => {
       // Check if TechnologistID already exists in the accumulator
-      let existingTechnologist = acc.find((t) => t.TechnologistID === technologist.TechnologistID);
+      const existingTechnologist = acc.find((t) => t.TechnologistID === technologist.TechnologistID);
 
       if (existingTechnologist) {
         // If exists, update the CommaSeparatedQATitlesCount sum from the techData array
@@ -462,9 +462,9 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
     }, []);
 
 
-    let chartDataTC = this.RISTechInitSummary.reduce((acc, technologist) => {
+    const chartDataTC = this.RISTechInitSummary.reduce((acc, technologist) => {
       // Check if InitBy already exists in the accumulator
-      let existingTechnologist = acc.find((t) => t.InitBy === technologist.InitBy);
+      const existingTechnologist = acc.find((t) => t.InitBy === technologist.InitBy);
       if (existingTechnologist) {
         // If exists, increment the count for total cases
         existingTechnologist.TotalCasesCount += 1;
@@ -681,7 +681,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.PIN;
+    const pin = text.PIN;
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -720,7 +720,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
 
 
   printAuditSummaryReport() {
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     const url = environment.patientReportsPortalUrl + 'tech-audit-summary-report?p=' + btoa(JSON.stringify({
       TechnologistID: this.screenIdentity == 'my-tech-audit-summary-report' ? this.loggedInUser.userid : formValues.TechnologistID,
       AuditorTechnologistID: formValues.AuditorTechnologistID,
@@ -735,7 +735,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
       isTechRemarks: formValues.isTechRemarks ? formValues.isTechRemarks : null,
       DrChakboxParam: this.DrChakboxParam
     }));
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
   }
   printToExcel() {
     console.log(this.risWorklistForExport)
@@ -782,12 +782,12 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
   disabledButtonShare = false;
   isSpinnerShare = true;
   updateRadiologistVisitTPAuditShare() {
-    let checkedItems = this.risWorklist.filter(a => a.checked);
+    const checkedItems = this.risWorklist.filter(a => a.checked);
     if (!checkedItems.length) {
       this.toastr.warning("Please select any report to share", "No Report Selected");
       return;
     } else {
-      let objParam = {
+      const objParam = {
         RadiologistVisitTPAuditIDs: checkedItems.map(obj => obj.RadiologistVisitTPAuditID).join(","),
         CreatedBy: this.loggedInUser.userid || -99,
       }
@@ -1069,15 +1069,15 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
   TechRemarks = null;
   RISWorklistRow = []
   getRISWorklistRow(visitID, TPID) {
-    let params = {
+    const params = {
       VisitID: this.VisitID,
       TPID: this.TPId
     }
     this.sharedService.getData(API_ROUTES.GET_RIS_WORKLIST_ROW_FOR_TECH_AUDIT, params).subscribe((resp: any) => {
       if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
-        let respData = resp.PayLoad;
+        const respData = resp.PayLoad;
         this.RISWorklistRow = respData;
-        let row = this.RISWorklistRow[0];
+        const row = this.RISWorklistRow[0];
         // console.log("RISWorklistRow: ",this.RISWorklistRow)
         this.WorkflowStatus = row["Workflow Status"]
         this.TPId = row.TPId;
@@ -1138,7 +1138,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
   filterDrFeedbackData(isChecked: boolean): void {
     if (isChecked) {
       this.DrChakboxParam = true;
-      let filteredData = this.orignaRisList.filter(d => d.FeedBackBy);
+      const filteredData = this.orignaRisList.filter(d => d.FeedBackBy);
       this.fitlterMyData(filteredData);
     } else {
       this.DrChakboxParam = false;
@@ -1152,8 +1152,8 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
       this.rowCount = myData.length || 0;
       // console.log("risworklist before formate: ", response);
       //////////////////////begin:: Reformat Array////////////////////
-      let res = myData.reduce((re, o) => {
-        let existObj = re.find(obj => obj.TechnologistID === o.TechnologistID);
+      const res = myData.reduce((re, o) => {
+        const existObj = re.find(obj => obj.TechnologistID === o.TechnologistID);
         if (existObj) {
           existObj.techData.push({
             AuditStatusID: o.AuditStatusID,
@@ -1258,7 +1258,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
 
       setTimeout(() => {
         this.starRatingElements.splice(0, this.starRatingElements.length);
-        let _ratingElement = new ratingElement();
+        const _ratingElement = new ratingElement();
         _ratingElement.readonly = true;
         _ratingElement.checkedcolor = "red";
         _ratingElement.uncheckedcolor = "black";
@@ -1300,7 +1300,7 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
   visitInfo: any = {};
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -1316,12 +1316,12 @@ export class TechAuditSummaryReportBranchMgrComponent implements OnInit {
 
   RISTechInitSummary = []
   GetRISTechInitSummary() {
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     this.RISTechInitSummary = [];
-    let valBranch = formValues.BranchID
-    let valTechId = formValues.TechnologistID
+    const valBranch = formValues.BranchID
+    const valTechId = formValues.TechnologistID
     if (valBranch || valTechId) {
-      let params = {
+      const params = {
         DateFrom: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
         DateTo: formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null,
         LocID: formValues.BranchID || null,

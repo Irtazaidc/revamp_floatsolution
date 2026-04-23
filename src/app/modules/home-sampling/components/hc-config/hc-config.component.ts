@@ -14,8 +14,8 @@ import { HcCityAuthService } from '../../services/hc-city-auth.service';
   styleUrls: ['./hc-config.component.scss']
 })
 export class HcConfigComponent implements OnInit {
-  cardTitle: string = "Create City";
-  actionLabel: string = "Save";
+  cardTitle = "Create City";
+  actionLabel = "Save";
   searchInHCCity: any = "";
   hcCityConfigForm = this.fb.group({
     cityCode: ['', Validators.compose([Validators.required])],
@@ -36,7 +36,7 @@ export class HcConfigComponent implements OnInit {
     cancelClicked: false,
     confirmPopoverCancel: () => { }
   }
-  isSpinner: boolean = true;
+  isSpinner = true;
   loggedInUser: UserModel;
   gcCitiesList: any = [];
   selHCCity: any = [];
@@ -79,8 +79,8 @@ export class HcConfigComponent implements OnInit {
     }
   }
   InsertUpdateHCCity() {
-    let formDate = this.hcCityConfigForm.getRawValue();
-    let params = {
+    const formDate = this.hcCityConfigForm.getRawValue();
+    const params = {
       "HCHCityID": this.selHCCity && this.selHCCity.length? this.selHCCity[0].HCCityID : null,
       "HCCityCode": formDate.cityCode,
       "HCCityTitle": formDate.cityTitle,

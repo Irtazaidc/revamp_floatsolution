@@ -141,7 +141,7 @@ export class DocumentAuditComponent implements OnInit {
   getLookupsForRegistration() {
     this.paymentModesList = [];
     this.lookupService.getLookupsForRegistration({ branchId: this.loggedInUser.locationid }).subscribe((resp: any) => {
-      let _response = resp.PayLoadDS|| [];
+      const _response = resp.PayLoadDS|| [];
       this.paymentModesList = _response.Table5 || [];
       this.patientTypeList = _response.Table6 || [];
     }, (err) => {
@@ -170,7 +170,7 @@ export class DocumentAuditComponent implements OnInit {
   getPanelList() {
     this.panelList = [];
     this.panelsTypeList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -195,7 +195,7 @@ export class DocumentAuditComponent implements OnInit {
   }
 
   getDocAuditDataList(){
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     this.isDisable = true;
     this.isSpinnerDisable = false;
     this.docAuditDataList = null;
@@ -210,7 +210,7 @@ export class DocumentAuditComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let objParams = {
+    const objParams = {
       FromDate: Conversions.formatDateObject(formValues.dateFrom) || null,
       ToDate: Conversions.formatDateObject(formValues.dateTo) || null,
       LocId: formValues.locID || -1,
@@ -259,7 +259,7 @@ export class DocumentAuditComponent implements OnInit {
     })
   }
   getVisitDataList(visitId){  
-    let objParams = {
+    const objParams = {
       VisitId:visitId || null,
     };  
     this.spinner.show(this.spinnerRefs.dataTable);
@@ -280,7 +280,7 @@ export class DocumentAuditComponent implements OnInit {
   refByDocList = []
   getRefByDoctors() {
     this.refByDocList = [{ Name: 'Self' }];
-    let _params = {};
+    const _params = {};
     this.spinner.show(this.spinnerRefs.refByDocField);
     this.lookupService.getRefByDoctors(_params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.refByDocField);

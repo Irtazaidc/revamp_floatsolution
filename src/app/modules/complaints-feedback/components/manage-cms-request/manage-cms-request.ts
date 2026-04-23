@@ -40,8 +40,8 @@ import { NotifyService } from "../../services/notify.service";
 type Color = any;
 type Label = any;
 
-declare var $: any;
-declare var window: any;
+declare let $: any;
+declare let window: any;
 
 @Component({
   standalone: false,
@@ -55,7 +55,7 @@ export class ManageCMSRequestComponent implements OnInit {
   @ViewChild("showComplaintDataOnclick") showComplaintDataOnclick;
   @ViewChild("createCmsRequestForm") createCmsRequestForm;
   @ViewChild('openEmployeeCard') openEmployeeCard;
-  @Input("SectionToShowMyCMS") SectionToShowMyCMS = {
+  @Input() SectionToShowMyCMS = {
     showGraph: true,
     showAction: true,
   };
@@ -71,7 +71,7 @@ export class ManageCMSRequestComponent implements OnInit {
   patientId: number=null;
   isSubmitted = false;
   selectedComplaint: any;
-  rowIndex: number = 0;
+  rowIndex = 0;
   complaintDetailsList: any;
   getRemarksValue: any;
   getStatusValue: number;
@@ -148,7 +148,7 @@ export class ManageCMSRequestComponent implements OnInit {
   TotalInProgressRequests: any;
   TotalUnAssignedRequests: any;
   TotalCompletedRequests: any;
-  filtercomp:number = 26;
+  filtercomp = 26;
   screenIdentity='CMS'
   //chart Data end
   defaultPatientPic = CONSTANTS.USER_IMAGE.UNSPECIFIED;
@@ -294,7 +294,7 @@ export class ManageCMSRequestComponent implements OnInit {
     this.getLocationList();
     this.getResponsiblePerson();
     this.getMeasuresTakenData();
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getCMSRequest(objParm).subscribe(
@@ -387,15 +387,15 @@ export class ManageCMSRequestComponent implements OnInit {
       this.submitContactBackRequest();
     }
    
-    let formValues = this.getRemarksStatusForm.getRawValue();
+    const formValues = this.getRemarksStatusForm.getRawValue();
     if (Status == 2 && !formValues.assignedEmpName) {
       console.log('Missing Field:')
       this.toastr.info("Missing Field: Assigned To Person");
       return
     }
-    let multpleUserIdsForAssign = formValues.assignedEmpName;
-    let multpleUserIdsForResponiblePerson = formValues.responsibleEmpName;
-    let meauresTaken = formValues.measuresTaken;
+    const multpleUserIdsForAssign = formValues.assignedEmpName;
+    const multpleUserIdsForResponiblePerson = formValues.responsibleEmpName;
+    const meauresTaken = formValues.measuresTaken;
 
     if (this.getRemarksStatusForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
@@ -406,7 +406,7 @@ export class ManageCMSRequestComponent implements OnInit {
     this.getRemarksValue = this.getRemarksStatusForm.get("getRemarks").value;
     this.labDeptID = this.labDeptID == 2 ? this.labDeptID = 7 : this.labDeptID;
     // this.labDeptID = this.labDeptID == -1 ? this.labDeptID = null : this.labDeptID;
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
       CMSStatusID: this.getStatusValue,
 
@@ -473,11 +473,11 @@ export class ManageCMSRequestComponent implements OnInit {
     this.contactBackFormValues = event;
   }
   submitContactBackRequest() {
-    let formValues = this.contactBackFormValues;
+    const formValues = this.contactBackFormValues;
 
     formValues.ContactBackDate = formValues.ContactBackDate ? Conversions.formatDateObject(formValues.ContactBackDate) : null;
     const contactBackDateTime = Conversions.mergeDateAndTime(formValues.ContactBackDate, formValues.ContactBackTime);
-    let objParm = {
+    const objParm = {
       ContactBackStatusID: formValues.contactBackStatus,
       ContactBackDateTime: contactBackDateTime,
       CMSRequestID: this.getCMSrequestID,
@@ -500,14 +500,14 @@ export class ManageCMSRequestComponent implements OnInit {
   }
   getCMSrequestCountStats() {
     this.countList = [];
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom
       ? Conversions.formatDateObject(formValues.dateFrom)
       : null;
     formValues.dateTo = formValues.dateTo
       ? Conversions.formatDateObject(formValues.dateTo)
       : null;
-    let objParm = {
+    const objParm = {
       // UserID: this.loggedInUser.userid,
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
@@ -531,7 +531,7 @@ export class ManageCMSRequestComponent implements OnInit {
     );
   }
   getCMSstatus() {
-    let param = {
+    const param = {
       isShowCMSAdmin: 1,
       isShowMyCMS: null,
     };
@@ -556,12 +556,12 @@ export class ManageCMSRequestComponent implements OnInit {
      this.paginationforReq.filteredSearchResults = [];
 
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     // this.getEventData=eventData;
     formValues.dateFrom = formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null;
     formValues.dateTo = formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null;
     formValues.byPIN = (formValues.byPIN || '').trim().toString().replace(/\D/g, '');
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom || null,
       DateTo: formValues.dateTo || null,
       CMSRequestNo: formValues.reqNumber || null,
@@ -639,7 +639,7 @@ allRequestCount(){
   refreshPagination() {
     if (this.filteredComplaintList.length) {
       this.pagination.filteredSearchResults = this.filteredComplaintList;
-      let dataToPaginate = this.pagination.filteredSearchResults;
+      const dataToPaginate = this.pagination.filteredSearchResults;
       this.pagination.collectionSize = dataToPaginate.length;
       this.pagination.paginatedSearchResults = dataToPaginate
         .map((item, i) => ({ id: i + 1, ...item }))
@@ -656,7 +656,7 @@ allRequestCount(){
   refreshPaginationforFb() {
     if (this.filteredFeedBackList.length) {
       this.paginationforFb.filteredSearchResultsForFb = this.filteredFeedBackList;
-      let dataToPaginate = this.paginationforFb.filteredSearchResultsForFb;
+      const dataToPaginate = this.paginationforFb.filteredSearchResultsForFb;
       this.paginationforFb.collectionSize = dataToPaginate.length;
       this.paginationforFb.paginatedSearchResultsForFb = dataToPaginate
         .map((item, i) => ({ id: i + 1, ...item }))
@@ -672,7 +672,7 @@ allRequestCount(){
   refreshPaginationforReq() {
     if (this.filteredRequestsList.length) {
       this.paginationforReq.filteredSearchResults = this.filteredRequestsList;
-      let dataToPaginate = this.paginationforReq.filteredSearchResults;
+      const dataToPaginate = this.paginationforReq.filteredSearchResults;
       this.paginationforReq.collectionSize = dataToPaginate.length;
       this.paginationforReq.filteredSearchResults = dataToPaginate
         .map((item, i) => ({ id: i + 1, ...item }))
@@ -786,8 +786,8 @@ allRequestCount(){
     );
   }
   getCMSsubCategoryData() {
-    let formValues = this.getRemarksStatusForm.getRawValue();
-    let params = {
+    const formValues = this.getRemarksStatusForm.getRawValue();
+    const params = {
       CMSCategoryID: formValues.cmsCategoryID,
     };
     this.getfeedback.getCMSsubCategory(params).subscribe(
@@ -807,13 +807,13 @@ allRequestCount(){
         TpID:null,
       });
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     };
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
       },
       (err) => {
@@ -823,13 +823,13 @@ allRequestCount(){
     );
   }
   onChangeOfCategorizedTest() {
-    let formValues = this.getRemarksStatusForm.getRawValue();
-    let categorizedTest = formValues.cmsCategoryID;
+    const formValues = this.getRemarksStatusForm.getRawValue();
+    const categorizedTest = formValues.cmsCategoryID;
     this.testCategorization = categorizedTest;
   }
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1, //null
       TestProfileCode: null,
       TestProfileName: null,
@@ -950,8 +950,8 @@ allRequestCount(){
   }
   getEmployeesData() {
     this.employeesList = [];
-    let formValues = this.getRemarksStatusForm.getRawValue();
-    let objParam = {
+    const formValues = this.getRemarksStatusForm.getRawValue();
+    const objParam = {
       DepartmentId: formValues.assignedDepartmentId || -1,
       DesignationId: -1,
       locId: formValues.assignedBranchID || -1,
@@ -988,7 +988,7 @@ allRequestCount(){
   }
   getLocationList() {
     this.branchList = [];
-    let _param = {};
+    const _param = {};
 
     this.lookupService.GetBranches().subscribe(
       (res: any) => {
@@ -1055,7 +1055,7 @@ allRequestCount(){
     }
   }
   getResponsiblePerson() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.sharedService
@@ -1082,7 +1082,7 @@ allRequestCount(){
       );
   }
   getMeasuresTakenData() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.sharedService
@@ -1166,7 +1166,7 @@ allRequestCount(){
   getCMSrequestInquiry() {
     this.cmsInquiryList = [];
 
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getCMSinquiryDetails(objParm).subscribe((resp: any) => {
@@ -1196,7 +1196,7 @@ allRequestCount(){
     }, 500);
   }
   getHistoryOfCMSContactBackTracking() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getHistoryOfCMSContactBack(objParm).subscribe((resp: any) => {
@@ -1210,14 +1210,14 @@ allRequestCount(){
   }
   getLabSectionIDList
   getLabSectionID() {
-    let formValues = this.getRemarksStatusForm.getRawValue();
+    const formValues = this.getRemarksStatusForm.getRawValue();
     if (formValues.TpID) {
-      let objParm = {
+      const objParm = {
         TPID: formValues.TpID || null,
       }
       console.log("objParm:", objParm)
       this.lookupService.GetTestInfoByTPID(objParm).subscribe((resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.getLabSectionIDList = _response;
         setTimeout(() => {
           this.labDeptID = this.getLabSectionIDList[0].LabdepID;

@@ -226,7 +226,7 @@
                                 </tr>
                             </thead>
                             <tbody id="">
-                                <tr (click)="GetVisitTestDetails(v, indx)" scope="row"
+                                <tr (click)="GetVisitTestDetails(v, indx)"
                                     *ngFor="let v of paginatedSearchResults | filterByKey: searchInVisitList:['VisitId', 'PatientName', 'Cell', 'VisitDateTime'] ; let indx = index"
                                     [class.active]="indx == HighlightRow">
                                     <td> {{v.VisitId}}</td>

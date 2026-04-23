@@ -113,7 +113,7 @@
 
               <section
                 class="example-section"
-                *ngIf="mode == 'determinate' || mode == 'buffer'"
+                *ngIf="mode === 'determinate' || mode === 'buffer'"
               >
                 <label class="example-margin">Progress:</label>
                 <mat-slider
@@ -121,7 +121,7 @@
                   [(ngModel)]="value"
                 ></mat-slider>
               </section>
-              <section class="example-section" *ngIf="mode == 'buffer'">
+              <section class="example-section" *ngIf="mode === 'buffer'">
                 <label class="example-margin">Buffer:</label>
                 <mat-slider
                   class="example-margin"

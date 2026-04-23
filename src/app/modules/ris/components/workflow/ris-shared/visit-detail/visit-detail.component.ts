@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
@@ -10,7 +10,7 @@ import { CONSTANTS } from 'src/app/modules/shared/helpers/constants';
 import { SharedService } from 'src/app/modules/shared/services/shared.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
-declare var $: any;
+declare let $: any;
 
 @Component({
   standalone: false,
@@ -19,12 +19,12 @@ declare var $: any;
   templateUrl: './visit-detail.component.html',
   styleUrls: ['./visit-detail.component.scss']
 })
-export class VisitDetailComponent implements OnInit {
-  @Input('selVisit') selVisit: any = {};
-  @Input('selPIN') selPIN: any;
+export class VisitDetailComponent implements OnInit, OnChanges {
+  @Input() selVisit: any = {};
+  @Input() selPIN: any;
   visitDetailsList: any = [];
-  isDueBalance: boolean = false;
-  DueBalanceAmount: number = 0;
+  isDueBalance = false;
+  DueBalanceAmount = 0;
   IsMasterDisable: boolean;
   masterSelected: boolean;
   isTPDetailScreen: boolean;
@@ -69,7 +69,7 @@ export class VisitDetailComponent implements OnInit {
 
   GetVisitTestDetails() {
     this.spinner.show(this.spinnerRefs.visitDetailListSection);
-    let params = {
+    const params = {
       AccountNo: this.selVisit,//visit.VisitId,
       branchID: 1,
       SampleRefNo: '',
@@ -118,13 +118,13 @@ export class VisitDetailComponent implements OnInit {
   }
 
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     // patientVisitInvoiceWinRef.opener = null;
 
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -173,7 +173,7 @@ export class VisitDetailComponent implements OnInit {
         pakageTP[0].LoginName_MC = this.loggedInUser.username;
 
 
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(pakageTP[0]).subscribe((res: any) => {
           try {
             res = JSON.parse(res);
@@ -201,7 +201,7 @@ export class VisitDetailComponent implements OnInit {
         // chemistryTP[0].LoginName_MC = this.loggedInUser.username;
 
 
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(chemistryTP[0]).subscribe((res: any) => {
           try {
             res = JSON.parse(res);
@@ -226,7 +226,7 @@ export class VisitDetailComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           try {
             res = JSON.parse(res);
@@ -251,7 +251,7 @@ export class VisitDetailComponent implements OnInit {
         grphicalTP[0].ItemType = itemType;
         grphicalTP[0].AppName = 'medicubes';
         grphicalTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(grphicalTP[0]).subscribe((res: any) => {
           try {
             res = JSON.parse(res);
@@ -274,12 +274,12 @@ export class VisitDetailComponent implements OnInit {
   getCheckedItemList() {
     this.SelectedTPs = [];
     this.checkedList = [];
-    for (var i = 0; i < this.checklist.length; i++) {
+    for (let i = 0; i < this.checklist.length; i++) {
       if (this.checklist[i].isSelected) {
         this.checkedList.push(this.checklist[i]);
       }
     }
-    let decision = this.CheckIFCheckedItemsContainDeliverStatus();
+    const decision = this.CheckIFCheckedItemsContainDeliverStatus();
     if (decision.length > 0) {
       this.isDeliverButtonAllowed = true;
       this.deliverRptTitle = "Some tests are not allowed to deliver";
@@ -309,7 +309,7 @@ export class VisitDetailComponent implements OnInit {
   }
 
   CheckIFCheckedItemsContainDeliverStatus() {
-    let aa = this.checkedList.filter(a => {
+    const aa = this.checkedList.filter(a => {
       return a.permission_ViewDeliverReportIcon == false;
     })
     return aa;
@@ -322,7 +322,7 @@ export class VisitDetailComponent implements OnInit {
   openMoconsent(row) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(row.ACCOUNTNO), TPID: row.PROFILETESTID }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
   }
 
  

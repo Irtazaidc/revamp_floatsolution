@@ -37,7 +37,7 @@ export class VisitTestInquiryComponent implements OnInit {
   }
    
   getVisitTPInquiry(visitID, TPID) {
-      let objParams = {
+      const objParams = {
         VisitID: visitID,
         TpIDs: TPID
       }

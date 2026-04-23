@@ -94,7 +94,7 @@ export class RolesComponent implements OnInit {
   getRoles() {
     this.roleSelectedEvent.emit({});
     this.rolesList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.tableList)
     this.roleService.getRoles(params).subscribe( (res:any) => {
       setTimeout(() => {
@@ -137,7 +137,7 @@ export class RolesComponent implements OnInit {
     if(this.roleForm.valid) {
       this.insertUpdateRole(this.roleForm.value);
     } else {
-      let invalidFieldNAmes = [];
+      const invalidFieldNAmes = [];
       Object.keys(this.roleForm.controls).forEach((a,i) => {
         if(this.roleForm.controls[a].errors) {
              // console.log(a, this.roleForm.controls[a].errors, this.roleForm.controls[a]);
@@ -151,7 +151,7 @@ export class RolesComponent implements OnInit {
 
   insertUpdateRole(values) {
     this.rolesList = [];
-    let params = values;
+    const params = values;
     // {
     //   userRoleID: this.selectedRole.userRoleID || null,
     //   roleTitle: this.selectedRole.roleTitle || '',
@@ -228,7 +228,7 @@ export class RolesComponent implements OnInit {
     // this.updateUrlParams_navigateTo(_url, {p: btoa(JSON.stringify( role ))});
   }
   viewUsers(role){
-     let Obj ={
+     const Obj ={
       role:role,
       parentName:1,
      }
@@ -241,7 +241,7 @@ export class RolesComponent implements OnInit {
 
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = { ...{
+    const _settings = { ...{
         // relativeTo: this.route,
         replaceUrl: true,
         queryParams: params,

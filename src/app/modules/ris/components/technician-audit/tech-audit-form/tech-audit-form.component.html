@@ -196,7 +196,7 @@
 
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-10">
                         <button
-                            *ngIf="TechnologistVisitTPAuditID && !isReAudit && showResetButton && screenIdentity=='tech-audit'"
+                            *ngIf="TechnologistVisitTPAuditID && !isReAudit && showResetButton && screenIdentity==='tech-audit'"
                             (click)="enableReaudit()" class="btn btn-sm btn-danger pull-right ml-2">
                             <i class="fa fa-retweet"></i>Re-Audit
                         </button>
@@ -233,7 +233,7 @@
                     </div>
                 </div>
                 <div class="row"
-                    *ngIf="(screenIdentity=='tech-audit-summary-report' || screenIdentity=='tech-audit') && TechRemarksDisabled">
+                    *ngIf="(screenIdentity==='tech-audit-summary-report' || screenIdentity==='tech-audit') && TechRemarksDisabled">
                     <div class="col-12">
                         <div class="form-group" style="border: 1px solid #f9949f;
                         border-radius: 6px;
@@ -244,7 +244,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" *ngIf="screenIdentity=='my-tech-audit-summary-report'">
+                <div class="row" *ngIf="screenIdentity==='my-tech-audit-summary-report'">
                     <div class="col-12">
                         <div class="form-group">
                             <label for="TechRemarks" class="control-label">Tech Comments: <i

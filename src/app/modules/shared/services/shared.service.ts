@@ -109,7 +109,7 @@ export class SharedService {
   private loaded = false;
   private loadingPromise: Promise<void> | null = null;
 
-  loadGoogleMap(key: string, libraries: string = 'places'): Promise<void> {
+  loadGoogleMap(key: string, libraries = 'places'): Promise<void> {
     if (this.loaded) {
       return Promise.resolve();
     }

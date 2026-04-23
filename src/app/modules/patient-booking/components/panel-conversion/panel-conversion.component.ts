@@ -90,18 +90,18 @@ export class PanelConversionComponent implements OnInit {
   totalRefund: any = 0;
   visitDetailForPanel: any[];
   VisitID: any = null;
-  IsAllowedCheck:boolean=false;
+  IsAllowedCheck=false;
   PanelCode: any= "";
   PanelID: any = null;
   PanelIDChk: any = null;
-  UserLocationId: number=-99;
-  remarksToSave:string = "";
+  UserLocationId=-99;
+  remarksToSave = "";
   
-  disabledButtonVisits: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonVisits = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerVisits: boolean = true;//Hide Loader
+  isSpinner = true;//Hide Loader
+  isSpinnerVisits = true;//Hide Loader
   VisitRegLoc=""
   VisitRegDate=""
   minDate:any;
@@ -143,7 +143,7 @@ export class PanelConversionComponent implements OnInit {
 
 
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissionsObj = this.storageService.getLoggedInUserProfilePermissionsObj(_activatedroute);
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     // console.log(this.screenPermissionsObj);
@@ -169,13 +169,13 @@ export class PanelConversionComponent implements OnInit {
     this.visitsList = [];
     this.visitsListAll = [];
     this.getVisitDetailsForSecurityRefund(visitid);
-    let formValues = this.searchVisitsForm.getRawValue();
-    let x = 7;
+    const formValues = this.searchVisitsForm.getRawValue();
+    const x = 7;
     // let currentDate = moment(new Date).format("YYYY-MM-DD");
-    let fromeDate =  moment(Conversions.formatDateObject(formValues.fromDate)).format("YYYY-MM-DD");
-    let currentDate =new Date();
-    let currentMinusx  = currentDate.setDate(currentDate.getDate() - x);
-    let currentDateFinal = moment(currentMinusx).format("YYYY-MM-DD");
+    const fromeDate =  moment(Conversions.formatDateObject(formValues.fromDate)).format("YYYY-MM-DD");
+    const currentDate =new Date();
+    const currentMinusx  = currentDate.setDate(currentDate.getDate() - x);
+    const currentDateFinal = moment(currentMinusx).format("YYYY-MM-DD");
    
     this.minDate = Conversions.getDateObjectByGivenDate(currentDateFinal);
     console.log('min is: ',this.minDate)
@@ -184,7 +184,7 @@ export class PanelConversionComponent implements OnInit {
       return
     }
  
-    let params = { 
+    const params = { 
       locationIds:formValues.branchIds,
       fromDate: formValues.fromDate ? Conversions.formatDateObject(formValues.fromDate) : '',
       toDate: formValues.toDate ? Conversions.formatDateObject(formValues.toDate, 'end') : ''
@@ -217,8 +217,8 @@ export class PanelConversionComponent implements OnInit {
         data = data || [];
         console.log('data is: ',data);
         // sort Urgent at top
-        let normalVisit = data.filter(a => a.ProcessId != 2);
-        let urgentVisit = data.filter(a => a.ProcessId == 2);
+        const normalVisit = data.filter(a => a.ProcessId != 2);
+        const urgentVisit = data.filter(a => a.ProcessId == 2);
         data = [...urgentVisit, ...normalVisit];
 
         this.visitsList = data;
@@ -261,7 +261,7 @@ export class PanelConversionComponent implements OnInit {
     if (!visit || !visit.VisitId) {
       return;
     }
-    let formValues = this.searchVisitsForm.getRawValue();
+    const formValues = this.searchVisitsForm.getRawValue();
     // this.searchPatient(visit.PatientId);
     //////////////
     this.getVisitDetialsForSecurityRefundSrv(visit.VisitId)
@@ -269,7 +269,7 @@ export class PanelConversionComponent implements OnInit {
   }
   getVisitDetialsForSecurityRefundSrv(visitID){
     this.PanelIDChk = null;
-    let params = {
+    const params = {
       visitId: visitID
     };
     this.spinner.show(this.spinnerRefs.visitSamples);
@@ -304,7 +304,7 @@ export class PanelConversionComponent implements OnInit {
     this.branchesList = [];
     this.branchRegions = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -320,7 +320,7 @@ export class PanelConversionComponent implements OnInit {
   }
   getPanelByPanelType(panelType) {
     this.panelList = [];
-    let objParam = {
+    const objParam = {
       PanelType:panelType
     }
     this.lookupService.getPanelByPanelType(objParam).subscribe((resp: any) => {
@@ -360,13 +360,13 @@ export class PanelConversionComponent implements OnInit {
       this.PanelIDChk = event.PanelId || event.PanelID;
       this.PanelCode = event.Code;
       this.visitSamplesList = [];
-      let objParam = {
+      const objParam = {
         VisitID : this.VisitID,
         PanelID : event.PanelId || event.PanelID,
       }
       this.panelConversionService.getVisitDetailForPanelConversion(objParam).subscribe((resp: any) => {
         this.visitSamplesList = resp.PayLoad||[];
-        let chekUnAvailableTest = this.visitSamplesList.find(e=> !e.IsAllowed);
+        const chekUnAvailableTest = this.visitSamplesList.find(e=> !e.IsAllowed);
         this.IsAllowedCheck = (chekUnAvailableTest)?this.IsAllowedCheck=true:this.IsAllowedCheck=false;
       }, (err) => {
         console.log(err);
@@ -398,7 +398,7 @@ export class PanelConversionComponent implements OnInit {
     // } else {
       // this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       // this.isSpinner = false; // Button Spinner show
-      let objParam = {
+      const objParam = {
         VisitID : this.VisitID,
         RefundAmount: this.totalRefund,
         ModeID: 1,
@@ -485,7 +485,7 @@ export class PanelConversionComponent implements OnInit {
     }
     this.spinner.show();
 
-    let params = this.getFinalDataSet();
+    const params = this.getFinalDataSet();
     console.log(params);
 
     this.fbrService.postFBRDataForPanelConversion(params).subscribe((resp: any) => {
@@ -516,17 +516,17 @@ export class PanelConversionComponent implements OnInit {
 
   
   getFinalDataSet() {
-    let regModule = '4';
+    const regModule = '4';
 
-    let userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
+    const userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
     userWithoutPic.pic = '';
-    let details = {
+    const details = {
       appVersion: CONSTANTS.APP_VERSION,
       webDeskVersion: this.auth.getWebDeskVersionFromStorage(),
       user: userWithoutPic
     };
 
-    let RegistrationModel: any = {
+    const RegistrationModel: any = {
       CreatedBy: this.loggedInUser.userid,
       BranchId: this.loggedInUser.locationid,
       MACAddress: this.loggedInUser.macAdr || '',
@@ -547,17 +547,17 @@ export class PanelConversionComponent implements OnInit {
     // let testsData = data.Table1 || [];
     // let visitData = data.Table.length ? data.Table[0] : {};
 
-    let testsData = this.visitSamplesList;
+    const testsData = this.visitSamplesList;
     console.log("🚀 ~ PanelConversionComponent ~ formatDataForFBR ~ testsData:", testsData)
-    let visitData = {VisitID: this.selectedVisit.VisitId, AdjAmount: 0};
+    const visitData = {VisitID: this.selectedVisit.VisitId, AdjAmount: 0};
 
     let taxRate = 0;
     if (this.visitSamplesList && this.visitSamplesList.length) {
       taxRate = (this.visitSamplesList[0].TaxRate || 0);
     }
 
-    let totalPrice = +this.helperSrv.getTotal(this.visitSamplesList, 'Price') - +this.helperSrv.getTotal(this.visitSamplesList, 'PanelPrice')
-    let valueWithAndWithoutTax = this.helperSrv.calculateTaxValue(totalPrice - (visitData.AdjAmount || 0), taxRate);
+    const totalPrice = +this.helperSrv.getTotal(this.visitSamplesList, 'Price') - +this.helperSrv.getTotal(this.visitSamplesList, 'PanelPrice')
+    const valueWithAndWithoutTax = this.helperSrv.calculateTaxValue(totalPrice - (visitData.AdjAmount || 0), taxRate);
 
     let calculatedTax = valueWithAndWithoutTax.taxValue;
     let totalSale = valueWithAndWithoutTax.fullValue - valueWithAndWithoutTax.taxValue;
@@ -573,7 +573,7 @@ export class PanelConversionComponent implements OnInit {
       calculatedTax = 0;
     }
 
-    let params = {
+    const params = {
       "InvoiceNumber": "",
       "POSID": this.loggedInUser.posId || this.MACAndPOSAlert.POSID, // 966130
       "USIN": visitData.VisitID, // VisitId
@@ -595,14 +595,14 @@ export class PanelConversionComponent implements OnInit {
     };
     testsData.forEach(tp => {
       tp.TaxRate = tp.TaxRate || 0;
-      let _tpPrice = (tp.Price || 0) - (tp.PanelPrice || 0);
-      let tpValueWithAndWithoutTax = this.helperSrv.calculateTaxValue(_tpPrice - (tp.Discount || 0), tp.TaxRate);
+      const _tpPrice = (tp.Price || 0) - (tp.PanelPrice || 0);
+      const tpValueWithAndWithoutTax = this.helperSrv.calculateTaxValue(_tpPrice - (tp.Discount || 0), tp.TaxRate);
 
-      let taxCharged = tpValueWithAndWithoutTax.taxValue;
-      let saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue;
-      let totalAmount = tpValueWithAndWithoutTax.fullValue;
+      const taxCharged = tpValueWithAndWithoutTax.taxValue;
+      const saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue;
+      const totalAmount = tpValueWithAndWithoutTax.fullValue;
 
-      let item = {
+      const item = {
         "ItemCode": tp.TPId,
         "ItemName": tp.Title || tp.TPCode,
         "PCTCode": tp.PCTCode || '98160000', // {radiology: '98179000', lab: '98160000'} , // "98173000", // "11001010", https://download1.fbr.gov.pk/Docs/2021101313103753401chapte-98&99.pdf // page 4
@@ -636,7 +636,7 @@ export class PanelConversionComponent implements OnInit {
 
   getMACAddress(loggedInUser: UserModel) {
     // setTimeout(() => {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -654,7 +654,7 @@ export class PanelConversionComponent implements OnInit {
     this.getPOSID();
   }
   getPOSID() {
-    let params = {
+    const params = {
       macAddress: this.loggedInUser.macAdr,
       branchId: this.loggedInUser.locationid,
       userId: this.loggedInUser.userid

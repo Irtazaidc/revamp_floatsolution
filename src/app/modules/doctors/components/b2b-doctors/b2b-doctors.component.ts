@@ -40,9 +40,9 @@ export class B2bDoctorsComponent implements OnInit {
 
   bTobDoctorsData
   
-  QRCodeNumber: string = '';
+  QRCodeNumber = '';
   existing
-  : string = '';
+   = '';
 
   spinnerRefs = {
     DocDrGen: 'DocDrGen',
@@ -52,8 +52,8 @@ export class B2bDoctorsComponent implements OnInit {
   isSubmitted = false;
   isEditing = false;
   isSaveEditing = false;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
 
 
 
@@ -196,8 +196,8 @@ export class B2bDoctorsComponent implements OnInit {
   }
 
   b2bTypeChangedEvent() {
-    let genderCtrl = 'Gender';
-    let titleCtrl = 'Title';
+    const genderCtrl = 'Gender';
+    const titleCtrl = 'Title';
     // let lastName = 'LastName'
     if (!this.doctorForm.value.B2BTypeID || this.doctorForm.value.B2BTypeID == 1) {
       // this.setMandatoryFormControl(genderCtrl, true);
@@ -248,7 +248,7 @@ export class B2bDoctorsComponent implements OnInit {
 
   getB2BDoctors(b2bDoctorID = 0) {
     this.b2bDoctorsList = [];
-    let _params = {
+    const _params = {
       B2BDoctorID: b2bDoctorID
     };
     this.spinner.show();
@@ -273,7 +273,7 @@ export class B2bDoctorsComponent implements OnInit {
   }
   getDoctorSpeciality() {
     this.doctorSpecialityList = [];
-    let _params = {
+    const _params = {
     };
     this.lookupService.getDoctorSpeciality(_params).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -289,7 +289,7 @@ export class B2bDoctorsComponent implements OnInit {
   }
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       PanelType: 1
     };
     this.lookupService.getPanelByPanelType(_params).subscribe((res: any) => {
@@ -311,7 +311,7 @@ export class B2bDoctorsComponent implements OnInit {
     if(this.doctorForm.valid) {
       this.insertUpdate(this.doctorForm.getRawValue());
     } else {
-      let invalidFieldNames = [];
+      const invalidFieldNames = [];
       Object.keys(this.doctorForm.controls).forEach((a,i) => {
         if(this.doctorForm.controls[a].errors) {
              invalidFieldNames.push(a);
@@ -322,7 +322,7 @@ export class B2bDoctorsComponent implements OnInit {
   }
 
   insertUpdate(values) {
-    let params = values;
+    const params = values;
     params.B2BType = params.B2BTypeID;
     params.DateOfBirth = new Date();
     params.AssociatePanelIDs = (params.AssociatePanelIDs || []).join(',')
@@ -354,7 +354,7 @@ export class B2bDoctorsComponent implements OnInit {
       console.log(err);
     })
   }
-  getB2BDoctorID:boolean = true;
+  getB2BDoctorID = true;
   B2BDoctorID : any;
   edit(doctor) {
    console.log("🚀edit ~ doctor:", doctor);
@@ -399,8 +399,8 @@ export class B2bDoctorsComponent implements OnInit {
   }
 
   insertPanelUserForAssociation() {
-    let formValues = this.insertPanelform.getRawValue();
-    let panelUserIdArray = Array.isArray(formValues.PanelUserId)
+    const formValues = this.insertPanelform.getRawValue();
+    const panelUserIdArray = Array.isArray(formValues.PanelUserId)
       ? formValues.PanelUserId
       : formValues.PanelUserId
       ? [formValues.PanelUserId]
@@ -412,7 +412,7 @@ export class B2bDoctorsComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       PanelUserIDs: panelUserIdArray.join(","),
       PanelId: -1,
       B2BDoctorID: this.B2BDoctorID,
@@ -593,7 +593,7 @@ export class B2bDoctorsComponent implements OnInit {
   }
 
   PanelUserId = null;
-  doctorFullName: string = '';
+  doctorFullName = '';
   InsertUpdatePanelUser() {
     if (this.userCreationForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
@@ -601,10 +601,10 @@ export class B2bDoctorsComponent implements OnInit {
       return;
     }
 
-    let formValues = this.userCreationForm.getRawValue();
-    let isUpdating = !!this.PanelUserId; // Check if updating
+    const formValues = this.userCreationForm.getRawValue();
+    const isUpdating = !!this.PanelUserId; // Check if updating
 
-    let params = {
+    const params = {
       PanelUserId: isUpdating ? this.PanelUserId : null, // Ensure correct ID handling
       Username: formValues.Username || null,
       Password: formValues.Password,
@@ -701,7 +701,7 @@ edit_User(user: any) {
       this.toastr.warning("Please Provide Panel UserId");
       return;
     }
-    let params = {
+    const params = {
       PanelUserId: this.PanelUserId,
       IsDeleted: 1,
       CreatedBy: this.loggedInUser.userid || -1,
@@ -724,14 +724,14 @@ edit_User(user: any) {
   }
   getPanelUsersData() {
     this.panelUsersDataList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.searchTable);
 
     this.Billing.GetPanelUsers(params).subscribe(
       (res: any) => {
         this.spinner.hide(this.spinnerRefs.searchTable);
         if (res.StatusCode === 200) {
-          let uniqueUsers = new Map(); // Using a Map to ensure uniqueness by PanelUserId
+          const uniqueUsers = new Map(); // Using a Map to ensure uniqueness by PanelUserId
 
           res.PayLoad.forEach((user) => {
             if (user.UserType === 2) {
@@ -777,7 +777,7 @@ edit_User(user: any) {
       return;
     }
 
-    let params = {
+    const params = {
       PanelUserId: this.PanelUserId
     };
     this.spinner.show(this.spinnerRefs.insertForm)

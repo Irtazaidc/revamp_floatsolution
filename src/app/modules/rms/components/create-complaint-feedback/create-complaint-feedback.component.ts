@@ -57,7 +57,7 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   rdSearchBy = 'byCode';
   employeesList: any;
   showCityAreaSelector = false;
-  remainingCharactersforFindings:number=2000;
+  remainingCharactersforFindings=2000;
   cmsRequestSourceList:any;
   priorityList = [];
   patientId:number;
@@ -143,13 +143,13 @@ export class CreateComplaintFeedbackComponent implements OnInit {
       this.toastr.warning('Please Fill The Mandatory fields');
       return;
     }
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
     console.log("saveComplaintRrequest ~ docsToSave:", docsToSave)
-    let formValues = this.ComplaintDetailsForm.getRawValue();   
+    const formValues = this.ComplaintDetailsForm.getRawValue();   
     formValues.visitID = (formValues.visitID || '').trim().toString().replace(/\D/g, '');
     formValues.callBackCheck=formValues.callBackCheck==true?1:0;
     formValues.smsCheck=formValues.smsCheck==true?1:0;
-    let objParam = {
+    const objParam = {
       CMSTypeID: formValues.requestTypeID,
       CMSCategoryID: null, //formValues.cmsCategoryID || null,
       CMSSubCategoryID: null,//formValues.cmsSubCategory || null,
@@ -294,7 +294,7 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   }
   getCityAreas(CityID) {
     this.cityAreasList = []
-    let objParam = {
+    const objParam = {
       CityID: CityID
     }
     this.lookupService.getHCCityAreas(objParam).subscribe((resp: any) => {
@@ -308,7 +308,7 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   }
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1, //null
       TestProfileCode: null,
       TestProfileName: null,
@@ -330,8 +330,8 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   }
   getEmployeesData() {
     this.employeesList = [];
-    let formValues= this.ComplaintDetailsForm.getRawValue();
-    let objParam = {
+    const formValues= this.ComplaintDetailsForm.getRawValue();
+    const objParam = {
       DepartmentId: formValues.DepartmentId || -1, 
       DesignationId: -1,
       locId: formValues.BranchID || -1,
@@ -407,7 +407,7 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   }
   getCMSPriorityList() {
     this.priorityList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.GetCMSPriorityList().subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -537,7 +537,7 @@ export class CreateComplaintFeedbackComponent implements OnInit {
     // formValues.dateTo = formValues.dateTo
     //   ? Conversions.formatDateObject(formValues.dateTo)
     //   : null;
-    let objParm = {
+    const objParm = {
       CreatedByUserID:this.loggedInUser.userid,
       // DateFrom: formValues.dateFrom,
       // DateTo: formValues.dateTo,
@@ -560,8 +560,8 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   getfeedbackEmail:number=null
 
   feedbackEmail(){
-    let formValues = this.ComplaintDetailsForm.getRawValue()
-    let sourceId = formValues.cmsSourceId;
+    const formValues = this.ComplaintDetailsForm.getRawValue()
+    const sourceId = formValues.cmsSourceId;
     console.log("feedbackEmail ~ event:", sourceId);
     this.getfeedbackEmail = sourceId;
   }
@@ -598,9 +598,9 @@ export class CreateComplaintFeedbackComponent implements OnInit {
   }
 
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.loadedDocuments.filter(a => !a.docId).forEach(a => {
-      let d = {
+      const d = {
         DocId: null,
         Title: a.fileName,
         Remarks: '',

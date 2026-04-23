@@ -40,9 +40,9 @@ import Swal from 'sweetalert2';
 })
 export class AuditSummaryReportComponent implements OnInit {
   screenIdentity = null;
-  public starRatingElements: Array<ratingElement> = [];
-  public starRatingElementsInner: Array<ratingElement> = [];
-  public starRatingElementsNew: Array<ratingElement> = [];
+  public starRatingElements: ratingElement[] = [];
+  public starRatingElementsInner: ratingElement[] = [];
+  public starRatingElementsNew: ratingElement[] = [];
   @ViewChild('detailArea') detailArea: ElementRef;
   @ViewChild('vitalsModal') vitals;
   @ViewChild('emrModal') emrModal;
@@ -192,7 +192,7 @@ export class AuditSummaryReportComponent implements OnInit {
     this.getSubSection();
     this.getRadiologist();
     this.getRadiologistAudit();
-    let _ratingElement = new ratingElement();
+    const _ratingElement = new ratingElement();
     _ratingElement.readonly = true;
     _ratingElement.checkedcolor = "red";
     _ratingElement.uncheckedcolor = "black";
@@ -208,12 +208,12 @@ export class AuditSummaryReportComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -238,7 +238,7 @@ export class AuditSummaryReportComponent implements OnInit {
   }
 
   getRadiologist() {
-    let objParams = {
+    const objParams = {
       isAuditor: null
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST, objParams).subscribe((resp: any) => {
@@ -299,7 +299,7 @@ export class AuditSummaryReportComponent implements OnInit {
   getRISRadiologistAuditSummary() {
     this.risWorklist = [];
     this.roundedAverageRating = null;
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     this._form.markAllAsTouched();
     if (!this.RadiologistAuditID) {
       this.toastr.warning('Please select the audit!', 'No Audit Selected');
@@ -310,7 +310,7 @@ export class AuditSummaryReportComponent implements OnInit {
       return false;
 
     } else {
-      let objParams = {
+      const objParams = {
         RadiologistID: (this.screenIdentity == 'audit-summary-report' || this.screenIdentity == 'audit-findings') ? formValues.RadiologistID : this.loggedInUser.empid,
         AuditorRadiologistID: (this.screenIdentity == 'audit-summary-report') ? this.loggedInUser.userid : null,
         DateFrom: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
@@ -329,7 +329,7 @@ export class AuditSummaryReportComponent implements OnInit {
         if (resp && resp.PayLoadDS && resp.PayLoadDS["Table"].length && resp.StatusCode == 200) {
           // let data = resp.PayLoadDS;
           this.risWorklist = resp.PayLoadDS["Table"] || [];
-          let auditReportRow = resp.PayLoadDS["Table1"] || [];
+          const auditReportRow = resp.PayLoadDS["Table1"] || [];
           if (auditReportRow.length) {
             this.AuditRemarks = auditReportRow[0].Remarks;
             this.RelativeCaseDistID = auditReportRow[0].RelativeCaseDistID;
@@ -370,7 +370,7 @@ export class AuditSummaryReportComponent implements OnInit {
 
           setTimeout(() => {
             this.starRatingElements.splice(0, this.starRatingElements.length);
-            let _ratingElement = new ratingElement();
+            const _ratingElement = new ratingElement();
             _ratingElement.readonly = true;
             _ratingElement.checkedcolor = "red";
             _ratingElement.uncheckedcolor = "black";
@@ -380,7 +380,7 @@ export class AuditSummaryReportComponent implements OnInit {
             this.starRatingElements.push(_ratingElement);
 
             this.starRatingElementsNew.splice(0, this.starRatingElementsNew.length);
-            let _ratingElementNew = new ratingElement();
+            const _ratingElementNew = new ratingElement();
             _ratingElementNew.readonly = true;
             _ratingElementNew.checkedcolor = "red";
             _ratingElementNew.uncheckedcolor = "black";
@@ -409,7 +409,7 @@ export class AuditSummaryReportComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.PIN;
+    const pin = text.PIN;
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -488,7 +488,7 @@ export class AuditSummaryReportComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.VisitID && this.TPId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -536,7 +536,7 @@ export class AuditSummaryReportComponent implements OnInit {
   isSubmitClicked = false;
   insertUpdateRadiologistVisitTPAudit() {
     this.isSubmitClicked = true;
-    let checkedItems = this.risWorklist.filter(a => a.checked);
+    const checkedItems = this.risWorklist.filter(a => a.checked);
     if (!this.AuditorRadiologistID) {
       this.toastr.warning("Please select any Doctor", "No Doctor selected");
       return;
@@ -545,7 +545,7 @@ export class AuditSummaryReportComponent implements OnInit {
       this.toastr.warning("Please select any test to send", "No Test Selection");
       return;
     } else {
-      let objParam = {
+      const objParam = {
         AuditorRadiologistID: this.AuditorRadiologistID,
         RadiologistID: this._form.getRawValue().RadiologistID,
         CreatedBy: this.loggedInUser.userid || -99,
@@ -592,7 +592,7 @@ export class AuditSummaryReportComponent implements OnInit {
       this.toastr.warning("Please select any audit.", "No audit selected!");
       return;
     }
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     const url = environment.patientReportsPortalUrl + 'audit-summary-report?p=' + btoa(JSON.stringify({
       AuditorRadiologistID: (this.screenIdentity == 'audit-summary-report') ? this.loggedInUser.userid : null,
       RadiologistID: (this.screenIdentity == 'audit-summary-report' || this.screenIdentity == 'audit-findings') ? formValues.RadiologistID : this.loggedInUser.empid,
@@ -606,7 +606,7 @@ export class AuditSummaryReportComponent implements OnInit {
       isManager: (this.screenIdentity == 'audit-findings') ? 1 : null,
       RadiologistAuditID: this.RadiologistAuditID
     }));
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
   }
 
 
@@ -623,14 +623,14 @@ export class AuditSummaryReportComponent implements OnInit {
   AuditList = [];
   getRadiologistAudit() {
     this.AuditList = [];
-    let objParam = {
+    const objParam = {
       RadiologistID: (this.screenIdentity == 'audit-summary-report' || this.screenIdentity == 'audit-findings') ? this.RadiologistIDForAuditDropDown : this.loggedInUser.empid,
       // AuditorRadiologistID:(this.screenIdentity=='audit-findings') ? this.AuditorRadiologistIDForAuditDropDown : this.loggedInUser.userid,
       AuditorRadiologistID: (this.screenIdentity == 'audit-summary-report') ? this.loggedInUser.empid : null,
       AuditStatusID: (this.screenIdentity == 'audit-findings') ? 7 : null
     }
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_AUDIT, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.AuditList = _response;
     }, (err) => {
     })
@@ -651,12 +651,12 @@ export class AuditSummaryReportComponent implements OnInit {
   disabledButtonShare = false;
   isSpinnerShare = true;
   updateRadiologistVisitTPAuditShare() {
-    let checkedItems = this.risWorklist.filter(a => a.checked);
+    const checkedItems = this.risWorklist.filter(a => a.checked);
     if (!checkedItems.length) {
       this.toastr.warning("Please select any report to share", "No Report Selected");
       return;
     } else {
-      let objParam = {
+      const objParam = {
         RadiologistVisitTPAuditIDs: checkedItems.map(obj => obj.RadiologistVisitTPAuditID).join(","),
         CreatedBy: this.loggedInUser.userid || -99,
       }
@@ -692,7 +692,7 @@ export class AuditSummaryReportComponent implements OnInit {
   RadiologistAuditIDFinalized = null;
   updateRadiologistVisitTPAudit() {
     this.btnFinalizedClick = true;
-    let checkedItems = this.risWorklist.filter(a => a.checked);
+    const checkedItems = this.risWorklist.filter(a => a.checked);
     // if (!checkedItems.length) {
     //   this.toastr.warning("Please select any report to share", "No Report Selected");
     //   return;
@@ -708,7 +708,7 @@ export class AuditSummaryReportComponent implements OnInit {
       return
     }
     this.btnFinalizedClick = false;
-    let objParam = {
+    const objParam = {
       RadiologistAuditID: this.RadiologistAuditID,
       // RadiologistVisitTPAuditIDs: checkedItems.map(obj => obj.RadiologistVisitTPAuditID).join(","),
       AuditStatusID: 7,
@@ -727,8 +727,8 @@ export class AuditSummaryReportComponent implements OnInit {
       if (JSON.parse(resp.PayLoadStr).length) {
         if (resp.StatusCode == 200) {
           if (JSON.parse(resp.PayLoadStr)[0].Result == 2) {
-            let unsavedReports = resp.PayLoadDS.Table1;
-            let unsavedReportsList = '';
+            const unsavedReports = resp.PayLoadDS.Table1;
+            const unsavedReportsList = '';
 
             // Loop through the unsavedReports array and build the list
             // unsavedReports.forEach(report => {

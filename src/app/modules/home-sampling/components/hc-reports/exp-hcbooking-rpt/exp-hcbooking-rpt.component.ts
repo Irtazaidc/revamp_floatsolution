@@ -49,10 +49,10 @@ export class ExpHcbookingRptComponent implements OnInit {
 
   getHCBookingDeatil() {
     this.hcBookingDetailData = [];
-    let hcformData = this.hcBookingDetailForm.getRawValue();
+    const hcformData = this.hcBookingDetailForm.getRawValue();
     // let F = `${this.hcBookingDetailForm.controls["dateFrom"].value.year}-${this.hcBookingDetailForm.controls["dateFrom"].value.month}-${this.hcBookingDetailForm.controls["dateFrom"].value.day}`;
     // let T = `${this.hcBookingDetailForm.controls["dateTo"].value.year}-${this.hcBookingDetailForm.controls["dateTo"].value.month}-${this.hcBookingDetailForm.controls["dateTo"].value.day}`;
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(hcformData.dateFrom),
       DateTo: Conversions.formatDateObject(hcformData.dateTo),
       // "DateFrom": F,
@@ -78,7 +78,7 @@ export class ExpHcbookingRptComponent implements OnInit {
         this.excelData.push(row);
       });
       this.excelData = this.excelData.map(aa => {
-        let objD = aa;
+        const objD = aa;
         delete objD.isBranchSelected;
         return objD;
       })

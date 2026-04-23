@@ -20,7 +20,7 @@ import { SmsStatusService } from '../../service/sms-status.service';
 })
 export class SendingSmsStatusComponent implements OnInit {
   @ViewChild('showPatientPortalUserDetails') showPatientPortalUserDetails;
-  @Input('isCancellationScreen') isCancellationScreen = false;
+  @Input() isCancellationScreen = false;
   ModalPopupRef: NgbModalRef;
   smsInquiryReportList=[];
   smsHistoryList=[];
@@ -95,10 +95,10 @@ export class SendingSmsStatusComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let formValues = this.formForSMSstatus.getRawValue();
+    const formValues = this.formForSMSstatus.getRawValue();
     formValues.dateFrom=Conversions.formatDateObject(formValues.dateFrom);
     formValues.dateTo=Conversions.formatDateObject(formValues.dateTo);
-    let params = {
+    const params = {
       CellNo: formValues.cellNumber, 
       DateFrom: formValues.dateFrom ,
       DateTo: formValues.dateTo,
@@ -166,10 +166,10 @@ export class SendingSmsStatusComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let formValues = this.formForSMSstatus.getRawValue();
+    const formValues = this.formForSMSstatus.getRawValue();
     formValues.dateFrom=Conversions.formatDateObject(formValues.dateFrom);
     formValues.dateTo=Conversions.formatDateObject(formValues.dateTo);
-    let params = {
+    const params = {
       CellNo: formValues.cellNumber, 
       DateFrom: formValues.dateFrom ,
       DateTo: formValues.dateTo,
@@ -204,9 +204,9 @@ export class SendingSmsStatusComponent implements OnInit {
       this.operatorID = true;
       return;
     }
-    let formValues = this.formForSendingSMS.getRawValue();
+    const formValues = this.formForSendingSMS.getRawValue();
 
-    let params = {
+    const params = {
       PhoneNumber: formValues.cellNumber, 
       OperatorId: formValues.MobileOperatorID,
       Message: formValues.Message,

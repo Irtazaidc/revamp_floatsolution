@@ -10,8 +10,8 @@ import { AuthService } from '../../auth';
 
 
 
-declare var window: any;
-declare var $: any;
+declare let window: any;
+declare let $: any;
 
 @Injectable({
   providedIn: 'root',
@@ -121,7 +121,7 @@ export class MultiAppService {
       return;
     }
     try {
-      var wsImpl = window.WebSocket || window.MozWebSocket;
+      const wsImpl = window.WebSocket || window.MozWebSocket;
       this.ws_for_multiWinApp = new wsImpl(this.webSocketUrlForWinMultiApp);
       if (this.ws_for_multiWinApp) {
         // this.setMultiAppConnectionStatus(true);
@@ -148,7 +148,7 @@ export class MultiAppService {
               console.log('WebDesk: Message: ' + data_from_webDesk.message + ' | Error: ' + data_from_webDesk.message + ' | ErrorDetails: ' + data_from_webDesk.errorDetails);
               return;
             }
-            let identityObj = {
+            const identityObj = {
               user: this.loggedInUser,
               timestamp: +new Date(),
               screen: encodeURIComponent(window.location.href)
@@ -229,9 +229,9 @@ export class MultiAppService {
     }
   }
   checkIfMultiAppConnected(): boolean {
-    let connected = false;
+    const connected = false;
     let socketStatus = 3;
-    let status = {
+    const status = {
       connected: false,
       status: 3
     }
@@ -253,9 +253,9 @@ export class MultiAppService {
     return status.connected; // connected;
   }
   checkIfMultiAppConnectedBiomatric(): boolean {
-    let connected = false;
+    const connected = false;
     let socketStatus = 3;
-    let status = {
+    const status = {
       connected: false,
       status: 3
     }
@@ -292,8 +292,8 @@ export class MultiAppService {
         // data_from_fpScanner.data = this.base64toBlob(data_from_fpScanner.data, 'image/png');
         // if (data_from_fpScanner.data instanceof Blob) {
 
-        let fileName = "Scan_" + +new Date(); //"File" + i;
-        let _obj: any = {};
+        const fileName = "Scan_" + +new Date(); //"File" + i;
+        const _obj: any = {};
         _obj.Doc = (response.data || ''); // (fileObject.FileBase64Data || '');
         _obj.DocId = null;
         _obj.Title = fileName || (+new Date()); // fileObject.FileName || (+new Date());
@@ -307,11 +307,11 @@ export class MultiAppService {
 
         this.resizeImage('', this.resizeImageDimentions.thumbnail.width, this.resizeImageDimentions.thumbnail.height, 0, 'image/png', response.data).then((thumbnailImg) => {
           _obj.VisitDocBase64Thumbnail = (thumbnailImg || '');
-          let imgDataFormatted = this.helperSrv.addPrefixToDocs([_obj]);
+          const imgDataFormatted = this.helperSrv.addPrefixToDocs([_obj]);
           console.log('imgDataFormatted from scanner 1 ', imgDataFormatted);
           this.updateScannedDoc(imgDataFormatted);
         }, (err) => {
-          let imgDataFormatted = this.helperSrv.addPrefixToDocs([_obj]);
+          const imgDataFormatted = this.helperSrv.addPrefixToDocs([_obj]);
           console.log('imgDataFormatted from scanner 2 ', imgDataFormatted);
           this.updateScannedDoc(imgDataFormatted);
         });
@@ -357,7 +357,7 @@ export class MultiAppService {
     // console.log('============> ', JSON.parse(data_from_fpScanner.userIdentity), identityObj);
     if (response.status && response.data) {
       if (response.data) {
-        let aa = console.log("aaaaaaaaaaaaa", response.data);
+        const aa = console.log("aaaaaaaaaaaaa", response.data);
         setTimeout(() => {
           this.auth.updateSysInfo(response.data);
         }, 2000);
@@ -376,24 +376,24 @@ export class MultiAppService {
   }
   base64toBlob(base64Data, contentType) {
     contentType = contentType || '';
-    var sliceSize = 1024;
-    var byteCharacters = '';
+    const sliceSize = 1024;
+    let byteCharacters = '';
     try {
       byteCharacters = atob(base64Data);
     }
     catch (ex) {
       byteCharacters = base64Data;
     }
-    var bytesLength = byteCharacters.length;
-    var slicesCount = Math.ceil(bytesLength / sliceSize);
-    var byteArrays = new Array(slicesCount);
+    const bytesLength = byteCharacters.length;
+    const slicesCount = Math.ceil(bytesLength / sliceSize);
+    const byteArrays = new Array(slicesCount);
 
-    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-      var begin = sliceIndex * sliceSize;
-      var end = Math.min(begin + sliceSize, bytesLength);
+    for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+      const begin = sliceIndex * sliceSize;
+      const end = Math.min(begin + sliceSize, bytesLength);
 
-      var bytes = new Array(end - begin);
-      for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+      const bytes = new Array(end - begin);
+      for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
         bytes[i] = byteCharacters[offset].charCodeAt(0);
       }
       byteArrays[sliceIndex] = new Uint8Array(bytes);
@@ -401,7 +401,7 @@ export class MultiAppService {
     return new Blob(byteArrays, { type: contentType });
   }
   dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n);
@@ -413,30 +413,30 @@ export class MultiAppService {
   dataURItoBlob(dataURI) {
     // convert base64 to raw binary data held in a string
     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    var byteString = atob(dataURI.split(',')[1]);
+    const byteString = atob(dataURI.split(',')[1]);
 
     // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
 
     // write the bytes of the string to an ArrayBuffer
-    var ab = new ArrayBuffer(byteString.length);
+    const ab = new ArrayBuffer(byteString.length);
 
     // create a view into the buffer
-    var ia = new Uint8Array(ab);
+    const ia = new Uint8Array(ab);
 
     // set the bytes of the buffer to the correct values
-    for (var i = 0; i < byteString.length; i++) {
+    for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
 
     // write the ArrayBuffer to a blob, and you're done
-    var blob = new Blob([ab], { type: mimeString });
+    const blob = new Blob([ab], { type: mimeString });
     return blob;
 
   }
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = 'image/jpeg', base64Data = '') {
     const self = this;
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       if (!file && !base64Data) {
         resolve('');
       }
@@ -447,7 +447,7 @@ export class MultiAppService {
       let blob = null;
 
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_' + +new Date();
+      const canvas_id = 'hiddenCanvas_' + +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;

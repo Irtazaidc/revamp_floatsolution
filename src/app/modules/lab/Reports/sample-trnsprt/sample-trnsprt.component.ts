@@ -74,7 +74,7 @@ export class SampleTransportComponent implements OnInit {
   }
 
   getSampleTransportationList(){
-    let formValues  = this.getsampleTransportationData.getRawValue();
+    const formValues  = this.getsampleTransportationData.getRawValue();
     
     if (this.getsampleTransportationData.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -82,7 +82,7 @@ export class SampleTransportComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
       LocID : formValues.locID || null,

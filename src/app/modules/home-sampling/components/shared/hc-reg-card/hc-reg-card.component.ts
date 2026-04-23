@@ -14,8 +14,8 @@ import { HcSharedService } from '../../../services/hc-shared.service';
 export class HcRegCardComponent implements OnInit {
 
 
-  @Input('bookingid') bookingid: number;
-  @Input('requestid') requestid: number;
+  @Input() bookingid: number;
+  @Input() requestid: number;
   hcRegDetail: any;
   constructor(private spinner: NgxSpinnerService,
     private shared: HcSharedService,
@@ -28,7 +28,7 @@ export class HcRegCardComponent implements OnInit {
 
   gethcRegDetail() {
     this.spinner.show();
-    let params = {
+    const params = {
       "BookingID": this.bookingid
     }
     this.shared.hcRegDetail(params).subscribe((resp: any) => {

@@ -23,17 +23,17 @@ export class GeneratorActivationLogsComponent implements OnInit {
 
   isSubmitted = false;
   CardTitle = "Add Generator Log";
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   ActionLabel = "Save";
   GeneratorID: any = null;
-  isSpinner: boolean = false;
+  isSpinner = false;
   maxDate: any;
   GeneratorList: any = [];
   GeneratorReport: any = [];
   GeneratorReportList: any = [];
   generatorOnOffList = [];
   generatorOnOffLog = [];
-  isEditMode: boolean = false;
+  isEditMode = false;
 
   public Fields = {
     dateFrom: ["", Validators.required],
@@ -134,7 +134,7 @@ export class GeneratorActivationLogsComponent implements OnInit {
 
   getGeneratorOnOffLog(selectedItem: any) {
     this.generatorOnOffLog = [];
-    let _param = {
+    const _param = {
       FromDate: this.generatorForm.get('dateFrom')?.value
         ? Conversions.formatDateObject(this.generatorForm.get('dateFrom')?.value)
         : null,
@@ -158,8 +158,8 @@ export class GeneratorActivationLogsComponent implements OnInit {
 
   getGeneratorOnOffLogList() {
     this.generatorOnOffList = [];
-    let formValues = this.generatorForm.getRawValue();
-    let _param = {
+    const formValues = this.generatorForm.getRawValue();
+    const _param = {
       FromDate: formValues.dateFrom
         ? Conversions.formatDateObject(formValues.dateFrom)
         : null,
@@ -171,7 +171,7 @@ export class GeneratorActivationLogsComponent implements OnInit {
     this.fuelLog.getGeneratorOnOffLogList(_param).subscribe(
       (res: any) => {
         if (res && res.StatusCode == 200 && res.PayLoad) {
-          let data = res.PayLoad;
+          const data = res.PayLoad;
           this.generatorOnOffList = data || [];
         }
       },
@@ -207,7 +207,7 @@ export class GeneratorActivationLogsComponent implements OnInit {
   GeneratorOnOffLogID = null;
   updateGeneratorLog() {
     // Extract form values
-    let formValues = this.generatorConfigForm.getRawValue();
+    const formValues = this.generatorConfigForm.getRawValue();
   
     // Validate mandatory fields
     if (!formValues.generatorId) {
@@ -235,7 +235,7 @@ export class GeneratorActivationLogsComponent implements OnInit {
     const isEditMode = !!formValues.GeneratorOnOffLogID; // Non-zero ID indicates an update
   
     // Prepare API payload
-    let param = {
+    const param = {
       GeneratorID: formValues.generatorId,
       GeneratorOnTime: Conversions.formatDateTimeObject(
         formValues.StartDate,
@@ -288,16 +288,16 @@ export class GeneratorActivationLogsComponent implements OnInit {
   getGeneratorReport() {
     this.GeneratorReport = [];
     this.spinner.show(this.spinnerRefs.generatorReportSection);
-    let objParm = {
+    const objParm = {
       GeneratorReportList: this.GeneratorReportList,
     };
   }
 
   getGeneratorList() {
     this.GeneratorList = [];
-    let formValues = this.getGeneratorFuelLog.getRawValue();
+    const formValues = this.getGeneratorFuelLog.getRawValue();
     console.log("formValues", formValues)
-    let param = {
+    const param = {
       LocIds :this.loggedInUser.locationid, 
 
     };

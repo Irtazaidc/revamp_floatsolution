@@ -667,7 +667,7 @@ export class CustomDatepickerI18n extends NgbDatepickerI18n {
   getDayAriaLabel(date: NgbDateStruct): string {
     throw new Error('Method not implemented.'); // TODO: implement this
   }
-  // tslint:disable-next-line:variable-name
+ 
   constructor(private _i18n: I18n) {
     super();
   }
@@ -830,7 +830,7 @@ export class DatepickerComponent implements OnInit {
     !this.toDate &&
     this.hoveredDate &&
     after(date, this.fromDate) &&
-    // tslint:disable-next-line:semicolon
+   
     before(date, this.hoveredDate);
   isInside = (date) => after(date, this.fromDate) && before(date, this.toDate);
   isFrom = (date) => equals(date, this.fromDate);

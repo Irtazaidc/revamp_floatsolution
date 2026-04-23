@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { RiderService } from '../../services/rider.service';
   templateUrl: './hc-rider-dashboard.component.html',
   styleUrls: ['./hc-rider-dashboard.component.scss']
 })
-export class HcRiderDashboardComponent implements OnInit {
+export class HcRiderDashboardComponent implements OnInit, AfterViewInit {
 
   //  parent = document.querySelector(".custom-container") as HTMLElement | null;
   // parent = document.getElementsByClassName(
@@ -92,7 +92,7 @@ export class HcRiderDashboardComponent implements OnInit {
   getRiderDashboardInfo() {
     this.RiderDashboardInfo = [];
     this.spinner.show(this.spinnerRefs.RiderDashboardSpinner);
-    let params = {
+    const params = {
       HCZoneID: this.hczones ? this.hczones.join(',') : "1",
       RiderID: null,
       HCCityIds: this.hcCity ? this.hcCity.join(',') : null
@@ -114,7 +114,7 @@ export class HcRiderDashboardComponent implements OnInit {
 
   getZonesByHCCityId(hccity) {
     if (this.hcCity) {
-      let params = {
+      const params = {
         HCCityIDs: this.hcCity.join(',')
       }
       this.HCService.GetZonesByHCCityID(params).subscribe((resp: any) => {
@@ -137,7 +137,7 @@ export class HcRiderDashboardComponent implements OnInit {
   getRiderQCheckList(riderid) {
     this.spinner.show(this.spinnerRefs.RiderDashboardSpinner);
 
-    let params = {
+    const params = {
       RiderID: riderid,
       CurrentDate: moment().format('YYYY/MM/DD')
     }

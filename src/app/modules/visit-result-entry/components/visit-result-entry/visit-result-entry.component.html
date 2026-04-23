@@ -168,7 +168,7 @@
                                                                             [(ngModel)]="tp.Result" 
                                                                             class="form-control form-control-sm"
                                                                             (change)="resultChangedEvent(tp, $event, res.value)"
-                                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                                            [ngClass]="{'invalid': res.value === '', 'invalid-highlighted': res.value === ''}"
                                                                             required
                                                                             disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
                                                                             >
@@ -183,7 +183,7 @@
                                                                             [(ngModel)]="tp.Result" 
                                                                             class="form-control form-control-sm"
                                                                             (change)="resultChangedEvent(tp, $event, res.value)"
-                                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                                            [ngClass]="{'invalid': res.value === '', 'invalid-highlighted': res.value === ''}"
                                                                             required
                                                                             disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
                                                                             >
@@ -198,7 +198,7 @@
                                                                             [(ngModel)]="tp.Result" 
                                                                             class="form-control form-control-sm"
                                                                             (change)="resultChangedEvent(tp, $event, res.value)"
-                                                                            [ngClass]="{'invalid': res.value == '', 'invalid-highlighted': res.value == ''}"
+                                                                            [ngClass]="{'invalid': res.value === '', 'invalid-highlighted': res.value === ''}"
                                                                             required
                                                                             disabled="{{tp.StatusId > 8 || tp.StatusId < 0}}"
                                                                             >

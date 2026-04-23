@@ -55,8 +55,8 @@ export class MoQuestionnaireComponent implements OnInit {
   isMetal: any = null;
   MOBy: any = null;
 
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   loggedInUser: UserModel;
 
   TPQuestions = [];
@@ -134,11 +134,11 @@ export class MoQuestionnaireComponent implements OnInit {
   loadLoggedInUserInfo() {
     this.loggedInUser = this.auth.currentUserValue;
   }
-  isOutsideReport: boolean = false;
+  isOutsideReport = false;
   resHtml = "";
   getRISTPQuestions(TPID) {
     this.TPQuestions = []
-    let params = {
+    const params = {
       TPID: TPID,
       QuestionGroupTypeID: 5,
       VisitID: this.VisitId
@@ -147,10 +147,10 @@ export class MoQuestionnaireComponent implements OnInit {
     this.questionnaireService.getRISTPQuestions(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.TPQuestionsModalSection);
       if (res.StatusCode == 200) {
-        let resp = res.PayLoad || [];
+        const resp = res.PayLoad || [];
         // this.TPFullName = resp[0].TPFullName;
         this.RISWorkListID = resp[0].RISWorkListID;
-        let tpq = resp.map(a => ({
+        const tpq = resp.map(a => ({
           AnsType: a.AnsType,
           AnsTypeId: a.AnsTypeId,
           ChildQuestionID: a.ChildQuestionID,
@@ -320,7 +320,7 @@ export class MoQuestionnaireComponent implements OnInit {
 
   getMOInterventionTPByVisitID(VisitID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID
     };
     this.questionnaireService.getMOInterventionTPByVisitID(params).subscribe((res: any) => {
@@ -351,7 +351,7 @@ export class MoQuestionnaireComponent implements OnInit {
   }
 
   setExistingDeaultAns(inputType, existingDefaultVal) {
-    var inputCondition = inputType
+    const inputCondition = inputType
     switch (inputCondition) {
       // case 1:
       //   {
@@ -364,8 +364,8 @@ export class MoQuestionnaireComponent implements OnInit {
       //   }
       case 3:
         {
-          let existingDefaultAns = existingDefaultVal.split(',');
-          let arrOptions1: any =
+          const existingDefaultAns = existingDefaultVal.split(',');
+          const arrOptions1: any =
             existingDefaultAns.map(a => ({
               option: a,
             }));
@@ -375,8 +375,8 @@ export class MoQuestionnaireComponent implements OnInit {
 
       case 5:
         {
-          let existingDefaultAns = existingDefaultVal.split(',');
-          let arrOptions: any =
+          const existingDefaultAns = existingDefaultVal.split(',');
+          const arrOptions: any =
             existingDefaultAns.map(a => ({
               option: a,
             }));
@@ -401,7 +401,7 @@ export class MoQuestionnaireComponent implements OnInit {
         }
       case 7:
         {
-          let existingDefaultAns = existingDefaultVal.split('-');
+          const existingDefaultAns = existingDefaultVal.split('-');
           return {
             minVal: existingDefaultAns[0],
             maxVal: existingDefaultAns[1],
@@ -560,7 +560,7 @@ export class MoQuestionnaireComponent implements OnInit {
     };
     this.visitResultsService.updatePatientVisitTestStatusFoRIS(_params).subscribe(
       (res: any) => {
-        let result = JSON.parse(res.PayLoadStr)
+        const result = JSON.parse(res.PayLoadStr)
         // if (res && res.StatusCode === 200) {
         //   this.creatinineStatusID = 9;
         //   this.toastr.success("Creatinine result saved successfully");
@@ -587,7 +587,7 @@ export class MoQuestionnaireComponent implements OnInit {
   }
 
   getAnswerMinMax(minVal = "", maxVal = "") {
-    let ans = minVal + '^' + maxVal;
+    const ans = minVal + '^' + maxVal;
     return ans;
   }
   getAnswerValue(AnsTypeId, Answer, AnswerText) {
@@ -611,14 +611,14 @@ export class MoQuestionnaireComponent implements OnInit {
         }
       case 5:
         {
-          let ans = (Answer || Answer == "Yes") ? "Yes" : "No"
+          const ans = (Answer || Answer == "Yes") ? "Yes" : "No"
           return ans;
           break;
         }
 
       case 6:
         {
-          let ans = (Answer || Answer != "") ? Conversions.formatDateObject(Answer) : "";
+          const ans = (Answer || Answer != "") ? Conversions.formatDateObject(Answer) : "";
           return ans;
           break;
         }
@@ -636,7 +636,7 @@ export class MoQuestionnaireComponent implements OnInit {
 
   }
   setYesNoVal(Answer, defaultAns) {
-    let ans = (Answer == "Yes") ? true : false;
+    const ans = (Answer == "Yes") ? true : false;
     // if((Answer=="" || !Answer) && (defaultAns=="Yes" || defaultAns=="1" || defaultAns==1)){
     //   ans=true;
     // }else if((Answer=="" || !Answer) && (defaultAns=="false"||defaultAns=="0")){
@@ -675,7 +675,7 @@ export class MoQuestionnaireComponent implements OnInit {
   setOptionValue(param) {
     let arrExpectedOptions = [];
     if (param && param != "") {
-      let existinEexpectedOptions = param.split('^');
+      const existinEexpectedOptions = param.split('^');
       arrExpectedOptions =
         existinEexpectedOptions.map(a => ({
           option: a,
@@ -688,21 +688,21 @@ export class MoQuestionnaireComponent implements OnInit {
       case 1:
       case 2:
         {
-          let ans = (Answer && Answer != "") ? Answer : DefaultAns
+          const ans = (Answer && Answer != "") ? Answer : DefaultAns
           return ans;
           break;
         }
       case 3:
         {
-          let ans = (Answer && Answer != "") ? Answer : DefaultAns
+          const ans = (Answer && Answer != "") ? Answer : DefaultAns
           return ans;
           break;
         }
       case 4:
         {
-          let ans = (Answer && Answer != "") ? Answer : DefaultAns
+          const ans = (Answer && Answer != "") ? Answer : DefaultAns
           if (ans) {
-            let ansFormate = ans.split("^") || null;
+            const ansFormate = ans.split("^") || null;
             return ansFormate[0];
           }
           else {
@@ -714,14 +714,14 @@ export class MoQuestionnaireComponent implements OnInit {
         }
       case 5:
         {
-          let ans = (Answer == "Yes") ? true : false;
+          const ans = (Answer == "Yes") ? true : false;
           return ans;
           break;
         }
 
       case 6:
         {
-          let ans = (Answer) ? Conversions.getDateObjectByGivenDate(Answer) : Conversions.getDateObjectByGivenDate(DefaultAns);
+          const ans = (Answer) ? Conversions.getDateObjectByGivenDate(Answer) : Conversions.getDateObjectByGivenDate(DefaultAns);
           return ans;
           break;
         }
@@ -730,8 +730,8 @@ export class MoQuestionnaireComponent implements OnInit {
           let existingAns = "";
           if (Answer) {
             existingAns = Answer.split('-');
-            let minVal = existingAns[0];
-            let maxVal = existingAns[1];
+            const minVal = existingAns[0];
+            const maxVal = existingAns[1];
           }
 
           return existingAns;
@@ -748,18 +748,18 @@ export class MoQuestionnaireComponent implements OnInit {
   setAnswerMinMax(Answer, minMax, AnsTypeId) {
     let ans = "";
     if (AnsTypeId == 7) {
-      let existingAns = Answer.split('^');
+      const existingAns = Answer.split('^');
       ans = (minMax == 1) ? existingAns[0] : existingAns[1];
     }
     return ans;
   }
   getMOIntervenedTestsByTPID(e) {
-    let TPID = e.target.value;
+    const TPID = e.target.value;
     if (TPID) {
-      let visitTest = this.visitTests.find(a => a.TPID == TPID);
+      const visitTest = this.visitTests.find(a => a.TPID == TPID);
       this.TPFullName = visitTest.TPCode + ' - ' + visitTest.TPName;
       this.getRISTPQuestions(TPID);
-      let doropDownObj = { TPID: TPID, VisitID: this.VisitId }
+      const doropDownObj = { TPID: TPID, VisitID: this.VisitId }
       this.getCreatinineByPIN();
       this.isDropDownChange.emit(doropDownObj);
     }
@@ -837,8 +837,8 @@ export class MoQuestionnaireComponent implements OnInit {
         input: 'custom-radio'
       },
       preConfirm: (res) => {
-        let processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
-        let processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
+        const processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
+        const processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
         if (!processID && processRemarks == '') {
           Swal.showValidationMessage('Please select any option and provide remarks');
         } else if (!processID) {
@@ -858,7 +858,7 @@ export class MoQuestionnaireComponent implements OnInit {
 
     if (formValues[0] && formValues[1] != '') {
       this.ProcessID = Number(formValues[0]);
-      let remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
+      const remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
       this.ProcessRemarks = remarksPrepend + formValues[1]
       this.updateVisitTestPriority()
       this.saveVisitRemarks()
@@ -869,7 +869,7 @@ export class MoQuestionnaireComponent implements OnInit {
 
 
   updateVisitTestPriority() {
-    let objParams = {
+    const objParams = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       ProcessID: this.ProcessID,
@@ -877,7 +877,7 @@ export class MoQuestionnaireComponent implements OnInit {
       CreatedBy: this.loggedInUser.userid
     }
     this.questionnaireService.updateVisitTestPriority(objParams).subscribe((res: any) => {
-      let respons = JSON.parse(res.PayLoadStr);
+      const respons = JSON.parse(res.PayLoadStr);
       if (res.StatusCode == 200) {
         this.ProcessIDParent = this.ProcessID;
         this.toastr.success(res.Message, "Test Sensitivity");
@@ -889,7 +889,7 @@ export class MoQuestionnaireComponent implements OnInit {
     })
   }
   saveVisitRemarks() {
-    let params = {
+    const params = {
       VisitId: Number(this.VisitId),
       ModuleName: 'MO Questionnaire',
       Remarks: this.ProcessRemarks.trim(),
@@ -953,7 +953,7 @@ export class MoQuestionnaireComponent implements OnInit {
 
   metalDetected(event) {
 
-    let params = {
+    const params = {
       PatientID: this.PatientID,
       isMetal: this.isMetalChecked ? 1 : 0,  // 1 for is Metal, 0 for not isMetal
       ModifiedBy: this.loggedInUser.userid,  //logged in User
@@ -990,7 +990,7 @@ export class MoQuestionnaireComponent implements OnInit {
    * @returns {void}
    */
   getCreatinineByPIN(): void {
-    let params = {
+    const params = {
       VisitID: this.VisitId
     };
     this.questionnaireService.getCreatinineByPIN(params).subscribe((res: any) => {
@@ -1012,7 +1012,7 @@ export class MoQuestionnaireComponent implements OnInit {
 
   radoiologistList = [];
   getRadiologistInfo() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.questionnaireService.getRadiologistInfo(params).subscribe((res: any) => {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SecurityContext, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SecurityContext, SimpleChanges, ViewChild, OnChanges, OnDestroy } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, UserModel } from 'src/app/modules/auth';
@@ -29,7 +29,7 @@ import Swal from 'sweetalert2';
   templateUrl: './reporting-window.component.html',
   styleUrls: ['./reporting-window.component.scss']
 })
-export class ReportingWindowComponent implements OnInit {
+export class ReportingWindowComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('userVerificationModal') userVerificationModal;
   @ViewChild('addendumnModal') addendumnModal;
@@ -95,11 +95,11 @@ export class ReportingWindowComponent implements OnInit {
   ActiveTab = null;
 
   isEditingMode = false;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   disabledButtonInitial = false;
   disabledButtonLock = false;
   disabledButtonCancel = false;
-  isSpinner: boolean = true;//Hide Loader
+  isSpinner = true;//Hide Loader
   isSpinnerInitial = true;
   isSpinnerLock = true;
   isSpinnerCancel = true;
@@ -515,8 +515,8 @@ export class ReportingWindowComponent implements OnInit {
   };
 
   screenIdentity = null;
-  isEditExpired: boolean = false;
-  remainingTime: string = '00:00'; // Initialize remainingTime with '00:00'
+  isEditExpired = false;
+  remainingTime = '00:00'; // Initialize remainingTime with '00:00'
   private subscription: Subscription;
   updateRemainingTime_(): void {
     const currentTime = moment();
@@ -655,14 +655,14 @@ export class ReportingWindowComponent implements OnInit {
     setTimeout(() => {
       this.isEditorDisabled = true;
       //////////get one year back date for comparison studies filter
-      let currentDate = new Date();
+      const currentDate = new Date();
 
       // Subtract one year from the current date
-      let oneYearBack = new Date(currentDate);
+      const oneYearBack = new Date(currentDate);
       oneYearBack.setFullYear(currentDate.getFullYear() - 1);
       // Format the date as needed
-      let formattedDate = `${oneYearBack.getFullYear()}-${(oneYearBack.getMonth() + 1).toString().padStart(2, '0')}-${oneYearBack.getDate().toString().padStart(2, '0')}`;
-      let metacubeStartDate = '2006-07-19'
+      const formattedDate = `${oneYearBack.getFullYear()}-${(oneYearBack.getMonth() + 1).toString().padStart(2, '0')}-${oneYearBack.getDate().toString().padStart(2, '0')}`;
+      const metacubeStartDate = '2006-07-19'
       this._form.patchValue({
         startDate: Conversions.getDateObjectByGivenDate(metacubeStartDate),
         // startDate: Conversions.getCurrentDateObjectNew(),
@@ -695,7 +695,7 @@ export class ReportingWindowComponent implements OnInit {
 
   getTPByVisitID(VisitID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID
     };
     this.sharedService.getData(API_ROUTES.GET_TP_BY_VISIT_ID, params).subscribe((res: any) => {
@@ -716,7 +716,7 @@ export class ReportingWindowComponent implements OnInit {
 
   getRISTPByVisit(VisitID) {
     this.visitTestsAssigner = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       FilterBy: 2 //1=For Assigner, 2= Reporting
     };
@@ -740,10 +740,10 @@ export class ReportingWindowComponent implements OnInit {
   isReadonly = false;
 
   getTPName(e) {
-    let TPID = e.target.value;
+    const TPID = e.target.value;
     this.TPID = TPID;
     if (TPID) {
-      let visitTestAssigner = this.visitTestsAssigner.find(a => a.TPID == TPID);
+      const visitTestAssigner = this.visitTestsAssigner.find(a => a.TPID == TPID);
       this.TPFullName = visitTestAssigner.TestProfileCode + ' - ' + visitTestAssigner.TestProfileName;
       this.TPName = visitTestAssigner.TestProfileCode + '-' + visitTestAssigner.TestProfileName;
       this.TPCode = visitTestAssigner.TestProfileCode;
@@ -763,7 +763,7 @@ export class ReportingWindowComponent implements OnInit {
   templateList = [];
   TemplateParameterHTML = "";
   getRISTemplate() {
-    let params = {
+    const params = {
       RISTemplateID: null,//this.RISTemplateID,
       TPID: this.TPID,
       UserID: this.loggedInUser.userid
@@ -772,8 +772,8 @@ export class ReportingWindowComponent implements OnInit {
       if (res.StatusCode == 200) {
         this.templateList = res.PayLoad || [];
         if (this.templateList.length) {
-          let resultTemplateDefault = this.templateList.find(x => x.isDefault);
-          let resultTemplateMain = this.templateList.find(x => x.CategoryID == 1);
+          const resultTemplateDefault = this.templateList.find(x => x.isDefault);
+          const resultTemplateMain = this.templateList.find(x => x.CategoryID == 1);
           this.RISTemplateID = resultTemplateDefault ? resultTemplateDefault.RISTemplateID : ((!resultTemplateDefault && resultTemplateMain) ? resultTemplateMain.RISTemplateID : this.templateList[0]["RISTemplateID"]);
           // this.getRISTemplateDetail();
           // this.getRISReportParametersDetail();
@@ -791,7 +791,7 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   getRISTemplete(pid) {
-    let params = {
+    const params = {
       RISTemplateID: pid,
       PID: null,
       UserID: null
@@ -887,12 +887,12 @@ export class ReportingWindowComponent implements OnInit {
   getTPDisclaimer() {
     this.disableDropdown = false; // Initialize
     this.TPDisclaimerRow = [];
-    let objParam = {
+    const objParam = {
       TPID: this.TPID,
       VisitID: this.VisitId || null
     }
     this.sharedService.getData(API_ROUTES.GET_TP_DISCLAIMER, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.TPDisclaimerRow = _response;
       if (this.TPDisclaimerRow.length) {
         const foundDisclaimer = this.TPDisclaimerRow.find(
@@ -1033,7 +1033,7 @@ export class ReportingWindowComponent implements OnInit {
       } else {
         this.isSpinnerFinalizePopup = true;
       }
-      let res = JSON.parse(data.PayLoadStr);
+      const res = JSON.parse(data.PayLoadStr);
       if (data.StatusCode === 200) {
         // this.StatusID = statusID;
         // this.RISStatusID = RISStatusID;
@@ -1113,7 +1113,7 @@ export class ReportingWindowComponent implements OnInit {
   DisclaimerHeader = null;
   DisclaimerFooter = null;
   insertUpdateVisitTPDisclaimer() {
-    let objDisclaimer = {
+    const objDisclaimer = {
       VisitTPDisclaimerID: this.VisitTPDisclaimerID,
       TPDisclaimerID: this.TPDisclaimerID,
       VisitID: this.VisitId,
@@ -1180,7 +1180,7 @@ export class ReportingWindowComponent implements OnInit {
     }
 
     this.isEditorDisabled = false;
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       LockedBy: param ? this.loggedInUser.userid : null,
@@ -1192,7 +1192,7 @@ export class ReportingWindowComponent implements OnInit {
       this.isSpinnerLock = true;
       param ? this.disabledButtonLock = false : this.disabledButtonCancel = false;
       param ? this.isSpinnerLock = true : this.isSpinnerCancel = true;
-      let response = JSON.parse(data.PayLoadStr);
+      const response = JSON.parse(data.PayLoadStr);
       if (response.length) {
         if (data.StatusCode == 200) {
           if (response[0].Result == 1) {
@@ -1240,7 +1240,7 @@ export class ReportingWindowComponent implements OnInit {
   }
   updateRadioReportLockOnPreliminary(param) {
     this.isEditorDisabled = false;
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       LockedBy: param ? this.loggedInUser.userid : null,
@@ -1252,7 +1252,7 @@ export class ReportingWindowComponent implements OnInit {
       this.isSpinnerLock = true;
       param ? this.disabledButtonLock = false : this.disabledButtonCancel = false;
       param ? this.isSpinnerLock = true : this.isSpinnerCancel = true;
-      let response = JSON.parse(data.PayLoadStr);
+      const response = JSON.parse(data.PayLoadStr);
       if (response.length) {
         if (data.StatusCode == 200) {
           if (response[0].Result == 1) {
@@ -1289,7 +1289,7 @@ export class ReportingWindowComponent implements OnInit {
 
   updateVisitTPStatus() {
     //SP : UpdateVisitTPStatus
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       StatusID: this.StatusID,
@@ -1300,7 +1300,7 @@ export class ReportingWindowComponent implements OnInit {
     this.techSrv.updateVisitTPStatusForInitialization(objParam).subscribe((data: any) => {
       this.disabledButtonInitial = false;
       this.isSpinnerInitial = true;
-      let respData = JSON.parse(data.PayLoadStr);
+      const respData = JSON.parse(data.PayLoadStr);
 
       if (respData.length) {
         this.RISWorkListID = respData[0].RISWorkListID;
@@ -1323,7 +1323,7 @@ export class ReportingWindowComponent implements OnInit {
 
   initializedReportByDoctor() {
     //SP : UpdateVisitTPStatus
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       StatusID: this.StatusID,
@@ -1334,7 +1334,7 @@ export class ReportingWindowComponent implements OnInit {
     this.techSrv.updateVisitTPStatusForInitialization(objParam).subscribe((data: any) => {
       this.disabledButtonInitial = false;
       this.isSpinnerInitial = true;
-      let respData = JSON.parse(data.PayLoadStr);
+      const respData = JSON.parse(data.PayLoadStr);
 
       if (respData.length) {
         this.RISWorkListID = respData[0].RISWorkListID;
@@ -1363,12 +1363,12 @@ export class ReportingWindowComponent implements OnInit {
   isShowReportMain = true;
   getTPParamsByTPID(TPID) {
     if (TPID) {
-      let objParam = {
+      const objParam = {
         pTPID: TPID
       }
       this.sharedService.getData(API_ROUTES.GET_TP_PARAMS, objParam).subscribe((data: any) => {
-        let response = JSON.parse(data.PayLoadStr)
-        let params = response.Table || [];
+        const response = JSON.parse(data.PayLoadStr)
+        const params = response.Table || [];
         // console.log("returned template params are _____________________________",params)
         this.TPParams = params.map((a) => ({
           Pcode: a.PCode,
@@ -1385,7 +1385,7 @@ export class ReportingWindowComponent implements OnInit {
         }));
         // console.log("TPParams_ after maping_____________________:", this.TPParams)
         if (this.TPParams.length) {
-          let pid = this.TPParams[0].PId;
+          const pid = this.TPParams[0].PId;
           this.isShowReportMain = true;
           // this.getRISTemplate()
         } else {
@@ -1400,8 +1400,8 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   getHtml(param) {
-    let data = this.templateList.find(b => b.PID == param);
-    let d = data ? data.TemplateParameterHTML : '<p></p>';
+    const data = this.templateList.find(b => b.PID == param);
+    const d = data ? data.TemplateParameterHTML : '<p></p>';
     return d;
   }
 
@@ -1555,13 +1555,13 @@ export class ReportingWindowComponent implements OnInit {
     //   this.clickSubmit = false;
     // }
 
-    let dsQuestions = this.feedbackQuestions.filter(a => a.checked);
+    const dsQuestions = this.feedbackQuestions.filter(a => a.checked);
 
     this.StatusID = 9;
     this.RadioEditStatus = 3;
     this.insertUpdateRadioReport(3, 9, 4, 13); //1.radioEditStatus, 2.statusID, 3.actionBtn, 4.RISStatusID = null
     if (this.feedbackRemarks != "") {
-      let dataObj = {
+      const dataObj = {
         VisitID: Number(this.VisitId),
         TPID: this.TPID,
         Remarks: this.feedbackRemarks,
@@ -1598,14 +1598,14 @@ export class ReportingWindowComponent implements OnInit {
       this.clickSubmit = false;
     }
 
-    let dsQuestions = this.feedbackQuestions.filter(a => a.checked);
+    const dsQuestions = this.feedbackQuestions.filter(a => a.checked);
 
     this.StatusID = 8;
     this.RadioEditStatus = 3;
     // this.insertUpdateRadioReport(3, 8, 5);//change for repeat option becasue it was making RISStatusID as null
     this.insertUpdateRadioReport(3, 8, 5, this.RISStatusID);
     this.updateVisitTPStatus();
-    let dataObj = {
+    const dataObj = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       Remarks: this.feedbackRemarks,
@@ -1640,7 +1640,7 @@ export class ReportingWindowComponent implements OnInit {
 
   ReportData = [];
   getRadopReportByID() {
-    let objParam = {
+    const objParam = {
       VisitID: this.VisitId,
       TPID: this.TPID
     }
@@ -1670,8 +1670,8 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   getRISTemplateDetail() {
-    let response = [];
-    let objParams = {
+    const response = [];
+    const objParams = {
       RISTemplateID: this.RISTemplateID,
       TPID: null,
     }
@@ -1702,7 +1702,7 @@ export class ReportingWindowComponent implements OnInit {
   getRISReportParametersDetail() {
     this.TPParams = [];
     let response = [];
-    let objParams = {
+    const objParams = {
       VisitID: this.VisitId,
       TPID: this.TPID,
       UserID: this.loggedInUser.userid
@@ -1739,12 +1739,12 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   getRadioReportVisitTestStatus() {
-    let objParam = {
+    const objParam = {
       VisitID: this.VisitId,
       TPID: this.TPID,
     }
     this.sharedService.getData(API_ROUTES.GET_RADIO_REPORT_VISIT_TEST_STATUS, objParam).subscribe((data: any) => {
-      let response = data.PayLoad;
+      const response = data.PayLoad;
       if (response.length) {
         this.StatusId = response[0].StatusId;
         this.RadioEditStatus = response[0].RadioEditStatus
@@ -1767,7 +1767,7 @@ export class ReportingWindowComponent implements OnInit {
   codesList = [];
   getRISDictionaryByUserID() {
     this.codesList = [];
-    let params = {
+    const params = {
       UserID: this.loggedInUser.userid || -99,
       CategoryID: 2
     };
@@ -1798,7 +1798,7 @@ export class ReportingWindowComponent implements OnInit {
 
     // Traverse backwards until a space character is encountered
     let previousWord = '';
-    let currentNode = startNode;
+    const currentNode = startNode;
     let currentOffset = startOffset;
     while (currentOffset > 0) {
       const previousCharacter = currentNode.getText().charAt(currentOffset - 1);
@@ -1902,7 +1902,7 @@ export class ReportingWindowComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -1925,11 +1925,11 @@ export class ReportingWindowComponent implements OnInit {
 
 
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -1950,22 +1950,22 @@ export class ReportingWindowComponent implements OnInit {
   RegLocId = null;
   VerifiedUserName = null;
   IsAuthenticated = false;
-  disabledButtonVerify: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerVerify: boolean = true;//Hide Loader
+  disabledButtonVerify = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerVerify = true;//Hide Loader
   openVerifyForm() {
     this.modalPopupRef = this.appPopupService.openModal(this.userVerificationModal, { backdrop: 'static', size: 'md' });
   }
 
   verifyUser() {
     // this.clearVariables();
-    let formValues = this.userVerificationForm.getRawValue();
+    const formValues = this.userVerificationForm.getRawValue();
     this.userVerificationForm.markAllAsTouched();
     if (this.userVerificationForm.invalid) {
       this.toastr.warning('Please enter your username and password!'); return false;
     } else {
       ///////START::VERIFY USER /////////////////////////////
       // formValues.techUsername=='john.doe' && formValues.techPassword=='freedom'
-      let params = {
+      const params = {
         UserName: formValues.techUsername,
         Password: formValues.techPassword
       }
@@ -2017,7 +2017,7 @@ export class ReportingWindowComponent implements OnInit {
   //This function will decide to show Addendum button or not show
   getTPByVisitIDForAddendum() {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: this.VisitId,
       TPId: this.TPID
     };
@@ -2059,7 +2059,7 @@ export class ReportingWindowComponent implements OnInit {
   showSecondOpinionButton = false;
   getAddendumByTPID() {
     this.addendumFormData = []
-    let params = {
+    const params = {
       VisitID: this.VisitId,
       TPID: this.TPID
     };
@@ -2102,7 +2102,7 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   Addendum = "";
-  AddendumHTML: string = '';
+  AddendumHTML = '';
   RISAssesmentCategoryID = null;
   RISErrorCategoryID = null;
   disabledButtonAddendum = false;
@@ -2122,12 +2122,12 @@ export class ReportingWindowComponent implements OnInit {
         this.clickSubmitBtn = true;
         return;
       } else {
-        let sanitizedAddendumHTML = '<br>' + (this.AddendumHTML
+        const sanitizedAddendumHTML = '<br>' + (this.AddendumHTML
           ?.replace(/<p[^>]*>/gi, '<span>')
           .replace(/<\/p>/gi, '</span>')
           || '');
         this.clickSubmitBtn = false;
-        let formData = {
+        const formData = {
           VisitID: this.VisitId,
           TPIDs: this.TPID,
           // Remarks: this.AddendumRemarks,
@@ -2199,12 +2199,12 @@ export class ReportingWindowComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
       // console.log("subsectionsa are: ", this.subSectionList)
     }, (err) => {
@@ -2214,7 +2214,7 @@ export class ReportingWindowComponent implements OnInit {
 
 
   copyText(text: any, i = null) {
-    let pin = text;
+    const pin = text;
     this.helper.copyMessage(pin);
   }
 
@@ -2307,7 +2307,7 @@ export class ReportingWindowComponent implements OnInit {
         radioTP[0].ItemType = '';
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -2332,11 +2332,11 @@ export class ReportingWindowComponent implements OnInit {
   searchText = "";
   comparativeStudies = []
   getTestProfileComparisonByPatientID() {
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     if (this._form.invalid) {
       this.toastr.warning('Please provide date range', 'Date Validation'); return false;
     } else {
-      let objParams = {
+      const objParams = {
         PatientID: this.PatientID,
         SubSectionID: formValues.SubSectionID,
         DateFrom: formValues.startDate ? Conversions.formatDateObject(formValues.startDate) : null,
@@ -2354,7 +2354,7 @@ export class ReportingWindowComponent implements OnInit {
         if (resp.StatusCode == 200) {
           this.selectedCount = 0;
           this.flexCheckDisabled = false;
-          let respData = resp.PayLoad || [];
+          const respData = resp.PayLoad || [];
           if (respData.length) {
             this.comparativeStudies = respData.filter(f => !(f.TPID === this.TPID && f.VisitID === Number(this.VisitId)));
           }
@@ -2375,7 +2375,7 @@ export class ReportingWindowComponent implements OnInit {
     // let VisitID = data.PIN.replaceAll("-", "");
     let selVisits = "";
     let selTPID = "";
-    let VisitIDsObj = this.comparativeStudies.filter(row => row.checked);
+    const VisitIDsObj = this.comparativeStudies.filter(row => row.checked);
     selVisits = VisitIDsObj.map(a => { return a.VisitID }).join(',');
     selTPID = VisitIDsObj.map(a => { return a.TPID }).join(',');
 
@@ -2393,7 +2393,7 @@ export class ReportingWindowComponent implements OnInit {
 
 
     this.SysInfo = this.auth.getSystemInfoFromStorage();
-    let objParams = { //240401170909,221201097900,
+    const objParams = { //240401170909,221201097900,
       VisitIDs: VisitIDs,//"240401170909,221201097900,240501050969", //'240301134040',//'240301044020',//VisitID,
       // VisitId: VisitID, //'240301134040',//'240301044020',//VisitID,
       // TPID: TPID,//926//926//TPID
@@ -2412,15 +2412,15 @@ export class ReportingWindowComponent implements OnInit {
           if (this.comparativeStudies.length !== 1) {
             this.toastr.info("Only One Study Is Avalibale In System")
           }
-          var createLink = (this.PACSServers[0].BackupServer);
+          let createLink = (this.PACSServers[0].BackupServer);
 
           createLink = createLink.substring(0, createLink.length - 1)
-          let sanitizedPath = createLink.replace(/\\/g, '%5C');
-          let url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
+          const sanitizedPath = createLink.replace(/\\/g, '%5C');
+          const url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
           // console.log("url is :", url)
 
           // let winRef = window.open((url), '_blank');
-          let winRef = window.open((url), '_blank');
+          const winRef = window.open((url), '_blank');
           // const shortcutPath = createLink;
           //   let url = ('radiant://?n=d&v=%22'+createLink+'%22') 
 
@@ -2436,7 +2436,7 @@ export class ReportingWindowComponent implements OnInit {
 
         else if (this.PACSServers.length === 2) {
 
-          let serverObj = [];
+          const serverObj = [];
           this.PACSServers.forEach(a => {
             this.comparativeStudies.forEach(b => {
               // if (a.VisitID == b.VisitID) {
@@ -2457,7 +2457,7 @@ export class ReportingWindowComponent implements OnInit {
           b2 = b2.substring(0, b2.length - 1)
           b2 = b2.replace(/\\/g, '%5C');
 
-          let url = ('radiant://?n=f&v=%22' + b1 + '%22' + '&v=%22' + b2 + '%22');
+          const url = ('radiant://?n=f&v=%22' + b1 + '%22' + '&v=%22' + b2 + '%22');
 
           window.open((url), '_blank');
         }
@@ -2478,7 +2478,7 @@ export class ReportingWindowComponent implements OnInit {
 
   getSystemInformation(loggedInUser: UserModel) {
     // setTimeout(() => {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -2521,7 +2521,7 @@ export class ReportingWindowComponent implements OnInit {
       // this.spinner.hide(this.spinnerRefs.comparativeSection);
     }, 3000);
 
-    let selectedStudies = this.comparativeStudies.filter(row => row.checked)
+    const selectedStudies = this.comparativeStudies.filter(row => row.checked)
     if (!selectedStudies.length) {
       this.toastr.warning("Please select atleast one study", "No Selection");
     } else {
@@ -2529,7 +2529,7 @@ export class ReportingWindowComponent implements OnInit {
     }
   }
 
-  DateError: boolean = false;
+  DateError = false;
   validateApplyDate(StartDate, EndDate) {
     if (StartDate > EndDate) {
       this.DateError = true;
@@ -2545,15 +2545,15 @@ export class ReportingWindowComponent implements OnInit {
   contrastServices = [];
   getRISServicesByVisitIDAll() {
     this.RISServices = [];
-    let params = {
+    const params = {
       VisitID: this.VisitId,
       isShowAllService: 1
     };
     this.sharedService.getData(API_ROUTES.GET_RISSERVICES_BY_VISITID, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let services = res.PayLoad || [];
-        let result = services.reduce((re, o) => {
-          let existObj = re.find(
+        const services = res.PayLoad || [];
+        const result = services.reduce((re, o) => {
+          const existObj = re.find(
             obj => obj.TPID === o.TPID
           )
 
@@ -2604,7 +2604,7 @@ export class ReportingWindowComponent implements OnInit {
 
   assesmentCategories = [];
   getRISAssesmentCategory() {
-    let params = {};
+    const params = {};
     this.sharedService.getData(API_ROUTES.GET_RIS_ASSESMENT_CATEGORY, params).subscribe((res: any) => {
       this.assesmentCategories = res.PayLoad || [];
     }, (err) => {
@@ -2615,7 +2615,7 @@ export class ReportingWindowComponent implements OnInit {
 
   errorCategories = []
   getRISErrorCategoryResearch() {
-    let params = {};
+    const params = {};
     this.sharedService.getData(API_ROUTES.GET_RIS_ERROR_CATEGORY_RESEARCH, params).subscribe((res: any) => {
       this.errorCategories = res.PayLoad || [];
     }, (err) => {
@@ -2634,7 +2634,7 @@ export class ReportingWindowComponent implements OnInit {
       return;
     } else {
       this.btnReviewer = false;
-      let formData = {
+      const formData = {
         VisitID: this.VisitId,
         TPIDs: this.TPID,
         DrQueryRemarks: this.DrQueryRemarks,
@@ -2678,7 +2678,7 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   getIsDoctorFeedBack() {
-    let params = {
+    const params = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID
     }
@@ -2695,8 +2695,8 @@ export class ReportingWindowComponent implements OnInit {
     }
   }
 
-  pendingIsCaseStudy: boolean = false;
-  isCaseStudy: boolean = false
+  pendingIsCaseStudy = false;
+  isCaseStudy = false
   reportMarking(event: any) {
     // event.source.checked = false;
     let options = '';
@@ -2712,7 +2712,7 @@ export class ReportingWindowComponent implements OnInit {
     // if (event.checked) {
     let selectedCase = null;
     let processRemarks = null;
-    let unMarkMessageDescription = event.checked ? 'Are you sure you want to mark this test as outstanding?' : 'Are you sure you want to Unmark this test as outstanding?'
+    const unMarkMessageDescription = event.checked ? 'Are you sure you want to mark this test as outstanding?' : 'Are you sure you want to Unmark this test as outstanding?'
     Swal.fire({
       title: event.checked ? 'Mark as Case Study' : 'Unmark from Case Study',
       html:
@@ -2749,7 +2749,7 @@ export class ReportingWindowComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        let obj = {
+        const obj = {
           VisitID: this.VisitId,
           TPID: this.TPID,
           RISCaseStudyCategoryID: event.checked ? selectedCase : null,
@@ -2791,15 +2791,15 @@ export class ReportingWindowComponent implements OnInit {
   isMarkCaseStudy = false;
   screenPermissionsObj: any = {};
   isAIAssist = false;
-  disabledButtonAIRequest: boolean = false;
-  isSpinnerAIRequest: boolean = true;
-  disabledButtonDoctorAIFeedback: boolean = false;
-  isSpinnerDoctorAIFeedback: boolean = true;
+  disabledButtonAIRequest = false;
+  isSpinnerAIRequest = true;
+  disabledButtonDoctorAIFeedback = false;
+  isSpinnerDoctorAIFeedback = true;
   getPermissions() {
     this.screenPermissionsObj = this.auth.getUserPermissionsFromLocalStorage();
-    let data = this.screenPermissionsObj.find(i => i.state == 'can_mark_report_casestudy');
+    const data = this.screenPermissionsObj.find(i => i.state == 'can_mark_report_casestudy');
     this.isMarkCaseStudy = data ? true : false;
-    let aiassist = this.screenPermissionsObj.find(i => i.key == 'can-use-ai-assist');
+    const aiassist = this.screenPermissionsObj.find(i => i.key == 'can-use-ai-assist');
     this.isAIAssist = aiassist ? true : false;
   }
 
@@ -2835,9 +2835,9 @@ export class ReportingWindowComponent implements OnInit {
     } else {
       this.clickSubmit = false;
     }
-    let dsQuestions = this.feedbackQuestions.filter(a => a.checked);
+    const dsQuestions = this.feedbackQuestions.filter(a => a.checked);
 
-    let dataObj = {
+    const dataObj = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       Remarks: this.feedbackRemarks,
@@ -2862,7 +2862,7 @@ export class ReportingWindowComponent implements OnInit {
   }
 
   revertToUnassigned() {
-    let dataObj = {
+    const dataObj = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       CreatedBy: this.loggedInUser.userid,
@@ -3086,7 +3086,7 @@ export class ReportingWindowComponent implements OnInit {
   AIAssistanceRequestRow: any;
   ImagePath: any = null;
   getRISAIAssistanceRequestByVIsitIDTPID() {
-    let params = {
+    const params = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID
     };
@@ -3209,13 +3209,13 @@ export class ReportingWindowComponent implements OnInit {
       // var createLink = (this.PACSServers[0].BackupServer);
 
       // createLink = createLink.substring(0, createLink.length - 1)
-      var createLink = imagePath
-      let sanitizedPath = createLink.replace(/\\/g, '%5C');
-      let url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
+      const createLink = imagePath
+      const sanitizedPath = createLink.replace(/\\/g, '%5C');
+      const url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
       // console.log("url is :", url)
 
       // let winRef = window.open((url), '_blank');
-      let winRef = window.open((url), '_blank');
+      const winRef = window.open((url), '_blank');
     } catch (error) {
       console.error('Error opening DICOM:', error);
       this.toastr.error("Could not open DICOM image");
@@ -3232,7 +3232,7 @@ export class ReportingWindowComponent implements OnInit {
   // Open the DICOM images
   openDicomImageWithOrigional() {
     // debugger;
-    let VisitIDsObj = this.comparativeStudies.filter(row => row.checked);
+    const VisitIDsObj = this.comparativeStudies.filter(row => row.checked);
     this.isVPN = localStorage.getItem('isVPN') === 'true';
 
     // 🔹 Step 1: First fixed object
@@ -3251,7 +3251,7 @@ export class ReportingWindowComponent implements OnInit {
     const tblVisitTestDetail = [firstObj, ...dynamicObjs];
 
     // 🔹 Step 4: Final object for API
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail,
@@ -3316,8 +3316,8 @@ export class ReportingWindowComponent implements OnInit {
 
   // New function for time delays
   timeDelays: any[] = [];   // store all delays
-  xrayDelay: number = 0;
-  memoDelay: number = 0;
+  xrayDelay = 0;
+  memoDelay = 0;
   AITimeDelay = 65000;
   getTimeDelays() {
     this.sharedService.getUtility(API_ROUTES.GET_TIME_DELAYS).subscribe(

@@ -8,9 +8,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class GetValueFromArrayPipe implements PipeTransform {
 
-  transform(filterValue: string, key: any, returnKey:any, fullDataSet: Array<Object>): unknown {
+  transform(filterValue: string, key: any, returnKey:any, fullDataSet: object[]): unknown {
     let valueToReturn = '';
-    let filteredData = fullDataSet.filter(a => a[key] == filterValue) || [];
+    const filteredData = fullDataSet.filter(a => a[key] == filterValue) || [];
     if(filteredData.length) {
       valueToReturn = filteredData[0][returnKey];
     }

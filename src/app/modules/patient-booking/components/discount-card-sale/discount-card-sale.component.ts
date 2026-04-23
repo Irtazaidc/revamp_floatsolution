@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 
 import { FormBuilder, Validators } from '@angular/forms';
 import { LookupService } from '../../services/lookup.service';
@@ -34,7 +34,7 @@ import { switchMap, catchError } from 'rxjs/operators';
   templateUrl: './discount-card-sale.component.html',
   styleUrls: ['./discount-card-sale.component.scss']
 })
-export class DiscountCardSaleComponent implements OnInit {
+export class DiscountCardSaleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(WizardComponent) public wizard: WizardComponent;
   @ViewChild('searchPatientsPopup') searchPatientsPopup;
 
@@ -245,14 +245,14 @@ export class DiscountCardSaleComponent implements OnInit {
     POSID: '',
     MAC: ''
   };
-  InvalidCardno: boolean = false;
+  InvalidCardno = false;
   discountCardNumber: any = [];
   stickerText: string = null;
-  isAlreadyCustomer: boolean = false;
-  cardMemberOnly: boolean = false;
-  disableCardNumberInput: boolean = false;
+  isAlreadyCustomer = false;
+  cardMemberOnly = false;
+  disableCardNumberInput = false;
   IsPatientARYCardmember: any = false;
-  AddressRequiredMsg: boolean = false;
+  AddressRequiredMsg = false;
 
 
 
@@ -353,11 +353,11 @@ export class DiscountCardSaleComponent implements OnInit {
       this.patientBasicInforFormSubmitted = true;
       let valid = true;
       // return valid;
-      let maxLengthErrors = [];
+      const maxLengthErrors = [];
 
 
-      let selectedDob1 = moment(new Date(this.patientBasicInfo.value.DateOfBirth.year, this.patientBasicInfo.value.DateOfBirth.month, this.patientBasicInfo.value.DateOfBirth.day)).format();
-      let selectedDob = moment(new Date(`${this.patientBasicInfo.value.DateOfBirth.month}-${this.patientBasicInfo.value.DateOfBirth.day}-${this.patientBasicInfo.value.DateOfBirth.year}`)).format();
+      const selectedDob1 = moment(new Date(this.patientBasicInfo.value.DateOfBirth.year, this.patientBasicInfo.value.DateOfBirth.month, this.patientBasicInfo.value.DateOfBirth.day)).format();
+      const selectedDob = moment(new Date(`${this.patientBasicInfo.value.DateOfBirth.month}-${this.patientBasicInfo.value.DateOfBirth.day}-${this.patientBasicInfo.value.DateOfBirth.year}`)).format();
       if (moment(new Date()).diff(moment(selectedDob)) < 0) {
         valid = false;
         this.toastr.warning('Please select past date for DOB');
@@ -425,8 +425,8 @@ export class DiscountCardSaleComponent implements OnInit {
       // console.log('DateOfBirth subscribe ',  val);
       // console.log(val);
       // let selectedDob = new Date(val.year, val.month, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
-      let selectedDob = new Date(val.year, val.month - 1, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
-      let _ageObj = this.calculateAge(selectedDob);
+      const selectedDob = new Date(val.year, val.month - 1, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
+      const _ageObj = this.calculateAge(selectedDob);
       // console.log('_ageObj _ageObj _ageObj ', _ageObj);
       this.patientBasicInfo.patchValue({
         //Age: obj.years ? (obj.years + ' years') : obj.months ? (obj.months + ' months') : (obj.days + 'days')
@@ -440,8 +440,8 @@ export class DiscountCardSaleComponent implements OnInit {
 
 
     this.patientBasicInfo.get('Salutation').valueChanges.subscribe((val: any) => {
-      let genderValue = this.patientBasicInfo.value.Gender;
-      let salutationForGender = this.salutationsList.filter(a => a.SalutationTitle == val).length ? this.salutationsList.filter(a => a.SalutationTitle == val)[0].ForGender : '';
+      const genderValue = this.patientBasicInfo.value.Gender;
+      const salutationForGender = this.salutationsList.filter(a => a.SalutationTitle == val).length ? this.salutationsList.filter(a => a.SalutationTitle == val)[0].ForGender : '';
       if (genderValue != salutationForGender && salutationForGender) {
         // setTimeout(() => {
         this.patientBasicInfo.patchValue({
@@ -459,7 +459,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
 
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissions = (this.storageService.getLoggedInUserProfilePermissions(_activatedroute) || []); // .filter(a=>a.state == _activatedroute);
     // this.screenPermissions.forEach(a=>{
     //   this.screenPermissionsObj[a.key] = a.key;
@@ -483,7 +483,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
   /*  start - camera */
   initCamera(config: any) {
-    var browser = <any>navigator;
+    const browser = navigator as any;
 
     browser.getUserMedia = (browser.getUserMedia ||
       browser.webkitGetUserMedia ||
@@ -524,7 +524,7 @@ export class DiscountCardSaleComponent implements OnInit {
     this.canvas.nativeElement.getContext('2d').clearRect(0, 0, this.videoDimensions.width, this.videoDimensions.height);
   }
   capture() {
-    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
+    const context = this.canvas.nativeElement.getContext("2d").drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
     this.patientBasicInfo.patchValue({
       PatientPic: this.canvas.nativeElement.toDataURL("image/png")
     });
@@ -539,7 +539,7 @@ export class DiscountCardSaleComponent implements OnInit {
     let count = 1;
     mediaDevices.forEach(mediaDevice => {
       if (mediaDevice.kind === 'videoinput') {
-        let obj = {
+        const obj = {
           id: mediaDevice.deviceId,
           name: mediaDevice.label || `Camera ${count++}`
         }
@@ -569,28 +569,28 @@ export class DiscountCardSaleComponent implements OnInit {
       return;
     }
     console.log("addedPaymentModes", this.addedPaymentModes)
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
 
     if (totalAmountByPaymentModes > this.totalAmount) {
       this.toastr.warning(`Payable Amount is: "<strong>${this.totalAmount}</strong>"`, 'Amount Exceed', { enableHtml: true });
       return;
     }
     this.paymentInforFormSubmitted = true;
-    let data = this.getFinalDataSet();
-    let paymentFormValidity: any = this.isPaymentFieldsValid();
+    const data = this.getFinalDataSet();
+    const paymentFormValidity: any = this.isPaymentFieldsValid();
     // console.log(paymentFormValidity);
     if (!paymentFormValidity.valid) {
       this.toastr.warning(paymentFormValidity.message);
       return;
     }
 
-    let fbrRequestData: any = this.formatDataForFBR(data);
+    const fbrRequestData: any = this.formatDataForFBR(data);
 
     // data.FBRInvoiceNo = '';
     data.FBRRequestData = fbrRequestData; //JSON.stringify(fbrRequestData);
 
-    let dataVisit = this.getFinalDataSetforVisit();
-    let fbrRequestDataforVisit: any = this.formatDataForFBR(dataVisit);
+    const dataVisit = this.getFinalDataSetforVisit();
+    const fbrRequestDataforVisit: any = this.formatDataForFBR(dataVisit);
     dataVisit.FBRRequestData = fbrRequestDataforVisit;
 
     // this.saveDiscountCardPost(data);
@@ -602,7 +602,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
 
   saveDiscountCardPost(data) {
-    let patientVisitInvoiceWinRef: any = this.openInvoiceWindow();
+    const patientVisitInvoiceWinRef: any = this.openInvoiceWindow();
     // patientVisitInvoiceWinRef.location = ''; // fix for iOS devices // https://stackoverflow.com/a/39387533 // window.open(url, '_blank'); not working on iMac/Safari
     this.spinner.show();
 
@@ -660,7 +660,7 @@ export class DiscountCardSaleComponent implements OnInit {
     window.open(url.toString(), '_blank');
   }
   openInvoiceWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank', 'width=900;height=100;');
+    const patientVisitInvoiceWinRef = window.open('', '_blank', 'width=900;height=100;');
     patientVisitInvoiceWinRef.opener = null;
     // create a new div element
     const heading = document.createElement("h1");
@@ -731,7 +731,7 @@ export class DiscountCardSaleComponent implements OnInit {
   getLookupsForRegistration() {
     this.lookupService.getLookupsForRegistration({ branchId: this.loggedInUser.locationid }).subscribe((res: any) => {
       if (res && res.PayLoadDS && Object.keys(res.PayLoadDS).length) {
-        let _responsees = res.PayLoadDS;
+        const _responsees = res.PayLoadDS;
 
         this.countriesList = _responsees.Table || [];
         this.citiesList = _responsees.Table1 || [];
@@ -740,7 +740,7 @@ export class DiscountCardSaleComponent implements OnInit {
         this.salutationsList = _responsees.Table4 || [];
         this.paymentModesList = _responsees.Table5.filter(a => a.ModeId && a.ModeId <= 5) || []; // this.paymentModesList = this.paymentModesList.filter(a => a.ModeId != 5); this.selectedPaymentModeToAdd = this.paymentModesList.length ? this.paymentModesList[0] : {}; // this.addedPaymentModes.push(this.selectedPaymentModeToAdd);       
         // this.paymentModesList = [{ModeId: 2, Title: "Credit Card"}, {ModeId: 3, Title: "Cheque"}, {ModeId: 4, Title: "Demand Draft"}]; this.selectedPaymentModeToAdd = this.paymentModesList.length ? this.paymentModesList[0] : {};
-        let notAllowedPatientTypes = [6];
+        const notAllowedPatientTypes = [6];
         if (!this.route.snapshot.queryParams.p) {
           notAllowedPatientTypes.push(8);
         }
@@ -753,7 +753,7 @@ export class DiscountCardSaleComponent implements OnInit {
     // this.spinner.show('GetBranches');
     this.lookupService.GetBranches().subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -773,7 +773,7 @@ export class DiscountCardSaleComponent implements OnInit {
     });
   }
   getMobileOperatorByCode(mobileNo) {
-    let params = {
+    const params = {
       mobileCode: (mobileNo || this.patientBasicInfo.value.MobileNO || '')
     }
     if (params.mobileCode && params.mobileCode.length > 3) {
@@ -867,7 +867,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
   getMaritalStatus() {
     this.maritalStatusList = [];
-    let _params = {
+    const _params = {
     }
     this.lookupService.maritalStatus(_params).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -922,7 +922,7 @@ export class DiscountCardSaleComponent implements OnInit {
       this.spinner.hide(this.spinnerRefs.discountCards);
       // }, 6000);
       if (res && res.StatusCode == 200 && res.PayLoad) {
-        let data = res.PayLoad;
+        const data = res.PayLoad;
         this.discountCardNumber = res.PayLoad;
         if (res.Status == false && res.ResponseCode == "10016" && res.Customer == null) {
           this.toastr.error(res.ResponseMessage);
@@ -947,7 +947,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
 
   getCutomDiscountNumber(cardtype = null, cardNo = null) {
-    let params = {
+    const params = {
       CardTypeId: this.selectedDiscountCard,
       CardNo: cardNo
     }
@@ -962,7 +962,7 @@ export class DiscountCardSaleComponent implements OnInit {
       this.spinner.hide(this.spinnerRefs.discountCards);
       // }, 6000);
       if (res && res.StatusCode == 200 && res.PayLoad) {
-        let data = res.PayLoad;
+        const data = res.PayLoad;
         this.discountCardNumber = res.PayLoad;
 
         // this block is for new method of card verification 
@@ -995,10 +995,10 @@ export class DiscountCardSaleComponent implements OnInit {
     // let params = JSON.parse(JSON.stringify(this.patientBasicInfo.value));
     // params.Email = params.Emails || params.Email || '';
 
-    let patientInfo = this.patientBasicInfo.getRawValue(); //  this.patientBasicInfo.value;
-    let totalCalculatedDiscount = 0;
-    let formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
+    const patientInfo = this.patientBasicInfo.getRawValue(); //  this.patientBasicInfo.value;
+    const totalCalculatedDiscount = 0;
+    const formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
 
 
     let _patImg = null;
@@ -1008,7 +1008,7 @@ export class DiscountCardSaleComponent implements OnInit {
       } catch (e) { }
     }
 
-    let patientObj = {
+    const patientObj = {
       PatientId: patientInfo.PatientID || null,
       Title: patientInfo.Salutation,
       ISalutationID: ((this.salutationsList.find(a => a.SalutationTitle == patientInfo.Salutation) || {}).SalutationID || 0),
@@ -1049,7 +1049,7 @@ export class DiscountCardSaleComponent implements OnInit {
       });
     }
 
-    let valid = this.isPatientBasicInfoFormValid(0);
+    const valid = this.isPatientBasicInfoFormValid(0);
     if (valid) {
       // console.log('valid');
       // params.PatientVaccineNo = +new Date();
@@ -1101,7 +1101,7 @@ export class DiscountCardSaleComponent implements OnInit {
       PatientPic: ''
     });
     // patientId = 65201868;
-    let patientSearchParams = {
+    const patientSearchParams = {
       PatientID: patientId,
     }
     if (patientSearchParams.PatientID) {
@@ -1142,8 +1142,8 @@ export class DiscountCardSaleComponent implements OnInit {
       // console.log(res);
       if (res && res.StatusCode == 200) {
         if (res.PayLoad && res.PayLoad.length) {
-          let _patPic = (res.PayLoad[0].Pic || '');
-          let _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
+          const _patPic = (res.PayLoad[0].Pic || '');
+          const _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
           if (_formattedPic) {
             this.resizeImage('', this.resizePatientProfilePic.width, this.resizePatientProfilePic.height, 0, '', _formattedPic).then((res: string) => {
               this.patientBasicInfo.patchValue({
@@ -1217,9 +1217,9 @@ export class DiscountCardSaleComponent implements OnInit {
     //   pvNo: ""
     // }
     this.OrbitPatientID = data.OrbitPatientID || data.PatientID;
-    let _patPic = (data.OrbitPatientPic || data.PatientPic || '');
-    let _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
-    let _formattedDob = { day: moment(data.DateOfBirth).get('date'), month: (moment(data.DateOfBirth).get('month') + 1), year: moment(data.DateOfBirth).get('year') };
+    const _patPic = (data.OrbitPatientPic || data.PatientPic || '');
+    const _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
+    const _formattedDob = { day: moment(data.DateOfBirth).get('date'), month: (moment(data.DateOfBirth).get('month') + 1), year: moment(data.DateOfBirth).get('year') };
     // console.log('populatePatientFields ', _formattedDob);
     data.MobileOperatorID = (data.MobileOperatorID || '') == -1 ? '' : (data.MobileOperatorID || '');
     this.cd.detectChanges();
@@ -1294,7 +1294,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
   getSalutationByTitle(salutation) {
     if (isNaN(salutation || 0)) {
-      let selectedSalutation = this.salutationsList.filter(a => {
+      const selectedSalutation = this.salutationsList.filter(a => {
         return a.SalutationTitle == salutation;
       });
       if (selectedSalutation && selectedSalutation.length) {
@@ -1307,7 +1307,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
   getSalutationById(salutationId) {
     let salutation = salutationId;
-    let selectedSalutation = this.salutationsList.filter(a => {
+    const selectedSalutation = this.salutationsList.filter(a => {
       return a.SalutationID == salutationId;
     });
     if (selectedSalutation && selectedSalutation.length) {
@@ -1366,13 +1366,13 @@ export class DiscountCardSaleComponent implements OnInit {
 
 
   loadImage(file, fileName = 'file') {
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
-        let _fileName = file.name || '';
+        const imageURL = reader.result as string;
+        const _fileName = file.name || '';
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
           fileType: file.type || '',
@@ -1423,7 +1423,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
 
     try {
-      var browser = <any>navigator;
+      const browser = navigator as any;
       browser.getUserMedia = (browser.getUserMedia ||
         browser.webkitGetUserMedia ||
         browser.mozGetUserMedia ||
@@ -1448,7 +1448,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = '', base64Data = '') {
     const self = this;
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       if (!file && !base64Data) {
         resolve('');
       }
@@ -1459,7 +1459,7 @@ export class DiscountCardSaleComponent implements OnInit {
       let blob = null;
 
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_' + +new Date();
+      const canvas_id = 'hiddenCanvas_' + +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;
@@ -1550,7 +1550,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
   getFinalDataSet() {
     let parsedValue = null;
-    let AryCookieValue = this.getCookie("arytokendata");
+    const AryCookieValue = this.getCookie("arytokendata");
 
     if (AryCookieValue) {
       try {
@@ -1562,10 +1562,10 @@ export class DiscountCardSaleComponent implements OnInit {
         console.error("Invalid cookie JSON:", e);
       }
     }
-    let patientInfo = this.patientBasicInfo.getRawValue(); //  this.patientBasicInfo.value;
-    let formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
-    let patientObj = {
+    const patientInfo = this.patientBasicInfo.getRawValue(); //  this.patientBasicInfo.value;
+    const formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
+    const patientObj = {
       PatientId: patientInfo.PatientID || this.OrbitPatientID || null,
       Title: patientInfo.Salutation,
       ISalutationID: ((this.salutationsList.find(a => a.SalutationTitle == patientInfo.Salutation) || {}).SalutationID || 0),
@@ -1609,11 +1609,11 @@ export class DiscountCardSaleComponent implements OnInit {
     }
 
 
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
 
 
     let paymentArr = []; // git branches testing
-    let payObj = {
+    const payObj = {
       VisitID: null,
       Amount: 0,
       ModeId: 0,
@@ -1628,7 +1628,7 @@ export class DiscountCardSaleComponent implements OnInit {
     }
 
     this.addedPaymentModes.forEach(a => {
-      let _payObj = JSON.parse(JSON.stringify(payObj));
+      const _payObj = JSON.parse(JSON.stringify(payObj));
       _payObj.Amount = this.parseNumbericValues(a.amount || 0);
       _payObj.ModeId = a.ModeId || 0;
       _payObj.InstNo = a.InstOwner || null,
@@ -1653,15 +1653,15 @@ export class DiscountCardSaleComponent implements OnInit {
       } catch (e) { }
     }
 
-    let userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
+    const userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
     userWithoutPic.pic = '';
-    let details = {
+    const details = {
       appVersion: CONSTANTS.APP_VERSION,
       webDeskVersion: this.auth.getWebDeskVersionFromStorage(),
       user: userWithoutPic
     };
 
-    let RegistrationModel = {
+    const RegistrationModel = {
       // FBRInvoiceNo: '',
       FBRRequestData: '',
       MACAddress: this.loggedInUser.macAdr || '',
@@ -1690,12 +1690,12 @@ export class DiscountCardSaleComponent implements OnInit {
 
 
   getFinalDataSetforVisit() {
-    let patientInfo = this.patientBasicInfo.getRawValue();
-    let totalCalculatedDiscount = 0;
+    const patientInfo = this.patientBasicInfo.getRawValue();
+    const totalCalculatedDiscount = 0;
     // let formattedDob = moment(new Date(`${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}-${patientInfo.DateOfBirth.year}`)).format();
-    let formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
-    let patientObj = {
+    const formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
+    const patientObj = {
       PatientId: patientInfo.PatientID || this.OrbitPatientID || null,
       Title: patientInfo.Salutation,
       ISalutationID: ((this.salutationsList.find(a => a.SalutationTitle == patientInfo.Salutation) || {}).SalutationID || 0),
@@ -1734,14 +1734,14 @@ export class DiscountCardSaleComponent implements OnInit {
       EmergencyContactRelation: patientInfo.EmergencyContactRelation || '',
       */
     }
-    let testProfileArr = [];
-    let ecltestProfileArr = [];
-    let telenoretestProfileArr = [];
+    const testProfileArr = [];
+    const ecltestProfileArr = [];
+    const telenoretestProfileArr = [];
 
 
     this.selectedDiscountCards.forEach((a, i) => {
 
-      let testProfileObj = {
+      const testProfileObj = {
         PacslinkSectionName: a.ModalityCode || null,
         SubSectionID: a.SubSectionID || 60,
         VisitId: null,
@@ -1786,9 +1786,9 @@ export class DiscountCardSaleComponent implements OnInit {
     });
 
 
-    var ismob = '';
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
-    let visitObj = {
+    const ismob = '';
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const visitObj = {
       VisitID: null,
       PatientID: patientInfo.PatientID || null,
       // VisitNo: this.patientVisitInfo.visitNo,
@@ -1817,8 +1817,8 @@ export class DiscountCardSaleComponent implements OnInit {
     }
 
 
-    let paymentArr = []; // git branches testing
-    let payObj = {
+    const paymentArr = []; // git branches testing
+    const payObj = {
       VisitID: null,
       Amount: 0,
       ModeId: 0,
@@ -1833,7 +1833,7 @@ export class DiscountCardSaleComponent implements OnInit {
     }
 
     this.addedPaymentModes.forEach(a => {
-      let _payObj = JSON.parse(JSON.stringify(payObj));
+      const _payObj = JSON.parse(JSON.stringify(payObj));
       _payObj.Amount = this.parseNumbericValues(a.amount || 0);
       _payObj.ModeId = a.ModeId || 0;
       _payObj.InstNo = a.InstOwner || null,
@@ -1860,18 +1860,18 @@ export class DiscountCardSaleComponent implements OnInit {
       paymentArr.push(payObj);
     }
 
-    let regModule = '1';
+    const regModule = '1';
 
-    let userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
+    const userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
     userWithoutPic.pic = '';
-    let details = {
+    const details = {
       appVersion: CONSTANTS.APP_VERSION,
       webDeskVersion: this.auth.getWebDeskVersionFromStorage(),
       user: userWithoutPic
     };
-    let mobNoti = [];
+    const mobNoti = [];
 
-    let RegistrationModel = {
+    const RegistrationModel = {
       // FBRInvoiceNo: '',
       DiscountPerc: 0,
       FBRRequestData: '',
@@ -1932,12 +1932,12 @@ export class DiscountCardSaleComponent implements OnInit {
 
   addNewPaymentMethod() {
 
-    let _selPayMod = this.selectedPaymentModeToAdd;
+    const _selPayMod = this.selectedPaymentModeToAdd;
     if (!_selPayMod || !_selPayMod.ModeId) {
       return;
     }
     _selPayMod.uniqueId = +new Date();
-    let _payMod = this.addedPaymentModes.find(a => a.uniqueId == _selPayMod.uniqueId);
+    const _payMod = this.addedPaymentModes.find(a => a.uniqueId == _selPayMod.uniqueId);
     if (!_payMod || _selPayMod.ModeId == 2) {
       // this.connectToCCMachine();
       // this.addedPaymentModes = this.addedPaymentModes.filter( a => a.amount); // 
@@ -1988,7 +1988,7 @@ export class DiscountCardSaleComponent implements OnInit {
         paymentMode.amount = availableRewardPoints;
       }
     }
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
     // console.log('paymentModesValueUpdated ', totalAmountByPaymentModes, this.patientVisitInfo.netAmount, totalAmountByPaymentModes > this.patientVisitInfo.netAmount);
   }
 
@@ -2044,7 +2044,7 @@ export class DiscountCardSaleComponent implements OnInit {
   GetARYToken() {
 
     this.spinner.show();
-    let params = {
+    const params = {
       BranchCode: this.loggedInUser.currentLocation,
       CreatedBy: this.loggedInUser.userid || 0
     };
@@ -2056,7 +2056,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
         if (resp?.Status === true && resp?.ResponseCode === "200") {
           try {
-            let tokenData = JSON.parse(resp.ResponseDescription);
+            const tokenData = JSON.parse(resp.ResponseDescription);
 
             if (tokenData?.Token && tokenData?.TokenKey) {
               // this.toastr.success("Token generated successfully.");
@@ -2109,7 +2109,7 @@ export class DiscountCardSaleComponent implements OnInit {
     this.spinner.show();
     this.IsPatientARYCardmember = true;
 
-    let cookieValue = this.getCookie("arytokendata");
+    const cookieValue = this.getCookie("arytokendata");
     let parsedValue = null;
     if (cookieValue) {
       try {
@@ -2121,7 +2121,7 @@ export class DiscountCardSaleComponent implements OnInit {
         console.error("Invalid cookie JSON:", e);
       }
     }
-    let params = {
+    const params = {
       "PhoneNumber": this.patientBasicInfo.getRawValue().MobileNO.replace(/^0/, '92'), //"923331666981"
       "CreatedBy": this.loggedInUser.userid || 0,
       "ARYToken": parsedValue ? parsedValue.Token : null,//cookieARYValue.tokenData.Token,
@@ -2230,7 +2230,7 @@ export class DiscountCardSaleComponent implements OnInit {
   MobileChange(MobileNO) {
 
     this.MobileNumberChange();
-    let form = this.patientBasicInfo.getRawValue();
+    const form = this.patientBasicInfo.getRawValue();
 
     if (form.MobileNO != '03111000432' && form.PhoneNO != '03111000432')
       if (form.MobileNO.length > 10) {
@@ -2243,7 +2243,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
 
   searchPatientByPhoneNo(mobileNO) {
-    let patientSearchParams = {
+    const patientSearchParams = {
       MobileNO: mobileNO,
     }
     if (patientSearchParams.MobileNO) {
@@ -2271,7 +2271,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
   //create ARY Customer
   createARYSahoolatCustomer() {
-    let maxLengthErrors = [];
+    const maxLengthErrors = [];
     let valid = true;
     Object.keys(this.patientBasicInfo.controls).forEach((a) => {
       // console.log(this.patientBasicInfo.controls[a].errors ? 'invalud' : 'valid')
@@ -2291,7 +2291,7 @@ export class DiscountCardSaleComponent implements OnInit {
     }
 
     this.spinner.show();
-    let AryCookieValue = this.getCookie("arytokendata");
+    const AryCookieValue = this.getCookie("arytokendata");
     let parsedValue = null;
     if (AryCookieValue) {
       try {
@@ -2303,7 +2303,7 @@ export class DiscountCardSaleComponent implements OnInit {
         console.error("Invalid cookie JSON:", e);
       }
     }
-    let params = {
+    const params = {
       CardNo: this.cusCardno,
       CellNo: this.patientBasicInfo.getRawValue().MobileNO ? this.patientBasicInfo.getRawValue().MobileNO.replace(/^0/, '92') : this.patientBasicInfo.getRawValue().PhoneNO.replace(/^0/, '92'),
       City: "Islamabad",
@@ -2360,13 +2360,13 @@ export class DiscountCardSaleComponent implements OnInit {
   }
 
   ageChange(value) {
-    let _calculatedDob = this.calculateDOB(value, this.patientBasicInfo.value.dmy);
+    const _calculatedDob = this.calculateDOB(value, this.patientBasicInfo.value.dmy);
     this.patientBasicInfo.patchValue({
       DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
     });
   }
   dmyChange(value) {
-    let _calculatedDob = this.calculateDOB(this.patientBasicInfo.value.Age, value);
+    const _calculatedDob = this.calculateDOB(this.patientBasicInfo.value.Age, value);
     this.patientBasicInfo.patchValue({
       DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
     });
@@ -2421,9 +2421,9 @@ export class DiscountCardSaleComponent implements OnInit {
   }
 
   isPaymentFieldsValid() {
-    let result = { valid: false, code: '', message: '' };
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
-    let minReceivableAmount = this.minimumReceivableAmount;
+    const result = { valid: false, code: '', message: '' };
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const minReceivableAmount = this.minimumReceivableAmount;
     if (totalAmountByPaymentModes < minReceivableAmount) {
       result.valid = false;
       result.message = `Please Receive minimum amount of Rs: "${minReceivableAmount}"`;
@@ -2433,7 +2433,7 @@ export class DiscountCardSaleComponent implements OnInit {
       result.message = '';
     }
 
-    let creditCardEntry: any = this.addedPaymentModes.find(a => a.ModeId == 2);
+    const creditCardEntry: any = this.addedPaymentModes.find(a => a.ModeId == 2);
     if (creditCardEntry && this.parseNumbericValues(creditCardEntry.amount) > 0 && (!creditCardEntry.CCNo || !creditCardEntry.CCTNo)) {
       result.valid = false;
       result.message = 'Please enter "Credit Card No" and "Slip No"';
@@ -2476,14 +2476,14 @@ export class DiscountCardSaleComponent implements OnInit {
     // var ageDifMs = Date.now() - birthday.getTime();
     // var ageDate = new Date(ageDifMs); // miliseconds from epoch
     // return Math.abs(ageDate.getUTCFullYear() - 1970);
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
@@ -2514,7 +2514,7 @@ export class DiscountCardSaleComponent implements OnInit {
     } else if (dmy == '3') {
       dob = moment(dob).subtract(number, 'years')
     }
-    let calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
+    const calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
     /*
     this.patientBasicInfo.patchValue({
       DateOfBirth: calculatedDob, // moment(dob).format(this.dateFormat)
@@ -2555,7 +2555,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = {
+    const _settings = {
       ...{
         // relativeTo: this.route,
         replaceUrl: true,
@@ -2574,10 +2574,10 @@ export class DiscountCardSaleComponent implements OnInit {
 
   /* start - FBR - function */
   formatDataForFBR(data) {
-    let discountCards = data.discountCards || [];
-    let paymentData = data.payment || [];
+    const discountCards = data.discountCards || [];
+    const paymentData = data.payment || [];
     let paymentModeSelected = 1;
-    let fbrPaymentModes = {
+    const fbrPaymentModes = {
       cash: 1, // Cash
       card: 2, // Card
       giftVoucher: 3, // Gift Voucher
@@ -2626,8 +2626,8 @@ export class DiscountCardSaleComponent implements OnInit {
     // (ValueWithTax * 100) / (TaxRate + 100)
     // (900 * 100) / (TaxRate + 100) = 769.2308
 
-    let taxRate = 0;
-    let valueWithAndWithoutTax = { taxRate: 0, fullValue: this.totalAmount, taxValue: 0 }; // this.helperSrv.calculateTaxValue(((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice')) || 0) - (visitData.AdjAmount || 0), taxRate);
+    const taxRate = 0;
+    const valueWithAndWithoutTax = { taxRate: 0, fullValue: this.totalAmount, taxValue: 0 }; // this.helperSrv.calculateTaxValue(((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice')) || 0) - (visitData.AdjAmount || 0), taxRate);
 
     let calculatedTax = valueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
     let totalSale = valueWithAndWithoutTax.fullValue - valueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
@@ -2644,7 +2644,7 @@ export class DiscountCardSaleComponent implements OnInit {
     }
 
 
-    let params = {
+    const params = {
       "InvoiceNumber": "",
       "POSID": 0, // 966130
       "USIN": "0", // VisitId
@@ -2665,16 +2665,16 @@ export class DiscountCardSaleComponent implements OnInit {
       "Items": []
     };
     discountCards.forEach(tp => {
-      let _texRate = 0; // (this.getValidAddedTestsProfiles().find(a => a.TPId == tp.TPId) || { TaxRate: 0 }).TaxRate;
+      const _texRate = 0; // (this.getValidAddedTestsProfiles().find(a => a.TPId == tp.TPId) || { TaxRate: 0 }).TaxRate;
       tp.TaxRate = (_texRate || 0); //(tp.TaxRate || 0);
 
-      let tpValueWithAndWithoutTax = this.helperSrv.calculateTaxValue((tp.Amount || 0) - (tp.Discount || 0), tp.TaxRate);
+      const tpValueWithAndWithoutTax = this.helperSrv.calculateTaxValue((tp.Amount || 0) - (tp.Discount || 0), tp.TaxRate);
 
-      let taxCharged = tpValueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
-      let saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
-      let totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
+      const taxCharged = tpValueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
+      const saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
+      const totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
 
-      let item = {
+      const item = {
         "ItemCode": tp.CardTypeId,
         "ItemName": 'Dis-Card' + tp.Code,
         "PCTCode": tp.PCTCode || '98160000', // {radiology: '98179000', lab: '98160000'} , // "98173000", // "11001010", https://download1.fbr.gov.pk/Docs/2021101313103753401chapte-98&99.pdf // page 4
@@ -2737,7 +2737,7 @@ export class DiscountCardSaleComponent implements OnInit {
   }
   getMACAddress(loggedInUser: UserModel) {
     // setTimeout(() => {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -2755,7 +2755,7 @@ export class DiscountCardSaleComponent implements OnInit {
     this.getPOSID();
   }
   getPOSID() {
-    let params = {
+    const params = {
       macAddress: this.loggedInUser.macAdr,
       branchId: this.loggedInUser.locationid,
       userId: this.loggedInUser.userid
@@ -2819,7 +2819,7 @@ export class DiscountCardSaleComponent implements OnInit {
     this.disableCardNumberInput = false;
     this.IsPatientARYCardmember = false
 
-    let patientData = this.patientBasicInfo.getRawValue();
+    const patientData = this.patientBasicInfo.getRawValue();
     if (!patientData) {
       return;
     }
@@ -2855,7 +2855,7 @@ export class DiscountCardSaleComponent implements OnInit {
 
 
   submitRegistrationForDiscountCard(data) {
-    let patientVisitInvoiceWinRef: any = this.openInvoiceWindow();
+    const patientVisitInvoiceWinRef: any = this.openInvoiceWindow();
     this.spinner.show();
     this.visitService.createVisit(data).subscribe((res: any) => {
       this.spinner.hide();

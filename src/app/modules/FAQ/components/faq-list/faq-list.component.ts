@@ -14,7 +14,7 @@ import { AuthService, UserModel } from 'src/app/modules/auth';
   styleUrls: ['./faq-list.component.scss']
 })
 export class FAQListComponent implements OnInit {
-  Answer: string = '<p></p>';
+  Answer = '<p></p>';
   faqListForm!: FormGroup;
   formSearchFAQ!: FormGroup;
 
@@ -27,8 +27,8 @@ export class FAQListComponent implements OnInit {
   }
   loggedInUser: UserModel;
   faqList = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   ActionLabel = "Save"
   LoadingFAQMessage = 'No record found...';
 
@@ -64,14 +64,14 @@ export class FAQListComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.faqSearchSection);
     this.faqList = [];
     this.clearForms();
-    let formValues = this.formSearchFAQ.getRawValue();
+    const formValues = this.formSearchFAQ.getRawValue();
 
-    let objParm = {
+    const objParm = {
       FAQCategoryID: formValues.faqCategoryId
     }
     this.LoadingFAQMessage = 'data loading...';
     this.faqService.getFAQ(objParm).subscribe((res: any) => {
-      let resSearchJob = res.PayLoad || [];
+      const resSearchJob = res.PayLoad || [];
       if (res.StatusCode == 200) {
         this.faqList = resSearchJob || [];
         if (!this.faqList.length) {
@@ -105,7 +105,7 @@ export class FAQListComponent implements OnInit {
     this.faqID = id;
     this.ExistingRow = [];
 
-    let paramObj = {
+    const paramObj = {
       FAQID: this.faqID
     }
 
@@ -127,7 +127,7 @@ export class FAQListComponent implements OnInit {
 
   addUpdateJobRequest() {
     this.spinner.show(this.spinnerRefs.faqFormSection);
-    let formValues = this.faqListForm.getRawValue();
+    const formValues = this.faqListForm.getRawValue();
     this.faqListForm.markAllAsTouched();
     if (this.faqListForm.invalid) {
       this.spinner.hide(this.spinnerRefs.faqFormSection);
@@ -135,7 +135,7 @@ export class FAQListComponent implements OnInit {
     } else {
       this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       this.isSpinner = false; // Button Spinner shwo
-      let formData = {
+      const formData = {
         FAQID: this.faqID,
         FAQCategoryID: formValues.FAQCategoryID,
         Question: formValues.Question,

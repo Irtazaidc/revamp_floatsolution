@@ -26,7 +26,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: "./machine-status-log.component.html",
   styleUrls: ["./machine-status-log.component.scss"],
 })
-export class MachineStatusLogComponent implements OnInit {
+export class MachineStatusLogComponent implements OnInit, OnChanges {
   @Input() locationId: {};
   @Input() subsectionId: any = null;
   RISMachineID: any = null;
@@ -76,12 +76,12 @@ export class MachineStatusLogComponent implements OnInit {
   validateBranch = false;
   techAudit = true;
   branchList: any = [];
-  selectedStatus: string = "";
+  selectedStatus = "";
   selectedSectionId: any;
   selectedBranchId: any;
   previousSectionFilter: any;
   radoiologistTime: any;
-  selectedLocation: string = '';
+  selectedLocation = '';
   machineLogPopupRef: NgbModalRef;
   selectedMachineType: any;
   
@@ -241,7 +241,7 @@ export class MachineStatusLogComponent implements OnInit {
   this.MachineLogList = [];
 
   if (item.type === 'ris') {
-    let params = {
+    const params = {
       RISMachineID: item.RISMachineID || null, // Or use correct field
       Location: null
     };
@@ -266,7 +266,7 @@ export class MachineStatusLogComponent implements OnInit {
       }
     );
   } else if (item.type === 'lab') {
-    let params = {
+    const params = {
       MachineID: item.MachineID || null,
       Location: null
     };
@@ -356,7 +356,7 @@ export class MachineStatusLogComponent implements OnInit {
 
   getLabMachine() {
     this.MachineList = [];
-    let params = {
+    const params = {
       MachineID:  null,
       LocID: this.selectedLocation || null
     };
@@ -403,7 +403,7 @@ export class MachineStatusLogComponent implements OnInit {
   }
   getRISMachine() {
     this.MachineList = [];
-    let params = {
+    const params = {
       RISMachineID:  null,
       LocID: this.selectedLocation || null
     };
@@ -459,7 +459,7 @@ export class MachineStatusLogComponent implements OnInit {
 
   refreshPagination() {
     this.pagination.filteredSearchResults = this.MachineList;
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -487,7 +487,7 @@ export class MachineStatusLogComponent implements OnInit {
   refreshPaginationRis() {
     this.filterMachineListByLocation();
     this.paginationRis.filteredSearchResults = this.MachineList;
-    let dataToPaginate = this.paginationRis.filteredSearchResults;
+    const dataToPaginate = this.paginationRis.filteredSearchResults;
     this.paginationRis.collectionSize = dataToPaginate.length;
     this.paginationRis.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -502,7 +502,7 @@ export class MachineStatusLogComponent implements OnInit {
     this.BranchesList = [];
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -552,13 +552,13 @@ export class MachineStatusLogComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: -1,
     };
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
       },
       (err) => {

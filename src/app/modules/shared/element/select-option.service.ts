@@ -10,7 +10,7 @@ export interface IOption {
 
 @Injectable()
 export class SelectOptionService {
-  public static readonly PLAYER_ONE: Array<IOption> = [
+  public static readonly PLAYER_ONE: IOption[] = [
     {value: '0', label: 'Alabama'},
     {value: '1', label: 'Wyoming'},
     {value: '2', label: 'Coming'},
@@ -18,7 +18,7 @@ export class SelectOptionService {
     {value: '4', label: 'John Doe'}
   ];
 
-  private static readonly COUNTRIES: Array<IOption> = [
+  private static readonly COUNTRIES: IOption[] = [
     {value: 'AF', label: 'Afghanistan'},
     {value: 'AX', label: 'Åland Islands'},
     {value: 'AL', label: 'Albania'},
@@ -267,30 +267,30 @@ export class SelectOptionService {
     {value: 'ZW', label: 'Zimbabwe'}
   ];
 
-    getCharacters(): Array<IOption> {
+    getCharacters(): IOption[] {
         return this.cloneOptions(SelectOptionService.PLAYER_ONE);
     }
 
-    loadCharacters(): Observable<Array<IOption>> {
+    loadCharacters(): Observable<IOption[]> {
         return this.loadOptions(SelectOptionService.PLAYER_ONE);
     }
 
-    getCharactersWithDisabled(): Array<IOption> {
-        const characters: Array<IOption> = this.cloneOptions(SelectOptionService.PLAYER_ONE);
+    getCharactersWithDisabled(): IOption[] {
+        const characters: IOption[] = this.cloneOptions(SelectOptionService.PLAYER_ONE);
         characters[1].disabled = true;
         characters[4].disabled = true;
         return characters;
     }
 
-    getCountries(): Array<IOption> {
+    getCountries(): IOption[] {
         return this.cloneOptions(SelectOptionService.COUNTRIES);
     }
 
-    loadCountries(): Observable<Array<IOption>> {
+    loadCountries(): Observable<IOption[]> {
         return this.loadOptions(SelectOptionService.COUNTRIES);
     }
 
-    private loadOptions(options: Array<IOption>): Observable<Array<IOption>> {
+    private loadOptions(options: IOption[]): Observable<IOption[]> {
         return new Observable((obs) => {
             setTimeout(() => {
                 obs.next(this.cloneOptions(options));
@@ -299,7 +299,7 @@ export class SelectOptionService {
         });
     }
 
-    private cloneOptions(options: Array<IOption>): Array<IOption> {
+    private cloneOptions(options: IOption[]): IOption[] {
         return options.map(option => ({ value: option.value, label: option.label }));
     }
 }

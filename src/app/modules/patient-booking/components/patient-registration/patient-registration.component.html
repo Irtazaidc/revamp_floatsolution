@@ -192,9 +192,9 @@
                           <div class="input-group">
                             <select class="form-control col-4 pl-1 pr-0" formControlName="Salutation" #salutation
                               [ngClass]="{
-                                invalid: salutation.value == '',
+                                invalid: salutation.value === '',
                                 'invalid-highlighted':
-                                  salutation.value == '' &&
+                                  salutation.value === '' &&
                                   patientBasicInforFormSubmitted
                               }" [attr.disabled]="patientBasicInfoDisabled" [required]="!patientBasicInfoDisabled"
                               (change)="checkSalutaion()">
@@ -253,14 +253,14 @@
                           <div class="input-group">
                             <select #gndr id="pat_gender" class="form-control" formControlName="Gender" [ngClass]="{
                                 invalid:
-                                  gndr.value == '' &&
+                                  gndr.value === '' &&
                                   byPassReqPatientData != true,
                                 'invalid-highlighted':
-                                  gndr.value == '' &&
+                                  gndr.value === '' &&
                                   byPassReqPatientData != true &&
                                   patientBasicInforFormSubmitted
                               }" [attr.disabled]="patientBasicInfoDisabled" [required]="
-                                gndr.value == '' && byPassReqPatientData != true
+                                gndr.value === '' && byPassReqPatientData != true
                               ">
                               <!-- [ngClass]="gndr.value && gndr.value != '0' && gndr.value != 0 && gndr.value != '0: 0' ? '' : 'invalid'"  -->
                               <option [value]="''">--select--</option>
@@ -442,7 +442,7 @@
                             <span class="md-line"></span>
                           </div>
                         </div>
-                        <div class="col-lg-6" *ngIf="currentRoutePatch == 'hc-booking'">
+                        <div class="col-lg-6" *ngIf="currentRoutePatch === 'hc-booking'">
                           <label for="pat_phone">Calling Number: </label>
                           <div class="input-group">
                             <input id="pat_AlternateContact" type="number" class="form-control"
@@ -706,9 +706,9 @@
                     <label>Branches:</label>
                     <div class="input-group">
                       <select #loc class="form-control" formControlName="BranchID" [ngClass]="{
-                          invalid: loc.value == '',
+                          invalid: loc.value === '',
                           'invalid-highlighted':
-                            loc.value == '' && patientBasicInforFormSubmitted
+                            loc.value === '' && patientBasicInforFormSubmitted
                         }" [attr.disabled]="patientBasicInfoDisabled">
                         <option [value]="''">--select--</option>
                         <option *ngFor="let item of branchesList" [value]="item.LocId">
@@ -919,9 +919,9 @@
                           <!-- <a [href]="va.data" target="_blank"> -->
                           <ng-container [ngSwitch]="va.fileType.split('/')[0]">
                             <ng-container *ngSwitchCase="'image'">
-                              <img [src]="va.data" *ngIf="va.fileType.split('/')[1] != 'svg+xml'" alt="visit attachment"
+                              <img [src]="va.data" *ngIf="va.fileType.split('/')[1] !== 'svg+xml'" alt="visit attachment"
                                 class="attachment-display-frame" />
-                              <embed [src]="va.sanitizedData" *ngIf="va.fileType.split('/')[1] == 'svg+xml'"
+                              <embed [src]="va.sanitizedData" *ngIf="va.fileType.split('/')[1] === 'svg+xml'"
                                 style="width: 100%; height: 100%; border: none" />
                               <!-- <span [src]="va.data" *ngIf="va.fileType.split('/')[1] == 'svg+xml'"  style="width: 100%;height: 100%;border: none;" ></span> -->
                             </ng-container>
@@ -940,7 +940,7 @@
                                   <embed [src]="va.sanitizedData" width="100%" height="100%" />
                                 </ng-container>
                                 <ng-container *ngSwitchDefault>
-                                  <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                                  <h3 *ngIf="va.fileType.split('/')[0] !== 'image'">
                                     {{ va.fileType.split("/")[1] }}
                                   </h3>
                                 </ng-container>
@@ -1180,10 +1180,10 @@
                             <input type="radio" [(ngModel)]="searchByCodeNameRadio" value="code"
                               name="searchByCodeNameRadio" (click)="tpFilterType('code')" id="radioTPByCode" />
                             <label class="form-check-label ml-1" for="radioTPByCode">Code</label>
-                            <input type="checkbox" *ngIf="searchByCodeNameRadio == 'code'" class="ml-1"
+                            <input type="checkbox" *ngIf="searchByCodeNameRadio === 'code'" class="ml-1"
                               name="chkSearchByExactMatch" id="chkSearchByExactMatch"
                               [(ngModel)]="chkSearchByExactMatch" />
-                            <label for="chkSearchByExactMatch" *ngIf="searchByCodeNameRadio == 'code'"
+                            <label for="chkSearchByExactMatch" *ngIf="searchByCodeNameRadio === 'code'"
                               class="form-check-label">
                               <small>Exact match</small></label>
                           </small>
@@ -1731,9 +1731,9 @@
                             <!-- <a [href]="va.data" target="_blank"> -->
                             <ng-container [ngSwitch]="va.fileType.split('/')[0]">
                               <ng-container *ngSwitchCase="'image'">
-                                <img [src]="va.data" *ngIf="va.fileType.split('/')[1] != 'svg+xml'"
+                                <img [src]="va.data" *ngIf="va.fileType.split('/')[1] !== 'svg+xml'"
                                   alt="visit attachment" class="attachment-display-frame" />
-                                <embed [src]="va.sanitizedData" *ngIf="va.fileType.split('/')[1] == 'svg+xml'" style="
+                                <embed [src]="va.sanitizedData" *ngIf="va.fileType.split('/')[1] === 'svg+xml'" style="
                                     width: 100%;
                                     height: 100%;
                                     border: none;
@@ -1756,7 +1756,7 @@
                                   </ng-container>
                                   <ng-container *ngSwitchDefault>
                                     <h3 *ngIf="
-                                        va.fileType.split('/')[0] != 'image'
+                                        va.fileType.split('/')[0] !== 'image'
                                       ">
                                       {{ va.fileType.split("/")[1] }}
                                     </h3>
@@ -2753,8 +2753,8 @@
                       <div class="input-group">
                         <ng-select style="width: 100%" [(ngModel)]="hcCityID" [items]="gcCitiesList" tabindex="2"
                           bindLabel="Code" bindValue="HCCityID" [ngClass]="{
-                            invalid: hcCityID == '',
-                            'invalid-highlighted': hcCityID == ''
+                            invalid: hcCityID === '',
+                            'invalid-highlighted': hcCityID === ''
                           }" required>
                           <!-- [ngClass]="HCCityClass"  -->
                         </ng-select>
@@ -2848,10 +2848,10 @@
                               <ng-container [ngSwitch]="va.fileType.split('/')[0]">
                                 <ng-container *ngSwitchCase="'image'">
                                   <img [src]="va.data" *ngIf="
-                                      va.fileType.split('/')[1] != 'svg+xml'
+                                      va.fileType.split('/')[1] !== 'svg+xml'
                                     " alt="visit attachment" class="attachment-display-frame" />
                                   <embed [src]="va.sanitizedData" *ngIf="
-                                      va.fileType.split('/')[1] == 'svg+xml'
+                                      va.fileType.split('/')[1] === 'svg+xml'
                                     " style="
                                       width: 100%;
                                       height: 100%;
@@ -2875,7 +2875,7 @@
                                     </ng-container>
                                     <ng-container *ngSwitchDefault>
                                       <h3 *ngIf="
-                                          va.fileType.split('/')[0] != 'image'
+                                          va.fileType.split('/')[0] !== 'image'
                                         ">
                                         {{ va.fileType.split("/")[1] }}
                                       </h3>
@@ -3183,11 +3183,11 @@
                   <!-- <button (click)="startCamera()" class="btn btn-sm btn-outline-success">Play</button> -->
                   <!-- <button (click)="pause()" class="btn btn-warning">Pause</button> -->
                   <!-- <button (click)="resume()" class="btn btn-info">Resume</button> -->
-                  <button (click)="capture()" *ngIf="openCameraFromSource == 'patient_pic'"
+                  <button (click)="capture()" *ngIf="openCameraFromSource === 'patient_pic'"
                     class="btn btn-sm btn-outline-success m-r-10">
                     Capture
                   </button>
-                  <button (click)="captureDocument()" *ngIf="openCameraFromSource == 'attachment'"
+                  <button (click)="captureDocument()" *ngIf="openCameraFromSource === 'attachment'"
                     class="btn btn-sm btn-outline-success m-r-10">
                     Capture Document
                   </button>
@@ -3969,9 +3969,9 @@
             <div class="input-group">
               <select class="form-control" formControlName="MobileOperatorID" #oprtrB [required]="mobileB.value"
                 [ngClass]="{
-                  invalid: oprtrB.value == '' && mobileB.value,
+                  invalid: oprtrB.value === '' && mobileB.value,
                   'invalid-highlighted':
-                    oprtrB.value == '' &&
+                    oprtrB.value === '' &&
                     mobileB.value &&
                     patientBasicInfoFormForCovidSubmitted
                 }">
@@ -4226,9 +4226,9 @@
             <div class="input-group">
               <select class="form-control" formControlName="MobileOperatorID" #oprtrB [required]="mobileB.value"
                 [ngClass]="{
-                  invalid: oprtrB.value == '' && mobileB.value,
+                  invalid: oprtrB.value === '' && mobileB.value,
                   'invalid-highlighted':
-                    oprtrB.value == '' &&
+                    oprtrB.value === '' &&
                     mobileB.value &&
                     patientBasicInfoFormForDengueSubmitted
                 }">
@@ -4641,11 +4641,11 @@
             <div class="input-group">
               <select class="form-control" formControlName="AirlineId" #fd_airlineId required="true" [ngClass]="{
                   invalid:
-                    fd_airlineId.value == '' ||
+                    fd_airlineId.value === '' ||
                     !fd_airlineId.value ||
                     fd_airlineId.value < 1,
                   'invalid-highlighted':
-                    (fd_airlineId.value == '' ||
+                    (fd_airlineId.value === '' ||
                       !fd_airlineId.value ||
                       fd_airlineId.value < 1) &&
                     patientFlightDetailsFormSubmitted
@@ -4739,12 +4739,12 @@
               <select class="form-control" formControlName="AirportId" #fd_airport [required]="!_isAirportLocation"
                 [ngClass]="{
                   invalid:
-                    (fd_airport.value == '' ||
+                    (fd_airport.value === '' ||
                       !fd_airport.value ||
                       fd_airport.value < 1) &&
                     !_isAirportLocation,
                   'invalid-highlighted':
-                    (fd_airport.value == '' ||
+                    (fd_airport.value === '' ||
                       !fd_airport.value ||
                       fd_airport.value < 1) &&
                     !_isAirportLocation &&
@@ -4894,11 +4894,11 @@
               <select class="form-control" formControlName="VaccineID" #vc_vaccineId required="true"
                 (change)="getDosageList()" [ngClass]="{
                   invalid:
-                    vc_vaccineId.value == '' ||
+                    vc_vaccineId.value === '' ||
                     !vc_vaccineId.value ||
                     vc_vaccineId.value < 1,
                   'invalid-highlighted':
-                    (vc_vaccineId.value == '' ||
+                    (vc_vaccineId.value === '' ||
                       !vc_vaccineId.value ||
                       vc_vaccineId.value < 1) &&
                     patientVaccineDetailsFormSubmitted
@@ -4916,11 +4916,11 @@
             <div class="input-group">
               <select class="form-control" formControlName="Dosage" #vc_vaccineDose required="true" [ngClass]="{
                   invalid:
-                    vc_vaccineDose.value == '' ||
+                    vc_vaccineDose.value === '' ||
                     !vc_vaccineDose.value ||
                     vc_vaccineDose.value < 1,
                   'invalid-highlighted':
-                    (vc_vaccineDose.value == '' ||
+                    (vc_vaccineDose.value === '' ||
                       !vc_vaccineDose.value ||
                       vc_vaccineDose.value < 1) &&
                     patientVaccineDetailsFormSubmitted
@@ -5146,13 +5146,13 @@
                     </tr>
                   </thead>
                   <tbody id>
-                    <tr scope="row" *ngFor="let hc of RiderScheduleData; let i = index">
-                      <td scope="row">{{ hc.PatientName }}</td>
-                      <td scope="row">{{ hc.PatientAddress }}</td>
-                      <td scope="row">
+                    <tr *ngFor="let hc of RiderScheduleData; let i = index">
+                      <td>{{ hc.PatientName }}</td>
+                      <td>{{ hc.PatientAddress }}</td>
+                      <td>
                         {{ hc.HCDateTime | date : "yyyy-MMM-dd hh:mm" }}
                       </td>
-                      <td scope="row">{{ hc.HCBookingStatus }}</td>
+                      <td>{{ hc.HCBookingStatus }}</td>
                     </tr>
                   </tbody>
                 </table>

@@ -258,9 +258,9 @@
                             class="form-control form-control-sm"
                             (change)="setSourcePhysicianAndReportedDoctorName()"
                             [ngClass]="{
-                              invalid: !RequestedBy||RequestedBy=='null',
+                              invalid: !RequestedBy||RequestedBy==='null',
                               'invalid-highlighted':
-                                (!RequestedBy||RequestedBy=='null') && clickSubmitBtn
+                                (!RequestedBy||RequestedBy==='null') && clickSubmitBtn
                             }"
                           >
                             <option value="null">--Select Source--</option>

@@ -17,7 +17,7 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
 })
 export class ReportResetRequestComponent implements OnInit {
 
-  @Input('buttonControls') buttonControls = [''];
+  @Input() buttonControls = [''];
 
 
   loggedInUser: UserModel;
@@ -38,8 +38,8 @@ export class ReportResetRequestComponent implements OnInit {
   pageSize = 5;
   collectionSize = 0;
   selectedVisit: any = null;
-  disabledButton: boolean = false;
-  isSpinner: boolean = true;
+  disabledButton = false;
+  isSpinner = true;
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Confirmation Alert', // 'Are you sure?',
@@ -89,7 +89,7 @@ export class ReportResetRequestComponent implements OnInit {
 
   getVisitTestsByVisitIDStatusID(VisitID, StatusID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       StatusID: StatusID
     };
@@ -125,7 +125,7 @@ export class ReportResetRequestComponent implements OnInit {
   }
   clickSubmitBtn=false;
   updateVisitTestResetStatus() {
-    let checkedTests = this.visitTests.filter(a => a.checked);
+    const checkedTests = this.visitTests.filter(a => a.checked);
     if (this.ResetRequestRemarks.length < 15) {
       this.clickSubmitBtn=true;
       this.toastr.warning("Please Provide atleast 15 characters in remarks", "Warning");
@@ -137,8 +137,8 @@ export class ReportResetRequestComponent implements OnInit {
       return;
     } else {
       this.clickSubmitBtn=false;
-      let TPIDs = checkedTests.map(obj => obj.TPID).join(",")
-      let formData = {
+      const TPIDs = checkedTests.map(obj => obj.TPID).join(",")
+      const formData = {
         VisitID: this.VisitID,
         TPIDs: TPIDs,
         Remarks: this.ResetRequestRemarks,

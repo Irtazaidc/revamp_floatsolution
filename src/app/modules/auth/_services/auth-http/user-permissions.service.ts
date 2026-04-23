@@ -55,16 +55,16 @@ export class UserPermissionsService implements OnDestroy {
 
   formatPermissionsData(data) {
     console.log(data);
-    let c = [];
+    const c = [];
     let allowedScreensData = JSON.parse(JSON.stringify(data));
-    let allScreens = [... new Set(allowedScreensData.map(a => a.ScreenKey))]
+    const allScreens = [... new Set(allowedScreensData.map(a => a.ScreenKey))]
     allScreens.forEach( a=> {
       if(!allowedScreensData.find( b => b.ScreenKey == a && (b.ScreenDetailKey || '').toLowerCase() == 'screen')) {
         allowedScreensData = allowedScreensData.filter( c => c.ScreenKey != a);
       }
     })
     allowedScreensData.forEach( (a,i)=> {
-      let obj = {
+      const obj = {
         allowed: ((typeof(a.allowed) == 'undefined' || a.allowed == null) ? 1 : a.allowed),
         name: a.ScreenDetailTitle,
         key: a.ScreenDetailKey,

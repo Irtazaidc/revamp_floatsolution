@@ -78,7 +78,7 @@
                     </thead>
                     <tbody>
                         <!-- | filterByKey: filterSearchedPatients.value: ['MobileNo','HospitalMRNo'] -->
-                        <tr [ngClass]="patient.PatientType =='ER' ? 'urgent-order' : ''"
+                        <tr [ngClass]="patient.PatientType ==='ER' ? 'urgent-order' : ''"
                             *ngFor="let patient of FilOutsourceHospitalPatientsList   | filterByKey: searchInOuthospPatient:['HospitalMRNo','HospitalOrderNo', 'HPatientAddress', 'FirstName', 'LastName', 'InternalRemarks' ]; let i = index"
                             (dblClick)="OutSourcePatClick(patient)">
                             <td>{{patient.SalutationTitle || ''}} {{patient.FirstName}} {{patient.LastName || ''}}

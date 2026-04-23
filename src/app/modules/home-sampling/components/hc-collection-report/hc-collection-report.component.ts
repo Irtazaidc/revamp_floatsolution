@@ -21,8 +21,8 @@ import { Conversions } from 'src/app/modules/shared/helpers/conversions';
 export class HcCollectionReportComponent implements OnInit {
 
 
-  isSpinner: boolean = true;
-  disabledButton: boolean = false;
+  isSpinner = true;
+  disabledButton = false;
 
   sampleCollectionReportForm: FormGroup;
   sampleCollectionList: any = [];
@@ -35,7 +35,7 @@ export class HcCollectionReportComponent implements OnInit {
   oneDayEarlier : NgbDate = this.calendar.getPrev(this.today, 'd', 1);
   noComparisonDataMessage = 'Please select user';
   HomeCollectionCites: any = [];
-  disableSearchButton: boolean = true;
+  disableSearchButton = true;
 
   hczones: any = 0;
   hcCity: any = 0;
@@ -95,7 +95,7 @@ export class HcCollectionReportComponent implements OnInit {
 
   getSampleCollectionReport() {
 
-    let formValues = this.sampleCollectionReportForm.getRawValue();
+    const formValues = this.sampleCollectionReportForm.getRawValue();
 formValues.dateFrom = formValues.dateFrom
   ? Conversions.formatDateObject(formValues.dateFrom)
   : null;
@@ -139,7 +139,7 @@ if (formValues.dateFrom && formValues.dateTo) {
 }
 
 
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom,    
       DateTo: formValues.dateTo,
       RiderID: formValues.rider !== ""  ? formValues.rider : null  
@@ -186,7 +186,7 @@ event ? this.currentCityID = event.HCCityID:null
 
   RidersDetailF() {
 
-    let params = {
+    const params = {
       RiderID: 0,
       LocID: this.currentCityID
     }

@@ -1,5 +1,5 @@
 // @ts-nocheck
-// tslint:disable:variable-name
+
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';

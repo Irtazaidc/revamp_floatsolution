@@ -90,7 +90,7 @@ validateDateRange(getGeneratorFuelLog: AbstractControl) {
   return null;
 }
   getGenFuelLogData(){
-    let formValues = this.getGeneratorFuelLog.getRawValue();
+    const formValues = this.getGeneratorFuelLog.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -122,7 +122,7 @@ validateDateRange(getGeneratorFuelLog: AbstractControl) {
       return;
     } 
   
-    let param = {
+    const param = {
       FromDate: Conversions.formatDateObject(formValues.dateFrom) || null,
       ToDate: Conversions.formatDateObject(formValues.dateTo) || null, 
       LocIds: formValues.locID.join(","), 
@@ -217,9 +217,9 @@ validateDateRange(getGeneratorFuelLog: AbstractControl) {
   }
   getGeneratorList() {
     this.GeneratorList = [];
-    let formValues = this.getGeneratorFuelLog.getRawValue();
+    const formValues = this.getGeneratorFuelLog.getRawValue();
     console.log("formValues", formValues)
-    let param = {
+    const param = {
       LocIds : formValues.locID.join(",") || -1, 
     };
 

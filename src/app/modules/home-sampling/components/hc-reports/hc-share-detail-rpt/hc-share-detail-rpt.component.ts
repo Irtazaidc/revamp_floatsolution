@@ -22,14 +22,14 @@ import autoTable from "jspdf-autotable";
 })
 export class HcShareDetailRptComponent implements OnInit {
   excel = [];
-  collectionSize: number = 0;
-  collectionSizeSummaryDetail: number = 0;
+  collectionSize = 0;
+  collectionSizeSummaryDetail = 0;
   paginatedSearchResults: any = [];
   paginatedSearchSummaryResults: any = [];
-  page: number = 1;
-  pageSummary: number = 1;
-  pageSize: number = 20;
-  pageSummarySize: number = 20;
+  page = 1;
+  pageSummary = 1;
+  pageSize = 20;
+  pageSummarySize = 20;
   public Fields = {
     dateFrom: ["", ""],
     dateTo: ["", ""],
@@ -85,7 +85,7 @@ export class HcShareDetailRptComponent implements OnInit {
   }
 
   RidersDetail() {
-    let params = {
+    const params = {
       RiderID: null,
     };
     this.HCService.GetRiders(params).subscribe(
@@ -102,8 +102,8 @@ export class HcShareDetailRptComponent implements OnInit {
     this.HCSummaryRpt = [];
     this.ShareRptDetailList = [];
     this.HCShareComplianceData = [];
-    let formData = this.HCShareRptForm.getRawValue();
-    let params = {
+    const formData = this.HCShareRptForm.getRawValue();
+    const params = {
       DateFrom:
         formData.dateFrom.year +
         "-" +
@@ -156,9 +156,9 @@ export class HcShareDetailRptComponent implements OnInit {
             CommaSepBookingIDs: "",
           }));
 
-          let aa = this.ShareRptDetailList.map((a) => {
+          const aa = this.ShareRptDetailList.map((a) => {
             if (a.VisitNo) {
-              var str2 = a.VisitNo,
+              const str2 = a.VisitNo,
                 letterForvisitID = "VisitID:",
                 letterForBookingID = "BookingID:",
                 indexesForVisitNo = [],
@@ -209,7 +209,7 @@ export class HcShareDetailRptComponent implements OnInit {
 
   getHCSummary() {
     this.spinner.show();
-    let formData = this.HCShareRptForm.getRawValue();
+    const formData = this.HCShareRptForm.getRawValue();
     this.HCSummaryRpt = [];
     this.ShareRptDetailList = [];
     this.HCShareComplianceData = [];
@@ -218,7 +218,7 @@ export class HcShareDetailRptComponent implements OnInit {
       this.toastr.error("Please Select Date Range");
       return;
     } else {
-      let params = {
+      const params = {
         DateFrom: formData.dateFrom
           ? Conversions.formatDateObject(formData.dateFrom)
           : "",
@@ -255,7 +255,7 @@ export class HcShareDetailRptComponent implements OnInit {
 
   getHCShareComplianceRpt() {
     this.spinner.show();
-    let formData = this.HCShareRptForm.getRawValue();
+    const formData = this.HCShareRptForm.getRawValue();
     this.HCSummaryRpt = [];
     this.ShareRptDetailList = [];
     this.HCShareComplianceData = [];
@@ -264,7 +264,7 @@ export class HcShareDetailRptComponent implements OnInit {
       this.toastr.error("Please Select Date Range");
       return;
     } else {
-      let params = {
+      const params = {
         DateFrom: formData.dateFrom
           ? Conversions.formatDateObject(formData.dateFrom)
           : "",
@@ -294,9 +294,9 @@ export class HcShareDetailRptComponent implements OnInit {
               CommaSepBookingIDs: "",
             }));
 
-            let aa = this.HCShareComplianceData.map((a) => {
+            const aa = this.HCShareComplianceData.map((a) => {
               if (a.VisitNo) {
-                var str2 = a.VisitNo,
+                const str2 = a.VisitNo,
                   letterForvisitID = "VisitID:",
                   letterForBookingID = "BookingID:",
                   indexesForVisitNo = [],

@@ -16,7 +16,7 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
 })
 export class InitialReportResetRequestComponent implements OnInit {
 
-  @Input('buttonControls') buttonControls = [''];
+  @Input() buttonControls = [''];
 
 
   loggedInUser: UserModel;
@@ -37,8 +37,8 @@ export class InitialReportResetRequestComponent implements OnInit {
   pageSize = 5;
   collectionSize = 0;
   selectedVisit: any = null;
-  disabledButton: boolean = false;
-  isSpinner: boolean = true;
+  disabledButton = false;
+  isSpinner = true;
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Confirmation Alert', // 'Are you sure?',
@@ -88,7 +88,7 @@ export class InitialReportResetRequestComponent implements OnInit {
 
   getTPByVisitIDFortedReset(VisitID, StatusID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       StatusID: StatusID
     };
@@ -124,12 +124,12 @@ export class InitialReportResetRequestComponent implements OnInit {
   }
   showHideBtnSubmit = false;
   onResetTPCheckboxChange() {
-    let checkedTests = this.visitTests.filter(a => a.checked);
+    const checkedTests = this.visitTests.filter(a => a.checked);
     this.showHideBtnSubmit = (checkedTests.length) ? true : false;
   }
   clickSubmitBtn=false;
   updateVisitTestResetStatus() {
-    let checkedTests = this.visitTests.filter(a => a.checked);
+    const checkedTests = this.visitTests.filter(a => a.checked);
     console.log("visitTests__",this.visitTests);
     console.log("checkedTests__",checkedTests);
     if (this.ResetRequestRemarks.length < 15) {
@@ -143,8 +143,8 @@ export class InitialReportResetRequestComponent implements OnInit {
       return;
     } else {
       this.clickSubmitBtn=false;
-      let TPIDs = checkedTests.map(obj => obj.TPID).join(",")
-      let formData = {
+      const TPIDs = checkedTests.map(obj => obj.TPID).join(",")
+      const formData = {
         VisitID: this.VisitID,
         TPIDs: TPIDs,
         Remarks: this.ResetRequestRemarks,
@@ -158,7 +158,7 @@ export class InitialReportResetRequestComponent implements OnInit {
         
         // if (JSON.parse(data.PayLoadStr).length) {
         // if (data.StatusCode == 200) {
-        let result = JSON.parse(data.PayLoadStr);
+        const result = JSON.parse(data.PayLoadStr);
         if(result[0].Result==1){
           this.toastr.success(data.Message);
         }

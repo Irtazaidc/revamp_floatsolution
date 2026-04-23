@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -19,7 +19,7 @@ import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
   templateUrl: './doctor-share-config.component.html',
   styleUrls: ['./doctor-share-config.component.scss']
 })
-export class DoctorShareConfigComponent implements OnInit {
+export class DoctorShareConfigComponent implements OnInit, AfterViewInit {
 
   spinnerRefs = {
     searchTable: 'searchTable',
@@ -44,7 +44,7 @@ export class DoctorShareConfigComponent implements OnInit {
   AssignedDataList = [];
   isDissabledChk = false;
   isFieldDisabled = false;
-  isChecked: boolean = true;
+  isChecked = true;
   searchAssignForm: FormGroup = this.formBuilder.group(this.Fields)
 
 
@@ -79,7 +79,7 @@ export class DoctorShareConfigComponent implements OnInit {
   mainChk
   isValues
   radiologistLevel: any = []
-  isLargeScreen: boolean = false;
+  isLargeScreen = false;
   subSectionList: any = [];
   constructor(
     private formBuilder: FormBuilder,
@@ -149,12 +149,12 @@ export class DoctorShareConfigComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -268,7 +268,7 @@ export class DoctorShareConfigComponent implements OnInit {
     this.EmpUserID = item?.UserId || null
   }
   getRadiologistInfoDetail() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.questionnaireSrv.getRadiologistInfoDetail(params).subscribe((res: any) => {
@@ -345,7 +345,7 @@ export class DoctorShareConfigComponent implements OnInit {
 
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       BranchID: 1,
       isRadiologyTests: 1,
       SubSectionIDs: this.SubSectionIDs
@@ -634,7 +634,7 @@ export class DoctorShareConfigComponent implements OnInit {
     this.updateFilteredList();
     this.hideLoc = false;
     this.hideTest = true;
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     console.log("formValues", formValues);
     if (this.EmpUserID == '' || this.EmpUserID == null || this.EmpUserID == undefined) {
       this.toastr.error('Please select the doctor', 'Doctor not selected');
@@ -648,7 +648,7 @@ export class DoctorShareConfigComponent implements OnInit {
       this.toastr.error('Please select the test', 'Test not selected');
       return
     }
-    let objParams = {
+    const objParams = {
       TPID: formValues.TPID || null,
       DoctorUserID: this.EmpUserID || null,
       LocID: formValues.locID || null,
@@ -685,8 +685,8 @@ export class DoctorShareConfigComponent implements OnInit {
     this.updateFilteredList();
     this.hideLoc = true;
     this.hideTest = false;
-    let formValues = this.searchAssignForm.getRawValue();
-    let objParams = {
+    const formValues = this.searchAssignForm.getRawValue();
+    const objParams = {
       TPID: formValues.TPID || null,
       DoctorUserID: this.EmpUserID || null,
       LocID: formValues.locID || null,
@@ -750,7 +750,7 @@ export class DoctorShareConfigComponent implements OnInit {
   distaniationBranchesList = [];
   distaniationRadiologistList = [];
   showBranchSelectionModal() {
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     const locId = formValues.locID
     const RadiologistUserId = formValues.doctorUserID
     // if (!locId) {
@@ -826,7 +826,7 @@ export class DoctorShareConfigComponent implements OnInit {
 
   copyDataToSelectedBranch() {
     this.isBranchSubmitted = true;
-    let formValues = this.searchAssignForm.getRawValue()
+    const formValues = this.searchAssignForm.getRawValue()
     if (!this.branchIds.length) {
       this.toastr.warning("Please select branch first");
       return;
@@ -843,7 +843,7 @@ export class DoctorShareConfigComponent implements OnInit {
     this.LabConfService.transferRISTPDoctorShareLocToLocs(objParam).subscribe(
       (data: any) => {
        this.stopCopyLoading();
-        let result = JSON.parse(data.PayLoadStr)
+        const result = JSON.parse(data.PayLoadStr)
         if (data.StatusCode === 200 && result[0].Result === 1) {
           this.branchPopupRef.close();
           this.toastr.success("Configuration applied successfully to all selected branches.");
@@ -871,7 +871,7 @@ export class DoctorShareConfigComponent implements OnInit {
   }
   copyDataToSelectedRadiologists() {
     this.isRadiologistSubmitted = true;
-    let formValues = this.searchAssignForm.getRawValue()
+    const formValues = this.searchAssignForm.getRawValue()
     if (!this.radiologistIds?.length) {
       this.toastr.warning("Please select radiologist first");
       return;
@@ -887,7 +887,7 @@ export class DoctorShareConfigComponent implements OnInit {
     this.LabConfService.TransferRISShareDocToDocs(objParam).subscribe(
       (data: any) => {
         this.stopCopyLoading();
-        let result = data.PayLoad
+        const result = data.PayLoad
         if (data.StatusCode === 200 && result[0].Result === 1) {
           this.branchPopupRef.close();
           this.toastr.success("Configuration applied successfully to all selected radiologists.");

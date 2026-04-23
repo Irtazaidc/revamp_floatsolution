@@ -188,7 +188,7 @@ export class StepperComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
-  // tslint:disable-next-line:variable-name
+ 
   constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {

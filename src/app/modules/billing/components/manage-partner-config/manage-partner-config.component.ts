@@ -116,7 +116,7 @@ export class ManagePartnerConfigComponent implements OnInit {
 
   getPartnersData() {
     this.partnersDataList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.searchTable);
     this.Billing.getAllPartners().subscribe(
       (res: any) => {
@@ -146,13 +146,13 @@ export class ManagePartnerConfigComponent implements OnInit {
   this.hoveredMachineID = null;
 }
 
-   tooltipVisible: boolean = false;
+   tooltipVisible = false;
   hoveredMachineID: number | null = null;
-  tooltipBranchesMap: { [key: number]: string } = {};
+  tooltipBranchesMap: Record<number, string> = {};
   showTooltip(PID) {
     this.tooltipVisible = true;
     this.hoveredMachineID = PID;
-    let params = {
+    const params = {
       PartnerID: PID
     };
      this.tooltipBranchesMap[PID] = 'Loading...';
@@ -182,7 +182,7 @@ export class ManagePartnerConfigComponent implements OnInit {
   getPartnerUsersData() {
     this.partnerUsersDataList = [];
     this.partnerUsersDataList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.searchTable)
     this.Billing.GetPanelUsers(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.searchTable)
@@ -211,7 +211,7 @@ export class ManagePartnerConfigComponent implements OnInit {
   RISMachineIDs: any = null;
   getRISMachine() {
     this.RISMachines = [];
-    let params = {
+    const params = {
       RISMachineID: null,
     };
     this.spinner.show(this.spinnerRefs.searchTable);
@@ -242,7 +242,7 @@ export class ManagePartnerConfigComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       PartnerID: this.PatnerID,
     };
     this.spinner.show(this.spinnerRefs.insertForm);
@@ -284,7 +284,7 @@ export class ManagePartnerConfigComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       PartnerID: this.PatnerID,
     };
     this.spinner.show(this.spinnerRefs.insertForm);
@@ -358,7 +358,7 @@ export class ManagePartnerConfigComponent implements OnInit {
   // }
 
   InsertUpdatePartners() {
-    let formValues = this.insertionForm.getRawValue();
+    const formValues = this.insertionForm.getRawValue();
     if (this.insertionForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -368,7 +368,7 @@ export class ManagePartnerConfigComponent implements OnInit {
     // if (this.RISMachineIDs && this.PatnerID) {
     //   this.InsertUpdatePartnersRISMachine();
     // }
-    let params = {
+    const params = {
       PartnerID: this.PatnerID || null,
       PartnerName: formValues.PatnerName || null,
       PartnerContactNo: formValues.PatnerContactNo || null,
@@ -403,7 +403,7 @@ export class ManagePartnerConfigComponent implements OnInit {
   }
 
   InsertUpdatePartnerUsers() {
-    let formValues = this.CreateUsersForm.getRawValue();
+    const formValues = this.CreateUsersForm.getRawValue();
     if (this.CreateUsersForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -420,7 +420,7 @@ export class ManagePartnerConfigComponent implements OnInit {
     // console.log("🚀 Obj params:", params);
     // this.spinner.show(this.spinnerRefs.searchTable2);
     // this.Billing.InserUpdatePartnerUser(params).subscribe(
-        let params = {
+        const params = {
       PanelUserId:  this.PatnerUserID || null,
       Username: formValues.Username?.trim() || null,
       Password: formValues.Password || null,
@@ -468,7 +468,7 @@ export class ManagePartnerConfigComponent implements OnInit {
   }
 
   InsertUpdatePartnersRISMachine() {
-    let checkedItems = this.RISMachines.filter(a => a.checked);
+    const checkedItems = this.RISMachines.filter(a => a.checked);
     if (checkedItems?.length == 0) {
       this.toastr.warning("Please Provide MachinesIds");
       return;
@@ -479,7 +479,7 @@ export class ManagePartnerConfigComponent implements OnInit {
     }
 
     console.log(" checkedItems:", checkedItems)
-    let params = {
+    const params = {
       PartnerID: this.PatnerID || null,
       CreatedBy: this.loggedInUser.userid || -1,
       tblPatnerMachine: checkedItems.map(a => {
@@ -684,7 +684,7 @@ PartnerInformation = null;
       return;
     }
 
-    let params = {
+    const params = {
       PanelUserId: this.PatnerUserID
     };
     this.spinner.show(this.spinnerRefs.UsersCreateForm)
@@ -692,7 +692,7 @@ PartnerInformation = null;
       this.spinner.hide(this.spinnerRefs.UsersCreateForm)
       if (res.StatusCode === 200) {
         if (res.PayLoad.length) {
-          let panelUsersDatiels = res.PayLoad;
+          const panelUsersDatiels = res.PayLoad;
           //  this.userCreationForm.patchValue(this.panelUsersDatiels[0]);
           const userDetails = { ...panelUsersDatiels[0] };
           userDetails.Password = 'DummyPassword@123';
@@ -724,7 +724,7 @@ PartnerInformation = null;
       return;
     }
 
-    let params = {
+    const params = {
       PanelUserIDs: this.selectedPatnerUserID,
       PanelId: -1,
       B2BDoctorID: -1, // this.PatnerID

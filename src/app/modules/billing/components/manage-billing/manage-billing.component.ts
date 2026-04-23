@@ -122,7 +122,7 @@ export class ManageBillingComponent implements OnInit {
 
 
   copyText(text: any, i = null) {
-    let pin = text.AccNo
+    const pin = text.AccNo
     this.helper.copyMessage(pin);
   }
 
@@ -176,7 +176,7 @@ export class ManageBillingComponent implements OnInit {
 
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       branchId: null
     }
     if (!this.loggedInUser.locationid) {
@@ -200,7 +200,7 @@ export class ManageBillingComponent implements OnInit {
 
 
         // setTimeout(() => {
-        let panelID = this.panelsList.find(panel => panel.PanelId === 1714);
+        const panelID = this.panelsList.find(panel => panel.PanelId === 1714);
         if (panelID) {
           this._form.get('PanelId').setValue(1714);
           this._form.get('PanelId').disable();
@@ -216,14 +216,14 @@ export class ManageBillingComponent implements OnInit {
       this.toastr.error("Something went wrong.");
     });
   }
-  disabledButtonSearch: boolean = false;
-  isSpinnerSearch: boolean = true;
+  disabledButtonSearch = false;
+  isSpinnerSearch = true;
   BranchID = null;
   disabledVal = true;
   panelVisitsData: any[] = []; // Assuming you have data assigned to this variable
   totalSum = 0;
   getPanelVisitsForBilling() {
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     // Get the form values for dateFrom and dateTo
     const dateFrom: any = formValues.dateFrom;
     const dateTo: any = formValues.dateTo;
@@ -251,7 +251,7 @@ export class ManageBillingComponent implements OnInit {
     this.BranchID = formValues.BranchID || -1;
     this.selectedPanel = formValues.PanelId || null;
     this._form.markAllAsTouched();
-    let objParams = {
+    const objParams = {
       FromDate: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
       ToDate: formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null,
       PanelID: formValues.PanelId ? formValues.PanelId : -1,
@@ -266,7 +266,7 @@ export class ManageBillingComponent implements OnInit {
       this.isSubmittedValue = false;
       this.spinner.hide(this.spinnerRefs.listSection);
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
         this.totalSum = response.reduce((sum, obj) => {
           if (obj.invData) {
             sum += obj.invData.reduce((innerSum, innerObj) => innerSum + innerObj.NetAmount, 0);
@@ -277,9 +277,9 @@ export class ManageBillingComponent implements OnInit {
         }, 0);
 
 
-        let res = response.reduce((re, o) => {
-          let existObj = re.find(obj => obj.PatientId === o.PatientId);
-          let amt = 0;
+        const res = response.reduce((re, o) => {
+          const existObj = re.find(obj => obj.PatientId === o.PatientId);
+          const amt = 0;
           if (existObj) {
             existObj.invData.push({
               VisitId: o.VisitId,
@@ -417,7 +417,7 @@ export class ManageBillingComponent implements OnInit {
   }
 
 
-  selectedCount: number = 0;
+  selectedCount = 0;
   flexCheckDisabled = false;
   onCheckboxChange_() {
     // chek for the max limit of a data packet
@@ -534,15 +534,15 @@ export class ManageBillingComponent implements OnInit {
   }
 
   insertPanelBill(status) {
-    let isFinal = status;
-    let formValues = this._form.getRawValue();
+    const isFinal = status;
+    const formValues = this._form.getRawValue();
     this.BranchID = formValues.BranchID || null;
     this.selectedPanel = formValues.PanelId || null;
     this._form.markAllAsTouched();
 
     // Initialize an empty array to store the filtered data
-    let filteredData: any[] = [];
-    let sumNetAmount: number = 0; // Initialize the sum variable
+    const filteredData: any[] = [];
+    let sumNetAmount = 0; // Initialize the sum variable
 
     // Loop through each item in the PandelVisitsData array
     for (const item of this.panelVisitsData) {
@@ -559,7 +559,7 @@ export class ManageBillingComponent implements OnInit {
         }
       }
     }
-    let checkFiltered = this.panelVisitsData.filter(a => a.checked);
+    const checkFiltered = this.panelVisitsData.filter(a => a.checked);
     // console.log("🚀 ~ ManageBillingComponent ~ insertPanelBill ~ checkFiltered:", checkFiltered)
     if (!checkFiltered.length) {
       this.toastr.info("Please select any patient to generate the bill", "No Patient Selected!");
@@ -572,10 +572,10 @@ export class ManageBillingComponent implements OnInit {
     }
     // Output the filtered data
     // Get the current date and time for BillMonth
-    let currentDate = moment().format('YYYY-MM-DD'); // Get current date in YYYY-MM-DD format
+    const currentDate = moment().format('YYYY-MM-DD'); // Get current date in YYYY-MM-DD format
     // Create the desired format
-    let billMonth = `${currentDate}T00:00:00+05:00`; // Concatenate the current date with the desired time and offset
-    let objParam = {
+    const billMonth = `${currentDate}T00:00:00+05:00`; // Concatenate the current date with the desired time and offset
+    const objParam = {
       PanelBillNewID: this.PanelBillID,
       PanelID: formValues.PanelId,
       // RefNo: filteredData[0].RefNo,
@@ -618,7 +618,7 @@ export class ManageBillingComponent implements OnInit {
       }
       if (JSON.parse(resp.PayLoadStr).length) {
         if (resp.StatusCode == 200) {
-          let result = JSON.parse(resp.PayLoadStr)
+          const result = JSON.parse(resp.PayLoadStr)
           if(result[0].Result == 2){
             this.toastr.error('The selected visit has already been included in an existing bill. Duplicate billing is not allowed.','Duplicated Bill');
             this.selectedCount = 0;
@@ -675,7 +675,7 @@ export class ManageBillingComponent implements OnInit {
 
     filteredData = row.invData.filter(a => a.checked);
     // console.log("filteredData:", filteredData)
-    let objParam = {
+    const objParam = {
       PanelBillNewID: this.PanelBillID,
       BillNo: this.BillNo,
       CreatedBy: this.loggedInUser.userid || -99,
@@ -726,19 +726,19 @@ export class ManageBillingComponent implements OnInit {
   }
   PanelBillIDReload = null;
   updatePanelBill(status) {
-    let isFinal = status;
+    const isFinal = status;
     if (this.isTPCancel && isFinal) {
       this.toastr.error("This Bill has some cancelled test(s) remove the visit before finalizing it.");
       return;
     }
 
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     this.BranchID = formValues.BranchID || null;
     this.selectedPanel = formValues.PanelId || null;
     this._form.markAllAsTouched();
     // Initialize an empty array to store the filtered data
-    let filteredData: any[] = [];
-    let sumNetAmount: number = 0; // Initialize the sum variable
+    const filteredData: any[] = [];
+    let sumNetAmount = 0; // Initialize the sum variable
 
     // Loop through each item in the PandelVisitsData array
     for (const item of this.generatedPanelVisitsData) {
@@ -755,7 +755,7 @@ export class ManageBillingComponent implements OnInit {
         }
       }
     }
-    let checkFiltered = this.generatedPanelVisitsData.filter(a => a.checked);
+    const checkFiltered = this.generatedPanelVisitsData.filter(a => a.checked);
     if (!checkFiltered.length) {
       this.toastr.info("Please select any patient to generate the bill", "No Patient Selected!");
       return;
@@ -768,10 +768,10 @@ export class ManageBillingComponent implements OnInit {
     // Output the filtered data
     // console.log("panelVisitsDataFiltered________________",filteredData);
     // Get the current date and time for BillMonth
-    let currentDate = moment().format('YYYY-MM-DD'); // Get current date in YYYY-MM-DD format
+    const currentDate = moment().format('YYYY-MM-DD'); // Get current date in YYYY-MM-DD format
     // Create the desired format
-    let billMonth = `${currentDate}T00:00:00+05:00`; // Concatenate the current date with the desired time and offset
-    let objParam = {
+    const billMonth = `${currentDate}T00:00:00+05:00`; // Concatenate the current date with the desired time and offset
+    const objParam = {
       PanelBillNewID: this.PanelBillID,
       PanelID: formValues.PanelId,
       // RefNo: filteredData[0].RefNo,
@@ -815,7 +815,7 @@ export class ManageBillingComponent implements OnInit {
       if (JSON.parse(resp.PayLoadStr).length) {
         if (resp.StatusCode == 200) {
           this.PanelBillIDReload = this.PanelBillID;
-          let result = JSON.parse(resp.PayLoadStr)
+          const result = JSON.parse(resp.PayLoadStr)
           if(result[0].Result == 2){
             this.toastr.error('The selected visit has already been included in an existing bill. Duplicate billing is not allowed.','Duplicated Bill');
             this.selectedCount = 0;
@@ -839,7 +839,7 @@ export class ManageBillingComponent implements OnInit {
             this.BillPanelID = 0;
             this.getPanelVisitsForBilling();
             if (this.PanelBillIDReload) {
-              let row = this.panelBills.find(a => a.PanelBillNewID == this.PanelBillIDReload);
+              const row = this.panelBills.find(a => a.PanelBillNewID == this.PanelBillIDReload);
               this.getPanelBill(row, this.rowIndex);
             } else {
               this.getPanelBill(null, null);
@@ -949,7 +949,7 @@ export class ManageBillingComponent implements OnInit {
     this.rowIndex = i;
     this.rowIndexBillDetail = null;
     this.PanelBillID = row ? row.PanelBillNewID : null;
-    let formValues = this._formWorklist.getRawValue();
+    const formValues = this._formWorklist.getRawValue();
 
     // Get the form values for dateFrom and dateTo
     const dateFrom: any = formValues.startDate;
@@ -976,7 +976,7 @@ export class ManageBillingComponent implements OnInit {
     }
 
     this._formWorklist.markAllAsTouched();
-    let objParams = {
+    const objParams = {
       FromDate: formValues.startDate ? Conversions.formatDateObject(formValues.startDate) : null,
       ToDate: formValues.endDate ? Conversions.formatDateObject(formValues.endDate) : null,
       PanelID: formValues.PanelId ? formValues.PanelId : null,
@@ -996,7 +996,7 @@ export class ManageBillingComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.listSectionBill);
       }
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
         // console.log("resp is : ",response)
         // console.log("resp[0] is : ",response[0])
         if (!response.length) {
@@ -1009,7 +1009,7 @@ export class ManageBillingComponent implements OnInit {
             this.Remarks = this.panelBills[0].Remarks;
             // this.BillStatus = this.panelBills[0].BillStatus;
             this.BillStatus = this.panelBills[0].isFinal ? 'Finalized' : 'Drafted';
-            let BillNetAmoutRaw = this.panelBills[0].NetAmount || 0;
+            const BillNetAmoutRaw = this.panelBills[0].NetAmount || 0;
             this.BillNetAmout = BillNetAmoutRaw.toLocaleString();
             this.BillPanelID = this.panelBills[0].PanelId || 0;
             this.BillGeneratingDate = this.panelBills[0].BillGeneratingDate || null;
@@ -1023,7 +1023,7 @@ export class ManageBillingComponent implements OnInit {
           this.Remarks = this.panelBillDetail['Remarks'];
           this.BillStatus = this.panelBillDetail['BillStatus'];
           this.BillStatus = this.panelBillDetail['isFinal'] ? 'Finalized' : 'Drafted';
-          let BillNetAmoutRaw = this.panelBillDetail['NetAmount'] || 0;
+          const BillNetAmoutRaw = this.panelBillDetail['NetAmount'] || 0;
           this.BillNetAmout = BillNetAmoutRaw.toLocaleString();
           this.BillPanelID = this.panelBillDetail['PanelId'] || 0;
           this.BillGeneratingDate = this.panelBillDetail['BillGeneratingDate'] || null;
@@ -1058,7 +1058,7 @@ export class ManageBillingComponent implements OnInit {
   generatedPanelVisitsData: any[] = [];
   getPanelBillDetail() {
     this.isNew = false;
-    let objParams = {
+    const objParams = {
       PanelBillID: this.PanelBillIDReload ? this.PanelBillIDReload : this.PanelBillID
     };
 
@@ -1068,7 +1068,7 @@ export class ManageBillingComponent implements OnInit {
       this.spinner.hide(this.spinnerRefs.listSection);
 
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
 
         if (!response.length) {
           this.noDataMessageGeneratedBill = 'No record found.';
@@ -1140,7 +1140,7 @@ export class ManageBillingComponent implements OnInit {
         });
 
         // Convert map to array and compute total amount
-        let res = Array.from(patientMap.values());
+        const res = Array.from(patientMap.values());
         res.forEach(patient => {
           const total = patient.invData.reduce((sum, item) => sum + (item.NetAmount || 0), 0);
           patient.TotalAmt = total.toLocaleString();
@@ -1161,14 +1161,14 @@ export class ManageBillingComponent implements OnInit {
   printPanleBillsummaryReport() {
     const url = environment.patientReportsPortalUrl + 'panel-bill-summary?p=' + btoa(JSON.stringify({ PanelBillID: this.PanelBillID, BillNo: this.BillNo, BillGeneratingDate: this.BillGeneratingDate, BillPanelID: this.BillPanelID }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
 
   }
   printPanleBillPatientWiseReport(parentRow) {
-    let obj = {
+    const obj = {
       PatientID: parentRow.PatientId,
       PanelBillID: this.PanelBillID,
       BillNo: this.BillNo,
@@ -1181,7 +1181,7 @@ export class ManageBillingComponent implements OnInit {
     }
     const url = environment.patientReportsPortalUrl + 'panel-bill-patient-wise-summary?p=' + btoa(JSON.stringify(obj));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -1267,7 +1267,7 @@ export class ManageBillingComponent implements OnInit {
     this.disabledButtonSrv = true;
     this.isSpinnerSrv = false;
     this.isSubmitted = true;
-    let checkedItems = this.panelAddOnServices.filter(a => a.checked);
+    const checkedItems = this.panelAddOnServices.filter(a => a.checked);
     if (!checkedItems.length) {
       this.toastr.warning("Please select any service", "No Service Selected");
       this.disabledButtonSrv = false;
@@ -1292,7 +1292,7 @@ export class ManageBillingComponent implements OnInit {
       // Remove existing invData items without VisitId
       // this.panelVisitsData[this.srvIndex].invData = this.panelVisitsData[this.srvIndex].invData.filter(item => item.VisitId);
 
-      let extraService = checkedItems.map(a => ({
+      const extraService = checkedItems.map(a => ({
         VisitId: null,
         ReceiptNo: '',
         AccNo: '',
@@ -1325,7 +1325,7 @@ export class ManageBillingComponent implements OnInit {
       });
 
       // Recalculate TotalAmt for the parent row
-      let totalAmt = this.panelVisitsData[this.srvIndex].invData.reduce((total, item) => total + item.NetAmount, 0);
+      const totalAmt = this.panelVisitsData[this.srvIndex].invData.reduce((total, item) => total + item.NetAmount, 0);
       this.panelVisitsData[this.srvIndex].TotalAmt = totalAmt; // Keep it as a number
       this.isSubmitted = false;
       this.onCheckboxChange();
@@ -1346,7 +1346,7 @@ export class ManageBillingComponent implements OnInit {
     this.disabledButtonSrv = true;
     this.isSpinnerSrv = false;
     this.isSubmitted = true;
-    let checkedItems = this.panelAddOnServices.filter(a => a.checked);
+    const checkedItems = this.panelAddOnServices.filter(a => a.checked);
     // console.log("checkedItems: ",checkedItems)
     if (!checkedItems.length) {
       this.toastr.warning("Please select any service", "No Service Selected");
@@ -1372,7 +1372,7 @@ export class ManageBillingComponent implements OnInit {
       // Remove existing invData items without VisitId
       // this.panelVisitsData[this.srvIndex].invData = this.panelVisitsData[this.srvIndex].invData.filter(item => item.VisitId);
 
-      let extraService = checkedItems.map(a => ({
+      const extraService = checkedItems.map(a => ({
         VisitId: null,
         ReceiptNo: '',
         AccNo: '',
@@ -1405,7 +1405,7 @@ export class ManageBillingComponent implements OnInit {
       });
 
       // Recalculate TotalAmt for the parent row
-      let totalAmt = this.generatedPanelVisitsData[this.srvIndex].invData.reduce((total, item) => total + item.NetAmount, 0);
+      const totalAmt = this.generatedPanelVisitsData[this.srvIndex].invData.reduce((total, item) => total + item.NetAmount, 0);
       this.generatedPanelVisitsData[this.srvIndex].TotalAmt = totalAmt; // Keep it as a number
       this.isSubmitted = false;
       this.onCheckboxChangeGenerated();
@@ -1443,7 +1443,7 @@ export class ManageBillingComponent implements OnInit {
     this.panelVisitsData[index_i].invData.splice(index_j, 1);
 
     // Recalculate the total sum for the parent row
-    let totalAmt = this.panelVisitsData[index_i].invData.reduce((total, item) => total + item.NetAmount, 0);
+    const totalAmt = this.panelVisitsData[index_i].invData.reduce((total, item) => total + item.NetAmount, 0);
     this.panelVisitsData[index_i].TotalAmt = totalAmt.toLocaleString();
 
     // Recalculate total sum for selected rows
@@ -1454,7 +1454,7 @@ export class ManageBillingComponent implements OnInit {
     this.generatedPanelVisitsData[index_i].invData.splice(index_j, 1);
 
     // Recalculate the total sum for the parent row
-    let totalAmt = this.generatedPanelVisitsData[index_i].invData.reduce((total, item) => total + item.NetAmount, 0);
+    const totalAmt = this.generatedPanelVisitsData[index_i].invData.reduce((total, item) => total + item.NetAmount, 0);
     this.generatedPanelVisitsData[index_i].TotalAmt = totalAmt.toLocaleString();
 
     // Recalculate total sum for selected rows
@@ -1524,11 +1524,11 @@ export class ManageBillingComponent implements OnInit {
   generatedPanelVisitsDataPromiss = [];
   getPanelVisitsForBillingMerge() {
     return new Promise<any>((resolve, reject) => {
-      let formValues = this._form.getRawValue();
+      const formValues = this._form.getRawValue();
       this.BranchID = formValues.BranchID || -1;
       this.selectedPanel = formValues.PanelId || null;
       this._form.markAllAsTouched();
-      let objParams = {
+      const objParams = {
         FromDate: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
         ToDate: formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null,
         PanelID: formValues.PanelId ? formValues.PanelId : -1,
@@ -1557,7 +1557,7 @@ export class ManageBillingComponent implements OnInit {
 
   getPanelBillDetailMerge() {
     return new Promise<any>((resolve, reject) => {
-      let objParams = {
+      const objParams = {
         PanelBillID: this.PanelBillID
       };
       // this.spinner.show(this.spinnerRefs.listSection);
@@ -1579,14 +1579,14 @@ export class ManageBillingComponent implements OnInit {
   async loadData() {
     this.isNew = false;
     try {
-      let panelVisitsPromisePromiss = this.getPanelVisitsForBillingMerge();
-      let generatedPanelVisitsPromise = this.getPanelBillDetailMerge();
+      const panelVisitsPromisePromiss = this.getPanelVisitsForBillingMerge();
+      const generatedPanelVisitsPromise = this.getPanelBillDetailMerge();
       // Wait for both promises to resolve
-      let panelVisitsData = await panelVisitsPromisePromiss;
-      let generatedPanelVisitsData = await generatedPanelVisitsPromise;
+      const panelVisitsData = await panelVisitsPromisePromiss;
+      const generatedPanelVisitsData = await generatedPanelVisitsPromise;
       this.selectedCount = generatedPanelVisitsData.filter(row => row.checked).length;
 
-      let filteredPanelVisitsData = panelVisitsData.filter(obj1 =>
+      const filteredPanelVisitsData = panelVisitsData.filter(obj1 =>
         !generatedPanelVisitsData.some(obj2 => obj1.VisitId === obj2.VisitId)
       );
 
@@ -1682,7 +1682,7 @@ export class ManageBillingComponent implements OnInit {
       });
 
       // Convert map to array
-      let res = Array.from(patientMap.values());
+      const res = Array.from(patientMap.values());
 
       // Calculate TotalAmt for each patient
       res.forEach(patient => {
@@ -1702,7 +1702,7 @@ export class ManageBillingComponent implements OnInit {
 
   visitDetails = null;
   getVisitDetails(visitID) {
-    let params = { VisitId: visitID };
+    const params = { VisitId: visitID };
     this.visitDetails = {
       // pateintInfo: null,
       // visitInfo: null,

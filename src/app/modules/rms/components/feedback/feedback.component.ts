@@ -96,11 +96,11 @@ export class FeedbackComponent implements OnInit {
 
   getPatientFeedbackData() {
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null;
     formValues.dateTo = formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null;
 
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom,    
       DateTo: formValues.dateTo,      
       AccountNo: formValues.pin || null,

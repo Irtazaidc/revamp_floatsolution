@@ -58,11 +58,11 @@ export class ManageJobsComponent implements OnInit {
   ActionLabel: string;
   ExistingRow: any[];
   ExistingRowRemarks: any[];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerRecommended: boolean = true;//Hide Loader
-  isSpinnerPend: boolean = true;//Hide Loader
-  isSpinnerCancel: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerRecommended = true;//Hide Loader
+  isSpinnerPend = true;//Hide Loader
+  isSpinnerCancel = true;//Hide Loader
   SkillsArray: any;
   RemarksErrorMessage: string;
   loggedInUser: UserModel;
@@ -92,7 +92,7 @@ export class ManageJobsComponent implements OnInit {
   getJobStatus(){
     this.JobStatusList=[];
     this.recruitmentService.getJobStatus().subscribe((res: any) => {
-      let resJobStatus = res.PayLoad;
+      const resJobStatus = res.PayLoad;
       if(resJobStatus){
         this.JobStatusList = res.PayLoad;
         this.JobStatusList = this.JobStatusList.filter( a=> (a.JobStatusID != 5 && a.JobStatusID != 1));
@@ -106,7 +106,7 @@ export class ManageJobsComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -131,14 +131,14 @@ export class ManageJobsComponent implements OnInit {
     this.spinnerText = 'Loading...';
     this.spinner.show(this.spinnerRefs.jobSearchSection);
     this.JobList =[];
-    let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const formValues = this.formSearchJob.getRawValue();
+    const objParm = {
       LocID:  formValues.branchIds,
       DepartmentID:  formValues.departmentIds,
       JobStatusID:  1
     }  
     this.recruitmentService.searchJobRequest(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         
         this.JobList = resSearchJob||[];
@@ -215,7 +215,7 @@ export class ManageJobsComponent implements OnInit {
     this.JobRequestID = id;
     this.ExistingRow = [];
     this.ExistingRowRemarks =[];
-    let paramObj = {
+    const paramObj = {
       JobRequestID:this.JobRequestID
     }
     
@@ -245,7 +245,7 @@ export class ManageJobsComponent implements OnInit {
           this.Skills= this.ExistingRow["SkillsRequiredHTML"];
           let skillRec = this.ExistingRow["SkillsRequired"];
           skillRec = skillRec.replaceAll("\n", "").replaceAll("\r", "").replaceAll("&nbsp;","");
-          let string  = skillRec.split(',');
+          const string  = skillRec.split(',');
           [...string];
           Array.from(string);
          this.SkillsArray = Object.assign([], string);
@@ -262,7 +262,7 @@ export class ManageJobsComponent implements OnInit {
     this.spinnerText = 'Processing...';
     this.loadingProcess('show',0); 
     this.spinner.show(this.spinnerRefs.jobSearchSection); 
-    let jobListChecked = this.JobList.filter( a=> a.checked);
+    const jobListChecked = this.JobList.filter( a=> a.checked);
     let isValidStatus = true;
     let isValidRemarks = true;
     jobListChecked.forEach(a => {;
@@ -284,7 +284,7 @@ export class ManageJobsComponent implements OnInit {
       return;
     } else {
       if(jobListChecked.length){
-        let objParam = {
+        const objParam = {
           CreatedBy: this.loggedInUser.userid || -99,
           tblJobRequestStatus: jobListChecked.map( a => {
             return {
@@ -343,10 +343,10 @@ export class ManageJobsComponent implements OnInit {
       alertMessage = 'Something went wrong';
     }
     this.loadingProcess('show',statusID) 
-     let formValues = this.formUpdateStatus.getRawValue();
+     const formValues = this.formUpdateStatus.getRawValue();
      this.formUpdateStatus.markAllAsTouched();
     if(this.formUpdateStatus.valid) {
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid || -99,
         tblJobRequestStatus: [{
           "JobRequestID": this.JobRequestID,

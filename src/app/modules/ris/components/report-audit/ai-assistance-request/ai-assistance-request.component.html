@@ -201,7 +201,7 @@
             </div>
         </div>
         <!--end::Search Filter-->
-        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!='assign-bulk-test'">
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!=='assign-bulk-test'">
             <div class="col-12">
                 <img class="img-fluid" src="assets/images/brand/no-data-found-orange.svg" style="height: 178px;"
                     alt="No Data Found image">
@@ -210,7 +210,7 @@
                 </p>
             </div>
         </div>
-        <div class="row" *ngIf="screenIdentity!='assign-bulk-test'">
+        <div class="row" *ngIf="screenIdentity!=='assign-bulk-test'">
             <div class="col-md-12">
                 <div class="table-responsive" style="min-height: 330px;">
                     <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
@@ -354,7 +354,7 @@
                     <label for="otherInstructions" class="control-label">Feedback Remarks :</label>
                     <textarea cols="" rows="" class="form-control form-control-sm" [disabled]="AuditorRadiologistID"
                         [(ngModel)]="RadiologistRemarks" name="AIFeedbackRemarks"
-                        [ngClass]="{'invalid': (!RadiologistRemarks || RadiologistRemarks=='') && RadiologistRating == 3, 'invalid-highlighted': (!RadiologistRemarks || RadiologistRemarks=='') && clickSubmitAIRequestFeedback && RadiologistRating == 3}"></textarea>
+                        [ngClass]="{'invalid': (!RadiologistRemarks || RadiologistRemarks==='') && RadiologistRating == 3, 'invalid-highlighted': (!RadiologistRemarks || RadiologistRemarks==='') && clickSubmitAIRequestFeedback && RadiologistRating == 3}"></textarea>
                 </div>
             </div>
         </div>

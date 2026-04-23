@@ -126,7 +126,7 @@ export class ReportDisclaimerComponent implements OnInit {
   DisclaimerHeader = ""
   DisclaimerFooter = ""
   DisclaimerBody = ""
-  DisclaimerBodyHTML: string = '<p></p>';
+  DisclaimerBodyHTML = '<p></p>';
   actionButtonClicked = false;
   loggedInUser: UserModel;
   // end:: Form and list Variabls 
@@ -155,17 +155,17 @@ export class ReportDisclaimerComponent implements OnInit {
   searchTextTest = "";
   getSubSection() {
     this.subSectionList = [];
-    let objParam = {
+    const objParam = {
       SectionID: -1,
       LabDeptID: -1
     }
     this.spinner.show(this.spinnerRefs.sectionListSection);
     this.sharedService.getData(API_ROUTES.LOOKUP_GET_SUBSECTION_SECTIONID, objParam).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.sectionListSection);
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       // this.subSectionList = [];
       if (this.existingSectionIDs.length) {
-        let data = _response;
+        const data = _response;
         data.forEach(subsection => {
           subsection.checked = this.existingSectionIDs.includes(subsection.SubSectionId);
         });
@@ -191,16 +191,16 @@ export class ReportDisclaimerComponent implements OnInit {
     })
   }
   getTestProfileBySectionIDs() {
-    let checkedItems = this.subSectionList.filter(a => a.checked);
+    const checkedItems = this.subSectionList.filter(a => a.checked);
     this.testProfileList = [];
-    let objParam = {
+    const objParam = {
       SubSectionIDs: checkedItems.length ? checkedItems.map(obj => obj.SubSectionId).join(",") : -1,
       LabDeptID: -1
     }
     this.spinner.show(this.spinnerRefs.testListSection);
     this.sharedService.getData(API_ROUTES.GET_TEST_PROFILE_BY_SECTIONIDS, objParam).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.testListSection);
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.testProfileList = _response;
     }, (err) => {
       this.spinner.hide(this.spinnerRefs.testListSection);
@@ -212,7 +212,7 @@ export class ReportDisclaimerComponent implements OnInit {
     this.hideSections = true;
     this.AssociationCardTitle = "Associate Tests";
     this.rowIndex = i;
-    let objParam = {
+    const objParam = {
       DDisclaimerID: DDisclaimerID
     }
     if (objParam.DDisclaimerID) {
@@ -223,7 +223,7 @@ export class ReportDisclaimerComponent implements OnInit {
     this.sharedService.getData(API_ROUTES.GET_D_DISCLAIMER, objParam).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.addUpdateSection);
       this.spinner.hide(this.spinnerRefs.disclaimerListSection);
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       if (objParam.DDisclaimerID) {
         this.disclaimerRow = [];
         this.disclaimerRow = _response || [];
@@ -274,7 +274,7 @@ export class ReportDisclaimerComponent implements OnInit {
       return
     }
 
-    let objParam = {
+    const objParam = {
       DDisclaimerID: this.DDisclaimerID,
       DisclaimerTitle: this.DisclaimerTitle,
       DisclaimerHeader: "",
@@ -333,13 +333,13 @@ export class ReportDisclaimerComponent implements OnInit {
   getTPByTPDisclaimerID(TPDisclaimerID, i) {
     this.TPDisclaimerID = TPDisclaimerID;
     this.rowIndex = i;
-    let objParam = {
+    const objParam = {
       TPDisclaimerID: TPDisclaimerID
     }
     this.spinner.show(this.spinnerRefs.addUpdateSection);
     this.sharedService.getData(API_ROUTES.GET_TP_DISCLAIMER_BY_TPDISCLAIMER_ID, objParam).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.addUpdateSection);
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.DisclaimerBodyHTML = _response.length ? _response[0].DisclaimerBodyHTML : '<p></p>';
     }, (err) => {
       this.spinner.hide(this.spinnerRefs.addUpdateSection);
@@ -389,13 +389,13 @@ export class ReportDisclaimerComponent implements OnInit {
 
   //////////////////////////////// begin::TP Association /////////////////////////////////////////////
   insertTPDisclaimer() {
-    let checkedItems = this.testProfileList.filter(a => a.checked);
+    const checkedItems = this.testProfileList.filter(a => a.checked);
     if (!checkedItems.length) {
       this.toastr.error("Please select any test to save disclaimer", "Validation Error!");
       return
     }
 
-    let objParam = {
+    const objParam = {
       DDisclaimerID: this.DDisclaimerID,
       CreatedBy: this.loggedInUser.userid || -99,
       tblTPDisclaimer: checkedItems.map(a => {
@@ -469,18 +469,18 @@ export class ReportDisclaimerComponent implements OnInit {
   // }
   getTPByDDisclaimerID() {
     this.TPDisclaimerList = [];
-    let objParam = {
+    const objParam = {
       DDisclaimerID: this.DDisclaimerID
     }
     this.spinner.show(this.spinnerRefs.testAssociationSection);
     this.sharedService.getData(API_ROUTES.GET_TP_BY_DDISCLAIMER, objParam).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.testAssociationSection);
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.TPDisclaimerList = _response;
       this.testProfileList = this.TPDisclaimerList;
       this.subSectionList = this.getUniqueRowsBySubSectionID(this.TPDisclaimerList);
       if (this.TPDisclaimerList.length) {
-        let sectionData = this.TPDisclaimerList;
+        const sectionData = this.TPDisclaimerList;
         this.existingSectionIDs = [...new Set(sectionData.map(item => item.SubSectionID))];
         this.existingTPIDs = [...new Set(sectionData.map(item => item.TPID))];
       } else {
@@ -523,19 +523,19 @@ export class ReportDisclaimerComponent implements OnInit {
 
   }
   getTestProfileBySectionIDsWithExisintTPs() {
-    let SubSectionIDs = this.existingSectionIDs.join(',');
+    const SubSectionIDs = this.existingSectionIDs.join(',');
     if (this.existingSectionIDs.length) {
       this.testProfileList = [];
-      let objParam = {
+      const objParam = {
         SubSectionIDs: SubSectionIDs,
         LabDeptID: -1
       }
       this.spinner.show(this.spinnerRefs.testListSection);
       this.sharedService.getData(API_ROUTES.GET_TEST_PROFILE_BY_SECTIONIDS, objParam).subscribe((resp: any) => {
         this.spinner.hide(this.spinnerRefs.testListSection);
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         if (this.existingTPIDs.length) {
-          let data = _response;
+          const data = _response;
           data.forEach(tps => {
             tps.checked = this.existingTPIDs.includes(tps.TPID);
           });
@@ -566,7 +566,7 @@ export class ReportDisclaimerComponent implements OnInit {
 
   ///////////////begin:: deactive disclaimer////////////////////////////////////
   deActiveDisclaimer() {
-    let objParam = {
+    const objParam = {
       DDisclaimerID: this.DDisclaimerID,
       CreatedBy: this.loggedInUser.userid || -99
     }

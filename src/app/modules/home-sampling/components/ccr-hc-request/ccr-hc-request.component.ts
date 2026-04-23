@@ -42,9 +42,9 @@ export class CcrHcRequestComponent implements OnInit {
   // collectionSize = 0;
 
   loadedDocuments: any[];
-  filter: number = 26;
+  filter = 26;
   screenIdentity = 'CMS';
-  allowRemove: boolean = false;
+  allowRemove = false;
   getCMSRequestID = null;
   hcHomeCollectionRequest = []
   searchText = ''
@@ -103,14 +103,14 @@ export class CcrHcRequestComponent implements OnInit {
     this.hcHomeCollectionRequest = []
     this.paginationForHCRequest.paginatedSearchResults = []
 
-    let formValues = this.formForDate.getRawValue();
+    const formValues = this.formForDate.getRawValue();
 
     if (this.formForDate.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom),
       DateTo: Conversions.formatDateObject(formValues.dateTo),
     };
@@ -195,7 +195,7 @@ export class CcrHcRequestComponent implements OnInit {
 
   cancelCMSRequest(event){
   console.log("🚀 ~ CcrHcRequestComponent ~ CancelRequest ~ event:", event);
-  let objParm = {
+  const objParm = {
     CMSRequestID: event.CMSRequestID,
     CMSStatusID:  8, //Cancelled
     CreatedBy: this.loggedInUser.userid,
@@ -257,7 +257,7 @@ export class CcrHcRequestComponent implements OnInit {
     }
   }
   getHistoryOfCMSContactBackTracking(event) {
-    let objParm = {
+    const objParm = {
       CMSRequestID: event.CMSRequestID,
     };
     this.complaintDashboardService.getHistoryOfCMSContactBack(objParm).subscribe((resp: any) => {

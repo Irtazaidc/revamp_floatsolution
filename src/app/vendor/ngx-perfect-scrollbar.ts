@@ -16,9 +16,7 @@ export class PerfectScrollbarDirective {}
 })
 export class PerfectScrollbarComponent {}
 
-export interface PerfectScrollbarConfigInterface {
-  [key: string]: any;
-}
+export type PerfectScrollbarConfigInterface = Record<string, any>;
 
 export const PERFECT_SCROLLBAR_CONFIG = 'PERFECT_SCROLLBAR_CONFIG';
 

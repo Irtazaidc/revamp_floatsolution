@@ -1119,7 +1119,7 @@ export class MaterialTableComponent implements OnInit, AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          // tslint:disable-next-line:no-non-null-assertion
+         
           return this.exampleDatabase!.getRepoIssues(
             this.sort6.active,
             this.sort6.direction,

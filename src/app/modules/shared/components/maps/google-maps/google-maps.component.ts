@@ -11,11 +11,11 @@ import { GmapsService } from '../../../services/gmaps.service';
 })
 export class GoogleMapsComponent implements OnInit, AfterViewInit {
   map!: google.maps.Map;
-  @Input('gMapsControls') gMapsControls: any;
+  @Input() gMapsControls: any;
   @Input('latLngpostions') positionInfoIn: any;
-  @Input('gMapInfoToDisplay') gMapInfoToDisplay: any;
-  @Input('gMultipleMarlers') gMultipleMarlers: any;
-  @Input('MapName') MapName: any;
+  @Input() gMapInfoToDisplay: any;
+  @Input() gMultipleMarlers: any;
+  @Input() MapName: any;
   @Output() positionInfoOut = new EventEmitter<any>();
 
 
@@ -78,17 +78,17 @@ export class GoogleMapsComponent implements OnInit, AfterViewInit {
       this.gmapsService.getPosition().then((pos: any) => {
         this.CreateMap(pos, this.MapName);
         if (this.buttonControlsPermissions.showMarker) {
-          let isMarkerDragable = this.buttonControlsPermissions.dragableMarker ? true : false;
+          const isMarkerDragable = this.buttonControlsPermissions.dragableMarker ? true : false;
           if (this.buttonControlsPermissions.allowMultipleMarkers) {
             console.log("allowMultipleMarkers", pos);
-            let markerArr = [];
+            const markerArr = [];
             pos.forEach(i => {
               markerArr.push(pos[i]);
             });
             console.log(markerArr);
           }
           else {
-              let markerSetting = {
+              const markerSetting = {
                 isMarkerDragable: isMarkerDragable,
                 icontype: 'patient'
               }
@@ -102,15 +102,15 @@ export class GoogleMapsComponent implements OnInit, AfterViewInit {
 
       if (this.buttonControlsPermissions.showMarker) {
         this.CreateMap(this.gMapInfoToDisplay, this.MapName);
-        let isMarkerDragable = this.buttonControlsPermissions.dragableMarker ? true : false;
+        const isMarkerDragable = this.buttonControlsPermissions.dragableMarker ? true : false;
        
         if (this.buttonControlsPermissions.allowMultipleMarkers && this.gMultipleMarlers) {
           console.log("allowMultipleMarkers", this.gMapInfoToDisplay);
           console.log("allowMultipleMarkers", this.gMultipleMarlers);
           
-          let markerArr = [];
+          const markerArr = [];
           for (let i = 0; i <= this.gMultipleMarlers.length; i++) {      
-            let markerSetting = {
+            const markerSetting = {
               isMarkerDragable: isMarkerDragable,
               icontype:this.gMultipleMarlers[i].markerType
             }     
@@ -120,7 +120,7 @@ export class GoogleMapsComponent implements OnInit, AfterViewInit {
           console.log(markerArr);
         }
         else {
-          let markerSetting = {
+          const markerSetting = {
             isMarkerDragable: isMarkerDragable,
             icontype: 'patient'
           }  
@@ -135,7 +135,7 @@ export class GoogleMapsComponent implements OnInit, AfterViewInit {
 
   }
   AddInputBox() {
-    let pacinput = document.createElement('input');
+    const pacinput = document.createElement('input');
     pacinput.setAttribute("class", "controls");
     pacinput.setAttribute("id", "pac-input");
     pacinput.setAttribute("type", "text");
@@ -162,12 +162,12 @@ export class GoogleMapsComponent implements OnInit, AfterViewInit {
         this.map.setZoom(17);
       }
       this.GoogleAddressName = place.formatted_address;
-      let placeinfo = {
+      const placeinfo = {
         "place": place.name,
         "place_id": place.place_id!,
         "formatted_address": place.formatted_address!
       }
-      let markerSetting = {
+      const markerSetting = {
         isMarkerDragable: false,
         icontype: 'patient'
       }

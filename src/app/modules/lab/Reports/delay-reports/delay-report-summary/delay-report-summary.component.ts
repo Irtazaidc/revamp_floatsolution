@@ -78,7 +78,7 @@ export class DelayReportSummaryComponent implements OnInit {
   }
 
   getdelayReportData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -86,7 +86,7 @@ export class DelayReportSummaryComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocIDs: formValues.locID ? formValues.locID.join(",") : null,
@@ -166,7 +166,7 @@ export class DelayReportSummaryComponent implements OnInit {
   getSubSection() {
 
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     }
@@ -182,7 +182,7 @@ export class DelayReportSummaryComponent implements OnInit {
   getTestStatus() {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.testStatusList = _response;
     }, (err) => {
     })
@@ -203,7 +203,7 @@ export class DelayReportSummaryComponent implements OnInit {
   panelList = []
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { UserModel, AuthService } from 'src/app/modules/auth';
   templateUrl: './emp-edu-info.component.html',
   styleUrls: ['./emp-edu-info.component.scss']
 })
-export class EmpEduInfoComponent implements OnInit {
+export class EmpEduInfoComponent implements OnInit, OnDestroy {
   
     formGroup: FormGroup;
     user: UserModel;

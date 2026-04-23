@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -32,7 +32,7 @@ import { SharedService } from 'src/app/modules/shared/services/shared.service';
     ])
   ]
 })
-export class CampaignConfigurationComponent implements OnInit {
+export class CampaignConfigurationComponent implements OnInit, AfterViewInit {
   @ViewChild('couponDetailModal') couponDetailModal;
   private scrollTopBtn: HTMLElement | null = null;
 
@@ -75,7 +75,7 @@ export class CampaignConfigurationComponent implements OnInit {
     couponDetail: 'couponDetail'
   };
 
-  ActionLabel: string = 'Save';
+  ActionLabel = 'Save';
   isValidDateRange = true;
   noCampaignDataMessage = 'No active campaigns found';
   noCouponDataMessage = 'Please select a campaign to get coupons';
@@ -513,7 +513,7 @@ export class CampaignConfigurationComponent implements OnInit {
   panelsList: any[] = [];
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       OutsourceHospitalID: this.outsourceHospitalID
     }
     this.spinner.show(this.spinnerRefs.panelsDropdown);
@@ -534,7 +534,7 @@ export class CampaignConfigurationComponent implements OnInit {
   citesList: any[] = [];
   getHCCities() {
     this.citesList = []
-    let objParam = {
+    const objParam = {
       isHomeSamplingCity: 1
     }
     this.lookupService.getHCCities(objParam).subscribe((resp: any) => {
@@ -550,7 +550,7 @@ export class CampaignConfigurationComponent implements OnInit {
   testProfileList: any[] = [];
   getTestProfileList(tpname) {
     this.testProfileList = [];
-    let _params = {
+    const _params = {
       tpids: null,
       branchId: 1,//this.loggedInUser.locationid,
       panelId: ''// (this.selectedPanel || '') // this.selectedPanel ? this.selectedPanel.PanelId : '' //this.patientBasicInfo.value.corporateClientID || '',

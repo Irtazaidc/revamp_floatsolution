@@ -77,7 +77,7 @@ export class MtWorkloadReportComponent implements OnInit {
    }
  
    getRISMTWorkloadReport() {
-     let formValues = this.filterForm.getRawValue();
+     const formValues = this.filterForm.getRawValue();
       const dateFrom = formValues.dateFrom;
       const dateTo = formValues.dateTo;
       const fromDate: any = new Date(
@@ -106,7 +106,7 @@ export class MtWorkloadReportComponent implements OnInit {
        this.isSubmitted = true;
        return;
      }
-     let objParams = {
+     const objParams = {
        DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
        DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
        LocID: formValues.locId || -1,
@@ -131,9 +131,9 @@ export class MtWorkloadReportComponent implements OnInit {
 
    employeesList:any[] = [];
   getEmployeesForTestRegistration() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     this.employeesList = [];
-     let objParam = {
+     const objParam = {
       DepartmentId: 10,
       DesignationId: -1,
       locId: formValues.locId || -1,
@@ -217,13 +217,13 @@ export class MtWorkloadReportComponent implements OnInit {
    getSubSection() {
  
      this.subSectionList = [];
-     let objParm = {
+     const objParm = {
        SectionID: -1,
        LabDeptID: 2 // Radiology,
      };
      this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
        (resp: any) => {
-         let _response = resp.PayLoad;
+         const _response = resp.PayLoad;
          this.subSectionList = _response;
        },
        (err) => {

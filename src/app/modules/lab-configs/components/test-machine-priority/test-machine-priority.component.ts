@@ -24,9 +24,9 @@ export class TestMachinePriorityComponent implements OnInit {
   searchText='';
   HighlightRow: any;
   MachineID:any=null;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonTests: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonTests = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   spinnerRefs = {
     listSection: 'listSection',
     testListSection: 'testListSection',
@@ -81,7 +81,7 @@ export class TestMachinePriorityComponent implements OnInit {
   getTestProfileList() {
     this.spinner.show(this.spinnerRefs.testListSection);
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1,//this.selectedLocId,
       TestProfileCode: null,
       TestProfileName: null,
@@ -91,7 +91,7 @@ export class TestMachinePriorityComponent implements OnInit {
     this.testProfileService.getTestsByName(_param).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.testListSection);
       if (res && res.StatusCode == 200 && res.PayLoad) {
-        let data = res.PayLoad;
+        const data = res.PayLoad;
         this.testList = data || [];
         // setTimeout(() => {
           this.getTestMachines(this.testList[0].TPId,0,this.testList[0].TestProfileCode)
@@ -109,7 +109,7 @@ export class TestMachinePriorityComponent implements OnInit {
   
   insertUpdateMachine(){
     this.spinner.show(this.spinnerRefs.machinePriorityFormSection); 
-    let formValues = this.machineConfigForm.getRawValue();
+    const formValues = this.machineConfigForm.getRawValue();
     this.machineConfigForm.markAllAsTouched();
     if(this.machineConfigForm.invalid) {
       this.spinner.hide(this.spinnerRefs.machinePriorityFormSection);
@@ -117,7 +117,7 @@ export class TestMachinePriorityComponent implements OnInit {
     } else {
       this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       this.isSpinner = false; // Button Spinner show
-      let formData = {
+      const formData = {
         MachineID:this.MachineID,
         MachineName: formValues.MachineName,
         MachineCode: formValues.MachineCode,
@@ -163,7 +163,7 @@ export class TestMachinePriorityComponent implements OnInit {
     this.TPID = TPID;
     this.HighlightRow = index;
     this.spinner.show(this.spinnerRefs.machinePriorityFormSection);
-    let params = {
+    const params = {
       TPId:this.TPID
     };
     this.LabConfService.getTestMachines(params).subscribe((res: any) => {
@@ -189,7 +189,7 @@ export class TestMachinePriorityComponent implements OnInit {
     this.isSpinner = false; // Button Spinner show
     this.spinner.show(this.spinnerRefs.machinePriorityFormSection);
       if(this.TestMachineList.length){
-        let objParam = {
+        const objParam = {
           MachineTestID: this.TestMachineList[0].MachineTestID,
           TPID : this.TPID,
           CreatedBy: this.loggedInUser.userid || -99,

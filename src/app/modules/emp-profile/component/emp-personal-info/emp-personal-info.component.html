@@ -78,7 +78,7 @@
               <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Date Of Birth</label>
               <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                 <input class="form-control form-control-lg form-control-solid" type="text"
-                  [value]="(!empBirthDate || empBirthDate == 'Invalid Date' ) ? 'NA' : empBirthDate"
+                  [value]="(!empBirthDate || empBirthDate === 'Invalid Date' ) ? 'NA' : empBirthDate"
                   placeholder="Date Of Birth" [readonly]="isReadonly" />
               </div>
             </div>
@@ -86,7 +86,7 @@
               <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Marital Status</label>
               <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                 <input class="form-control form-control-lg form-control-solid" type="text"
-                  [value]="empMaritalStatus=='M' ? 'Married' :empMaritalStatus=='S'? 'Single':'NA'" placeholder="Gender"
+                  [value]="empMaritalStatus==='M' ? 'Married' :empMaritalStatus==='S'? 'Single':'NA'" placeholder="Gender"
                   [readonly]="isReadonly" />
               </div>
             </div>
@@ -121,7 +121,7 @@
               <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
 
                 <input type="text"
-                  [value]="(!empDateOfJoining || empDateOfJoining == 'Invalid Date' ) ? 'NA' : empDateOfJoining"
+                  [value]="(!empDateOfJoining || empDateOfJoining === 'Invalid Date' ) ? 'NA' : empDateOfJoining"
                   class="form-control form-control-lg form-control-solid" placeholder="Date Of Joining"
                   [readonly]="isReadonly" />
               </div>
@@ -129,7 +129,7 @@
             <div class="form-group row d-flex align-items-center">
               <label class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">Age In Years</label>
               <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                <input type="text" [value]="(!empAge || empAge == 'NaN' ) ? 'NA' : empAge"
+                <input type="text" [value]="(!empAge || empAge === 'NaN' ) ? 'NA' : empAge"
                   class="form-control form-control-lg form-control-solid" placeholder="Age In Years"
                   [readonly]="isReadonly" />
               </div>

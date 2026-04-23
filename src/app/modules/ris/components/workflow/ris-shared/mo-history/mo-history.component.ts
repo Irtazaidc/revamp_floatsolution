@@ -50,7 +50,7 @@ export class MoHistoryComponent implements OnInit {
   SavedBy=null;
   SavedOn=null;
   getRISMOHistory(TPID) {
-    let params = {
+    const params = {
       TPID: TPID,
       QuestionGroupTypeID: 5,
       VisitID: this.VisitId

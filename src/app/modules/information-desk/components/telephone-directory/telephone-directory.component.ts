@@ -52,7 +52,7 @@ export class TelephoneDirectoryComponent implements OnInit {
   getExtension() {
     this.spinner.show(this.spinnerRefs.listSection);
     this.extensionList = [];
-    let _params = {
+    const _params = {
       ExtensionID: this.ExtensionID,
       SubDepartmentID: this.SubDepartmentID,
       LocID: this.LocID
@@ -77,7 +77,7 @@ export class TelephoneDirectoryComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });

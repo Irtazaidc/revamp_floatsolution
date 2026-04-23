@@ -23,7 +23,7 @@ import { LookupService } from '../../patient-booking/services/lookup.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  @Input('userId') userId: any;
+  @Input() userId: any;
   // KeenThemes mock, change it to:
   // defaultAuth = {
   //   email: '',
@@ -50,14 +50,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   loginForm!: FormGroup;
 
-  isDisable:boolean = false;
-  isLoading: boolean = false; 
+  isDisable = false;
+  isLoading = false; 
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   IsAuthenticated: any = true;
   empUserPicture: null;
   defaultPatientPic = CONSTANTS.USER_IMAGE.UNSPECIFIED;
-  webDeskStatus: boolean = false;
+  webDeskStatus = false;
   loggedInUser: UserModel;
   constructor(
     private fb: FormBuilder,
@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   // GetEmpPictureBy UserID
   getEmpPicByUserId(id) {
     localStorage.setItem('empPic', this.defaultPatientPic);
-    let paramObj = {
+    const paramObj = {
       UserID: id
     }
     this.empService.getEmpPicByUserId(paramObj).subscribe((resp: any) => {
@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   verifyUserCredentials() {
 
-    let params = {
+    const params = {
       UserName: decodeURIComponent(this.queryParams.un || '').replace(/\s/g, '+'),
       Password: decodeURIComponent(this.queryParams.pw || '').replace(/\s/g, '+'),
       SourceName: decodeURIComponent(this.queryParams.appName || '').replace(/\s/g, '+'),
@@ -124,9 +124,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     }
 
-    let un = params.UserName;
-    let pw = params.Password;
-    let path = params.Path;
+    const un = params.UserName;
+    const pw = params.Password;
+    const path = params.Path;
 
     this.loginForm.controls["usernameEnc"].patchValue(un);
     this.loginForm.controls["passwordEnc"].patchValue(pw);
@@ -163,7 +163,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       }
     }
-    let hashes = encryptedQueryString.split('&'); // atob
+    const hashes = encryptedQueryString.split('&'); // atob
     for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split(/=(.+)/); //.split('=');
       //vars.push(hash[0]);
@@ -184,7 +184,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         //vars.push('accNo');
         vars['accNo'] = vars['VisitNo'];
       }
-      let graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
+      const graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
       if (a == graphicalParameter) {
         if (vars[graphicalParameter] != 'false' && vars[graphicalParameter] != false && vars[graphicalParameter] != 0 && vars[graphicalParameter] != '0') {
           //vars.push('rpty');
@@ -225,7 +225,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       }
     }
-    let hashes = encryptedQueryString.split('&'); // atob
+    const hashes = encryptedQueryString.split('&'); // atob
     for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split(/=(.+)/); //.split('=');
       //vars.push(hash[0]);
@@ -246,7 +246,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         //vars.push('accNo');
         vars['accNo'] = vars['VisitNo'];
       }
-      let graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
+      const graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
       if (a == graphicalParameter) {
         if (vars[graphicalParameter] != 'false' && vars[graphicalParameter] != false && vars[graphicalParameter] != 0 && vars[graphicalParameter] != '0') {
           //vars.push('rpty');
@@ -307,7 +307,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         console.log('LOGIN USER:', user); // ✅ ADD THIS
         if (user) {
           
-          let _userObj = this.authService.getUserFromLocalStorage();
+          const _userObj = this.authService.getUserFromLocalStorage();
           this.authService.getAndUpdateUserPermissions(_userObj.userid).subscribe(res => {
             // setTimeout(() => { this.isDisable = false; this.isLoading = false;}, 1000);
             this.isDisable = false; this.isLoading = false;
@@ -326,9 +326,9 @@ export class LoginComponent implements OnInit, OnDestroy {
            } 
             // console.log('_userObj_________ data ', _userObj);
            else if (_userObj.ReqPath) {
-              let path = _userObj.ReqPath.toString().split('?');
+              const path = _userObj.ReqPath.toString().split('?');
               // this.router.navigate([path[0]]);
-              var navigateparams;
+              let navigateparams;
               console.log(this.queryParams);
               navigateparams = this.getnavigateUrlParams(path[1].toString());
               setTimeout(() => {
@@ -366,7 +366,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   /***** WEB SOCKET - MULTI APP *****/
   getMACAddress(loggedInUser: UserModel) {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -392,7 +392,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   getSystemInformation(loggedInUser: UserModel) {
     // setTimeout(() => {
 
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -414,7 +414,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   logoutSettingList = [];
   GetLogoutSetting(ProfileId) {
     this.logoutSettingList = [];
-    let objParm = {
+    const objParm = {
       ProfileID: ProfileId || 1, 
     };
     this.lookupService.GetLogoutSettingByProfileID(objParm).subscribe(
@@ -422,7 +422,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (resp && resp.PayLoad) {  
           this.logoutSettingList = resp.PayLoad;
           // console.log("this.logoutSettingList:", this.logoutSettingList);
-          let IdleTime = this.logoutSettingList.find(id => id.SettingID == 17)?.SettingValue;
+          const IdleTime = this.logoutSettingList.find(id => id.SettingID == 17)?.SettingValue;
           // let WarningTime = this.logoutSettingList.find(id => id.SettingID == 18)?.SettingValue;
           localStorage.setItem('IdleTime',IdleTime);
           // localStorage.setItem('WarningTime',WarningTime);
@@ -440,7 +440,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
 
-  showPassword: boolean = false;
+  showPassword = false;
 
 togglePasswordVisibility() {
   this.showPassword = !this.showPassword;

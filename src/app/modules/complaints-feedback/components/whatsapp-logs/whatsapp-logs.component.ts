@@ -23,7 +23,7 @@ export class WhatsappLogsComponent implements OnInit {
   maxDate;
 
   logsCount:any = null;
-  TotalCount: number = 0;
+  TotalCount = 0;
 
   isSubmitted = false;
   searchText = '';
@@ -78,7 +78,7 @@ export class WhatsappLogsComponent implements OnInit {
   }
 
   getWhatsappLogsDeatil(){
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     this.whatsAppLogList = [];
     this.searchText = ''; // Reset search text
     if(this.filterForm.invalid){
@@ -87,7 +87,7 @@ export class WhatsappLogsComponent implements OnInit {
       return
     }
 
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo:Conversions.formatDateObject(formValues.dateTo) || null,
       CellNo: formValues.byContact || null,
@@ -112,14 +112,14 @@ export class WhatsappLogsComponent implements OnInit {
   }
 
   getWhatsappLogsCounts(){
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     this.logsCount = [];
     if(this.filterForm.invalid){
       this.toastr.warning("Please fill the mandatory field");
       this.isSubmitted = true
     }
 
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo:Conversions.formatDateObject(formValues.dateTo) || null,
       CellNo: formValues.byContact || null,
@@ -151,7 +151,7 @@ export class WhatsappLogsComponent implements OnInit {
 
   refreshPagination() {
     if (this.pagination.filteredSearchResults.length) {
-      let dataToPaginate = this.pagination.filteredSearchResults;
+      const dataToPaginate = this.pagination.filteredSearchResults;
       this.pagination.collectionSize = dataToPaginate.length;
       
       // Calculate start and end indices for pagination
@@ -210,7 +210,7 @@ export class WhatsappLogsComponent implements OnInit {
           if (!item[col]) return false;
           
           // Handle different data types
-          let value = item[col];
+          const value = item[col];
           if (typeof value === 'string') {
             return value.replace(/-/g, '')
               .toLowerCase()

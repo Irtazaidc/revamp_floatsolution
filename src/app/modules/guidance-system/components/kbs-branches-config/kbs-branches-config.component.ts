@@ -14,8 +14,8 @@ import { LookupService } from "src/app/modules/patient-booking/services/lookup.s
   styleUrls: ["./kbs-branches-config.component.scss"],
 })
 export class KbsBranchesConfigComponent implements OnInit {
-  isSpinner: boolean = true; //Hide Loader
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   Branch: any;
   BranchServicesList: any;
   searchBranchText = "";
@@ -226,19 +226,19 @@ export class KbsBranchesConfigComponent implements OnInit {
     this.branchesList = [];
 
     // Determine UserID parameter
-    let userIdParam =
+    const userIdParam =
       this.loggedInUser?.userid === 2674 || this.loggedInUser?.userid === 2616
         ? 1
         : this.loggedInUser?.userid || -99;
 
-    let param = {
+    const param = {
       UserID: userIdParam,
     };
 
     this.lookupService.getAllLocationByUserID(param).subscribe(
       (res: any) => {
         if (res && res.StatusCode == 200 && res.PayLoad) {
-          let data = res.PayLoad;
+          const data = res.PayLoad;
 
           try {
             data.forEach((element, index) => {

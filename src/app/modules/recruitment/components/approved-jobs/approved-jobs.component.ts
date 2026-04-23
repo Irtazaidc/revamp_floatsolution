@@ -48,8 +48,8 @@ export class ApprovedJobsComponent implements OnInit {
   ActionLabel: string;
   ExistingRow: any[];
   ExistingRowRemarks: any[];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   SkillsArray: any;
   RemarksErrorMessage: string;
   loggedInUser: UserModel;
@@ -99,7 +99,7 @@ export class ApprovedJobsComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -124,14 +124,14 @@ export class ApprovedJobsComponent implements OnInit {
     this.spinnerText = 'Loading...';
     this.spinner.show(this.spinnerRefs.jobSearchSection);
     this.JobList =[];
-    let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const formValues = this.formSearchJob.getRawValue();
+    const objParm = {
       LocID:  formValues.branchIds,
       DepartmentID:  formValues.departmentIds,
       JobStatusID:  5
     }  
     this.recruitmentService.searchJobRequest(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.JobList = resSearchJob||[];
       }
@@ -173,7 +173,7 @@ export class ApprovedJobsComponent implements OnInit {
     this.JobRequestID = id;
     this.ExistingRow = [];
     this.ExistingRowRemarks =[];
-    let paramObj = {
+    const paramObj = {
       JobRequestID:this.JobRequestID
     }
     
@@ -203,7 +203,7 @@ export class ApprovedJobsComponent implements OnInit {
           this.Skills= this.ExistingRow["SkillsRequiredHTML"];
           let skillRec = this.ExistingRow["SkillsRequired"];
           skillRec = skillRec.replaceAll("\n", "").replaceAll("\r", "").replaceAll("&nbsp;","");
-          let string  = skillRec.split(',');
+          const string  = skillRec.split(',');
           [...string];
           Array.from(string);
          this.SkillsArray = Object.assign([], string);

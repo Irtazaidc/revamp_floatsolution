@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, OnDestroy, OnChanges, AfterViewInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { RisWorklistService } from 'src/app/modules/ris/services/ris-worklist.service';
 import { AppPopupService } from '../../../../../shared/helpers/app-popup.service';
@@ -35,13 +35,13 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./ris-worklist.component.scss']
 })
 
-export class RisWorklistComponent implements OnInit {
+export class RisWorklistComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   private refreshSubscription: Subscription;
-  @Input('paramsValuesForWorkList') paramsValuesForWorkList: any;
-  @Input('colNamesForMOScreen') colNamesForMOScreen = [];
-  @Input('actionsPermission') actionsPermission: any = [];
-  @Input('isStatusChanged') isStatusChanged: any = [];
-  @Input('isSaved') isSaved: any = [];
+  @Input() paramsValuesForWorkList: any;
+  @Input() colNamesForMOScreen = [];
+  @Input() actionsPermission: any = [];
+  @Input() isStatusChanged: any = [];
+  @Input() isSaved: any = [];
   @Output() paramFormHeaderInfo = new EventEmitter<any>();
   @Output() selectedValueChange = new EventEmitter<any>();
   @ViewChild('questionnaireModal') questionnaireModal;
@@ -71,8 +71,8 @@ export class RisWorklistComponent implements OnInit {
   visitInfo: any = {};
   PatientPhoneNumber: any = "";
   screenIdentity = null; //1 for MO Worklist, 2 for Tech Worklist
-  disabledButtonVerify: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerVerify: boolean = true;//Hide Loader
+  disabledButtonVerify = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerVerify = true;//Hide Loader
 
   techUsername = ""; //john.doe;
   techPassword = ""; //freedom;
@@ -104,7 +104,7 @@ export class RisWorklistComponent implements OnInit {
   loggedInUser: UserModel;
   searchTextShareSummary = ''
   sub: Subscription;
-  count: number = 0;
+  count = 0;
   currow: any;
   constructor(
     private worklistSrv: RisWorklistService,
@@ -257,7 +257,7 @@ export class RisWorklistComponent implements OnInit {
               this.toastr.warning("The device is not connected or closed, so please log in with your credentials.", "Device Connection Error")
               this.appPopupService.openModal(this.userVerificationModal, { backdrop: 'static', size: 'md' });
             } else {
-              let data = this.multiApp.getTDate();
+              const data = this.multiApp.getTDate();
               this.isMetal = data.value.isMetal;
               this.TPId = data.value.TPId;
               this.VisitID = data.value.VisitNo.replaceAll("-", "");
@@ -514,7 +514,7 @@ export class RisWorklistComponent implements OnInit {
             // console.log("this.StatusId_____________",this.StatusId," this.RISWorklistRow",this.RISWorklistRow)
             this.count = this.count + 1;
             // this.clearVariables(0);
-            let obj = {
+            const obj = {
               user: 1,
               timestamp: +new Date(),
               screen: encodeURIComponent(window.location.href)
@@ -639,7 +639,7 @@ export class RisWorklistComponent implements OnInit {
     this.isLoadSummaryMethodCalled = false;
     // console.log("there we goo in risworklist status change rec getRisworkList:",val)
     // this.clearVariables(0)
-    let storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : val;
+    const storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : val;
     this.storageService.setObject('risFilterParams', val);
     if (val.visitID) {
       this.showAllTab = true;
@@ -662,7 +662,7 @@ export class RisWorklistComponent implements OnInit {
       // this.filterResults();
       this.risWorkist = [];
       this.spinner.show(this.spinnerRefs.listSection);
-      let params = {
+      const params = {
         VisitID: val.visitID ? val.visitID.replaceAll("-", '') : null,
         BranchIDs: val.branch ? val.branch.join(",") : null,
         FilterBy: val.filterBy,
@@ -679,7 +679,7 @@ export class RisWorklistComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.listSection);
         if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
           this.orignaRisList = resp.PayLoad
-          let dataset = resp.PayLoad;
+          const dataset = resp.PayLoad;
           this.ReportDelayTime = resp.PayLoad[0].ReportDelayTime;
           this.urduNewsReporting = "اب آپ فا ئنل شدہ رپورٹس کو فا ئنل ہونے کے " + this.ReportDelayTime + " منٹ بعد تک ایڈٹ کر سکتے ہیں۔";
           this.englishNewsReporting = "You can now edit finalized reports within " + this.ReportDelayTime + " minutes of finalization.";
@@ -724,9 +724,9 @@ export class RisWorklistComponent implements OnInit {
           }));
           // this.risWorkist = resp.PayLoad;
           // ['VisitNo', 'PatientName', 'TPCode', 'TestStatus']
-          let newris = [];
+          const newris = [];
           this.risWorkist = this.risWorkist.map((a, i) => {
-            let _obj = {};
+            const _obj = {};
             this.colNamesForMOScreen.forEach(b => { _obj[b] = a[b] }); return _obj
           })
           this.filterResults();
@@ -746,7 +746,7 @@ export class RisWorklistComponent implements OnInit {
 
   }
   removeIntervals(dbTempDate) {
-    let formattedDateTime = dbTempDate ? moment(dbTempDate).format('YYYY-MM-DDTHH:mm:ss') : null;
+    const formattedDateTime = dbTempDate ? moment(dbTempDate).format('YYYY-MM-DDTHH:mm:ss') : null;
     return formattedDateTime;
   }
   getTestStatus(StatusId, RISStatusID, TestStatus, WorkflowStatus) {
@@ -842,7 +842,7 @@ export class RisWorklistComponent implements OnInit {
   getRISWorkListSummary(val) {
     // console.log("getRISWorkListSummary:",val)
     if ((val.dateFrom && val.dateTo) || val.visitID) {
-      let params = {
+      const params = {
         VisitID: val.visitID ? val.visitID.replaceAll("-", '') : null,
         // BranchIDs: val.branch ? val.branch.join(",") : null,
         BranchIDs: (this.screenIdentity === 'queue-management' || this.screenIdentity === 'assign-bulk-test' || this.screenIdentity === 'queue-manager' || this.screenIdentity == 'bulk-queue-manager' || this.screenIdentity == 'mo-worklist' || this.screenIdentity == 'tech-worklist' || this.screenIdentity == 'reporting-worklist') && (!val.branch || !val.branch.length)
@@ -866,12 +866,12 @@ export class RisWorklistComponent implements OnInit {
       }
       // console.log("params areeeeeeeeeeee:",params)
       this.worklistSrv.getRISWorkListSummary(params).subscribe((resp: any) => {
-        let filterBy = [4, 5, 6, 7, 8, 9, 10];
+        const filterBy = [4, 5, 6, 7, 8, 9, 10];
         if (filterBy.includes(parseInt(params.FilterBy))) {
           if (resp && resp.PayLoadDS && resp.StatusCode == 200) {
-            let summaryCounter = resp.PayLoadDS.Table;
-            let summaryAddendum = resp.PayLoadDS.Table1;
-            let summaryPending = resp.PayLoadDS.Table2;
+            const summaryCounter = resp.PayLoadDS.Table;
+            const summaryAddendum = resp.PayLoadDS.Table1;
+            const summaryPending = resp.PayLoadDS.Table2;
 
             this.countRadioAssigned = (summaryCounter.find(a => a.RISStatusID === 8 && a.StatusID === 7) || { TotalRecords: 0 }).TotalRecords;
 
@@ -880,7 +880,7 @@ export class RisWorklistComponent implements OnInit {
             // this.countRadioDrafted = (summaryCounter.find(a => a.RISStatusID === 10 && a.StatusID === 7) || { TotalRecords: 0 }).TotalRecords;
 
             //new changes for drafted
-            let draftednwl = summaryCounter.filter(a => a.RISStatusID == 10 && a.StatusID == 7);
+            const draftednwl = summaryCounter.filter(a => a.RISStatusID == 10 && a.StatusID == 7);
             // let draftednwl = summaryCounter.filter(a => a.RISStatusID == 10 && a.StatusID != 10 && a.StatusID != 9 && a.StatusID != 8);
             this.countRadioDrafted = draftednwl.length ? draftednwl.reduce((n, { TotalRecords }) => n + TotalRecords, 0) : 0 || 0;
 
@@ -891,7 +891,7 @@ export class RisWorklistComponent implements OnInit {
             // this.countRadioReported = (summaryCounter.find(a => a.StatusID === 8) || { TotalRecords: 0 }).TotalRecords;
 
             //new changes for reported
-            let reportednwl = summaryCounter.filter(a => a.StatusID == 8);
+            const reportednwl = summaryCounter.filter(a => a.StatusID == 8);
             this.countRadioReported = reportednwl.length ? reportednwl.reduce((n, { TotalRecords }) => n + TotalRecords, 0) : 0 || 0;
 
 
@@ -900,7 +900,7 @@ export class RisWorklistComponent implements OnInit {
             // this.countRadioFinal = (summaryCounter.find(a => a.StatusID === 9) || { TotalRecords: 0 }).TotalRecords;
 
             //new changes for Final
-            let finalwl = summaryCounter.filter(a => a.StatusID == 9 || a.StatusID == 11 || a.StatusID == 12);
+            const finalwl = summaryCounter.filter(a => a.StatusID == 9 || a.StatusID == 11 || a.StatusID == 12);
             this.countRadioFinal = finalwl.length ? finalwl.reduce((n, { TotalRecords }) => n + TotalRecords, 0) : 0 || 0;
 
 
@@ -909,43 +909,43 @@ export class RisWorklistComponent implements OnInit {
           }
         } else {
           if (resp && resp.PayLoadDS && resp.StatusCode == 200) {
-            let summaryCounter = resp.PayLoadDS.Table;
+            const summaryCounter = resp.PayLoadDS.Table;
             // console.log("summaryCounter: ", summaryCounter)
 
-            let mowl = summaryCounter.filter(a => !a.RISStatusID && a.isMedicalOfficerIntervention == 1);
+            const mowl = summaryCounter.filter(a => !a.RISStatusID && a.isMedicalOfficerIntervention == 1);
             this.countMOWorklist = mowl.length ? mowl[0].TestCount : 0 || 0;
 
-            let modonewl = summaryCounter.filter(a => a.RISStatusID == 2 && a.isMedicalOfficerIntervention == 1);
+            const modonewl = summaryCounter.filter(a => a.RISStatusID == 2 && a.isMedicalOfficerIntervention == 1);
             this.countMODone = modonewl.length ? modonewl[0].TestCount : 0 || 0;
 
-            let checkinwl = summaryCounter.filter(a => a.RISStatusID == 2 || a.RISStatusID == 7 || !a.RISStatusID);
+            const checkinwl = summaryCounter.filter(a => a.RISStatusID == 2 || a.RISStatusID == 7 || !a.RISStatusID);
             // this.countCheckinWorklist = checkinwl.length ? checkinwl[0].TestCount : 0 || 0;
             this.countCheckinWorklist = checkinwl.length ? checkinwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
             // this.countCheckinWorklist = this.countMOWorklist + this.countMODone;
 
-            let checkoutwl = summaryCounter.filter(a => a.RISStatusID == 3);
+            const checkoutwl = summaryCounter.filter(a => a.RISStatusID == 3);
             this.countCheckoutWorklist = checkoutwl.length ? checkoutwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
-            let pendwl = summaryCounter.filter(a => a.RISStatusID == 7);
+            const pendwl = summaryCounter.filter(a => a.RISStatusID == 7);
             this.countPendWorklist = pendwl.length ? pendwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
-            let initialwl = summaryCounter.filter(a => a.RISStatusID == 4);
+            const initialwl = summaryCounter.filter(a => a.RISStatusID == 4);
             this.countInitialWorklist = initialwl.length ? initialwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
-            let initializedwl = summaryCounter.filter(a => a.RISStatusID == 5 || a.RISStatusID == 6);
+            const initializedwl = summaryCounter.filter(a => a.RISStatusID == 5 || a.RISStatusID == 6);
             this.countInitialized = initializedwl.length ? initializedwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
             this.countAllWorklist = this.countMOWorklist + this.countCheckinWorklist + this.countCheckoutWorklist + this.countInitialized;
 
-            let assignerAllwl = resp.PayLoadDS.Table1.length ? resp.PayLoadDS.Table1[0].TestCount : 0
+            const assignerAllwl = resp.PayLoadDS.Table1.length ? resp.PayLoadDS.Table1[0].TestCount : 0
 
 
 
 
-            let assigneAssignedwl = summaryCounter.filter(a => a.RISStatusID == 8);
+            const assigneAssignedwl = summaryCounter.filter(a => a.RISStatusID == 8);
             // let assignerUnassignedwl = summaryCounter.filter(a => a.RISStatusID == 1 || a.RISStatusID == 2 || a.RISStatusID == 3 || a.RISStatusID == 4 || a.RISStatusID == 5 || a.RISStatusID == 6 || a.RISStatusID == 7 || a.RISStatusID == 9 );
-            let assignerUnassignedwl = summaryCounter.filter(a => [4, 5, 9].includes(a.RISStatusID)); //1, 2, 3, 4, 5, 6, 7, 9 i have made some changes because in counter MO done and checkin studies was also comming while not in listing
+            const assignerUnassignedwl = summaryCounter.filter(a => [4, 5, 9].includes(a.RISStatusID)); //1, 2, 3, 4, 5, 6, 7, 9 i have made some changes because in counter MO done and checkin studies was also comming while not in listing
             // this.countAssignerWorkList = resp.PayLoadDS.Table1.length ? resp.PayLoadDS.Table1[0].TestCount : 0
 
             // this.countAssignerAssigned = assigneAssignedwl.length ? assigneAssignedwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
@@ -981,7 +981,7 @@ export class RisWorklistComponent implements OnInit {
   countOustanding = 0;
   getRISWorkListSummaryOutsanding(val) {
     if ((val.dateFrom && val.dateTo) || val.visitID) {
-      let params = {
+      const params = {
         BranchIDs: val.branch ? val.branch.join(",") : null,
         FilterBy: val.filterBy,
         DateFrom: val.visitID ? null : val.dateFrom,
@@ -1466,7 +1466,7 @@ export class RisWorklistComponent implements OnInit {
   openMOHistoryReport(row) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(row.VisitNo.replaceAll("-", "")), TPID: row.TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -1491,7 +1491,7 @@ export class RisWorklistComponent implements OnInit {
   searchText = '';
   refreshPagination() {
     // this.clearVariables(0);
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     if (this.screenIdentity == 'queue-management' && this.isAssigner || (this.screenIdentity == 'assign-bulk-test')) {
       this.pagination.paginatedSearchResults = dataToPaginate;
@@ -1508,10 +1508,10 @@ export class RisWorklistComponent implements OnInit {
   filterResults() {
     // this.clearVariables(0);
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorkist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorkist, this.searchText, cols, this.risWorkist);
     }
     this.pagination.filteredSearchResults = results;
@@ -1532,7 +1532,7 @@ export class RisWorklistComponent implements OnInit {
   }
   readTechAgreement() {
     if (this.isConsentRead) {
-      let params = {
+      const params = {
         RISWorkListID: this.RISWorkListID,
         isConsentRead: 1,
         ModifiedBy: this.VerifiedUserID
@@ -1562,14 +1562,14 @@ export class RisWorklistComponent implements OnInit {
   }
   verifyUser() {
     // this.clearVariables();
-    let formValues = this.userVerificationForm.getRawValue();
+    const formValues = this.userVerificationForm.getRawValue();
     this.userVerificationForm.markAllAsTouched();
     if (this.userVerificationForm.invalid) {
       this.toastr.warning('Please fill the required fields...!'); return false;
     } else {
       ///////START::VERIFY USER /////////////////////////////
       // formValues.techUsername=='john.doe' && formValues.techPassword=='freedom'
-      let params = {
+      const params = {
         UserName: formValues.techUsername,
         Password: formValues.techPassword
       }
@@ -1636,7 +1636,7 @@ export class RisWorklistComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -1655,7 +1655,7 @@ export class RisWorklistComponent implements OnInit {
     this.VisitID = doropDownObj.VisitID
     this.visitInfo = { tpId: doropDownObj.TPID, visitID: doropDownObj.VisitID, patientID: this.PatientId, phoneNumber: this.PatientPhoneNumber }
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: doropDownObj.VisitID,
         TPID: doropDownObj.TPID
       }
@@ -1729,7 +1729,7 @@ export class RisWorklistComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -1742,10 +1742,10 @@ export class RisWorklistComponent implements OnInit {
 
 
   /////////////////////////////Assigner Section////////////
-  isSpinnerAssign: boolean = true;//Hide Loader
-  isSpinnerUnAssign: boolean = true;//Hide Loader
-  disabledButtonAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonUnAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerAssign = true;//Hide Loader
+  isSpinnerUnAssign = true;//Hide Loader
+  disabledButtonAssign = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonUnAssign = false; // Button Enabled / Disables [By default Enabled]
   VisitId = null;
   assigneeName = null;
   rowGlobal: any = null;
@@ -1793,7 +1793,7 @@ export class RisWorklistComponent implements OnInit {
       // setTimeout(() => {
       this.radiologistListFiltered = this.radoiologistList.filter((radiologist) => {
         // Split the SubSectionIDs string into an array of values
-        let subSectionIdsArray = radiologist.SubSectionIDs ? radiologist.SubSectionIDs.split(',').map(Number) : [];
+        const subSectionIdsArray = radiologist.SubSectionIDs ? radiologist.SubSectionIDs.split(',').map(Number) : [];
         // Check if the SubSectionIdFilter value is in the array
         return subSectionIdsArray.includes(this.SubSectionIdFilter);
       });
@@ -1805,7 +1805,7 @@ export class RisWorklistComponent implements OnInit {
       // this.clearRadiologistSummary();
       this.selectedValueChange.emit(this.EmpID);
       // this.getRadiologistSummary(null);
-      let drInfo = this.radoiologistList.find(a => a.EmpId == this.EmpID);
+      const drInfo = this.radoiologistList.find(a => a.EmpId == this.EmpID);
       if (drInfo)
         this.AssigneeName = drInfo.FullName;
     } else {
@@ -1824,7 +1824,7 @@ export class RisWorklistComponent implements OnInit {
   TPIds = [];
   getMOInterventionTPByVisitID(VisitID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID
     };
     // this.questionnaireSrv.getMOInterventionTPByVisitID(params).subscribe((res: any) => {
@@ -1844,7 +1844,7 @@ export class RisWorklistComponent implements OnInit {
   associatedRadiologists = null;
   getRadiologistRefByMappingInfo(visitID) {
     this.radiologistRefByMappingInfo = [];
-    let params = {
+    const params = {
       VisitID: visitID
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_REFBYLIST_MAPPING_INFO, params).subscribe((res: any) => {
@@ -1884,13 +1884,13 @@ export class RisWorklistComponent implements OnInit {
   visitTestsAssigner = [];
   getRISTPByVisit(VisitID) {
     this.visitTestsAssigner = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       FilterBy: 1
     };
     this.sharedService.getData(API_ROUTES.GET_RIS_TP_BY_VISIT, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let visitTestsAssigner = res.PayLoad || [];
+        const visitTestsAssigner = res.PayLoad || [];
         this.visitTestsAssigner = visitTestsAssigner.map(a => ({
           TPID: a.TPID,
           TestProfileCode: a.TestProfileCode,
@@ -1909,8 +1909,8 @@ export class RisWorklistComponent implements OnInit {
   radoiologistList = [];
   radiologistListFiltered = [];
   getRadiologistInfo(EmpID) {
-    let subSectionIDs = (this.paramsValuesForWorkList.subSectionIDs && this.paramsValuesForWorkList.subSectionIDs.length) ? this.paramsValuesForWorkList.subSectionIDs.join(",") : null;
-    let params = {
+    const subSectionIDs = (this.paramsValuesForWorkList.subSectionIDs && this.paramsValuesForWorkList.subSectionIDs.length) ? this.paramsValuesForWorkList.subSectionIDs.join(",") : null;
+    const params = {
       EmpID: EmpID,
       SubSectionIDs: subSectionIDs
     };
@@ -1977,7 +1977,7 @@ export class RisWorklistComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -2035,9 +2035,9 @@ export class RisWorklistComponent implements OnInit {
   isDoneTechHistory = 0;
   objJson = []
   insertUpdateTechnicianWorkList() {
-    let currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
+    const currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
     let mergeObj = []
-    let obj = {
+    const obj = {
       technicianHitory: this.TechnicianHistory,
       unserName: this.VerifiedUserName,
       userID: this.VerifiedUserID,
@@ -2048,7 +2048,7 @@ export class RisWorklistComponent implements OnInit {
     mergeObj.push(obj);
     // console.log("jsonOBJ______________",obj);//return;
     // console.log("mergeObj______________",mergeObj);return;
-    let objParam = {
+    const objParam = {
       ///////////////////
       TPID: this.TPId,
       VisitID: Number(this.VisitID),
@@ -2070,7 +2070,7 @@ export class RisWorklistComponent implements OnInit {
     // console.log("objParam for tech checklist____________", objParam);//return;
 
     this.techSrv.insertUpdateTechnicianWorkList(objParam).subscribe((data: any) => {
-      let respons = JSON.parse(data.PayLoadStr);
+      const respons = JSON.parse(data.PayLoadStr);
       if (respons.length) {
         if (data.StatusCode == 200) {
           this.toastr.success(data.Message);
@@ -2157,8 +2157,8 @@ export class RisWorklistComponent implements OnInit {
         input: 'custom-radio'
       },
       preConfirm: (res) => {
-        let processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
-        let processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
+        const processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
+        const processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
         if (!processID && processRemarks == '') {
           Swal.showValidationMessage('Please select any option and provide remarks');
           return false;
@@ -2181,7 +2181,7 @@ export class RisWorklistComponent implements OnInit {
 
     if (formValues && formValues[0] && formValues[1] != '') {
       this.ProcessID = Number(formValues[0]);
-      let remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + row.TPCode + ": " : "Critical Remarks for " + row.TPCode + ": ";
+      const remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + row.TPCode + ": " : "Critical Remarks for " + row.TPCode + ": ";
       this.ProcessRemarks = remarksPrepend + formValues[1]
       this.updateVisitTestPriority(row)
       this.saveVisitRemarks(row)
@@ -2222,8 +2222,8 @@ export class RisWorklistComponent implements OnInit {
         input: 'custom-radio'
       },
       preConfirm: (res) => {
-        let processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
-        let processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
+        const processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
+        const processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
         if (!processID && processRemarks == '') {
           Swal.showValidationMessage('Please select any option and provide remarks');
           return false;
@@ -2246,7 +2246,7 @@ export class RisWorklistComponent implements OnInit {
 
     if (formValues && formValues[0] && formValues[1] != '') {
       this.ProcessID = Number(formValues[0]);
-      let remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
+      const remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
       this.ProcessRemarks = remarksPrepend + formValues[1]
       this.updateVisitTestPriority({ TPId: this.TPId, VisitNo: this.VisitID })
       this.saveVisitRemarks({ TPId: this.TPId, VisitNo: this.VisitID })
@@ -2257,7 +2257,7 @@ export class RisWorklistComponent implements OnInit {
   }
 
   updateVisitTestPriority(row) {
-    let objParams = {
+    const objParams = {
       VisitID: row.VisitNo.replaceAll("-", ""),
       TPID: row.TPId,
       ProcessID: this.ProcessID,
@@ -2265,7 +2265,7 @@ export class RisWorklistComponent implements OnInit {
       CreatedBy: this.loggedInUser.userid || -99 // -99 incase of null
     }
     this.questionnaireSrv.updateVisitTestPriority(objParams).subscribe((res: any) => {
-      let respons = JSON.parse(res.PayLoadStr);
+      const respons = JSON.parse(res.PayLoadStr);
       if (res.StatusCode == 200) {
         this.toastr.success(res.Message, "Test Sensitivity");
         this.getRisworkList(this.paramsValuesForWorkList);
@@ -2279,7 +2279,7 @@ export class RisWorklistComponent implements OnInit {
   }
 
   saveVisitRemarks(row) {
-    let params = {
+    const params = {
       VisitId: Number(row.VisitNo.replaceAll("-", "")),
       ModuleName: this.moduleScreenName,
       Remarks: this.ProcessRemarks.trim(),
@@ -2304,7 +2304,7 @@ export class RisWorklistComponent implements OnInit {
     });
   }
   saveVisitRemarksAssigner(row) {
-    let params = {
+    const params = {
       VisitId: Number(row.VisitId),
       ModuleName: row.ModuleName,
       Remarks: row.Remarks,
@@ -2362,7 +2362,7 @@ export class RisWorklistComponent implements OnInit {
         this.isSpinnerUnassignmentBulk = false;
       }
 
-      let objParam = {
+      const objParam = {
         TPIDs: this.TPIds.join(","),
         VisitID: Number(this.VisitID),
         EmpID: this.EmpID,
@@ -2382,7 +2382,7 @@ export class RisWorklistComponent implements OnInit {
         this.isDisabledUnassignmentBulk = false;
         this.isSpinnerUnassignmentBulk = true;
 
-        let respons = JSON.parse(data.PayLoadStr);
+        const respons = JSON.parse(data.PayLoadStr);
         if (respons[0].IsExists) {
           this.toastr.warning("This Test is already assigned");
           this.getRISWorklistRow(Number(this.VisitID), this.TPId)
@@ -2415,7 +2415,7 @@ export class RisWorklistComponent implements OnInit {
 
             this.pagination.paginatedSearchResults.splice(this.rowIndex, 1);
             // this.pagination.paginatedSearchResults = this.pagination.paginatedSearchResults.filter(item => item.TPId != this.TPId && item.VisitNo!=this.VisitIDWithDashes);
-            let nextRow = this.pagination.paginatedSearchResults.find((item, index) => index == this.rowIndex);
+            const nextRow = this.pagination.paginatedSearchResults.find((item, index) => index == this.rowIndex);
             if (nextRow)
               setTimeout(() => {
                 this.assignTest(nextRow, this.rowIndex)
@@ -2489,7 +2489,7 @@ export class RisWorklistComponent implements OnInit {
     this.clearRadiologistSummary();
     this.isDisabledUnassignmentBulk = true;
     this.isSpinnerUnassignmentBulk = false;
-    let objParam = {
+    const objParam = {
       TPIDs: row.TPId,
       VisitID: Number(row.VisitNo.replaceAll("-", "")),
       EmpID: this.EmpID,
@@ -2502,7 +2502,7 @@ export class RisWorklistComponent implements OnInit {
     this.techSrv.insertUpdateVisitTestAssignment(objParam).subscribe((data: any) => {
       this.isDisabledUnassignmentBulk = false;
       this.isSpinnerUnassignmentBulk = true;
-      let respons = JSON.parse(data.PayLoadStr);
+      const respons = JSON.parse(data.PayLoadStr);
 
       if (respons.length) {
         if (data.StatusCode == 200) {
@@ -2578,7 +2578,7 @@ export class RisWorklistComponent implements OnInit {
   disabledButtonUnlock = false;
   isSpinnerUnlock = true;
   updateRadioReportLock() {
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPId,
       LockedBy: null,
@@ -2604,12 +2604,12 @@ export class RisWorklistComponent implements OnInit {
 
   isLocked = null;
   getRadioReportVisitTestStatus() {
-    let objParam = {
+    const objParam = {
       VisitID: this.VisitId,
       TPID: this.TPId,
     }
     this.sharedService.getData(API_ROUTES.GET_RADIO_REPORT_VISIT_TEST_STATUS, objParam).subscribe((data: any) => {
-      let response = data.PayLoad;
+      const response = data.PayLoad;
       if (response && response.length) {
         this.isLocked = response[0].LockedBy;
       }
@@ -2621,12 +2621,12 @@ export class RisWorklistComponent implements OnInit {
   subSectionList = []
   getSubSection() {
     this.subSectionList = [];
-    let objParam = {
+    const objParam = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.sharedService.getData(API_ROUTES.LOOKUP_GET_SUBSECTION_SECTIONID, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -2696,10 +2696,10 @@ export class RisWorklistComponent implements OnInit {
 
   getStudyName(e, VisitID) {
     this.isDisabledAssignment = false;
-    let TPID = e.target.value;
+    const TPID = e.target.value;
     // console.log("TPID______this.VisitID_",TPID,this.VisitID);
     // console.log("risworklist is ",this.risWorkist)
-    let tpObj = this.visitTestsAssigner.find(a => a.TPID == TPID);
+    const tpObj = this.visitTestsAssigner.find(a => a.TPID == TPID);
     this.TPCode = tpObj.TestProfileCode;
     this.TPName = tpObj.TestProfileName;
     this.getRISWorklistRow(VisitID, TPID)
@@ -2757,7 +2757,7 @@ export class RisWorklistComponent implements OnInit {
   checkedItemCount = 0;
   mainChk = false;
   countCheckedItems() {
-    let checkedItems = this.pagination.paginatedSearchResults.filter(item => item.checked);
+    const checkedItems = this.pagination.paginatedSearchResults.filter(item => item.checked);
     this.checkedItemCount = checkedItems.length;
     this.mainChk = this.pagination.paginatedSearchResults.length == this.checkedItemCount ? true : false;
   }
@@ -2765,7 +2765,7 @@ export class RisWorklistComponent implements OnInit {
   assignTestToDoctorBulk(statusID) {
     let isValidAssignmentObj = false;
     this.buttonClicked = true;
-    let checkedItems = this.pagination.paginatedSearchResults.filter(a => a.checked);
+    const checkedItems = this.pagination.paginatedSearchResults.filter(a => a.checked);
     // console.log("checked itesm lengthh_______________", checkedItems)
     // console.log("Checked Itesm are: ", checkedItems)
     if (!checkedItems.length) {
@@ -2793,13 +2793,13 @@ export class RisWorklistComponent implements OnInit {
       //   Priority: 1,
       //   UserId: this.loggedInUser.userid,
       // })
-      let objParam = {
+      const objParam = {
         LocID: this.loggedInUser.locationid || -99, //incase of null or empty,
         RISStatusID: statusID,
         CreatedBy: this.loggedInUser.userid || -99,//incase of null or empty
         tblVisitTestAssignment: checkedItems.map(a => {
           let assigneeName = "";
-          let drInfo = this.radoiologistList.find(b => b.EmpId == a.EmpId);
+          const drInfo = this.radoiologistList.find(b => b.EmpId == a.EmpId);
           if (drInfo)
             assigneeName = drInfo.FullName;
           return {
@@ -2820,7 +2820,7 @@ export class RisWorklistComponent implements OnInit {
         this.buttonClicked = false;
         this.isDisabledAssignment = false;
         this.isSpinnerAssignment = true;
-        let respons = JSON.parse(data.PayLoadStr);
+        const respons = JSON.parse(data.PayLoadStr);
         if (respons[0].IsExists) {
           this.toastr.warning("In your selection some test(s) have alreay been assigned, Please refresh your list and retry.");
           // this.getRISWorklistRow(Number(this.VisitID),this.TPId)
@@ -3000,14 +3000,14 @@ export class RisWorklistComponent implements OnInit {
   getRISWorklistRow(VisitID, TPID) {
     this.visitDetailBtnClicked = false;
     this.RISWorklistRow = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       TPID: TPID
     };
     this.sharedService.getData(API_ROUTES.GET_RIS_WORKLIST_ROW, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
         this.RISWorklistRow = res.PayLoad || [];
-        let row = this.RISWorklistRow[0];
+        const row = this.RISWorklistRow[0];
         if (row.RISStatusID) {
           this.WorkflowStatus = row["WorkflowStatus"]
           this.EmpID = row.EmpId;
@@ -3080,7 +3080,7 @@ export class RisWorklistComponent implements OnInit {
     } else {
       this.clearRadiologistSummary();
       this.isLoadSummaryMethodCalled = true;
-      let objParam = {
+      const objParam = {
         EmpID: this.EmpID,
         SectionID: this.SubSectionId,
         DateFrom: this.paramsValuesForWorkList.dateFrom,
@@ -3092,7 +3092,7 @@ export class RisWorklistComponent implements OnInit {
       this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_SUMMARY, objParam).subscribe((resp: any) => {
         this.spinner.hide(this.spinnerRefs.readiologinstSummarySection);
         if (resp.StatusCode == 200) {
-          let readiologinstSummary = resp.PayLoadDS || [];
+          const readiologinstSummary = resp.PayLoadDS || [];
           this.AllStudies = readiologinstSummary.Table || [];
           this.FinalStudies = readiologinstSummary.Table1 || [];
           this.PendingStudies = readiologinstSummary.Table2 || [];
@@ -3111,14 +3111,14 @@ export class RisWorklistComponent implements OnInit {
   getEmployeePic(EmpID) {
     this.radiologistPic = null;
     this.spinner.show(this.spinnerRefs.drPic);
-    let params = {
+    const params = {
       EmpID: EmpID
     }
     this.questionnaireSrv.getEmployeePic(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.drPic);
       if (res.StatusCode == 200) {
         if (res.PayLoad.length && res.PayLoad[0].EmployeePic) {
-          let resp = this.helper.formateImagesData(res.PayLoad, 'EmployeePic');
+          const resp = this.helper.formateImagesData(res.PayLoad, 'EmployeePic');
           this.radiologistPic = resp[0].EmployeePic;
         } else {
           this.radiologistPic = null;
@@ -3135,11 +3135,11 @@ export class RisWorklistComponent implements OnInit {
   showPassword = false;
   isInputFocused = false;
 
-  urduNews: string = "براہ کرم زیر التواء ٹیسٹ چیک آؤٹ کریں۔ ورک فلو کا اگلا مرحلہ اس کا انتظار کر رہا ہے۔ شکریہ";
+  urduNews = "براہ کرم زیر التواء ٹیسٹ چیک آؤٹ کریں۔ ورک فلو کا اگلا مرحلہ اس کا انتظار کر رہا ہے۔ شکریہ";
   englishNews: string = this.countCheckoutWorklist > 1 ? "You have " + this.countCheckoutWorklist + " tests pending checkout. Please proceed; the next step awaits. " : "You have " + this.countCheckoutWorklist + " test pending checkout. Please proceed; the next step awaits. ";
   urduNewsReporting: string = "اب آپ فا ئنل شدہ رپورٹس کو فا ئنل ہونے کے " + this.ReportDelayTime + " منٹ بعد تک ایڈٹ کر سکتے ہیں۔";
   englishNewsReporting: string = "You can now edit finalized reports within " + this.ReportDelayTime + " minutes of finalization.";
-  showUrdu: boolean = true;
+  showUrdu = true;
   private newsSubscription: Subscription;
 
 
@@ -3262,7 +3262,7 @@ export class RisWorklistComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -3285,11 +3285,11 @@ export class RisWorklistComponent implements OnInit {
 
   isActive = null;
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -3302,7 +3302,7 @@ export class RisWorklistComponent implements OnInit {
   getPACSServers(visitID, TPID, rowIndex) {
     this.rowIndex = rowIndex;
     this.toastr.info("Working in progress", "Success");
-    let VisitID = visitID.replaceAll("-", "");
+    const VisitID = visitID.replaceAll("-", "");
     // 240301044020,@TPId INT=926--2123
     this.SysInfo = this.auth.getSystemInfoFromStorage();
     // let objParams = {
@@ -3316,7 +3316,7 @@ export class RisWorklistComponent implements OnInit {
       TPID: TPID
     }];
 
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail
@@ -3495,8 +3495,8 @@ export class RisWorklistComponent implements OnInit {
     if (this.reportType == '2') {
       this.ifDetail = true;
       this.ifSummary = false;
-      let val = this.paramsValuesForWorkList;
-      let params = {
+      const val = this.paramsValuesForWorkList;
+      const params = {
         DateFrom: val.dateFrom,
         DateTo: val.dateTo,
         DocId: this.loggedInUser.userid,
@@ -3530,9 +3530,9 @@ export class RisWorklistComponent implements OnInit {
   }
 
   getRadioShareDetails() {
-    let val = this.paramsValuesForWorkList;
+    const val = this.paramsValuesForWorkList;
     this.DoctorShareDetalList = [];
-    let params = {
+    const params = {
       DateFrom: val.dateFrom,
       DateTo: val.dateTo,
       DocId: this.loggedInUser.userid,
@@ -3558,10 +3558,10 @@ export class RisWorklistComponent implements OnInit {
   }
 
   getRadioShareSummary() {
-    let val = this.paramsValuesForWorkList;
+    const val = this.paramsValuesForWorkList;
     this.DoctorShareSummaryList = []
     this.DoctorName = null
-    let params = {
+    const params = {
       DateFrom: val.visitID ? null : val.dateFrom,
       DateTo: val.visitID ? null : val.dateTo,
       DocId: this.loggedInUser.userid,
@@ -3653,7 +3653,7 @@ export class RisWorklistComponent implements OnInit {
   }
 
   printMyShareReport() {
-    let val = this.paramsValuesForWorkList;
+    const val = this.paramsValuesForWorkList;
     if (Number(this.reportType) === 1) {
       const url = environment.patientReportsPortalUrl + 'my-services-share?p=' + btoa(JSON.stringify({
         // DoctorShareSummaryList: this.DoctorShareSummaryList,
@@ -3662,7 +3662,7 @@ export class RisWorklistComponent implements OnInit {
         DateTo: val.dateTo,
         DocId: this.loggedInUser.userid,
       }));
-      let winRef = window.open(url.toString(), '_blank');
+      const winRef = window.open(url.toString(), '_blank');
     }
     if (Number(this.reportType) === 2) {
       const url = environment.patientReportsPortalUrl + 'my-services-share?p=' + btoa(JSON.stringify({
@@ -3674,7 +3674,7 @@ export class RisWorklistComponent implements OnInit {
         HeadId: -1, //"123456",
         LocId: this.loggedInUser.locationid,
       }));
-      let winRef = window.open(url.toString(), '_blank');
+      const winRef = window.open(url.toString(), '_blank');
     }
 
   }
@@ -3684,7 +3684,7 @@ export class RisWorklistComponent implements OnInit {
 
   closeReportingModal() {
     if (this.active == 2) {
-      let objParam = {
+      const objParam = {
         VisitID: Number(this.VisitID),
         TPID: this.TPId,
         LockedBy: null,
@@ -3713,11 +3713,9 @@ export class RisWorklistComponent implements OnInit {
     cancelClicked: false,
     confirmPopoverCancel: () => { }
   }
-  isSpinnerAI: boolean = false;
+  isSpinnerAI = false;
   // Track state per row
-  rowStates: {
-    [key: string]: { loading: boolean; requested: boolean }
-  } = {};
+  rowStates: Record<string, { loading: boolean; requested: boolean }> = {};
 
   requestAIAssistance(row, i) {
     this.rowIndex = i;
@@ -3788,8 +3786,8 @@ export class RisWorklistComponent implements OnInit {
   screenPermissionsObj: any = {};
   getPermissions() {
     this.screenPermissionsObj = this.auth.getUserPermissionsFromLocalStorage();
-    let caseStudyRoute = this.screenPermissionsObj.find(i => i.state == 'can_mark_report_casestudy');
-    let aiassist = this.screenPermissionsObj.find(i => i.key == 'can-use-ai-assist');
+    const caseStudyRoute = this.screenPermissionsObj.find(i => i.state == 'can_mark_report_casestudy');
+    const aiassist = this.screenPermissionsObj.find(i => i.key == 'can-use-ai-assist');
     this.isMarkCaseStudy = caseStudyRoute ? true : false;
     this.isAIAssist = aiassist ? true : false;
   }

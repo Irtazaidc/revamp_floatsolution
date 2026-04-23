@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, OnChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -30,11 +30,11 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
     ])
   ]
 })
-export class RisWorklistParamsComponent implements OnInit {
+export class RisWorklistParamsComponent implements OnInit, OnChanges {
   @Output() risParamsValues = new EventEmitter<any>();
-  @Input('buttonControls') buttonControls = ['dateFrom', 'dateTo'];
+  @Input() buttonControls = ['dateFrom', 'dateTo'];
   @Input() checkDoctorFeedback = false;
-  @Input('paramsValuesForWorkListHeader') paramsValuesForWorkListHeader = {
+  @Input() paramsValuesForWorkListHeader = {
     formHeaderBGClass: null,
     formHeaderText: null
   };
@@ -89,7 +89,7 @@ export class RisWorklistParamsComponent implements OnInit {
       this.multiple = false;
       this.techAudit = false;
     }
-    let risFilterParams = this.storageService.getObject('risFilterParams');
+    const risFilterParams = this.storageService.getObject('risFilterParams');
     if (risFilterParams) {
       this.branchIDs = risFilterParams.branch;
       this.subSectionIDs = risFilterParams.subSectionIDs
@@ -112,7 +112,7 @@ export class RisWorklistParamsComponent implements OnInit {
     // }, 2000);
     this.passParams();
     // this.paramsValuesForWorkListHeaderFormate = this.paramsValuesForWorkListHeaderFormate = JSON.parse(JSON.stringify(this.paramsValuesForWorkListHeader));
-    let paramObj = JSON.parse(JSON.stringify(this.paramsValuesForWorkListHeader));
+    const paramObj = JSON.parse(JSON.stringify(this.paramsValuesForWorkListHeader));
     // setTimeout(() => {
     this.formHeaderBGClass = paramObj ? paramObj.formHeaderBGClass : "bg-purple";
     this.formHeaderText = paramObj ? paramObj.formHeaderText : "All";
@@ -121,12 +121,12 @@ export class RisWorklistParamsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    let paramObj = this.paramsValuesForWorkListHeader ? JSON.parse(JSON.stringify(this.paramsValuesForWorkListHeader)) : null;
+    const paramObj = this.paramsValuesForWorkListHeader ? JSON.parse(JSON.stringify(this.paramsValuesForWorkListHeader)) : null;
     // setTimeout(() => {
     this.formHeaderBGClass = paramObj ? paramObj.formHeaderBGClass : "bg-purple";
     this.formHeaderText = paramObj ? paramObj.formHeaderText : "All";
     // }, 100);
-    let checkDoctorFeedback = this.checkDoctorFeedback;
+    const checkDoctorFeedback = this.checkDoctorFeedback;
     // console.log("checkDoctorFeedback:", checkDoctorFeedback);
     this.storageService.setObject('DoctorFeedback', this.checkDoctorFeedback);
   }
@@ -143,10 +143,10 @@ export class RisWorklistParamsComponent implements OnInit {
   isValidDateRange = true;
   passParams() {
     // this.searchByVisit();
-    let formValues = this.risParamsForm.getRawValue();
+    const formValues = this.risParamsForm.getRawValue();
     // console.log("FORM VALUES IN PASS PARAMS: ",formValues)
-    let visitID = formValues.visitID;
-    let branch = formValues.branch;
+    const visitID = formValues.visitID;
+    const branch = formValues.branch;
     if ((!formValues.dateFrom || !formValues.dateTo) && !visitID) {
       this.toastr.error('Please Select Date Range');
       this.isValidDateRange = false;
@@ -205,7 +205,7 @@ export class RisWorklistParamsComponent implements OnInit {
     formValues.dateFrom = formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null;
     formValues.dateTo = formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null;
     formValues.AssignemntFilter = 3;
-    const filterMap: { [key: string]: number } = {
+    const filterMap: Record<string, number> = {
       "queue-manager": 12,
       "bulk-queue-manager": 12,
       "mo-worklist": 1,
@@ -323,7 +323,7 @@ export class RisWorklistParamsComponent implements OnInit {
     }, (err) => { console.log(err) })
   }
   getAllLocationByUserID() {
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid
     }
     this.lookupSrv.getAllLocationByUserID(param).subscribe((resp: any) => {
@@ -334,8 +334,8 @@ export class RisWorklistParamsComponent implements OnInit {
   }
 
   getRISModalities() {
-    let fromdata = this.risParamsForm.getRawValue();
-    let params = {
+    const fromdata = this.risParamsForm.getRawValue();
+    const params = {
       BranchID: fromdata.branch
     }
     this.worklistSrv.getRISModalities(params).subscribe((resp: any) => {
@@ -396,12 +396,12 @@ export class RisWorklistParamsComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -409,11 +409,11 @@ export class RisWorklistParamsComponent implements OnInit {
   }
   getSubSectionByEmpID() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       EmpID: this.loggedInUser.empid
     }
     this.lookupSrv.GetSubSectionByEmpID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -421,8 +421,8 @@ export class RisWorklistParamsComponent implements OnInit {
   }
   validateBranch = false;
   searchByVisit() {
-    let visitID = this.risParamsForm.getRawValue().visitID;
-    let branch = this.risParamsForm.getRawValue().branch;
+    const visitID = this.risParamsForm.getRawValue().visitID;
+    const branch = this.risParamsForm.getRawValue().branch;
     // let branchField = this.risParamsForm.get('branch');
     if (visitID) {
       this.risParamsForm.patchValue({
@@ -455,7 +455,7 @@ export class RisWorklistParamsComponent implements OnInit {
     // }
   }
   checkBranch(e) {
-    let visitID = this.risParamsForm.getRawValue().visitID;
+    const visitID = this.risParamsForm.getRawValue().visitID;
     if (!e.length && visitID)
       this.validateBranch = true;
     else

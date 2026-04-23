@@ -31,8 +31,8 @@ export class SampleReceiveComponent implements OnInit {
   spinnerRefs = {
     listSection: 'listSection'
   }
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   RackList: any = [];
   RackNo : any = null
   RackRow: any = [];
@@ -62,12 +62,12 @@ export class SampleReceiveComponent implements OnInit {
   });
   
   rackStatus: any=null;
-  isRequired: boolean = false;
+  isRequired = false;
   infoMessage ='Data loading...';
-  modalHeader : String ="Rack's Allocation";
-  scanType : number = 1; //1 For Rack Scaning, 2 For Sample Scaning
-  isRackAvailable: boolean = false;
-  SampleSection :String = "";
+  modalHeader  ="Rack's Allocation";
+  scanType  = 1; //1 For Rack Scaning, 2 For Sample Scaning
+  isRackAvailable = false;
+  SampleSection  = "";
   RackID : number = null;
   SampleBarcode :string = null;
   loggedInUser: any;
@@ -92,8 +92,8 @@ export class SampleReceiveComponent implements OnInit {
   ScannedRackInfo: any[];
   RackNoToShow: any;
   RackSectionToShow: any;
-  SampleCount: number = 0;
-  isTLA: boolean = false;
+  SampleCount = 0;
+  isTLA = false;
   TransferRackNo:number=null;
   AccessioningRackID: any;
   constructor(
@@ -134,9 +134,9 @@ export class SampleReceiveComponent implements OnInit {
   getSmapleInfoByRackNo(rackNo) {
     this.RackNo = rackNo;
     this.SampleIfoInRackList=[]
-    let sampleInfoFormVal = rackNo;
+    const sampleInfoFormVal = rackNo;
     if (sampleInfoFormVal) {
-      let params = {
+      const params = {
         "RackNo": sampleInfoFormVal,
         "Screen": 'TransferRack'
       }
@@ -165,7 +165,7 @@ export class SampleReceiveComponent implements OnInit {
   }
   
   moveSampleToTransferRack() {
-    var objParam = {
+    const objParam = {
       CreatedBy: this.loggedInUser.userid || -99,
       FromRackNo: this.RackNo,
       ToRackNo: this.TransferRack[0].RackNo,
@@ -239,7 +239,7 @@ export class SampleReceiveComponent implements OnInit {
       }
 
       this.RackRow = []
-      let params={
+      const params={
         RackNo : this.TransferRackNo, 
         BranchID :  null
       }
@@ -367,7 +367,7 @@ export class SampleReceiveComponent implements OnInit {
     this.sectionObj = data;
     if(this.sectionObj){
       this.spinner.show(this.spinnerRefs.listSection);
-      let objParm = {
+      const objParm = {
         BranchID: this.loggedInUser.locationid,
         SubSectionID: this.sectionObj.SubSectionId||null,
         Screen: "Accessioning"
@@ -392,12 +392,12 @@ export class SampleReceiveComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID
     }    
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response || [];
       this.subSectionList.push({SubSectionId: -1, SubSectionCode: 'TLASamples', SubSectionTitle: 'TLASamples', SubSectionShortName: 'TLASamples'})
     }, (err) => {
@@ -406,7 +406,7 @@ export class SampleReceiveComponent implements OnInit {
   }
 
   transferSampleToMachine(LabId){
-    let objParm = {
+    const objParm = {
       SampleBarcode: LabId,
       CreatedBy: this.loggedInUser.userid || -99,
       Remarks: null
@@ -428,7 +428,7 @@ export class SampleReceiveComponent implements OnInit {
 
   getRackInformationByRackNo(rackNo){
     this.ScannedRackInfo = []
-    let params={
+    const params={
       RackNo : rackNo, 
 	    BranchID :  null
     }
@@ -439,7 +439,7 @@ export class SampleReceiveComponent implements OnInit {
         if(this.ScannedRackInfo){
           this.RackNoToShow = this.ScannedRackInfo['RackNo'];
           this.RackSectionToShow = (this.ScannedRackInfo['Section']==null)?'TLASample': this.ScannedRackInfo['Section'];
-          let rack_sample_code = this.RackNoToShow.substring(0,5)
+          const rack_sample_code = this.RackNoToShow.substring(0,5)
           if(rack_sample_code.toLowerCase() == 'tlara'){
             this.RackSectionToShow ='TLA'
             this.isTLA = true;
@@ -472,9 +472,9 @@ export class SampleReceiveComponent implements OnInit {
     this.sampleList=[];
     this.disabledButton = true;
     this.isSpinner = false; 
-    let formValues = this.worklistForm.getRawValue();
+    const formValues = this.worklistForm.getRawValue();
     this.spinner.show(this.spinnerRefs.listSection);
-    let objParm = {
+    const objParm = {
       BranchID: this.loggedInUser.locationid,
       SubSectionID: formValues.SectionID||null,
       Screen: "Accessioning",
@@ -504,9 +504,9 @@ export class SampleReceiveComponent implements OnInit {
     // this.archievedSampleList =[]
     this.disabledButton = true;
     this.isSpinner = false; 
-    let formValues = this.archievedForm.getRawValue();
+    const formValues = this.archievedForm.getRawValue();
     this.spinner.show(this.spinnerRefs.listSection);
-    let objParm = {
+    const objParm = {
       BranchID: this.loggedInUser.locationid,
       SubSectionID: formValues.SectionID||null,
       Screen: "Accessioning",

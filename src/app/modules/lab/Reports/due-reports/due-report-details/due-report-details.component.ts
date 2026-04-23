@@ -44,7 +44,7 @@ export class DueReportDetailsComponent implements OnInit {
   maxDate: any;
 
   filterForm: FormGroup = this.formBuilder.group(this.Fields)
-  ViistCounts: number = 0;
+  ViistCounts = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -81,7 +81,7 @@ export class DueReportDetailsComponent implements OnInit {
     // console.log("loggedInUser", this.loggedInUser)
   }
   getDueReportData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -89,7 +89,7 @@ export class DueReportDetailsComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocIDs: formValues.locID ? formValues.locID.join(",") : null,
@@ -117,7 +117,7 @@ export class DueReportDetailsComponent implements OnInit {
     })
   }
   countTotalVisitIds(data: any[]): number {
-    const uniqueVisitIds: { [key: number]: boolean } = {};
+    const uniqueVisitIds: Record<number, boolean> = {};
     data.forEach(item => {
       uniqueVisitIds[item.VisitID] = true;
     });
@@ -163,7 +163,7 @@ export class DueReportDetailsComponent implements OnInit {
   getSubSection() {
 
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     }
@@ -179,7 +179,7 @@ export class DueReportDetailsComponent implements OnInit {
   getTestStatus() {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.testStatusList = _response;
     }, (err) => {
     })
@@ -200,7 +200,7 @@ export class DueReportDetailsComponent implements OnInit {
   panelList = []
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;

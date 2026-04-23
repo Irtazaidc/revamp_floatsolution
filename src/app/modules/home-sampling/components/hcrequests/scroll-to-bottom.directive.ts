@@ -8,7 +8,7 @@ import { Directive, ElementRef, AfterViewChecked, Input } from '@angular/core';
 })
 export class ScrollToBottomDirective implements AfterViewChecked {
 
-  @Input() appScrollToBottom: boolean = false; // trigger when new messages arrive
+  @Input() appScrollToBottom = false; // trigger when new messages arrive
 
   private lastScrollHeight = 0;
 

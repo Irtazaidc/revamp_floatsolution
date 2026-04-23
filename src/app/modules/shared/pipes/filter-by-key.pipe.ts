@@ -11,8 +11,8 @@ export class FilterByKeyPipe implements PipeTransform {
   // transform(value: unknown, ...args: unknown[]): unknown {
   //   return null;
   // }
-  transform(values: Array<Object>, filterValue: string, key: any, fullDataSet: Array<Object> = null): unknown {
-    let filteredData: Array<Object> = values;
+  transform(values: object[], filterValue: string, key: any, fullDataSet: object[] = null): unknown {
+    let filteredData: object[] = values;
     filterValue = (filterValue || '').toString();
     if(filterValue != '' && fullDataSet && fullDataSet.length) {
       filteredData = fullDataSet;

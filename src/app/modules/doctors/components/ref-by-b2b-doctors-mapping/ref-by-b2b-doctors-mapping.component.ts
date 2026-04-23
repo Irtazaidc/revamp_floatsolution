@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, OnInit, ViewChild , Input} from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild , Input, OnChanges} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -18,7 +18,7 @@ import { NullLogger } from '@microsoft/signalr';
   templateUrl: './ref-by-b2b-doctors-mapping.component.html',
   styleUrls: ['./ref-by-b2b-doctors-mapping.component.scss']
 })
-export class RefByB2bDoctorsMappingComponent implements OnInit {
+export class RefByB2bDoctorsMappingComponent implements OnInit, OnChanges {
 
   loggedInUser: UserModel;
 
@@ -160,7 +160,7 @@ export class RefByB2bDoctorsMappingComponent implements OnInit {
   
   getRefByDoctors() {
     this.refByDoctors = [];
-    let _params = {};
+    const _params = {};
     this.spinner.show();
     this.lookupService.getRefByDoctors(_params).subscribe((res: any) => {
       this.spinner.hide();
@@ -180,7 +180,7 @@ export class RefByB2bDoctorsMappingComponent implements OnInit {
 
   getB2BDoctors(b2bDoctorID = 0) {
     this.b2bDoctors = [];
-    let _params = {
+    const _params = {
       B2BDoctorID: b2bDoctorID
     };
     this.spinner.show();
@@ -202,9 +202,9 @@ export class RefByB2bDoctorsMappingComponent implements OnInit {
 
   getRefByB2bDoctorsMapping(refId = 0) {
     this.refByB2BDoctorsMapping = [];
-    let formvalues = this.form.getRawValue();
-    let B2BDoctorID = formvalues.B2BDoctorID;
-    let _params = {
+    const formvalues = this.form.getRawValue();
+    const B2BDoctorID = formvalues.B2BDoctorID;
+    const _params = {
       refId: refId ? refId : null
     };
     this.spinner.show();
@@ -228,8 +228,8 @@ export class RefByB2bDoctorsMappingComponent implements OnInit {
 
   save() {
     this.formSubmitted = true;
-    let formvalues = this.form.getRawValue();
-    let B2BDoctorID = formvalues.B2BDoctorID;
+    const formvalues = this.form.getRawValue();
+    const B2BDoctorID = formvalues.B2BDoctorID;
     this.form.patchValue({
       CreatedBy: this.loggedInUser.userid,
       AssignForcefully: this.form.value.AssignForcefully == 1 ? 1 : 0,
@@ -239,7 +239,7 @@ export class RefByB2bDoctorsMappingComponent implements OnInit {
       return;
     }
     console.log(this.form, this.form.valid)
-    let params = JSON.parse(JSON.stringify(this.form.value));
+    const params = JSON.parse(JSON.stringify(this.form.value));
     params.B2BDoctorID = B2BDoctorID,
     delete params.RefByDoc;
     this.spinner.show();

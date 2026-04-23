@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from 'src/app/modules/patient-booking/services/lookup.service';
@@ -14,7 +14,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './test-parameter.component.html',
   styleUrls: ['./test-parameter.component.scss']
 })
-export class TestParameterComponent implements OnInit {
+export class TestParameterComponent implements OnInit, OnChanges {
 
  @Input() getParamID:any;
 
@@ -72,7 +72,7 @@ export class TestParameterComponent implements OnInit {
   paramListChanged(e) {
   this.PId = e.PId || e.PID;
   this.spinner.show(this.spinnerRefs.testGeneralSection);
-    let objParm = {
+    const objParm = {
       PId: this.PId
     }
     this.testProfileService.getTestProfileDetailByPID(objParm).subscribe((res: any) => {
@@ -93,7 +93,7 @@ export class TestParameterComponent implements OnInit {
   
   getparamList() {
     this.paramList = [];
-    let _param = {
+    const _param = {
     };
 
     this.testProfileService.getParameter(_param).subscribe((res: any) => {
@@ -109,8 +109,8 @@ export class TestParameterComponent implements OnInit {
 
   minutesToHours(minutes){
     if(!minutes) return '';
-    var h:any = Math.floor(minutes / 60);
-    var m:any = minutes % 60;
+    let h:any = Math.floor(minutes / 60);
+    let m:any = minutes % 60;
     h = h < 10 ? '0' + h : h; 
     m = m < 10 ? '0' + m : m; 
     return h + ':' + m;
@@ -128,32 +128,32 @@ export class TestParameterComponent implements OnInit {
   }
 
   getFormatedStringFromDays(numberOfDays) {
-    var currentDate = new Date();
-    var calculatedDate = currentDate.setDate(currentDate.getDate() - numberOfDays);
-    var finalDateParam = this.datePipe.transform(calculatedDate, 'yyyy, MM, dd');
+    const currentDate = new Date();
+    const calculatedDate = currentDate.setDate(currentDate.getDate() - numberOfDays);
+    const finalDateParam = this.datePipe.transform(calculatedDate, 'yyyy, MM, dd');
     return(this.getAge(new Date(finalDateParam), new Date()))
   }
 
 
   getAge(date_1, date_2) {
     //convert to UTC
-    var date2_UTC = new Date(Date.UTC(date_2.getUTCFullYear(), date_2.getUTCMonth(), date_2.getUTCDate()));
-    var date1_UTC = new Date(Date.UTC(date_1.getUTCFullYear(), date_1.getUTCMonth(), date_1.getUTCDate()));
-    var yAppendix, mAppendix, dAppendix;
+    const date2_UTC = new Date(Date.UTC(date_2.getUTCFullYear(), date_2.getUTCMonth(), date_2.getUTCDate()));
+    const date1_UTC = new Date(Date.UTC(date_1.getUTCFullYear(), date_1.getUTCMonth(), date_1.getUTCDate()));
+    let yAppendix, mAppendix, dAppendix;
     //--------------------------------------------------------------
-    var days = date2_UTC.getDate() - date1_UTC.getDate();
+    let days = date2_UTC.getDate() - date1_UTC.getDate();
     if (days < 0) {
         date2_UTC.setMonth(date2_UTC.getMonth() - 1);
         days += this.DaysInMonth(date2_UTC);
     }
     //--------------------------------------------------------------
-    var months = date2_UTC.getMonth() - date1_UTC.getMonth();
+    let months = date2_UTC.getMonth() - date1_UTC.getMonth();
     if (months < 0) {
         date2_UTC.setFullYear(date2_UTC.getFullYear() - 1);
         months += 12;
     }
     //--------------------------------------------------------------
-    var years = date2_UTC.getFullYear() - date1_UTC.getFullYear();
+    const years = date2_UTC.getFullYear() - date1_UTC.getFullYear();
     if (years > 1) yAppendix = "yrs";
     else yAppendix = "y";
     if (months > 1) mAppendix = "mos";
@@ -164,9 +164,9 @@ export class TestParameterComponent implements OnInit {
   }
 
   DaysInMonth(date2_UTC) {
-      var monthStart:any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth(), 1);
-      var monthEnd:any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth() + 1, 1);
-      var monthLength = (monthEnd - monthStart) / (1000 * 60 * 60 * 24);
+      const monthStart:any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth(), 1);
+      const monthEnd:any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth() + 1, 1);
+      const monthLength = (monthEnd - monthStart) / (1000 * 60 * 60 * 24);
       return monthLength;
   }
 

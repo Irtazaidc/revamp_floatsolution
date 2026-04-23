@@ -83,7 +83,7 @@ export class AuthService implements OnDestroy {
     const baseUrl = window.location.origin.toLowerCase();
 
     let loginSourceId = 0;
-    let loginSourceURL = baseUrl;
+    const loginSourceURL = baseUrl;
 
     if (baseUrl.includes('reports.idc.net.pk')) {
       loginSourceId = 1;
@@ -96,7 +96,7 @@ export class AuthService implements OnDestroy {
     }
 
     this.isLoadingSubject.next(true);
-    let params = {
+    const params = {
       username: email,
       usernameEnc: emailEnc,
       password: password,
@@ -163,7 +163,7 @@ export class AuthService implements OnDestroy {
 
   getAndUpdateUserPermissions(userId): Observable<any> {
 
-    let params = {
+    const params = {
       // RoleID: 1,
       UserID: userId
     };
@@ -210,14 +210,14 @@ export class AuthService implements OnDestroy {
   }
   updateUserPOSID(posid: string) {
     if (posid) {
-      let user: UserModel = this.getUserFromLocalStorage();
+      const user: UserModel = this.getUserFromLocalStorage();
       user.posId = posid;
       this.setUserInLocalStorage(user);
     }
   }
   updateUserMACAddress(macAddress: string) {
     if (macAddress) {
-      let user: UserModel = this.getUserFromLocalStorage();
+      const user: UserModel = this.getUserFromLocalStorage();
       user.macAdr = macAddress;
       this.setUserInLocalStorage(user);
       localStorage.setItem(this.macAddressKeyLocalStorageKey, btoa(encodeURIComponent(JSON.stringify(macAddress))));
@@ -226,8 +226,8 @@ export class AuthService implements OnDestroy {
   updateSysInfo(SysInfo: string) {
 
     if (SysInfo) {
-      let user: UserModel = this.getUserFromLocalStorage();
-      let info = JSON.parse(SysInfo);
+      const user: UserModel = this.getUserFromLocalStorage();
+      const info = JSON.parse(SysInfo);
       user.currentLocationID = info.loginLocId;
       user.currentLocation = info.loginLocCode;
       user.currentMachineName = info.machineName;
@@ -264,9 +264,9 @@ export class AuthService implements OnDestroy {
     return version;
   }
 
-  updateUserDetails(key: string, value: string, removeIfNull: boolean = false) {
+  updateUserDetails(key: string, value: string, removeIfNull = false) {
     if (key) {
-      let user: UserModel = this.getUserFromLocalStorage();
+      const user: UserModel = this.getUserFromLocalStorage();
       user[key] = value;
       if (removeIfNull) {
         this.setUserInLocalStorage(user);
@@ -438,7 +438,7 @@ export class AuthService implements OnDestroy {
 
   getUserFromLocalStorage(): UserModel {
 
-    let data = localStorage.getItem(this.userLocalStorageToken);
+    const data = localStorage.getItem(this.userLocalStorageToken);
     if (!data) {
       return undefined;
     }
@@ -459,7 +459,7 @@ export class AuthService implements OnDestroy {
     return auth;
   }
   private createUSerObj(data): UserModel {
-    let userData: UserModel = new UserModel();
+    const userData: UserModel = new UserModel();
     userData.setUser(data);
     return userData;
   }
@@ -470,7 +470,7 @@ export class AuthService implements OnDestroy {
   }
 
   public getUserPermissionsFromLocalStorage() {
-    let data = localStorage.getItem(this.userPermissionsLocalStorage);
+    const data = localStorage.getItem(this.userPermissionsLocalStorage);
     if (!data) {
       return undefined;
     }
@@ -491,7 +491,7 @@ export class AuthService implements OnDestroy {
     if (screenKey) {
       data = (data || []).filter(a => a.state == screenKey);
     }
-    let permissionsObj = {};
+    const permissionsObj = {};
     data.forEach(a => {
       permissionsObj[a.key] = a.key;
     })

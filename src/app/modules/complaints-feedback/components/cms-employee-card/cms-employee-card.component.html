@@ -77,11 +77,11 @@
 
                     <span *ngIf="  VisitPanelName && patientData.VisitPanelName != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
                         <i ngbTooltip="Visit Panel" class="text-primary flaticon-network mr-2 font-size-lg"></i>{{  VisitPanelName}}</span> -->
-                    <span *ngIf="empList.EmployeeContactEmail != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                    <span *ngIf="empList.EmployeeContactEmail !== ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
                         <i class="text-danger fa fa-envelope mr-2 font-size-md"></i> {{empList.EmployeeContactEmail || 'NA'}}
                     </span>
                 </div>
-                <span *ngIf="empList.PostalAddress != ''" class="text-dark-75 font-size-lg"><i ngbTooltip="Location"  class="cursor-pointer text-danger fa fa-map-marker mr-2 font-size-lg "></i> {{  empList.PostalAddress || ''}}</span>
+                <span *ngIf="empList.PostalAddress !== ''" class="text-dark-75 font-size-lg"><i ngbTooltip="Location"  class="cursor-pointer text-danger fa fa-map-marker mr-2 font-size-lg "></i> {{  empList.PostalAddress || ''}}</span>
             </div>
         </div>
         <!--end::Content-->

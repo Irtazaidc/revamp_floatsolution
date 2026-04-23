@@ -32,8 +32,8 @@ export class ServicesConfigComponent implements OnInit {
   isDissabledChk = false;
   radoiologistTime: any;
   radoiologistWorkWeek: any;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
   filteredAvailableServices = [];
   loggedInUser: UserModel;
 
@@ -101,7 +101,7 @@ setTimeout(() => {
     this.loggedInUser = this.auth.currentUserValue;
   }
 
-  mainChk: boolean = false;
+  mainChk = false;
   selectAllItems(checked) {
     this.testList.forEach((item) => {
       item.checked = checked;
@@ -126,7 +126,7 @@ setTimeout(() => {
     }
   }
 
-  mainStatusChk: boolean = false;
+  mainStatusChk = false;
 
   selectAllStatus(checked: boolean) {
     console.log("clicked");
@@ -350,7 +350,7 @@ setTimeout(() => {
 
   subSectionList: any[] = [];
   selectedDepartment: any;
-  selectedDepartmentId: number = -1;
+  selectedDepartmentId = -1;
   selectedSubSectionId: number | null = null;
   selectedTestId: number | null = null;
   departmentOptions = [
@@ -369,14 +369,14 @@ setTimeout(() => {
   ];
 
   getSubSection() {
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     };
     // Assuming lookupService is fetching the subsections for both departments
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
 
         // Based on the selected department, populate the corresponding subSections
@@ -428,7 +428,7 @@ setTimeout(() => {
     );
   }
 
-  mainLocationChk: boolean = false;
+  mainLocationChk = false;
 
   onSelectAllBranches() {
     const allBranches = this.getAllowedBranches().map((b) => b.LocId);

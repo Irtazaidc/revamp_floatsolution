@@ -1,5 +1,5 @@
 // @ts-nocheck
-// tslint:disable:variable-name semicolon
+
 import {
   CollectionViewer,
   SelectionChange,
@@ -975,7 +975,7 @@ export class DynamicDataSource {
   ) {}
 
   connect(collectionViewer: CollectionViewer): Observable<DynamicFlatNode[]> {
-    // tslint:disable-next-line:no-non-null-assertion
+   
     this.treeControl.expansionModel.changed!.subscribe((change) => {
       if (
         (change as SelectionChange<DynamicFlatNode>).added ||
@@ -1205,15 +1205,15 @@ export class LoadmoreDatabase {
     if (!this.nodeMap.has(item) || !this.dataMap.has(item)) {
       return;
     }
-    // tslint:disable-next-line:no-non-null-assertion
+   
     const parent = this.nodeMap.get(item)!;
-    // tslint:disable-next-line:no-non-null-assertion
+   
     const children = this.dataMap.get(item)!;
-    // tslint:disable-next-line:no-non-null-assertion
+   
     if (onlyFirstTime && parent.children!.length > 0) {
       return;
     }
-    // tslint:disable-next-line:no-non-null-assertion
+   
     const newChildrenNumber = parent.children!.length + this.batchNumber;
     const nodes = children
       .slice(0, newChildrenNumber)
@@ -1229,7 +1229,7 @@ export class LoadmoreDatabase {
 
   private _generateNode(item: string): LoadmoreNode {
     if (this.nodeMap.has(item)) {
-      // tslint:disable-next-line:no-non-null-assertion
+     
       return this.nodeMap.get(item)!;
     }
     const result = new LoadmoreNode(item, this.dataMap.has(item));
@@ -1377,19 +1377,19 @@ export class TreeComponent implements OnInit {
 
   getLevel = (node: DynamicFlatNode) => node.level;
   isExpandable = (node: DynamicFlatNode) => node.expandable;
-  // tslint:disable-next-line:variable-name
+ 
   hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
 
   transformer2 = (node: FileNode, level: number) => {
     return new FileFlatNode(!!node.children, node.filename, level, node.type);
   };
-  // tslint:disable-next-line:variable-name
+ 
   private _getLevel2 = (node: FileFlatNode) => node.level;
-  // tslint:disable-next-line:variable-name
+ 
   private _isExpandable2 = (node: FileFlatNode) => node.expandable;
-  // tslint:disable-next-line:variable-name
+ 
   private _getChildren2 = (node: FileNode): Observable<FileNode[]> =>
-    // tslint:disable-next-line:semicolon
+   
     observableOf(node.children);
   hasChild2 = (_: number, _nodeData: FileFlatNode) => _nodeData.expandable;
 
@@ -1446,7 +1446,7 @@ export class TreeComponent implements OnInit {
   /** Select the category so we can insert the new item. */
   addNewItem3(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap3.get(node);
-    // tslint:disable-next-line:no-non-null-assertion
+   
     this.database3.insertItem(parentNode!, '');
     this.treeControl3.expand(node);
   }
@@ -1454,7 +1454,7 @@ export class TreeComponent implements OnInit {
   /** Save the node to database */
   saveNode3(node: TodoItemFlatNode, itemValue: string) {
     const nestedNode = this.flatNodeMap3.get(node);
-    // tslint:disable-next-line:no-non-null-assertion
+   
     this.database3.updateItem(nestedNode!, itemValue);
   }
 

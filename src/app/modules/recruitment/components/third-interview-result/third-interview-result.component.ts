@@ -40,12 +40,12 @@ export class ThirdInterviewResultComponent implements OnInit {
     confirmPopoverCancel: () => {}
   }
 
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerShortListed: boolean = true;//Hide Loader
-  isSpinnerFinalized: boolean = true;//Hide Loader
-  isSpinnerRejected: boolean = true;//Hide Loader
-  isSpinnerConfirmed: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerShortListed = true;//Hide Loader
+  isSpinnerFinalized = true;//Hide Loader
+  isSpinnerRejected = true;//Hide Loader
+  isSpinnerConfirmed = true;//Hide Loader
 
   formUpdateStatus = this.fb.group({
     StatusRemarks: ['', Validators.compose([Validators.required])]
@@ -77,18 +77,18 @@ export class ThirdInterviewResultComponent implements OnInit {
   }
   getOpenJobRequestByJobStatus(){
     this.OpenJobsList =[];
-    let objParm = {
+    const objParm = {
       JobStatusID: 5
     }
   
     this.recruitment.getOpenJobRequestsByJobStatus(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.OpenJobsList = [];
-      let newArr = [];
+      const newArr = [];
       resSearchJob.forEach(a => {
-          let _obj = JSON.parse(JSON.stringify(a));
-          let alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
+          const _obj = JSON.parse(JSON.stringify(a));
+          const alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
           if(alreadyAddedIndex > -1) {
               newArr[alreadyAddedIndex].empIds.push(_obj.InterviewerID);
           } else {
@@ -108,11 +108,11 @@ export class ThirdInterviewResultComponent implements OnInit {
   getJobApplicantResult(){
     this.spinner.show(this.spinnerRefs.applicantListSection);
     this.ApplicantResult =[];
-    let objParm = {
+    const objParm = {
       JobRequestID:  null,
     }
     this.recruitment.getJobApplicantResult(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.ApplicantResult = resSearchJob||[];
       }
@@ -125,15 +125,15 @@ export class ThirdInterviewResultComponent implements OnInit {
   }
 
   getJobApplicantResultByJobRequestID(){
-    let formValues = this.formSearch.getRawValue();
+    const formValues = this.formSearch.getRawValue();
     this.spinner.show(this.spinnerRefs.applicantListSection);
     this.ApplicantResult =[];
-    let objParm = {
+    const objParm = {
       JobRequestID:  formValues.JobRequestID?formValues.JobRequestID:null,
       ApplicantStatusID:  11,
     }
     this.recruitment.getJobApplicantResult(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.ApplicantResult = resSearchJob||[];
       }
@@ -171,7 +171,7 @@ export class ThirdInterviewResultComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.applicantDetailModal);
     this.JobApplicantID = applicantID;
     this.ApplicantDetailRow = []
-    let paramObj = {
+    const paramObj = {
       JobApplicantID:this.JobApplicantID
     }
     
@@ -222,10 +222,10 @@ export class ThirdInterviewResultComponent implements OnInit {
       alertMessage = 'Something went wrong';
     }
     this.loadingProcess('show', statusID);
-    let formValues = this.formUpdateStatus.getRawValue();
+    const formValues = this.formUpdateStatus.getRawValue();
     this.formUpdateStatus.markAllAsTouched();
     if (this.formUpdateStatus.valid) {
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid || -99,
         tblJobApplicantStatus: [{
           "JobApplicantID": this.JobApplicantID,
@@ -237,7 +237,7 @@ export class ThirdInterviewResultComponent implements OnInit {
       }
       console.log('Action data is: ', objParam);
       this.recruitment.updateJobApplicantStatusWithRemarks(objParam).subscribe((data: any) => {
-        let res = JSON.parse(data.PayLoadStr);
+        const res = JSON.parse(data.PayLoadStr);
         if (res && res.length) {
           if (data.StatusCode == 200) {
             this.toastr.success(alertMessage);
@@ -261,10 +261,10 @@ export class ThirdInterviewResultComponent implements OnInit {
   }
 
   applicantProcess() {
-    let interviewDate  = (this.InterviewDate)?Conversions.formatDateObject(this.InterviewDate):null;
+    const interviewDate  = (this.InterviewDate)?Conversions.formatDateObject(this.InterviewDate):null;
     this.loadingProcess('show', 0);
     this.spinner.show(this.spinnerRefs.applicantListSection);
-    let jobListChecked = this.ApplicantResult.filter(a => a.checked);
+    const jobListChecked = this.ApplicantResult.filter(a => a.checked);
     // console.warn('applicant fiter list is: ',jobListChecked)
     let isValidStatus = true;
     let isValidRemarks = true;
@@ -286,7 +286,7 @@ export class ThirdInterviewResultComponent implements OnInit {
       return;
     } else {
       if (jobListChecked.length) {
-        let objParam = {
+        const objParam = {
           CreatedBy: this.loggedInUser.userid || -99,
           tblJobApplicantStatus: jobListChecked.map(a => {
             return {

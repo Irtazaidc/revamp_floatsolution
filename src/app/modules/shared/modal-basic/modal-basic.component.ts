@@ -33,7 +33,7 @@ export class ModalBasicComponent implements OnInit {
   }
 
   public onContainerClicked(event: MouseEvent): void {
-    if ((<HTMLElement>event.target).classList.contains('modal')) {
+    if ((event.target as HTMLElement).classList.contains('modal')) {
       this.hide();
     }
   }

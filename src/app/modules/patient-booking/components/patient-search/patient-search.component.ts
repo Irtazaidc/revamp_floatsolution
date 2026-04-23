@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../../environments/environment';
@@ -42,7 +42,7 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
     ])
   ]
 })
-export class PatientSearchComponent implements OnInit {
+export class PatientSearchComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Output() patientSelectedEvent = new EventEmitter<any>();
   @Output() testSearchEvent = new EventEmitter<any>();
@@ -50,9 +50,9 @@ export class PatientSearchComponent implements OnInit {
   @Output() gettingValueTableRow = new EventEmitter<any>();
   @Output() visistList = new EventEmitter<any>();
   @Output() cardInfo = new EventEmitter<any>();
-  @Input('buttonControls') buttonControls = ['visits'];
-  @Input('isInquiry') isInquiry = false;
-  @Input('SectionToShow') SectionToShow = { showCardNo: false, NoRecordLabel: true, hidePIN: true, selectedPatientEvent: false };
+  @Input() buttonControls = ['visits'];
+  @Input() isInquiry = false;
+  @Input() SectionToShow = { showCardNo: false, NoRecordLabel: true, hidePIN: true, selectedPatientEvent: false };
   @ViewChild('patientVisits') patientVisitsPopup;
   @ViewChild('EditPatientRecord') EditPatientRecord;
   @ViewChild('patientVisitsInfo') patientVisitsPopupInfo;
@@ -166,12 +166,12 @@ export class PatientSearchComponent implements OnInit {
   selectedVisit = null;
   countriesList: any[];
   patientIDforPatientCard: number = null;
-  infoDeskChk: boolean = false;
+  infoDeskChk = false;
   patientDiscountCardsList = [];
-  editPatientContactBtn: Boolean = true
+  editPatientContactBtn = true
   patientData: any = [];
-  curDate: string = "";
-  selectedDob: string = "";
+  curDate = "";
+  selectedDob = "";
   PACSServers: any;
 
   constructor(
@@ -258,7 +258,7 @@ export class PatientSearchComponent implements OnInit {
   }
 
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
   }
 
@@ -273,7 +273,7 @@ export class PatientSearchComponent implements OnInit {
 
 
   openFloroConsentForm() {
-    let styleSheet = `
+    const styleSheet = `
      <style>
        body {
             font-family: Arial, sans-serif;
@@ -321,7 +321,7 @@ export class PatientSearchComponent implements OnInit {
 
 
 
-    let data = ` <!-- Header Section -->
+    const data = ` <!-- Header Section -->
     <table class="header-table">
         <tr>
             <th>Name</th>
@@ -378,7 +378,7 @@ export class PatientSearchComponent implements OnInit {
     </div>
  `;
 
-    let customWindow = window.open('', '_blank', 'width=800,height=600');
+    const customWindow = window.open('', '_blank', 'width=800,height=600');
     customWindow.document.write(`<html><head>${styleSheet}</head><body>${data}</body></html>`);
     customWindow.document.close();
     customWindow.print();
@@ -389,7 +389,7 @@ export class PatientSearchComponent implements OnInit {
     if (this.patientSearchParams.CardNO.length) {
       this.discountCardlist = [];
       this.hideTable = true;
-      let params = { cardNo: this.patientSearchParams.CardNO };
+      const params = { cardNo: this.patientSearchParams.CardNO };
       this.spinner.show(this.spinnerRefs.searchPatients);
       this.discountCardService.getDiscountCardDetails(params).subscribe((res: any) => {
         this.spinner.hide(this.spinnerRefs.searchPatients);
@@ -416,7 +416,7 @@ export class PatientSearchComponent implements OnInit {
 
     this.hideTable = false;
     //here
-    let params = this.patientSearchParams;
+    const params = this.patientSearchParams;
     params.BookingID = (params.BookingID || '').trim();
     params.VisitId = (params.VisitId || '').trim().toString().replace(/\D/g, '');
     params.PatientNo = (params.PatientNo || '').trim();
@@ -498,7 +498,7 @@ export class PatientSearchComponent implements OnInit {
     this.patientVisitsPopupRef = this.appPopupService.openModal(this.patientVisitsPopup, { size: 'lg' });
     this.patientVisitsList = [];
 
-    let params = { patientID: patient.OrbitPatientID };
+    const params = { patientID: patient.OrbitPatientID };
     if (params.patientID) {
       this.spinner.show(this.spinnerRefs.patientVisits);
       this.patientVisitsList = [{ Message: 'Loading...' }];
@@ -522,7 +522,7 @@ export class PatientSearchComponent implements OnInit {
   }
   searchPatientVisit() {
     this.patientVisitsList = [];
-    let params = this.patientSearchParams;
+    const params = this.patientSearchParams;
     params.BookingID = (params.BookingID || '').trim();
     params.VisitId = (params.VisitId || '').trim().toString().replace(/\D/g, '');
     params.PatientNo = (params.PatientNo || '').trim();
@@ -558,7 +558,7 @@ export class PatientSearchComponent implements OnInit {
 
       this.spinner.hide(this.spinnerRefs.searchPatients);
       if (res && res.StatusCode == 200 && res.PayLoad) {
-        let PatientVisits = res.PayLoad;
+        const PatientVisits = res.PayLoad;
         if (
           //to show patient visits on popup
           this.route.routeConfig.path == 'info-desk'
@@ -573,7 +573,7 @@ export class PatientSearchComponent implements OnInit {
           //   this.patientVisitsPopupRef = this.appPopupService.openModal(this.patientVisitsPopup, { size: 'lg' });
           // }
 
-          let PatientVisitsInfo = PatientVisits.map(a => ({
+          const PatientVisitsInfo = PatientVisits.map(a => ({
             BranchID: a.BranchID,
             CreatedOn: a.VisitDateTime,
             PatientID: a.PatientId,
@@ -641,7 +641,7 @@ export class PatientSearchComponent implements OnInit {
 
     console.log("OpenFitToFlyCertificate", v);
     this.patientData = [];
-    let params = {
+    const params = {
       "VisitID": v.VisitID
     }
     this.patientService.getPatientInfoByVisitID(params).subscribe((resp: any) => {
@@ -661,8 +661,8 @@ export class PatientSearchComponent implements OnInit {
 
   printFTFCertificate(param) {
     setTimeout(() => {
-      let data = document.getElementById(param).innerHTML;
-      let documentWindow = window.open();
+      const data = document.getElementById(param).innerHTML;
+      const documentWindow = window.open();
       documentWindow.document.write(`
       <html>
         <head>
@@ -727,7 +727,7 @@ export class PatientSearchComponent implements OnInit {
       return;
     }
     this.patientDiscountCardsRef = this.appPopupService.openModal(this.patientDiscountCards, { size: 'lg' });
-    let params = {
+    const params = {
       patientId: patientId // this.patientBasicInfo.get('PatientID').value;
     }
     this.spinner.show(this.spinnerRefs.patientDiscountCards);
@@ -791,7 +791,7 @@ export class PatientSearchComponent implements OnInit {
     setTimeout(() => {
       this.selectedVisit = visit;
 
-      let visitId = (visit || {}).VisitID;
+      const visitId = (visit || {}).VisitID;
       if (!visitId) {
         this.toastr.warning('Visit not selected');
         return;
@@ -1017,7 +1017,7 @@ export class PatientSearchComponent implements OnInit {
 
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = {
+    const _settings = {
       ...{
         // relativeTo: this.route,
         replaceUrl: true,
@@ -1032,12 +1032,12 @@ export class PatientSearchComponent implements OnInit {
   }
 
   getInfoForConscent(visitInfo) {
-    let params = {
+    const params = {
       "VisitID": visitInfo.VisitID
     }
     this.patientService.getConscentDetailByVisitID(params).subscribe((resp: any) => {
       if (resp.StatusCode == 200 && resp.PayLoad.length) {
-        let PatData = resp.PayLoad;
+        const PatData = resp.PayLoad;
         this.openConscentForm(PatData[0]);
       }
       else {
@@ -1055,7 +1055,7 @@ export class PatientSearchComponent implements OnInit {
 
 
   openConscentForm(patData) {
-    let styleSheet = `
+    const styleSheet = `
         <style>
           body {
             width: 21cm;
@@ -1144,18 +1144,18 @@ export class PatientSearchComponent implements OnInit {
           }
         </style>`;
 
-    let printedByText = `${this.loggedInUser.username || ''} @ ${moment(new Date()).format('DD-MMM-YYYY HH:mm:ss')}`;
-    let header = `<div class="header-area">
+    const printedByText = `${this.loggedInUser.username || ''} @ ${moment(new Date()).format('DD-MMM-YYYY HH:mm:ss')}`;
+    const header = `<div class="header-area">
                         <div class="branch-name"><span class="label">Islamabad Diagnostic Centre (Pvt Ltd</span></div>
                           <div class="report-name"><span class="label">Consent & Case report form for Novel Coronavirus COVID-19</span></div>
                           </div>`;
-    let footer = `<div class="divFooter printed-by-area">${printedByText}</div>`;
+    const footer = `<div class="divFooter printed-by-area">${printedByText}</div>`;
 
     setTimeout(() => {
       let data = ConscentForms.covid.airlinesOath; // general;
 
       if (patData.PanelId) {
-        let panelConscent = ConscentForms.covid[patData.PanelId];
+        const panelConscent = ConscentForms.covid[patData.PanelId];
         if (panelConscent) {
           data += '<div class="pagebreak"> </div>';
           data += panelConscent;
@@ -1167,7 +1167,7 @@ export class PatientSearchComponent implements OnInit {
 
 
       // let flightData = this.patientFlightDetails.getRawValue();
-      let flightDate = "";
+      const flightDate = "";
       // if (flightData.FlightDate && flightData.FlightDate.day && flightData.FlightDate.month && flightData.FlightDate.year) {
       //   flightDate = moment(new Date(`${flightData.FlightDate.month}-${flightData.FlightDate.day}-${flightData.FlightDate.year}`)).format('DD-MMM-YYYY');
       // }
@@ -1188,7 +1188,7 @@ export class PatientSearchComponent implements OnInit {
       data = this.helperService.replaceAll(data, '[PATIENT_ADDRESS]', patData.PatientAddress);
       data = this.helperService.replaceAll(data, '[PATIENT_EMAIL]', patData.Email);
       data = this.helperService.replaceAll(data, '[PATIENT_VISIT_DATE]', moment().format('DD-MMM-YYYY HH:mm'));
-      let cnic = (patData.CNIC || '').toString().padEnd(13, ' ').split('');
+      const cnic = (patData.CNIC || '').toString().padEnd(13, ' ').split('');
       cnic.forEach((digit, idx) => {
 
         data = this.helperService.replaceAll(data, '[PATIENT_CNIC_' + idx + ']', digit);
@@ -1210,7 +1210,7 @@ export class PatientSearchComponent implements OnInit {
       data = this.helperService.replaceAll(data, '[PATIENT_SAMPLE_COLLECTION_LOC]', '');
       //BookingReferenceNo
 
-      let customWindow = window.open('Covid Registration Conscent Form1', 'Covid Registration Conscent Form1' + +new Date());
+      const customWindow = window.open('Covid Registration Conscent Form1', 'Covid Registration Conscent Form1' + +new Date());
       customWindow.document.write('<html><head>' + styleSheet + '');
       customWindow.document.write('</head><body>');
       // customWindow.document.write('<h3>' + header + '</h3>');
@@ -1267,7 +1267,7 @@ export class PatientSearchComponent implements OnInit {
     });
   }
   getMobileOperatorByCode(mobileNo) {
-    let params = {
+    const params = {
       mobileCode: (mobileNo || this.editPatientInformation.value.MobileNO || '')
     }
     if (params.mobileCode && params.mobileCode.length > 3) {
@@ -1297,7 +1297,7 @@ export class PatientSearchComponent implements OnInit {
   getPatientInfoByGIZRefNo() {
     this.searchResults = [{ Message: 'Loading...' }];
     this.refreshPagination();
-    let params = this.patientSearchParams;
+    const params = this.patientSearchParams;
     params.GIZReferenceNo = (params.GIZReferenceNo || '').trim();
     this.patientService.searchPatientByRefNoForGIZ(params).subscribe((resp: any) => {
       if (resp && resp.StatusCode == 200 && resp.PayLoad.length) {
@@ -1337,7 +1337,7 @@ export class PatientSearchComponent implements OnInit {
     this.toastr.info("Working in progress", "Success");
     // let VisitID = visitID.replace("-", "");
     // 240301044020,@TPId INT=926--2123
-    let objParams = {
+    const objParams = {
       VisitId: '240301134507',//'240301044020',//VisitID,
       TPId: 639//926//TPID
     }
@@ -1351,16 +1351,16 @@ export class PatientSearchComponent implements OnInit {
       // this.spinner.hide(this.spinnerRefs.comparativeSection);
       if (resp.StatusCode == 200) {
         this.PACSServers = resp.PayLoad || [];
-        var createLink = (this.PACSServers[0].BackupServer);
+        let createLink = (this.PACSServers[0].BackupServer);
         console.log("PACSServers___", this.PACSServers);
         console.log("createLink___", createLink);
         createLink = createLink.substring(0, createLink.length - 1)
-        let sanitizedPath = createLink.replace(/\\/g, '%5C');
-        let url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
+        const sanitizedPath = createLink.replace(/\\/g, '%5C');
+        const url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
         console.log("url is :", url)
 
         // let winRef = window.open((url), '_blank');
-        let winRef = window.open((url), '_blank');
+        const winRef = window.open((url), '_blank');
         // const shortcutPath = createLink;
         //   let url = ('radiant://?n=d&v=%22'+createLink+'%22') 
 
@@ -1384,7 +1384,7 @@ export class PatientSearchComponent implements OnInit {
   }
 
   getSelectedPatVisitNo(visit) {
-    let VisitData = visit;
+    const VisitData = visit;
     console.log("🚀 ~ getSelectedPatVisitNo ~ let VisitData:", VisitData)
     this.testSearchEvent.emit(VisitData);
     this.closeTestSearchModal()

@@ -45,8 +45,8 @@ export class SampleDispatchComponent implements OnInit {
   branches: any[] = [];
   riders: any[] = [];
   rowIndex: number = null;
-  isLoading: boolean = false;
-  isCreatingBatch: boolean = false;
+  isLoading = false;
+  isCreatingBatch = false;
   selectedFile: File | null = null;
 
   confirmationPopoverConfig = {
@@ -61,10 +61,10 @@ export class SampleDispatchComponent implements OnInit {
   };
 
   // New properties for expand/collapse functionality
-  allExpanded: boolean = true;
+  allExpanded = true;
 
   // New property for select/deselect toggle
-  allItemsSelected: boolean = false;
+  allItemsSelected = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -123,7 +123,7 @@ export class SampleDispatchComponent implements OnInit {
   }
 
   loadRiders() {
-    let params = {
+    const params = {
       RiderID: 0,
       LocID: null
     }
@@ -187,11 +187,11 @@ export class SampleDispatchComponent implements OnInit {
     transportRefControl.updateValueAndValidity();
   }
 
-  isSpinnerSearch: boolean = true;
-  disabledButtonSearch: boolean = false;
+  isSpinnerSearch = true;
+  disabledButtonSearch = false;
   getDataForBatch() {
-    let formValues = this.paramsForm.getRawValue();
-    let visitID = formValues.visitID;
+    const formValues = this.paramsForm.getRawValue();
+    const visitID = formValues.visitID;
 
     if ((!formValues.dateFrom || !formValues.dateTo) && !visitID) {
       this.toastr.error('Please Select Date Range');
@@ -237,7 +237,7 @@ export class SampleDispatchComponent implements OnInit {
 
       this.spinner.show(this.spinnerRefs.listSection);
 
-      let params = {
+      const params = {
         FromLocId: this.loggedInUser.locationid || -99,
         FromDate: formValues.dateFrom ? formValues.dateFrom : null,
         ToDate: formValues.dateTo ? formValues.dateTo : null,
@@ -506,12 +506,12 @@ export class SampleDispatchComponent implements OnInit {
   updateAllExpandedStatus() {
     let allExpanded = true;
 
-    for (let visit of this.groupedSamples) {
+    for (const visit of this.groupedSamples) {
       if (!visit.expanded) {
         allExpanded = false;
         break;
       }
-      for (let barcode of visit.barcodes) {
+      for (const barcode of visit.barcodes) {
         if (!barcode.expanded) {
           allExpanded = false;
           break;
@@ -563,7 +563,7 @@ export class SampleDispatchComponent implements OnInit {
   }
 
   setSearchFilter() {
-    let visitID = this.paramsForm.getRawValue().visitID;
+    const visitID = this.paramsForm.getRawValue().visitID;
     if (visitID) {
       this.paramsForm.patchValue({
         dateFrom: "",
@@ -603,7 +603,7 @@ export class SampleDispatchComponent implements OnInit {
   transportMediums: any = [];
 
   getSampleTrackingLookup() {
-    let objParams = {
+    const objParams = {
       LookupName: 'TransportMedium',
       Id: null
     };
@@ -626,9 +626,9 @@ export class SampleDispatchComponent implements OnInit {
   }
 
   // /////////////////////////////////// Creat batch ///////////////////////////////
-  isSpinnerSearchDispatch: boolean = true;
+  isSpinnerSearchDispatch = true;
 
-  createBatch(isDraft: boolean = false) {
+  createBatch(isDraft = false) {
     // Mark all fields as touched to show validation errors
     Object.keys(this.dispatchForm.controls).forEach(key => {
       const control = this.dispatchForm.get(key);
@@ -897,8 +897,8 @@ export class SampleDispatchComponent implements OnInit {
   }
 
   // Add these properties for button states
-  disabledButton: boolean = false;
-  isSpinner: boolean = true;
+  disabledButton = false;
+  isSpinner = true;
 
   // Add this method for file conversion
   convertFileToBase64(file: File): Promise<string> {

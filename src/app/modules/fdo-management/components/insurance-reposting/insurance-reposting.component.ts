@@ -60,7 +60,7 @@ export class InsuranceRepostingComponent implements OnInit {
  
    searchText = "";
    maxDate: any;
-   isActive: number = 1;
+   isActive = 1;
    filterForm: FormGroup = this.formBuilder.group(this.Fields);
  
    constructor(
@@ -105,7 +105,7 @@ export class InsuranceRepostingComponent implements OnInit {
      this.searchText = "";
      this.activeCases = 0;
      this.inactiveCases = 0;
-     let formValues = this.filterForm.getRawValue();
+     const formValues = this.filterForm.getRawValue();
      const dateFrom = formValues.dateFrom;
      const dateTo = formValues.dateTo;
      const fromDate: any = new Date(
@@ -134,7 +134,7 @@ export class InsuranceRepostingComponent implements OnInit {
        this.isSubmitted = false;
        return;
      }
-     let locationid = formValues.locationid
+     const locationid = formValues.locationid
      !locationid ? this.showLocColumn = true : this.showLocColumn = false;
      if (this.filterForm.invalid) {
        this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -142,7 +142,7 @@ export class InsuranceRepostingComponent implements OnInit {
        return;
      }
  
-     let objParams = {
+     const objParams = {
        DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
        DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
        LocID: formValues.locationid || null,
@@ -230,7 +230,7 @@ export class InsuranceRepostingComponent implements OnInit {
        .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
        .subscribe(
          (resp: any) => {
-           let _response = resp.PayLoadDS || [];
+           const _response = resp.PayLoadDS || [];
            // this.paymentModesList = _response.Table5 || [];
            this.patientTypeList = _response.Table6 || [];
          },
@@ -242,7 +242,7 @@ export class InsuranceRepostingComponent implements OnInit {
    panelsList = [];
    getPanels() {
      this.panelsList = [];
-     let _params = {
+     const _params = {
        branchId: null,
      };
      // if (!this.loggedInUser.locationid) {
@@ -327,7 +327,7 @@ export class InsuranceRepostingComponent implements OnInit {
    
  
    refreshPagination() {
-     let dataToPaginate = this.pagination.filteredSearchResults;
+     const dataToPaginate = this.pagination.filteredSearchResults;
      this.pagination.collectionSize = dataToPaginate.length;
      this.pagination.paginatedSearchResults = dataToPaginate
        .map((item, i) => ({ id: i + 1, ...item }))
@@ -336,10 +336,10 @@ export class InsuranceRepostingComponent implements OnInit {
  
     filterResults() {
         this.pagination.page = 1;
-        let cols = ['PatientMRNo', 'PatientName', 'Cell', 'VisitID', 'PatientPolicyNo'];
+        const cols = ['PatientMRNo', 'PatientName', 'Cell', 'VisitID', 'PatientPolicyNo'];
         let results: any = this.insuranceDataList;
         if (this.searchText && this.searchText.length > 1) {
-          let pipe_filterByKey = new FilterByKeyPipe();
+          const pipe_filterByKey = new FilterByKeyPipe();
           results = pipe_filterByKey.transform(this.insuranceDataList, this.searchText, cols, this.insuranceDataList);
         }
         this.pagination.filteredSearchResults = results;

@@ -22,8 +22,8 @@ export class Conversions {
     return formattedDate;
   };
   static formatDateObject(date: NgbDateStruct, time?: string): string {
-    let _startTime = "00:00:00.000";
-    let _endTime = "23:59:59.996";
+    const _startTime = "00:00:00.000";
+    const _endTime = "23:59:59.996";
     let _time = _startTime;
     let _format = "MM/DD/YYYY HH:mm:ss.000";
     if (time == "end") {
@@ -43,10 +43,10 @@ export class Conversions {
   }
 
   // If NgbDateStruct → proceed with conversion
-  let _startTime = "00:00:00.000";
-  let _endTime = "23:59:59.996";
-  let _time = time === "end" ? _endTime : _startTime;
-  let _format = time === "end" ? "MM/DD/YYYY HH:mm:ss.999" : "MM/DD/YYYY HH:mm:ss.000";
+  const _startTime = "00:00:00.000";
+  const _endTime = "23:59:59.996";
+  const _time = time === "end" ? _endTime : _startTime;
+  const _format = time === "end" ? "MM/DD/YYYY HH:mm:ss.999" : "MM/DD/YYYY HH:mm:ss.000";
 
   return moment(
     `${date.month}/${date.day}/${date.year} ${_time}`,
@@ -90,7 +90,7 @@ export class Conversions {
   static formatDateTimeObject(
     date: NgbDateStruct,
     time: NgbTimeStruct | null,
-    isEndTime: boolean = false
+    isEndTime = false
   ): string {
     const _defaultStartTime = "00:00:00";
     const _defaultEndTime = "23:59:59";
@@ -118,8 +118,8 @@ export class Conversions {
     date: NgbDateStruct,
     time?: string | NgbTimeStruct
   ): string {
-    let _startTime = "00:00:00.000";
-    let _endTime = "23:59:59.996";
+    const _startTime = "00:00:00.000";
+    const _endTime = "23:59:59.996";
     let _time = _startTime;
     let _format = "MM/DD/YYYY HH:mm:ss.000";
     if (time == "end") {
@@ -163,9 +163,9 @@ export class Conversions {
 }
 
  static getCurrentDateISOFormat(time?: string): string {
-  let date = this.getCurrentDateObject();
-  let _startTime = "00:00:00";
-  let _endTime = "23:59:59";
+  const date = this.getCurrentDateObject();
+  const _startTime = "00:00:00";
+  const _endTime = "23:59:59";
   let _time = _startTime;
 
   if (time === "end") {
@@ -336,15 +336,15 @@ export class Conversions {
   }
 
   static findValidityDate(givenDate) {
-    let CurrentDate = moment().format();
-    let NoticeEndDate = moment(givenDate).format();
+    const CurrentDate = moment().format();
+    const NoticeEndDate = moment(givenDate).format();
     if (CurrentDate > NoticeEndDate) return false;
     else return true;
   }
   static getCurrentDateString(time?: string): string {
-    let date = this.getCurrentDateObject();
-    let _startTime = "00:00:00.000";
-    let _endTime = "23:59:59.996";
+    const date = this.getCurrentDateObject();
+    const _startTime = "00:00:00.000";
+    const _endTime = "23:59:59.996";
     let _time = _startTime;
     let _format = "MM/DD/YYYY HH:mm:ss.000";
     if (time == "end") {

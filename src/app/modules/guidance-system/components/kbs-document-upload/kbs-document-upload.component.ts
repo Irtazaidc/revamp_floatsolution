@@ -16,8 +16,8 @@ import { LookupService } from "src/app/modules/patient-booking/services/lookup.s
 export class KbsDocumentUploadComponent implements OnInit {
   categories: any;
   ActionLabel = "Save";
-  disabledButton: boolean = false;
-  isSpinner: boolean = true;
+  disabledButton = false;
+  isSpinner = true;
   spinnerRefs = {
     listSection: "listSection",
     testListSection: "testListSection",
@@ -58,7 +58,7 @@ export class KbsDocumentUploadComponent implements OnInit {
   }
 
   getKBSDocumentCategory() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
 
     this.lookupService.getKBSDocumentsCategory(params).subscribe(
@@ -221,12 +221,12 @@ export class KbsDocumentUploadComponent implements OnInit {
 
   // Document Upload Section
   selectedFile: File | null = null;
-  documentTitle: string = "";
+  documentTitle = "";
   selectedCategoryId: number | null = null;
   categoriesList: any[] = [];
   documentsList: any[] = [];
-  userId: number = 1; // replace with logged-in user id
-  searchText: string = "";
+  userId = 1; // replace with logged-in user id
+  searchText = "";
   
   loadedDocuments: any[] = [];
   docDefault = true;

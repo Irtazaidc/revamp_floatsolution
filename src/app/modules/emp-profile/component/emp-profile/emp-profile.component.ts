@@ -53,7 +53,7 @@ export class EmpProfileComponent implements OnInit {
   defaultPatientPic = CONSTANTS.USER_IMAGE.UNSPECIFIED;
   getEmpPicByUserId(id){
     this.spinner.show(this.spinnerRefs.empPic);
-    let paramObj = {
+    const paramObj = {
       UserID:this.userId
     }
     this.empService.getEmpPicByUserId(paramObj).subscribe((resp: any) => {
@@ -67,13 +67,13 @@ export class EmpProfileComponent implements OnInit {
   }
   getEmpBasicInfo(id) {
    
-    let paramObj = {
+    const paramObj = {
       UserID:this.userId
     }
     this.empService.getEmpBasicInfo(paramObj).subscribe((resp: any) => {
       // console.log("API Response", resp)
       
-      let empCardData=resp.PayLoad[0] || [];
+      const empCardData=resp.PayLoad[0] || [];
       // console.log("🚀 ~ file: emp-profile.component.ts:61 ~ EmpProfileComponent ~ this.empService.getEmpBasicInfo ~ empCardData", empCardData);
       this.FName=empCardData.EmployeeName;
       this.Department=empCardData.DepartmentName;

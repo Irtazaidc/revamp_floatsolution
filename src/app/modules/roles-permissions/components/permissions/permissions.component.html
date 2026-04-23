@@ -56,7 +56,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <ng-container *ngIf="(selectedRole && selectedRole.UserRoleID) || parentName != 'roles-and-permissions'; then permissionsContainer else noPermissionsMessage"></ng-container>
+                        <ng-container *ngIf="(selectedRole && selectedRole.UserRoleID) || parentName !== 'roles-and-permissions'; then permissionsContainer else noPermissionsMessage"></ng-container>
                         <ng-template #permissionsContainer>
                             <ngx-treeview [config]="config" [items]="items" (selectedChange)="onSelectedChange($event)" (filterChange)="onFilterChange($event)" (selectedChange)="values = $event"></ngx-treeview>
                         </ng-template>

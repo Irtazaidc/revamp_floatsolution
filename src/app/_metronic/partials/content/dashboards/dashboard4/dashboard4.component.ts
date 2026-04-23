@@ -33,8 +33,8 @@ import moment from 'moment';
   `]
 })
 export class Dashboard4Component implements OnInit {
-  disabled: boolean = true;
-  appName: string = "";
+  disabled = true;
+  appName = "";
   fdoSummaryPopupRef: NgbModalRef;
   loggedInUser: UserModel;
   selectedDate: '';
@@ -77,7 +77,7 @@ export class Dashboard4Component implements OnInit {
       selectedDate = moment().format('DD-MMM-YYYY'); // Default to today's date
     }
   
-    let params = {
+    const params = {
       userId: this.loggedInUser.userid,
       date: moment(selectedDate, 'DD-MMM-YYYY').format('YYYY-MM-DDT00:00:00.000'),
     };

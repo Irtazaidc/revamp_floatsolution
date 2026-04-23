@@ -73,14 +73,14 @@ export class HcRiderChecklistComponent implements OnInit {
     this.riderRoutinePic = []
     this.ImageUrl = 'assets/images/brand/no-image.png';
     this.RiderCheckList = []
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,    
       DateTo: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,   
       RiderID: formValues.RiderId  
@@ -109,7 +109,7 @@ export class HcRiderChecklistComponent implements OnInit {
 
   RidersDetailF() {
 
-    let params = {
+    const params = {
       RiderID: 0,
       LocID:this.loggedInUser.locationid,
     }

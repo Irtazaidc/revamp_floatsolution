@@ -8,7 +8,7 @@ import { LookupService } from "src/app/modules/patient-booking/services/lookup.s
 import { TestProfileService } from "src/app/modules/patient-booking/services/test-profile.service";
 import { AppPopupService } from "src/app/modules/shared/helpers/app-popup.service";
 import { AppointmentService } from "../../services/appointment.service";
-import { SocketService } from "src/app/modules/home-sampling/services/SocketService";
+
 
 
 @Component({
@@ -56,7 +56,7 @@ export class PatAppointmentsComponent implements OnInit {
 
 
   ModalityWiseDoctorsList: any = [];
-  isShowBookAppointment: boolean = false;
+  isShowBookAppointment = false;
   loggedInUser: UserModel;
   SelPatientData: any;
 
@@ -69,7 +69,6 @@ export class PatAppointmentsComponent implements OnInit {
     private appointmentSrv: AppointmentService,
     private spinner: NgxSpinnerService,
     private auth: AuthService,
-    private socketService: SocketService,
     private cdr: ChangeDetectorRef // 2. Inject it
   ) {
     this.appointmentForm = this.formBuilder.group(this.getAppointmnetFields);
@@ -87,7 +86,7 @@ export class PatAppointmentsComponent implements OnInit {
     });
     console.log("Socket messages", this.messages);
   }
-  newMessage: string = '';
+  newMessage = '';
   sendData() {
     if (this.newMessage.trim()) {
       this.socketService.sendMessage(this.newMessage);

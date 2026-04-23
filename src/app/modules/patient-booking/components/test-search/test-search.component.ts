@@ -67,7 +67,7 @@ export class TestSearchComponent implements OnInit {
 
   }
   getSearchedDataList(){
-    let formValues  = this.searchForm.getRawValue();
+    const formValues  = this.searchForm.getRawValue();
      this.TestDataList = []
     if (this.searchForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -75,7 +75,7 @@ export class TestSearchComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
       BranchIDs : formValues.locID ? formValues.locID.join(",") : null,
@@ -129,7 +129,7 @@ getLocationList() {
   testList = [];
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1, //null
       TestProfileCode: null,
       TestProfileName: null,

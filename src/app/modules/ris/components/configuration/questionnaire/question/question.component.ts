@@ -26,8 +26,8 @@ export class QuestionComponent implements OnInit {
   branchesList = [];
   QuestionID: any = null;
   searchText = '';
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
 
   spinnerRefs = {
     listSection: 'listSection',
@@ -147,10 +147,10 @@ export class QuestionComponent implements OnInit {
   }
 
   insertUpdateQuestion() {
-    let formValues = this.objForm.getRawValue();
+    const formValues = this.objForm.getRawValue();
     // console.log("formValues.DefaultAns_______",formValues.DefaultAns);return;
     this.objForm.markAllAsTouched();
-    let q = formValues.Question ? formValues.Question.trim() : '';
+    const q = formValues.Question ? formValues.Question.trim() : '';
     if (q == "") {
       this.objForm.patchValue({
         Question: ""
@@ -159,7 +159,7 @@ export class QuestionComponent implements OnInit {
       return 0
     }
 
-    let inputType = formValues.AnsTypeID;
+    const inputType = formValues.AnsTypeID;
 
     let defaultAns = "";
     let expectedOptions = "";
@@ -172,7 +172,7 @@ export class QuestionComponent implements OnInit {
 
       case 3:
         {
-          let arr = this.arrExpectedOptions;
+          const arr = this.arrExpectedOptions;
           // defaultAns = arr.length?arr.map((x) => x.option).join(','):'';
           defaultAns = formValues.DefaultAns;
           expectedOptions = arr.length ? arr.map((x) => x.option).join('^') : '';
@@ -180,7 +180,7 @@ export class QuestionComponent implements OnInit {
         }
       case 4:
         {
-          let arr = this.arrExpectedOptions;
+          const arr = this.arrExpectedOptions;
           // let ans = "";
           // if((formValues.DefaultAns || formValues.DefaultAns !="" ) && (formValues.DefaultAnsText || formValues.DefaultAnsText)){
           //   defaultAns = formValues.DefaultAns+'^'+formValues.DefaultAnsText;
@@ -220,7 +220,7 @@ export class QuestionComponent implements OnInit {
       // this.disabledButton = true;
       // this.isSpinner = false;
       // this.spinner.show(this.spinnerRefs.formSection); 
-      let formData = {
+      const formData = {
         QuestionID: this.QuestionID,
         QuestionGroupTypeID: formValues.QuestionGroupTypeID,
         Question: formValues.Question,
@@ -295,7 +295,7 @@ export class QuestionComponent implements OnInit {
       this.spinner.show(this.spinnerRefs.listSection);
     }
 
-    let params = {
+    const params = {
       QuestionID: this.QuestionID
     };
     this.questionnaireSrv.getQuestion(params).subscribe((res: any) => {
@@ -326,7 +326,7 @@ export class QuestionComponent implements OnInit {
               AnsTypeID: 5
             })
   
-            let obj = {
+            const obj = {
               AnsTypeId: 5,
               AnswerType: "Yes/No"
             }
@@ -385,7 +385,7 @@ export class QuestionComponent implements OnInit {
     this.isReadonly = false;
     this.existingYesNo = false;
     this.yesNoLabel = "No";
-    var inputCondition = inputType
+    const inputCondition = inputType
     switch (inputCondition) {
       case 1:
       case 2:
@@ -399,13 +399,13 @@ export class QuestionComponent implements OnInit {
 
       case 3:
         {
-          let existingDefaultAns = existingDefaultVal.split('^');
+          const existingDefaultAns = existingDefaultVal.split('^');
           this.arrOptions =
             existingDefaultAns.map(a => ({
               option: a,
             }));
 
-          let existingEexpectedOptions = expectedOptions.split('^');
+          const existingEexpectedOptions = expectedOptions.split('^');
           this.arrExpectedOptions =
             existingEexpectedOptions.map(a => ({
               option: a,
@@ -423,7 +423,7 @@ export class QuestionComponent implements OnInit {
 
       case 4:
         {
-          let existingDefaultAns = existingDefaultVal.split('^');
+          const existingDefaultAns = existingDefaultVal.split('^');
           this.arrOptions =
             existingDefaultAns.map(a => ({
               option: a,
@@ -431,7 +431,7 @@ export class QuestionComponent implements OnInit {
 
           expectedOptions = expectedOptions.trim();
           if (expectedOptions && expectedOptions != "") {
-            let existingEexpectedOptions = expectedOptions.split('^');
+            const existingEexpectedOptions = expectedOptions.split('^');
             this.arrExpectedOptions =
               existingEexpectedOptions.map(a => ({
                 option: a,
@@ -465,7 +465,7 @@ export class QuestionComponent implements OnInit {
 
       case 5:
         {
-          let yesNoString = existingDefaultVal.trim();
+          const yesNoString = existingDefaultVal.trim();
           console.log("existing default value for checkbox is above if: ", yesNoString)
           if (yesNoString === 'Yes') {
             console.log("existing default value for checkbox is: ", yesNoString)
@@ -492,7 +492,7 @@ export class QuestionComponent implements OnInit {
         }
       case 7:
         {
-          let existingDefaultAns = existingDefaultVal.split('^');
+          const existingDefaultAns = existingDefaultVal.split('^');
           this.objForm.patchValue({
             minVal: existingDefaultAns[0],
             maxVal: existingDefaultAns[1],
@@ -508,13 +508,13 @@ export class QuestionComponent implements OnInit {
   }
   getAnswerType() {
     this.ansTypeList = [];
-    let params = {
+    const params = {
       // AnsTypeId: null
     };
     this.questionnaireSrv.getAnswerType(params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
         this.clearForm();
-        let result = res.PayLoad || [];
+        const result = res.PayLoad || [];
         // result = result.filter(a=> (a.AnsTypeId!=4));
         this.ansTypeList = result || [];
         if (!this.questionList.length) {
@@ -532,7 +532,7 @@ export class QuestionComponent implements OnInit {
   selectedGroupType = 5;
   getQuestionGroupType() {
     this.questionGroupTypeList = [];
-    let params = {
+    const params = {
       // AnsTypeId: null
     };
     this.questionnaireSrv.getQuestionGroupType(params).subscribe((res: any) => {
@@ -591,9 +591,9 @@ export class QuestionComponent implements OnInit {
 
   getAnstypeID(param) {
     this.yesNoLabel = "No";
-    let inputType = param.AnsTypeId;
+    const inputType = param.AnsTypeId;
     if (inputType == 5) {
-      let arr = [
+      const arr = [
         { option: 'Yes' },
         { option: 'No' }
       ]
@@ -644,7 +644,7 @@ export class QuestionComponent implements OnInit {
       6-	Date
       7-	Min - Max
     */
-    let inputType = param;
+    const inputType = param;
     switch (inputType) {
       case 1:
         {
@@ -773,7 +773,7 @@ export class QuestionComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -782,10 +782,10 @@ export class QuestionComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = ['Question', 'QuestionGroupType'];
+    const cols = ['Question', 'QuestionGroupType'];
     let results: any = this.questionList;
     if (this.searchText && this.searchText.length > 1) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.questionList, this.searchText, cols, this.questionList);
     }
     this.pagination.filteredSearchResults = results;
@@ -795,7 +795,7 @@ export class QuestionComponent implements OnInit {
   setAnswerMinMax(Answer, minMax, AnsTypeId) {
     let ans = "";
     if (AnsTypeId == 7) {
-      let existingAns = Answer.split('^');
+      const existingAns = Answer.split('^');
       ans = (minMax == 1) ? existingAns[0] : existingAns[1];
     }
     return ans;
@@ -812,7 +812,7 @@ export class QuestionComponent implements OnInit {
     }
   }
   setQuestionGroupTypeSetting(param) {
-    let inputType = param.QuestionGroupTypeID;
+    const inputType = param.QuestionGroupTypeID;
     switch (inputType) {
       case 1:
         {
@@ -857,7 +857,7 @@ export class QuestionComponent implements OnInit {
           this.objForm.patchValue({
             AnsTypeID: 5
           })
-          let obj = {
+          const obj = {
             AnsTypeId: 5,
             AnswerType: "Yes/No",
             DisplayOrder: 5
@@ -881,7 +881,7 @@ export class QuestionComponent implements OnInit {
             AnsTypeID: 5
           })
 
-          let obj = {
+          const obj = {
             AnsTypeId: 5,
             AnswerType: "Yes/No"
           }

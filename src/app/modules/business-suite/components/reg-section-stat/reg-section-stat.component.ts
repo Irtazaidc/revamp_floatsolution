@@ -214,7 +214,7 @@ pieChartPlugins = [];
     
     this.regCountList =[];
     // let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(this.fromDate)  ,
       DateTo:  Conversions.formatDateObject(this.toDate),
       GroupBy:  this.groupBy,
@@ -223,7 +223,7 @@ pieChartPlugins = [];
     console.log("date obje",objParm,this.fromDate);
     this.bussinesSuite.getBranchWiseVisitCountAnalytics(objParm).subscribe((res:any)=>{
       this.regCountList = [];
-      let resRegCount = res.PayLoad || [];
+      const resRegCount = res.PayLoad || [];
      
       if(resRegCount.length && res.StatusCode==200){
         this.regCountList = resRegCount||[];
@@ -252,7 +252,7 @@ pieChartPlugins = [];
     // this.spinner.show('GetBranches');
     this.lookupService.GetBranches().subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre', 'IDC ');
       });
@@ -273,14 +273,14 @@ pieChartPlugins = [];
   getSubSection() {
     
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID
     }    
     // this.spinner.show('GetBranches');
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
      
       this.subSectionList = _response;
       
@@ -290,9 +290,9 @@ pieChartPlugins = [];
   }
 
   getTestProfile() {
-    let subSectIDs = this.subSectionIDs.join(",");
+    const subSectIDs = this.subSectionIDs.join(",");
     this.testProfileList = [];
-    let objParm = {
+    const objParm = {
       TPID: null,
       TestProfileCode: null,
       TestProfileName: null,
@@ -303,7 +303,7 @@ pieChartPlugins = [];
     // this.spinner.show('GetBranches');
     this.testProfileService.getTestsProfileForAnalytics(objParm).subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
      
       this.testProfileList = _response;
       // console.log("Test Profile List",this.testProfileList);
@@ -347,10 +347,10 @@ pieChartPlugins = [];
     this.subSectionIDs = [];
     this.testProfileIDs = [];
     this.labDeptID = null;
-    let locID = rowSelect.LocID;
-    let vTPIDs = [];
-    let vLabDeptID = -1;
-    let vSubSectionIDs = [];
+    const locID = rowSelect.LocID;
+    const vTPIDs = [];
+    const vLabDeptID = -1;
+    const vSubSectionIDs = [];
     
     this.branchName = rowSelect.BranchName;
 
@@ -363,10 +363,10 @@ pieChartPlugins = [];
     this.subSectionIDs = [];
     this.testProfileIDs = [];
     this.labDeptID = null;
-    let locID = rowSelect.LocID;
-    let vTPIDs = [];
-    let vLabDeptID = -1;
-    let vSubSectionIDs = [];
+    const locID = rowSelect.LocID;
+    const vTPIDs = [];
+    const vLabDeptID = -1;
+    const vSubSectionIDs = [];
     
     this.branchName = rowSelect.BranchName;
 
@@ -387,7 +387,7 @@ pieChartPlugins = [];
     
     this.testRegCountList =[];
     // let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(this.fromDate)  ,
       DateTo:  Conversions.formatDateObject(this.toDate),
       GroupBy:  this.groupBy,
@@ -399,7 +399,7 @@ pieChartPlugins = [];
     console.log("objParm",objParm);
     // console.log("date obje",this.branchIds.join(','));
     this.bussinesSuite.getTPCodeWiseVisitCountAnalyticsByLocID(objParm).subscribe((res:any)=>{
-      let resRegCount = res.PayLoad || [];
+      const resRegCount = res.PayLoad || [];
      
       if(resRegCount.length && res.StatusCode==200){
         this.testRegCountList = resRegCount||[];
@@ -420,7 +420,7 @@ pieChartPlugins = [];
     
     this.testRegCountList =[];
     // let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(this.fromDate)  ,
       DateTo:  Conversions.formatDateObject(this.toDate),
       GroupBy:  this.groupBy,
@@ -432,7 +432,7 @@ pieChartPlugins = [];
     console.log("objParm",objParm);
     // console.log("date obje",this.branchIds.join(','));
     this.bussinesSuite.getSectionWiseVisitCountAnalyticsByLocID(objParm).subscribe((res:any)=>{
-      let resRegCount = res.PayLoad || [];
+      const resRegCount = res.PayLoad || [];
      
       if(resRegCount.length && res.StatusCode==200){
         this.testRegCountList = resRegCount||[];
@@ -450,14 +450,14 @@ pieChartPlugins = [];
     // this.getJobRequestByID(reqID);
     
     
-    let arGraphData =  JSON.parse(JSON.stringify(this.regCountList)) ;  
+    const arGraphData =  JSON.parse(JSON.stringify(this.regCountList)) ;  
     // delete arGraphData.LocID;
 
-    let newData = arGraphData.map( a=> {
-      let obja = Object.values(a);
+    const newData = arGraphData.map( a=> {
+      const obja = Object.values(a);
       obja.shift();
       obja.shift();
-      let nObj = { data: obja   , label: a.BranchName}
+      const nObj = { data: obja   , label: a.BranchName}
       return nObj;
       })
 
@@ -507,8 +507,8 @@ pieChartPlugins = [];
       console.log("row  null",rowSelect);
     }
     
-    let arGraphData =  JSON.parse(JSON.stringify(rowSelect)) ;   
-    let locID = arGraphData["LocID"];
+    const arGraphData =  JSON.parse(JSON.stringify(rowSelect)) ;   
+    const locID = arGraphData["LocID"];
     this.branchName = arGraphData["BranchName"];
     let regCountListData = []
     let regCountListLabel = []

@@ -20,8 +20,8 @@ import { SmsStatusService } from '../../service/sms-status.service';
 export class EmailStatusComponent implements OnInit {
 
   emailSendingDetails
-  IsMasterDisable: boolean = true;
-  masterSelected: boolean = false;
+  IsMasterDisable = true;
+  masterSelected = false;
   isSubmitted = false;
   emailInfoList = []
   emailVisitsLists = []
@@ -108,9 +108,9 @@ export class EmailStatusComponent implements OnInit {
       return;
     }
 
-    let formValues = this.SearchForEmailstatus.getRawValue();
+    const formValues = this.SearchForEmailstatus.getRawValue();
     formValues.PIN = (formValues.PIN || '').trim().toString().replace(/\D/g, '');
-    let params = {
+    const params = {
       VisitId: formValues.PIN || null,
     };
     this.getPatientDetailsForEmail.reset();
@@ -174,11 +174,11 @@ export class EmailStatusComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let formValues = this.getPatientDetailsForEmail.getRawValue();
+    const formValues = this.getPatientDetailsForEmail.getRawValue();
 
     if (this.SelectedTPs.length > 0) {
 
-      let params = {
+      const params = {
         EmailTo: formValues.Email || null,
         CC: formValues.CC || null,
         BCC: null,
@@ -236,11 +236,11 @@ export class EmailStatusComponent implements OnInit {
       this.spinner.hide(this.spinnerRefs.tableList)
     }
   }
-showEmailCC: boolean = false;
+showEmailCC = false;
 
 GetEmailDetailsBYVisitID(VisitId) {
   this.showEmailCC = false
-      let params = {
+      const params = {
         VisitId: VisitId,
       };
       this.spinner.show(this.spinnerRefs.tableList)
@@ -277,7 +277,7 @@ GetEmailDetailsBYVisitID(VisitId) {
       this.isSubmitted = true;
       return;
     }
-    let formValues = this.formForEmailstatus.getRawValue();
+    const formValues = this.formForEmailstatus.getRawValue();
     formValues.dateFrom = Conversions.formatDateObject(formValues.dateFrom);
     formValues.dateTo = Conversions.formatDateObject(formValues.dateTo);
     const dateFrom = new Date(formValues.dateFrom);
@@ -288,7 +288,7 @@ GetEmailDetailsBYVisitID(VisitId) {
       this.isSubmitted = true;
       return;
     }
-    let params = {
+    const params = {
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
     };
@@ -353,7 +353,7 @@ GetEmailDetailsBYVisitID(VisitId) {
     return source && source.length > size ? source.slice(0, size - 1) + "…" : source;
   }
 
-    selectedEmailBody: string = '';
+    selectedEmailBody = '';
 
 
   openEmailBodyPopup(content: TemplateRef<any>, body: string) {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
 import { QuestionnaireService } from 'src/app/modules/ris/services/questionnaire.service';
 import { TechnicianService } from 'src/app/modules/ris/services/technician.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -29,7 +29,7 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
   templateUrl: './checkin-checkout.component.html',
   styleUrls: ['./checkin-checkout.component.scss']
 })
-export class CheckinCheckOutComponent implements OnInit {
+export class CheckinCheckOutComponent implements OnInit, OnDestroy {
   @ViewChild('userVerificationModal') userVerificationModal;
   userVerificationModalRef: NgbModalRef;
   techUsername = ""; //john.doe;
@@ -177,7 +177,7 @@ export class CheckinCheckOutComponent implements OnInit {
   }
   startTimer() {
     this.machineStartTime = null;
-    let _machineStartTime = new Date();
+    const _machineStartTime = new Date();
     this.machineStartTime = formatDate(_machineStartTime, 'yyyy-MM-dd H:mm:ss', 'en-US');
     if (!this.isRunning) {
       this.startTime = performance.now() - (this.mm * 60000 + this.ss * 1000 + this.ms) * 10;
@@ -198,7 +198,7 @@ export class CheckinCheckOutComponent implements OnInit {
 
   isFieldDisabled = false;
   sub: any = Subscription;
-  count: number = 0;
+  count = 0;
   ngOnDestroy() {
     this.stopTimer();
   }
@@ -207,7 +207,7 @@ export class CheckinCheckOutComponent implements OnInit {
       cancelAnimationFrame(this.timerId);
       this.isRunning = false;
       this.machineStopTime = null;
-      let _machineStopTime = new Date();
+      const _machineStopTime = new Date();
       this.machineStopTime = formatDate(_machineStopTime, 'yyyy-MM-dd H:mm:ss', 'en-US');
       clearInterval(this.timerId);
       this.isStopped = true;
@@ -353,7 +353,7 @@ export class CheckinCheckOutComponent implements OnInit {
 
   getVisitTPInventory() {
     this.TPItemsList = []
-    let params = {
+    const params = {
       VisitID: this.VisitId,
       TPID: this.TPID,
       RISStatusID: null,
@@ -416,24 +416,24 @@ export class CheckinCheckOutComponent implements OnInit {
 
   removeItem(param) {
   }
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
 
-  isSpinner: boolean = true;//Hide Loader
-  disabledButtonInventory: boolean = false;
-  isSpinnerInventory: boolean = true;
+  isSpinner = true;//Hide Loader
+  disabledButtonInventory = false;
+  isSpinnerInventory = true;
   buttonClicked = false;
   isValidInventoryQty = false;
 
-  disabledButtonCheckin: boolean = false;
-  isSpinnerCheckin: boolean = true;
-  disabledButtonPrintLabel: boolean = false;
-  isSpinnerPrintLabel: boolean = true;
+  disabledButtonCheckin = false;
+  isSpinnerCheckin = true;
+  disabledButtonPrintLabel = false;
+  isSpinnerPrintLabel = true;
 
-  disabledButtonCheckout: boolean = false;
-  isSpinnerCheckout: boolean = true;
+  disabledButtonCheckout = false;
+  isSpinnerCheckout = true;
   InsertUpdateVisitTPInventory(saveFrom) {
     this.isValidInventoryQty = false;
-    let checkedItems = this.TPItemsList.filter(a => a.checked);
+    const checkedItems = this.TPItemsList.filter(a => a.checked);
     if (!checkedItems.length) {
       if (saveFrom == 1) {
         this.toastr.warning("Please select store item(s) to save", "Warning");
@@ -467,7 +467,7 @@ export class CheckinCheckOutComponent implements OnInit {
       this.isDoneTPInventory = 0;
       return
     } else {
-      let objParam = {
+      const objParam = {
         TPID: this.TPID,
         VisitID: Number(this.VisitId),
         CreatedBy: this.VerifiedUserID || -99,
@@ -521,7 +521,7 @@ export class CheckinCheckOutComponent implements OnInit {
   techChecklist = [];
   getTechnicianCheckList() {
     this.techChecklist = [];
-    let params = {
+    const params = {
       QuestionGroupTypeID: 8,
       TPID: this.TPID,
       VisitID: Number(this.VisitId)
@@ -579,7 +579,7 @@ export class CheckinCheckOutComponent implements OnInit {
       this.isDoneCheckList = 0;
       return;
     } else {
-      let objParam = {
+      const objParam = {
         TPID: this.TPID,
         VisitID: Number(this.VisitId),
         CreatedBy: this.VerifiedUserID || -99,
@@ -661,9 +661,9 @@ export class CheckinCheckOutComponent implements OnInit {
     // }
 
 
-    let currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
+    const currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
     let mergeObj = []
-    let obj = {
+    const obj = {
       technicianHitory: this.TechnicianHistory,
       unserName: this.VerifiedUserName,
       userID: this.VerifiedUserID,
@@ -674,7 +674,7 @@ export class CheckinCheckOutComponent implements OnInit {
     mergeObj.push(obj);
     // console.log("jsonOBJ______________",obj);//return;
     // console.log("mergeObj______________",mergeObj);return;
-    let objParam = {
+    const objParam = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       RISWorkListID: this.RISWorkListID,
@@ -698,7 +698,7 @@ export class CheckinCheckOutComponent implements OnInit {
     this.techSrv.insertUpdateTechnicianWorkList(objParam).subscribe((data: any) => {
       this.disabledButtonCheckin = false;
       this.isSpinnerCheckin = true;
-      let resp = JSON.parse(data.PayLoadStr)
+      const resp = JSON.parse(data.PayLoadStr)
       if (resp.length) {
         if (data.StatusCode == 200) {
           this.RISWorkListID = resp[0].RISWorkListID;
@@ -795,7 +795,7 @@ export class CheckinCheckOutComponent implements OnInit {
   PendCheckInRemarksToShow = null;
   PendCheckInBy = null;
   getTechnicianHistory() {
-    let params = {
+    const params = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       RISWorkListID: this.RISWorkListID
@@ -804,7 +804,7 @@ export class CheckinCheckOutComponent implements OnInit {
     this.techSrv.getTechnicianHistory(params).subscribe((res: any) => {
       // console.log("checkin resp-2 getTechnicianHistory",res)
       if (res.StatusCode == 200) {
-        let technicianHitory = res.PayLoad[0] || [];
+        const technicianHitory = res.PayLoad[0] || [];
         // console.log("technician history is_______________", technicianHitory)
         this.TechnicianHistory = technicianHitory.TechnicianHistory || '';
         this.machineStartTime = technicianHitory.MachineStartTime;
@@ -854,7 +854,7 @@ export class CheckinCheckOutComponent implements OnInit {
         // 3
         if (technicianHitory.MachineStartTime && technicianHitory.MachineStopTime) {
           this.isStartStopTimeSaved = true
-          let diffTime = Math.abs(new Date(technicianHitory.MachineStopTime).valueOf() - new Date(technicianHitory.MachineStartTime).valueOf());
+          const diffTime = Math.abs(new Date(technicianHitory.MachineStopTime).valueOf() - new Date(technicianHitory.MachineStartTime).valueOf());
           let days = diffTime / (24 * 60 * 60 * 1000);
           let hours = (days % 1) * 24;
           let minutes = (hours % 1) * 60;
@@ -966,7 +966,7 @@ export class CheckinCheckOutComponent implements OnInit {
       this.isDoneCheckList = 0;
       return;
     } else {
-      let objParam = {
+      const objParam = {
         TPID: this.TPID,
         VisitID: Number(this.VisitId),
         CreatedBy: this.VerifiedUserID || -99,
@@ -1018,11 +1018,11 @@ export class CheckinCheckOutComponent implements OnInit {
     /////////////////////start:: services/////////////////////////////////////
     // updateVisitTPStatusByTPIDs() {
     this.checkSubmit = false;
-    let checkedItems = this.RISServices.filter(a => a.checked);
+    const checkedItems = this.RISServices.filter(a => a.checked);
     // console.log("checkedItems___", checkedItems);
     if (checkedItems.length) {
-      let TPIDs = checkedItems.map(obj => obj.TPID).join(",")
-      let objParam = {
+      const TPIDs = checkedItems.map(obj => obj.TPID).join(",")
+      const objParam = {
         TPIDs: TPIDs,
         VisitID: Number(this.VisitId),
         StatusID: 7,
@@ -1068,9 +1068,9 @@ export class CheckinCheckOutComponent implements OnInit {
     /////////////////////end:: services//////////////////////////////////////
 
 
-    let currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
+    const currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
     let mergeObj = []
-    let obj = {
+    const obj = {
       technicianHitory: this.TechnicianHistory,
       unserName: this.VerifiedUserName,
       userID: this.VerifiedUserID,
@@ -1079,7 +1079,7 @@ export class CheckinCheckOutComponent implements OnInit {
     if (this.objJson && this.objJson.length)
       mergeObj = this.objJson;
     mergeObj.push(obj);
-    let objParam = {
+    const objParam = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       RISWorkListID: this.RISWorkListID,
@@ -1106,7 +1106,7 @@ export class CheckinCheckOutComponent implements OnInit {
       this.disabledButtonPend = false;
       this.disabledButtonCheckin = false;
       this.isSpinnerCheckout = true;
-      let resp = JSON.parse(data.PayLoadStr)
+      const resp = JSON.parse(data.PayLoadStr)
       if (resp.length) {
         if (data.StatusCode == 200) {
           this.RISWorkListID = resp[0].RISWorkListID;
@@ -1203,9 +1203,9 @@ export class CheckinCheckOutComponent implements OnInit {
   }
 
   emergencyAssignTest() {
-    let selectedDoctor = this.radoiologistList.find(dr => dr.EmpId === this.RadiologistID);
-    let drFullName = selectedDoctor ? selectedDoctor.FullName : "";
-    let objParam = {
+    const selectedDoctor = this.radoiologistList.find(dr => dr.EmpId === this.RadiologistID);
+    const drFullName = selectedDoctor ? selectedDoctor.FullName : "";
+    const objParam = {
       VisitId: Number(this.VisitId),
       TPID: this.TPID,
       EmpID: this.RadiologistID,
@@ -1257,7 +1257,7 @@ export class CheckinCheckOutComponent implements OnInit {
 
 
     if (risStatus == 5) {
-      let obj = {
+      const obj = {
         user: 1,
         timestamp: +new Date(),
         screen: encodeURIComponent(window.location.href)
@@ -1281,7 +1281,7 @@ export class CheckinCheckOutComponent implements OnInit {
         this.isDoneCheckList = 0;
         return;
       } else {
-        let objParam = {
+        const objParam = {
           TPID: this.TPID,
           VisitID: Number(this.VisitId),
           CreatedBy: this.VerifiedUserID || -99,
@@ -1331,9 +1331,9 @@ export class CheckinCheckOutComponent implements OnInit {
       /////////////////////////end::techninciat checklist////////////////////////////////////////////
 
 
-      let currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
+      const currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
       let mergeObj = []
-      let obj = {
+      const obj = {
         technicianHitory: this.TechnicianHistory,
         unserName: this.VerifiedUserName,
         userID: this.VerifiedUserID,
@@ -1342,7 +1342,7 @@ export class CheckinCheckOutComponent implements OnInit {
       if (this.objJson && this.objJson.length)
         mergeObj = this.objJson;
       mergeObj.push(obj);
-      let objParam = {
+      const objParam = {
         TPID: this.TPID,
         VisitID: Number(this.VisitId),
         RISWorkListID: this.RISWorkListID,
@@ -1425,7 +1425,7 @@ export class CheckinCheckOutComponent implements OnInit {
   // For now we are going to save tech history as visit remarks to show to the doctor on reporting because there is no separate table of any place to save , they handling in visit remarks
   // When reporting shifts to web then will remove this functionality
   saveTechHisoryAsRemarks(row) {
-    let params = {
+    const params = {
       VisitId: Number(row.VisitId),
       ModuleName: row.ModuleName,
       Remarks: row.Remarks,
@@ -1446,7 +1446,7 @@ export class CheckinCheckOutComponent implements OnInit {
   isSpinnerPend = true;
   disabledButtonPend = false;
   updateVisitTPStatusForInitialization() {
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID,
       StatusID: 7,
@@ -1525,7 +1525,7 @@ export class CheckinCheckOutComponent implements OnInit {
     // // this.isRunning = !this.isRunning;
 
     this.machineStartTime = null;
-    let _startDateTimeDate = new Date();
+    const _startDateTimeDate = new Date();
     this.machineStartTime = formatDate(_startDateTimeDate, 'yyyy-MM-dd H:mm:ss', 'en-US');
     this.isRunning = true;
     this.isPageVisible = true;
@@ -1536,7 +1536,7 @@ export class CheckinCheckOutComponent implements OnInit {
 
   stopTime() {
     this.machineStopTime = null;
-    let _machineStopTime = new Date();
+    const _machineStopTime = new Date();
     this.machineStopTime = formatDate(_machineStopTime, 'yyyy-MM-dd H:mm:ss', 'en-US');
     clearInterval(this.timerId);
     // this.isRunning=false;
@@ -1550,7 +1550,7 @@ export class CheckinCheckOutComponent implements OnInit {
   modalities = []
   getMachineModality() {
     this.techChecklist = [];
-    let params = {
+    const params = {
       LocID: this.loggedInUser.locationid, //this.RegLocId,
       TPID: this.TPID
     };
@@ -1579,7 +1579,7 @@ export class CheckinCheckOutComponent implements OnInit {
   radoiologistList = [];
   EmpId = null;
   getRadiologistInfo() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.questionnaireService.getRadiologistInfo(params).subscribe((res: any) => {
@@ -1623,9 +1623,9 @@ export class CheckinCheckOutComponent implements OnInit {
   }
 
   pendProcess(risStatus) {
-    let currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
+    const currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
     let mergeObj = []
-    let obj = {
+    const obj = {
       technicianHitory: this.TechnicianHistory,
       unserName: this.VerifiedUserName,
       userID: this.VerifiedUserID,
@@ -1634,7 +1634,7 @@ export class CheckinCheckOutComponent implements OnInit {
     if (this.objJson && this.objJson.length)
       mergeObj = this.objJson;
     mergeObj.push(obj);
-    let objParam = {
+    const objParam = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       RISWorkListID: this.RISWorkListID,
@@ -1749,8 +1749,8 @@ export class CheckinCheckOutComponent implements OnInit {
         input: 'custom-radio'
       },
       preConfirm: (res) => {
-        let processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
-        let processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
+        const processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
+        const processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
         if (!processID && processRemarks == '') {
           Swal.showValidationMessage('Please select any option and provide remarks');
         } else if (!processID) {
@@ -1770,7 +1770,7 @@ export class CheckinCheckOutComponent implements OnInit {
 
     if (formValues[0] && formValues[1] != '') {
       this.ProcessID = Number(formValues[0]);
-      let remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
+      const remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
       this.ProcessRemarks = remarksPrepend + formValues[1]
       this.updateVisitTestPriority()
       this.saveVisitRemarks()
@@ -1780,7 +1780,7 @@ export class CheckinCheckOutComponent implements OnInit {
   }
 
   updateVisitTestPriority() {
-    let objParams = {
+    const objParams = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       ProcessID: this.ProcessID,
@@ -1788,7 +1788,7 @@ export class CheckinCheckOutComponent implements OnInit {
       CreatedBy: this.VerifiedUserID
     }
     this.questionnaireService.updateVisitTestPriority(objParams).subscribe((res: any) => {
-      let respons = JSON.parse(res.PayLoadStr);
+      const respons = JSON.parse(res.PayLoadStr);
       if (res.StatusCode == 200) {
         this.ProcessIDParent = this.ProcessID;
         this.toastr.success(res.Message, "Test Sensitivity");
@@ -1800,7 +1800,7 @@ export class CheckinCheckOutComponent implements OnInit {
     })
   }
   saveVisitRemarks() {
-    let params = {
+    const params = {
       VisitId: Number(this.VisitId),
       ModuleName: 'Technician',
       Remarks: this.ProcessRemarks.trim(),
@@ -1887,18 +1887,18 @@ export class CheckinCheckOutComponent implements OnInit {
 
   }
 
-  disabledButtonVerify: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerVerify: boolean = true;//Hide Loader
+  disabledButtonVerify = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerVerify = true;//Hide Loader
   verifyUser() {
     // this.clearVariables();
-    let formValues = this.userVerificationForm.getRawValue();
+    const formValues = this.userVerificationForm.getRawValue();
     this.userVerificationForm.markAllAsTouched();
     if (this.userVerificationForm.invalid) {
       this.toastr.warning('Please fill the required fields...!'); return false;
     } else {
       ///////START::VERIFY USER /////////////////////////////
       // formValues.techUsername=='john.doe' && formValues.techPassword=='freedom'
-      let params = {
+      const params = {
         UserName: formValues.techUsername,
         Password: formValues.techPassword
       }
@@ -1947,7 +1947,7 @@ export class CheckinCheckOutComponent implements OnInit {
   RISServices = []
   getRISServicesByVisitID() {
     this.RISServices = [];
-    let params = {
+    const params = {
       VisitID: this.VisitId,
       TPId: this.TPID
     };
@@ -1957,11 +1957,11 @@ export class CheckinCheckOutComponent implements OnInit {
       // console.log("RISServices payload is: ", res)
       if (res.StatusCode == 200) {
         // this.RISServices = res.PayLoad || [];
-        let services = res.PayLoad || [];
+        const services = res.PayLoad || [];
 
-        let result = services.reduce((re, o) => {
+        const result = services.reduce((re, o) => {
           // Check if group already exists for this TPID
-          let existObj = re.find(obj => obj.TPID === o.TPId);
+          const existObj = re.find(obj => obj.TPID === o.TPId);
 
           if (existObj) {
             // Push service item only if TPInventoryID exists (non-null)
@@ -1977,7 +1977,7 @@ export class CheckinCheckOutComponent implements OnInit {
             }
           } else {
             // Create new TP group
-            let groupObj: any = {
+            const groupObj: any = {
               TPID: o.TPId,
               TPCode: o.TPCode,
               TPName: o.TPName,
@@ -2034,13 +2034,13 @@ export class CheckinCheckOutComponent implements OnInit {
   isDoneServices
   updateVisitTPStatusByTPIDs() {
     this.checkSubmit = false;
-    let checkedItems = this.RISServices.filter(a => a.checked);
+    const checkedItems = this.RISServices.filter(a => a.checked);
     // console.log("checkedItems___", checkedItems);
     if (!checkedItems.length) {
       this.toastr.warning("Please select any service to proceed!")
     } else {
-      let TPIDs = checkedItems.map(obj => obj.TPID).join(",")
-      let objParam = {
+      const TPIDs = checkedItems.map(obj => obj.TPID).join(",")
+      const objParam = {
         TPIDs: TPIDs,
         VisitID: Number(this.VisitId),
         StatusID: 7,
@@ -2080,7 +2080,7 @@ export class CheckinCheckOutComponent implements OnInit {
     this.loggedInUserLocCode = this.loggedInUser.currentLocation;
     
     // console.log("VisitID :", this.VisitId, " TPID: ", tpid)
-    let TPID = tpid;
+    const TPID = tpid;
     setTimeout(() => {
       if (TPID && this.VisitId) {
         const url = environment.patientReportsPortalUrl + 'print-radio-labels?p=' + btoa(JSON.stringify({ VisitNo: this.VisitId, TPID: TPID, UserLoc: this.loggedInUserLocCode,appName: 'WebMedicubes:radiolabels', timeStemp: +new Date() }));
@@ -2094,10 +2094,10 @@ export class CheckinCheckOutComponent implements OnInit {
   }
 
   checkValidationForServiceInventory(data) {
-    let filteredServicesdata = data;
+    const filteredServicesdata = data;
     let isValid = true; // Initialize isValid to true
-    for (let item of filteredServicesdata) {
-      for (let service of item.services) {
+    for (const item of filteredServicesdata) {
+      for (const service of item.services) {
         if (
           (service.DamagedQuantity > 0 && !service.Remarks) ||
           ((service.DamagedQuantity || 0) + service.ConsumedQuantity > service.Quantity && !service.Remarks)
@@ -2111,14 +2111,14 @@ export class CheckinCheckOutComponent implements OnInit {
   }
 
   insertServiceInventory(data) {
-    let filteredServices = data;
+    const filteredServices = data;
     // Initialize the tblVisitTPInventory array
-    let tblVisitTPInventory = [];
-    for (let item of filteredServices) {
-      for (let service of item.services) {
+    const tblVisitTPInventory = [];
+    for (const item of filteredServices) {
+      for (const service of item.services) {
         if (service.checked) {
           // Create an entry for each checked service
-          let visitTPInventory = {
+          const visitTPInventory = {
             VisitTPInventoryID: item.VisitTPInventoryID || null,
             Visit: Number(this.VisitId),
             TPID: item.TPID,
@@ -2135,7 +2135,7 @@ export class CheckinCheckOutComponent implements OnInit {
     }
 
     // Create the objParam with the tblVisitTPInventory array and insert
-    let objParam = {
+    const objParam = {
       TPID: this.TPID,
       VisitID: Number(this.VisitId),
       CreatedBy: this.VerifiedUserID || -99,
@@ -2177,9 +2177,9 @@ export class CheckinCheckOutComponent implements OnInit {
   }
 
   updateVisitServiceStatus(data) {
-    let filteredServices = data
-    let TPIDs = filteredServices.map(item => item.TPID).join(',');
-    let obj = {
+    const filteredServices = data
+    const TPIDs = filteredServices.map(item => item.TPID).join(',');
+    const obj = {
       TPIDs: TPIDs,
       VisitID: Number(this.VisitId),
       StatusID: 7,
@@ -2236,13 +2236,13 @@ export class CheckinCheckOutComponent implements OnInit {
     this.buttonserviceInventoryClicked = true;
     let isValidItem = true;
     // Create a deep copy of the RISServices array because if i dont do this then the original list is filtered in any case.
-    let srv = this.RISServices.filter((service) => service.checked === true);
+    const srv = this.RISServices.filter((service) => service.checked === true);
     if (!srv.length) {
       this.toastr.warning("Please select any service to serve!", "No Service selected!");
       return;
     }
     let isValidateData = true;
-    for (let item of srv) {
+    for (const item of srv) {
       if (!item.services || item.services.length === 0) {
         // Condition 1: No child array for services
         isValidateData = true;
@@ -2263,8 +2263,8 @@ export class CheckinCheckOutComponent implements OnInit {
       this.toastr.error("Please select any item against checked service/s to counsume", "No inventory selected!");
       return;
     }
-    let servicesToFilter = JSON.parse(JSON.stringify(srv));
-    let filteredServices = [];
+    const servicesToFilter = JSON.parse(JSON.stringify(srv));
+    const filteredServices = [];
     servicesToFilter.forEach((item) => {
       item.services = item.services.filter((service) => service.checked === true);
       filteredServices.push({ ...item }); // Push a copy of the item with filtered services
@@ -2323,7 +2323,7 @@ export class CheckinCheckOutComponent implements OnInit {
   metalDetected(event) {
     // console.log("🚀 ~ metalDetected ~ event:", event)
 
-    let params = {
+    const params = {
       PatientID: this.PatientID,
       isMetal: this.isMetalChecked ? 1 : 0,  // 1 for is Metal, 0 for not isMetal
       ModifiedBy: this.loggedInUser.userid,  //logged in User

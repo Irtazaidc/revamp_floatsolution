@@ -17,7 +17,7 @@ import { UserModel, AuthService } from "src/app/modules/auth";
 import * as ExcelJS from "exceljs";
 import { HelperService } from "src/app/modules/shared/helpers/helper.service";
 import { ActivatedRoute } from "@angular/router";
-type AttachItem = {
+interface AttachItem {
   id?: number | null; // existing file id if any (backend)
   file?: File | null; // File object for new uploads
   name: string;
@@ -28,7 +28,7 @@ type AttachItem = {
   isNew: boolean; // true if newly added in this session
   remark?: string | null; // only for new items
   url?: string | null; // existing file url for download/preview
-};
+}
 
 @Component({
   standalone: false,
@@ -104,7 +104,7 @@ export class BranchServicesLogComponent implements OnInit {
 
   getKBSBranch() {
     this.isSpinner = true;
-    let params = {
+    const params = {
       LocIDs: -1
     };
     this.lookupService.getKBSBranche(params).subscribe({
@@ -413,7 +413,7 @@ export class BranchServicesLogComponent implements OnInit {
   }
   // Alternative if you don't want to use DOM element:
   decodeHtmlEntities(text: string): string {
-    const entities: { [key: string]: string } = {
+    const entities: Record<string, string> = {
       "&nbsp;": " ",
       "&amp;": "&",
       "&lt;": "<",

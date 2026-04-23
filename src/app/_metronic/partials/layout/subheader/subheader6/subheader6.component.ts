@@ -46,8 +46,8 @@ export class Subheader6Component implements OnInit {
   breadcrumbs$: Observable<BreadcrumbItemModel[]>;
   description$: Observable<string>;
   user$: Observable<UserModel>;
-  menuBtnClick: boolean = false;
-  webDeskStatus: boolean = false;
+  menuBtnClick = false;
+  webDeskStatus = false;
 
   constructor(
     private layout: LayoutService,
@@ -126,7 +126,7 @@ export class Subheader6Component implements OnInit {
   }
   getSystemInformation(loggedInUser: UserModel) {
     // setTimeout(() => {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -157,7 +157,7 @@ export class Subheader6Component implements OnInit {
     // this.auth.logout();
     // document.location.reload();
     this.loadLoggedInUserInfo();
-    let params = {
+    const params = {
       ActionLogObj: {
         ActionId: 4,
         FormName: "Float Solution (Metacubes) logout",
@@ -188,7 +188,7 @@ export class Subheader6Component implements OnInit {
   empUserPicture: string;
   UserPicture: string;
   getEmpPicByUserId() {
-    let paramObj = {
+    const paramObj = {
       UserID: this.loggedInUser.userid,
     }
     this.empService.getEmpPicByUserId(paramObj).subscribe(

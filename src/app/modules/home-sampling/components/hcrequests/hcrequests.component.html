@@ -602,7 +602,7 @@
                   <tbody id="">
                     <tr (dblclick)="OpenMoreInfoPopup(hc)" [ngStyle]="{
                         color: hc.isUrgentBooking == 1 ? 'red' : 'black'
-                      }" scope="row" *ngFor="
+                      }" *ngFor="
                         let hc of paginationMyIDC.paginatedSearchResults;
                         let i = index
                       ">
@@ -619,9 +619,9 @@
                         <input (change)="isAllOnlineReqSelected()" [(ngModel)]="hc.isSelected" type="checkbox"
                           class="" />
                       </td>
-                      <td scope="row">{{ hc.BookingPatientID }}</td>
-                      <td scope="row">{{ hc.PatientFullName }}</td>
-                      <td scope="row">
+                      <td>{{ hc.BookingPatientID }}</td>
+                      <td>{{ hc.PatientFullName }}</td>
+                      <td>
                         <span>
                           <span ngbTooltip="MobileNo">{{ hc.PatientMobileNumber }}</span>
                           <span *ngIf="hc.PhoneNo" ngbTooltip="Phone No"> <br>{{hc.PhoneNo? hc.PhoneNo: ''}}</span>
@@ -629,20 +629,20 @@
                             hc.AlternateContact: ''}}</span>
                         </span>
                       </td>
-                      <td scope="row">{{ hc.PatientAddress }}</td>
-                      <td scope="row">{{ hc.HCCityName }}</td>
-                      <td scope="row">{{ hc.ModeOfPayment || "-" }}</td>
-                      <td scope="row">
+                      <td>{{ hc.PatientAddress }}</td>
+                      <td>{{ hc.HCCityName }}</td>
+                      <td>{{ hc.ModeOfPayment || "-" }}</td>
+                      <td>
                         <b>{{ hc.BookingSlot }}</b>
                       </td>
-                      <td scope="row">
+                      <td>
                         {{
                         hc.BookingInitiatedAt | date : "dd MMM, yyyy, h:mm a"
                         }}
                       </td>
-                      <td scope="row">{{ hc.RiderName }}</td>
-                      <td scope="row">{{ hc.HCBookingStatus }}</td>
-                      <td scope="row">
+                      <td>{{ hc.RiderName }}</td>
+                      <td>{{ hc.HCBookingStatus }}</td>
+                      <td>
                         <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px" placement="top"
                           ngbTooltip="View Map">
                           <i class="fas fa-map-marker-alt mapicon"></i>
@@ -737,11 +737,11 @@
                 </thead>
                 <tbody id="">
                   <tr *ngFor="let n of notifications; let i = index">
-                    <td scope="row">
+                    <td>
                       {{i+1}}
                     </td>
-                    <td scope="row">{{ n.bookingID }}</td>
-                    <td scope="row">{{ n.message }}</td>
+                    <td>{{ n.bookingID }}</td>
+                    <td>{{ n.message }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -797,7 +797,7 @@
                         color: hc.isUrgentBooking == 1 ? 'red' : 'black'
                       }" [ngClass]="{
                         'text-warning': hc.RiderID != null && hc.HCBookingStatusID == 1
-                      }" scope="row" *ngFor="let hc of HSCStaffRequestList; let i = index">
+                      }" *ngFor="let hc of HSCStaffRequestList; let i = index">
                       <!-- <td class="notification">
                         <span *ngIf="hc.chatNoticount > 0" class="badge">
                           {{ hc.chatNoticount }}</span
@@ -810,7 +810,7 @@
                           <i class="fas fa-comment"></i>
                         </button>
                       </td> -->
-                      <td scope="row">
+                      <td>
                         {{i+1}}
                         <!-- <input
                           (change)="isAllSelected()"
@@ -819,9 +819,9 @@
                           class=""
                         /> -->
                       </td>
-                      <td scope="row">{{ hc.BookingPatientID }}</td>
-                      <td scope="row">{{ hc.PatientFullName }}</td>
-                      <td scope="row">
+                      <td>{{ hc.BookingPatientID }}</td>
+                      <td>{{ hc.PatientFullName }}</td>
+                      <td>
                         <span>
                           <span ngbTooltip="MobileNo">{{ hc.PatientMobileNumber }}</span>
                           <span *ngIf="hc.PhoneNo" ngbTooltip="Phone No"> <br>{{hc.PhoneNo? hc.PhoneNo: ''}}</span>
@@ -829,14 +829,14 @@
                             hc.AlternateContact: ''}}</span>
                         </span>
                       </td>
-                      <td scope="row">{{ hc.PatientAddress }}</td>
-                      <td scope="row">{{ hc.HCRemarks ? hc.HCRemarks : "--" }}</td>
-                      <td scope="row">{{ hc.HCCityName }}</td>
-                      <td scope="row">
+                      <td>{{ hc.PatientAddress }}</td>
+                      <td>{{ hc.HCRemarks ? hc.HCRemarks : "--" }}</td>
+                      <td>{{ hc.HCCityName }}</td>
+                      <td>
                         {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
                       </td>
-                      <td scope="row">{{ hc.RiderName }}</td>
-                      <td scope="row">{{ hc.HCBookingStatus }}</td>
+                      <td>{{ hc.RiderName }}</td>
+                      <td>{{ hc.HCBookingStatus }}</td>
                       <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
                           <!-- <button
@@ -935,7 +935,7 @@
                         color: hc.isUrgentBooking == 1 ? 'red' : 'black'
                       }" [ngClass]="{
                         'text-warning': hc.RiderID != null && hc.HCBookingStatusID == 1
-                      }" scope="row" *ngFor="let hc of PendingHCRequests; let i = index">
+                      }" *ngFor="let hc of PendingHCRequests; let i = index">
                       <td class="notification">
                         <span *ngIf="hc.chatNoticount > 0" class="badge">
                           {{ hc.chatNoticount }}</span>
@@ -948,9 +948,9 @@
                         <!-- [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null" -->
                         <input (change)="isAllSelected()" [(ngModel)]="hc.isSelected" type="checkbox" class="" />
                       </td>
-                      <td scope="row">{{ hc.BookingPatientID }}</td>
-                      <td scope="row">{{ hc.PatientFullName }}</td>
-                      <td scope="row">
+                      <td>{{ hc.BookingPatientID }}</td>
+                      <td>{{ hc.PatientFullName }}</td>
+                      <td>
                         <span>
                           <span ngbTooltip="MobileNo">{{ hc.PatientMobileNumber }}</span>
                           <span *ngIf="hc.PhoneNo" ngbTooltip="Phone No"> <br>{{hc.PhoneNo? hc.PhoneNo: ''}}</span>
@@ -959,15 +959,15 @@
                         </span>
                       </td>
                       <!-- <td scope="row"> {{hc.CM}}</td> -->
-                      <td scope="row">{{ hc.PatientAddress }}</td>
-                      <td scope="row">{{ hc.HCRemarks ? hc.HCRemarks : "--" }}</td>
-                      <td scope="row">{{ hc.HCCityName }}</td>
-                      <td scope="row">
+                      <td>{{ hc.PatientAddress }}</td>
+                      <td>{{ hc.HCRemarks ? hc.HCRemarks : "--" }}</td>
+                      <td>{{ hc.HCCityName }}</td>
+                      <td>
                         {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
                       </td>
-                      <td scope="row">{{ hc.RiderName }}</td>
-                      <td scope="row">{{ hc.HCBookingStatus }}</td>
-                      <td scope="row">
+                      <td>{{ hc.RiderName }}</td>
+                      <td>{{ hc.HCBookingStatus }}</td>
+                      <td>
                         <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px" placement="top"
                           ngbTooltip="View Map">
                           <i class="fas fa-map-marker-alt mapicon"></i>
@@ -1062,10 +1062,10 @@
                       </tr>
                     </thead>
                     <tbody id="">
-                      <tr (dblclick)="OpenInProgMoreInfoPopup(hc)" scope="row"
+                      <tr (dblclick)="OpenInProgMoreInfoPopup(hc)"
                         *ngFor="let hc of InProgressRequests; let i = index"
                         [ngStyle]="{'color': hc.isUrgentBooking == 1 ? 'red' : 'black' }">
-                        <td scope="row">
+                        <td>
                           {{ hc.HCRequestID }} <br />
                           <small ngbTooltip="BookingID_Name_MobileNo,PhoneNo_Req-From-City_PIN_RegInfo"
                             style="font-weight: bold" *ngFor="let hcd of hc.bookingDetail; let ii = index">
@@ -1094,9 +1094,9 @@
                           </small>
                         </td>
                         <!-- <td> {{hc.CommSepTP}}</td> -->
-                        <td scope="row">{{ hc.PatientAddress }}</td>
+                        <td>{{ hc.PatientAddress }}</td>
 
-                        <td scope="row">
+                        <td>
                           <span *ngIf="hc.BookingSourceID == 7">
                             {{ hc.BookingSlot }}
                           </span>
@@ -1109,8 +1109,8 @@
                           </span>
                         </td>
                         <td>{{ hc.RiderName }}</td>
-                        <td scope="row">{{ hc.HCBookingStatus }}</td>
-                        <td scope="row">
+                        <td>{{ hc.HCBookingStatus }}</td>
+                        <td>
                           {{ hc.HCRemarks ? hc.HCRemarks : "--" }}
                         </td>
 
@@ -1119,7 +1119,7 @@
                             <i class="fas fa-map-marker-alt mapicon"></i>
                           </a>
                         </td>
-                        <td scope="col"></td>
+                        <td></td>
                         <td>
                           <div class="btn-group">
                             <div class="btn-group" ngbDropdown role="group"
@@ -1277,11 +1277,11 @@
                       </tr>
                     </thead>
                     <tbody id="">
-                      <tr scope="row" *ngFor="
+                      <tr *ngFor="
                           let hc of FilteredCompletedHCRequests;
                           let i = index
                         ">
-                        <td scope="row">
+                        <td>
                           {{ hc.HCRequestID }} <br />
                           <small ngbTooltip="BookingID_Name_Mob_PIN_Req-From-City_RegInfo" style="font-weight: bold"
                             *ngFor="let hcd of hc.bookingDetail; let ii = index">
@@ -1297,20 +1297,20 @@
                             <!-- {{hcd.cotp}} -->
                           </small>
                         </td>
-                        <td scope="row">
+                        <td>
                           {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
                         </td>
-                        <td scope="row">{{ hc.BookingInitiatedAt }}</td>
-                        <td scope="row">{{ hc.BookingAssignedByEmpName }}</td>
-                        <td scope="row">{{ hc.BookingCompletedAt }}</td>
-                        <td scope="row">{{ hc.BookingCompletedBy }}</td>
-                        <td scope="row">{{ hc.BookingCompletedRemarks }}</td>
-                        <td scope="row">
+                        <td>{{ hc.BookingInitiatedAt }}</td>
+                        <td>{{ hc.BookingAssignedByEmpName }}</td>
+                        <td>{{ hc.BookingCompletedAt }}</td>
+                        <td>{{ hc.BookingCompletedBy }}</td>
+                        <td>{{ hc.BookingCompletedRemarks }}</td>
+                        <td>
                           {{ hc.HCRemarks ? hc.HCRemarks : "--" }}
                         </td>
-                        <td scope="row">{{ hc.SampleSubBranchTitle }}</td>
-                        <td scope="row">{{ hc.SampleSubEmpName }}</td>
-                        <td scope="row">
+                        <td>{{ hc.SampleSubBranchTitle }}</td>
+                        <td>{{ hc.SampleSubEmpName }}</td>
+                        <td>
                           <small ngbTooltip="" style="font-weight: bold"
                             *ngFor="let hcd of hc.bookingDetail; let ii = index">
                             {{ hcd.cotp }} <br />
@@ -1392,7 +1392,7 @@
                     <tbody id="">
                       <tr (dblclick)="OpenMoreInfoPopup(hc)" [ngStyle]="{
                           color: hc.isUrgentBooking == 1 ? 'red' : 'black'
-                        }" scope="row" *ngFor="let hc of HSUrgentRequests; let i = index">
+                        }" *ngFor="let hc of HSUrgentRequests; let i = index">
                         <!-- <td>
                                                             
 
@@ -1402,19 +1402,19 @@
                           <!-- [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null" -->
                           <input (change)="isAllSelected()" [(ngModel)]="hc.isSelected" type="checkbox" class="" />
                         </td>
-                        <td scope="row">{{ hc.BookingPatientID }}</td>
-                        <td scope="row">{{ hc.PatientFullName }}</td>
-                        <td scope="row">{{ hc.PatientMobileNumber }}</td>
+                        <td>{{ hc.BookingPatientID }}</td>
+                        <td>{{ hc.PatientFullName }}</td>
+                        <td>{{ hc.PatientMobileNumber }}</td>
                         <!-- <td scope="row"> {{hc.CM}}</td> -->
-                        <td scope="row">{{ hc.PatientAddress }}</td>
-                        <td scope="row">{{ hc.HCCityName }}</td>
-                        <td scope="row">
+                        <td>{{ hc.PatientAddress }}</td>
+                        <td>{{ hc.HCCityName }}</td>
+                        <td>
                           {{ hc.HCDateTime | date : "dd MMM, yyyy, h:mm a" }}
                         </td>
 
-                        <td scope="row">{{ hc.RiderName }}</td>
-                        <td scope="row">{{ hc.HCBookingStatus }}</td>
-                        <td scope="row">
+                        <td>{{ hc.RiderName }}</td>
+                        <td>{{ hc.HCBookingStatus }}</td>
+                        <td>
                           <a (click)="ShowMapView(hc)" class="cursor-pointer" style="font-size: 17px" placement="top"
                             ngbTooltip="View Map">
                             <i class="fas fa-map-marker-alt mapicon"></i>
@@ -1503,7 +1503,7 @@
                       </tr>
                     </thead>
                     <tbody id="">
-                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" scope="row" *ngFor="
+                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" *ngFor="
                           let hc of FilteredCancelledHCRequests;
                           let i = index
                         ">
@@ -1511,7 +1511,7 @@
                                                     <input [attr.disabled]="hc.isDisabled ? true : null"
                                                         [(ngModel)]="hc.isSelected" type="checkbox" class="" />
                                                 </td> -->
-                        <td scope="row">
+                        <td>
                           {{ hc.HCRequestID }} <br />
                           <small ngbTooltip="BookingID_Name_Mob_Req-From-city" style="font-weight: bold"
                             *ngFor="let hcd of hc.bookingDetail; let ii = index">
@@ -1522,19 +1522,19 @@
                             <!-- {{hcd.cotp}} -->
                           </small>
                         </td>
-                        <td scope="row">{{ hc.BookingCanceledBy }}</td>
-                        <td scope="row">
+                        <td>{{ hc.BookingCanceledBy }}</td>
+                        <td>
                           {{
                           hc.BookingCanceledAt | date : "dd MMM, yyyy, h:mm a"
                           }}
                         </td>
-                        <td scope="row" style="word-break: break-word">{{ hc.BookingCanceledRemarks }}</td>
-                        <td scope="row">
+                        <td style="word-break: break-word">{{ hc.BookingCanceledRemarks }}</td>
+                        <td>
                           <b>{{
                             hc.HCDateTime | date : "dd MMM, yyyy, h:mm a"
                             }}</b>
                         </td>
-                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <td>{{ hc.HCBookingStatus }}</td>
 
                         <!-- BookingCanceledRemarks: d., -->
                         <td>
@@ -1610,7 +1610,7 @@
                       </tr>
                     </thead>
                     <tbody id="">
-                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" scope="row" *ngFor="
+                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" *ngFor="
                           let hc of FilteredCancellationHCRequests;
                           let i = index
                         ">
@@ -1618,7 +1618,7 @@
                                                     <input [attr.disabled]="hc.isDisabled ? true : null"
                                                         [(ngModel)]="hc.isSelected" type="checkbox" class="" />
                                                 </td> -->
-                        <td scope="row">
+                        <td>
                           {{ hc.HCRequestID }} <br />
                           <small ngbTooltip="BookingID_Name_Mob_Req-From-city" style="font-weight: bold"
                             *ngFor="let hcd of hc.bookingDetail; let ii = index">
@@ -1629,19 +1629,19 @@
                             <!-- {{hcd.cotp}} -->
                           </small>
                         </td>
-                        <td scope="row">{{ hc.BookingCanceledBy || '-'}}</td>
-                        <td scope="row">
+                        <td>{{ hc.BookingCanceledBy || '-'}}</td>
+                        <td>
                           {{
                           hc.BookingCanceledAt | date : "dd MMM, yyyy, h:mm a"
                           }}
                         </td>
-                        <td scope="row" style="word-break: break-word">{{ hc.BookingCanceledRemarks || '-' }}</td>
-                        <td scope="row">
+                        <td style="word-break: break-word">{{ hc.BookingCanceledRemarks || '-' }}</td>
+                        <td>
                           <b>{{
                             hc.HCDateTime | date : "dd MMM, yyyy, h:mm a"
                             }}</b>
                         </td>
-                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <td>{{ hc.HCBookingStatus }}</td>
 
                         <!-- BookingCanceledRemarks: d., -->
                         <td>
@@ -1731,7 +1731,7 @@
                       </tr>
                     </thead>
                     <tbody id="">
-                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" scope="row" *ngFor="
+                      <tr (dblclick)="OpencancelledMoreInfoPopup(hc)" *ngFor="
                           let hc of FilteredDelyedHCRequests;
                           let i = index
                         ">
@@ -1755,7 +1755,7 @@
                                                         class="fas fa-sync-alt refresh-icon"></i>-->
                         </td>
 
-                        <td scope="row">
+                        <td>
                           {{ hc.HCRequestID }} <br />
                           <small ngbTooltip="BookingID_Name_Mob_PIN" style="font-weight: bold"
                             *ngFor="let hcd of hc.bookingDetail; let ii = index">
@@ -1766,13 +1766,13 @@
                           </small>
                         </td>
                         <!-- <td> {{hc.CommSepTP}}</td> -->
-                        <td scope="row">{{ hc.PatientAddress }}</td>
-                        <td scope="row">{{ hc.HCCityName }}</td>
-                        <td scope="row">
+                        <td>{{ hc.PatientAddress }}</td>
+                        <td>{{ hc.HCCityName }}</td>
+                        <td>
                           <b>{{ hc.HCDateTime }}</b>
                         </td>
                         <td>{{ hc.RiderName }}</td>
-                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <td>{{ hc.HCBookingStatus }}</td>
                         <!-- <td scope="row"> {{hc.BC}}</td> -->
 
                         <!-- <td> {{hc.FirstName }}</td> -->
@@ -1782,7 +1782,7 @@
                             <i class="fas fa-map-marker-alt mapicon"></i>
                           </a>
                         </td>
-                        <td scope="col"></td>
+                        <td></td>
                         <!-- <td>
                                                 <div class="btn-group">
                                                     <div class="btn-group" ngbDropdown role="group"
@@ -1879,7 +1879,7 @@
                       </tr>
                     </thead>
                     <tbody id="">
-                      <tr scope="row" *ngFor="
+                      <tr *ngFor="
                           let hc of FilteredMissedHCRequests;
                           let i = index
                         ">
@@ -1901,7 +1901,7 @@
                                         class="fas fa-sync-alt refresh-icon"></i>-->
                         </td>
 
-                        <td scope="row">
+                        <td>
                           {{ hc.HCRequestID }} <br />
                           <small ngbTooltip="BookingID_Name_Mob_PIN" style="font-weight: bold"
                             *ngFor="let hcd of hc.bookingDetail; let ii = index">
@@ -1912,13 +1912,13 @@
                           </small>
                         </td>
                         <!-- <td> {{hc.CommSepTP}}</td> -->
-                        <td scope="row">{{ hc.PatientAddress }}</td>
-                        <td scope="row">{{ hc.HCCityName }}</td>
-                        <td scope="row">
+                        <td>{{ hc.PatientAddress }}</td>
+                        <td>{{ hc.HCCityName }}</td>
+                        <td>
                           <b>{{ hc.HCDateTime }}</b>
                         </td>
                         <td>{{ hc.RiderName }}</td>
-                        <td scope="row">{{ hc.HCBookingStatus }}</td>
+                        <td>{{ hc.HCBookingStatus }}</td>
                         <!-- <td scope="row"> {{hc.BC}}</td> -->
 
                         <!-- <td> {{hc.FirstName }}</td> -->
@@ -1928,7 +1928,7 @@
                             <i class="fas fa-map-marker-alt mapicon"></i>
                           </a>
                         </td>
-                        <td scope="col"></td>
+                        <td></td>
                         <td>
                           <div class="btn-group">
                             <div class="btn-group" ngbDropdown role="group"
@@ -2071,25 +2071,25 @@
                               </tr>
                             </thead>
                             <tbody id="">
-                              <tr scope="row" colspan="4" *ngIf="!VisitPatDetail.length">
+                              <tr colspan="4" *ngIf="!VisitPatDetail.length">
                                 <td>No Record Found</td>
                               </tr>
-                              <tr scope="row" *ngFor="
+                              <tr *ngFor="
                                   let pat of VisitPatDetail;
                                   let i = index
                                 ">
-                                <td scope="row">
+                                <td>
                                   {{ pat.SalutationTitle }}
                                   {{ pat.FirstName }}
                                   {{ pat.LastName }}
                                 </td>
-                                <td scope="row">{{ pat.Gender }}</td>
+                                <td>{{ pat.Gender }}</td>
                                 <td>{{ pat.DateOfBirth }}</td>
                                 <!-- <td scope="row"> {{pat.MobileOperatorID}}</td> -->
-                                <td scope="row">{{ pat.MobileNO }}</td>
-                                <td scope="row">{{ pat.PatientAddress }}</td>
-                                <td scope="row">{{ pat.HCCityName }}</td>
-                                <td scope="row">{{ pat.PanelName }}</td>
+                                <td>{{ pat.MobileNO }}</td>
+                                <td>{{ pat.PatientAddress }}</td>
+                                <td>{{ pat.HCCityName }}</td>
+                                <td>{{ pat.PanelName }}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -2110,14 +2110,14 @@
                             </tr>
                           </thead>
                           <tbody id="">
-                            <tr scope="row" colspan="4" *ngIf="!VisitTPDetail.length">
+                            <tr colspan="4" *ngIf="!VisitTPDetail.length">
                               <td>No Record Found</td>
                             </tr>
-                            <tr scope="row" *ngFor="let tp of VisitTPDetail; let i = index">
-                              <td scope="col">{{ tp.TestProfileCode }}</td>
-                              <td scope="col">{{ tp.TestProfilePrice }}</td>
-                              <td scope="col">{{ tp.DeliveryDate }}</td>
-                              <td scope="col">{{ tp.Remarks }}</td>
+                            <tr *ngFor="let tp of VisitTPDetail; let i = index">
+                              <td>{{ tp.TestProfileCode }}</td>
+                              <td>{{ tp.TestProfilePrice }}</td>
+                              <td>{{ tp.DeliveryDate }}</td>
+                              <td>{{ tp.Remarks }}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -2390,19 +2390,19 @@
                 <tbody id="">
                   <tr [ngStyle]="{
                       color: hc.isUrgentBooking == 1 ? 'red' : 'black'
-                    }" scope="row" *ngFor="let hc of SelBookingData; let i = index">
-                    <td scope="row">{{ hc.tpCodes || "-" }}</td>
-                    <td scope="row">{{ hc.RiderCell || "-" }}</td>
-                    <td scope="row">{{ hc.BookingInitiatedAt }}</td>
-                    <td scope="row">{{ hc.BookedByEmpName || "-" }}</td>
-                    <td scope="row">{{ hc.BookingAssignedAt || "-" }}</td>
-                    <td scope="row">
+                    }" *ngFor="let hc of SelBookingData; let i = index">
+                    <td>{{ hc.tpCodes || "-" }}</td>
+                    <td>{{ hc.RiderCell || "-" }}</td>
+                    <td>{{ hc.BookingInitiatedAt }}</td>
+                    <td>{{ hc.BookedByEmpName || "-" }}</td>
+                    <td>{{ hc.BookingAssignedAt || "-" }}</td>
+                    <td>
                       {{ hc.BookingAssignedByEmpName || "-" }}
                     </td>
                     <!-- BookedByEmpName  BookingAssignedByEmpName -->
-                    <td scope="row">{{ hc.DiscountPerc || "-" }}</td>
-                    <td scope="row">{{ hc.NetAmount || "-" }}</td>
-                    <td scope="row">{{ hc.GrossAmount || "-" }}</td>
+                    <td>{{ hc.DiscountPerc || "-" }}</td>
+                    <td>{{ hc.NetAmount || "-" }}</td>
+                    <td>{{ hc.GrossAmount || "-" }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -2453,16 +2453,16 @@
               <tbody id="">
                 <tr [ngStyle]="{
                       color: hc.isUrgentBooking == 1 ? 'red' : 'black'
-                    }" scope="row" *ngFor="let hc of selInProgReq; let i = index">
-                  <td scope="row">{{ hc.CommSepTP }}</td>
-                  <td scope="row">{{ hc.RiderCell }}</td>
-                  <td scope="row">{{ hc.BookingAssignedAt }}</td>
-                  <td scope="row">{{ hc.BookingAssignedByEmpName }}</td>
-                  <td scope="row">{{ hc.BookingInitiatedAt }}</td>
-                  <td scope="row">{{ hc.BookedByEmpName }}</td>
-                  <td scope="row">{{ hc.DiscountPerc }}</td>
-                  <td scope="row">{{ hc.NetAmount }}</td>
-                  <td scope="row">{{ hc.GrossAmount }}</td>
+                    }" *ngFor="let hc of selInProgReq; let i = index">
+                  <td>{{ hc.CommSepTP }}</td>
+                  <td>{{ hc.RiderCell }}</td>
+                  <td>{{ hc.BookingAssignedAt }}</td>
+                  <td>{{ hc.BookingAssignedByEmpName }}</td>
+                  <td>{{ hc.BookingInitiatedAt }}</td>
+                  <td>{{ hc.BookedByEmpName }}</td>
+                  <td>{{ hc.DiscountPerc }}</td>
+                  <td>{{ hc.NetAmount }}</td>
+                  <td>{{ hc.GrossAmount }}</td>
                 </tr>
               </tbody>
             </table>
@@ -2511,17 +2511,17 @@
                 <tbody id="">
                   <tr [ngStyle]="{
                       color: hc.isUrgentBooking == 1 ? 'red' : 'black'
-                    }" scope="row" *ngFor="
+                    }" *ngFor="
                       let hc of registredTestInfoByBookingID;
                       let i = index
                     ">
                     <!-- <td scope="row"> {{hc.SampleCollectedTPCode }}</td> -->
-                    <td scope="row">{{ hc.VisitTPCode }}</td>
-                    <td scope="row">{{ hc.AmountRecieved }}</td>
-                    <td scope="row">{{ hc.Discount }}</td>
-                    <td scope="row">{{ hc.PanelName }}</td>
-                    <td scope="row">{{ hc.SampleSubmittedLoc }}</td>
-                    <td scope="row">{{ hc.EmployeeSubmittedTo }}</td>
+                    <td>{{ hc.VisitTPCode }}</td>
+                    <td>{{ hc.AmountRecieved }}</td>
+                    <td>{{ hc.Discount }}</td>
+                    <td>{{ hc.PanelName }}</td>
+                    <td>{{ hc.SampleSubmittedLoc }}</td>
+                    <td>{{ hc.EmployeeSubmittedTo }}</td>
                   </tr>
                 </tbody>
               </table>

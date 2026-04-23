@@ -106,7 +106,7 @@ export class B2bShareReportComponent implements OnInit {
 
   getB2BDoctors(b2bDoctorID = 0) {
     this.b2bDoctorsList = [];
-    let _params = {
+    const _params = {
       B2BDoctorID: b2bDoctorID
     };
     this.spinner.show();
@@ -131,11 +131,11 @@ export class B2bShareReportComponent implements OnInit {
       Detailed: this.defaultLoadingRow,
     };
     // this.createHeadersFromData();
-    let _params = this.form.getRawValue();
+    const _params = this.form.getRawValue();
     _params.DateFrom = _params.DateFrom ? Conversions.formatDateObjectToString(_params.DateFrom) : '';
     _params.DateTo = _params.DateTo ? Conversions.formatDateObjectToString(_params.DateTo, 'end') : '';
     if(!this.form.valid) {
-      let invalidFieldNames = [];
+      const invalidFieldNames = [];
       Object.keys(this.form.controls).forEach((a,i) => {
         if(this.form.controls[a].errors) {
              invalidFieldNames.push(a);
@@ -153,7 +153,7 @@ export class B2bShareReportComponent implements OnInit {
           data = JSON.parse(data);
         } catch (ex) { }
         if(!data.Table2 || data.Table2.length) {
-          let perc = 25;
+          const perc = 25;
           data.Table2 = [
             {
               Name: 'LIS (Share '+perc+'%)',
@@ -170,11 +170,11 @@ export class B2bShareReportComponent implements OnInit {
             // TotalTPCount	LISShareAmt	RISShareAmt
           ]
         }
-        let dataSets = ['Table', 'Table1', 'Table2']
+        const dataSets = ['Table', 'Table1', 'Table2']
         dataSets.forEach(a => {
           data[a] = (data && data[a] || []).map( a => {
             if(a.isLabTest === undefined) return a
-            let o = {
+            const o = {
               ...a,
               // Dept: (a.isLabTest ? 'Lab' : 'Imaging')
               isLabTest: (a.isLabTest ? 'Lab' : 'Imaging')
@@ -183,9 +183,9 @@ export class B2bShareReportComponent implements OnInit {
             return o;
           });
         })
-        let covering = data && data.Table2 && data.Table2.length ? {headers: Object.keys(data.Table2[0]), data: data.Table2} : this.defaultNoRecordRow;
-        let summary = data && data.Table1 && data.Table1.length ? {headers: Object.keys(data.Table1[0]), data: data.Table1} : this.defaultNoRecordRow;
-        let detailed = data && data.Table && data.Table.length ? {headers: Object.keys(data.Table[0]), data: data.Table} : this.defaultNoRecordRow;
+        const covering = data && data.Table2 && data.Table2.length ? {headers: Object.keys(data.Table2[0]), data: data.Table2} : this.defaultNoRecordRow;
+        const summary = data && data.Table1 && data.Table1.length ? {headers: Object.keys(data.Table1[0]), data: data.Table1} : this.defaultNoRecordRow;
+        const detailed = data && data.Table && data.Table.length ? {headers: Object.keys(data.Table[0]), data: data.Table} : this.defaultNoRecordRow;
         console.log("🚀 this.doctorService.getB2BDoctorShareReport ~ detailed:", detailed)
         this.b2bDoctorShareReportData = {
           CoveringData: covering,

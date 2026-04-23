@@ -123,7 +123,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.paymentModesList = _response.Table5 || [];
           this.patientTypeList = _response.Table6 || [];
         },
@@ -211,7 +211,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
   }
 
   GetVisitTestDetails(EncVisitID: any) {
-    let params = {
+    const params = {
       AccountNo: EncVisitID,
       branchID: 1,
       SampleRefNo: "",
@@ -375,9 +375,9 @@ export class EmployeeMedicalRecordComponent implements OnInit {
     this.employeesList = [];
     this.TotalRecord = 0;
     this.patientVisitsList = [];
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
-    let objParam = {
+    const objParam = {
       DepartmentId: formValues.departmentIds || -1,
       DesignationId: formValues.Designation || -1,
       locId: formValues.locID || -1,
@@ -494,7 +494,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
 
         console.log("pakageTestIds:: ", pakageTP[0]);
 
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(pakageTP[0]).subscribe(
           (res: any) => {
             try {
@@ -528,7 +528,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
 
         console.log("chemistryTestIds:: ", chemistryTP[0]);
 
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(chemistryTP[0]).subscribe(
           (res: any) => {
             try {
@@ -561,7 +561,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
 
         console.log("radioTestIds:", radioTP[0]);
 
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe(
           (res: any) => {
             try {
@@ -589,7 +589,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
         grphicalTP[0].ItemType = itemType;
         grphicalTP[0].AppName = "medicubes";
         grphicalTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
 
         if (this.isLetterHead) grphicalTP[0].headerImage = 1;
         else grphicalTP[0].headerImage = 0;
@@ -618,12 +618,12 @@ export class EmployeeMedicalRecordComponent implements OnInit {
     }
   }
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open("", "_blank");
+    const patientVisitInvoiceWinRef = window.open("", "_blank");
     return patientVisitInvoiceWinRef;
   }
 
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split("?");
+    const reportSegments = reportUrl.split("?");
     if (reportSegments.length > 1) {
       reportUrl =
         reportSegments[0] +
@@ -641,7 +641,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
     if (!queryParams) {
       return reportUrl;
     }
-    let reportSegments = reportUrl.split("?");
+    const reportSegments = reportUrl.split("?");
     if (reportSegments.length > 1) {
       reportUrl =
         reportSegments[0] + "?" + btoa(atob(reportSegments[1]) + queryParams);
@@ -653,7 +653,7 @@ export class EmployeeMedicalRecordComponent implements OnInit {
 
   getTestProfileList() {
     this.testDropdownList = [];
-    let _param = {
+    const _param = {
       branchId: 1,
       TestProfileCode: null,
       TestProfileName: null,

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, UserModel } from 'src/app/modules/auth';
@@ -13,7 +13,7 @@ import { SharedService } from 'src/app/modules/shared/services/shared.service';
   templateUrl: './dicom-button.component.html',
   styleUrls: ['./dicom-button.component.scss']
 })
-export class DICOMButtonComponent implements OnInit {
+export class DICOMButtonComponent implements OnInit, OnChanges {
   @Input() btnPayload: any;
 
   VisitID: any;
@@ -118,7 +118,7 @@ export class DICOMButtonComponent implements OnInit {
       TPID: this.TPID
     }];
 
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail

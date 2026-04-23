@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, Inject, KeyValueDiffers, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, KeyValueDiffers, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { LookupService } from '../../services/lookup.service';
@@ -53,7 +53,7 @@ import { ThirdAssignedInterviewersComponent } from 'src/app/modules/recruitment/
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal, { SweetAlertResult } from 'sweetalert2';
 import { PostexService } from '../../services/postex.service';
-declare var Checkout: any;
+declare let Checkout: any;
 
 @Component({
   standalone: false,
@@ -77,7 +77,7 @@ declare var Checkout: any;
     ])
   ]
 })
-export class PatientRegistrationComponent implements OnInit {
+export class PatientRegistrationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   @ViewChild(WizardComponent) public wizard: WizardComponent;
@@ -379,7 +379,7 @@ export class PatientRegistrationComponent implements OnInit {
   meridian = true;
   HCtime: any = ""
   todayDate: { year: number; month: number; day: number; };
-  InvalidHCTime: boolean = false;
+  InvalidHCTime = false;
   hcBookingSourceID: any = 0;
   hcCityID: any = '';
 
@@ -397,19 +397,19 @@ export class PatientRegistrationComponent implements OnInit {
   selBranchid: any = null;
   PreTravelBookingPatient: any = {};
   OrbitPatientID: any = "";
-  HCBookingSourceClass: string = "";
+  HCBookingSourceClass = "";
   gcCitiesList: any[];
-  HCCityClass: string = "";
+  HCCityClass = "";
   isDiscountFrombookingID: any = false;
   panelTypeFromBookingId: any;
   selVisit: any = "";
   panelIdFromVisitInfo: any;
   paneltypeFromVisitInfo: any;
-  isLockTPSection: boolean = false;
+  isLockTPSection = false;
   BookingNo: any = "";
   RefByFromVisitAssciate: any = "";
   outSourceHospitalPatData: any = [];
-  lockPatientTypeAndPanel: boolean = false;
+  lockPatientTypeAndPanel = false;
   BookingNoFromDB: any = false;
   VisitHomeSamplingTest: any = [];
   outsourceHospitals: any = [];
@@ -423,7 +423,7 @@ export class PatientRegistrationComponent implements OnInit {
   teleHospitalOrderNo: any;
   FBI: any = "";
   BookingNoFromDBVal: any = "";
-  isOrderRegForECLAllowed: boolean = true;
+  isOrderRegForECLAllowed = true;
   alertMesForAssociatedTP: any = "";
   alertMesForAssociatedTPurdu: any = "";
   techList: any = [];
@@ -433,15 +433,15 @@ export class PatientRegistrationComponent implements OnInit {
   SelhelpingStaffIDToAssign: any = null;
   SelTechIDToAssign: any = null;
   branchList: any = [];
-  enableRadioServicesActions: boolean = false;
+  enableRadioServicesActions = false;
   personalRelations: any = [];
   districts: any = [];
   tehsils: any = [];
   provinces: any = [];
   MobDeviceNotificationsList: any = [];
   commaSepDeviceNames: any = "";
-  FirstNameWarTxt: string = "";
-  isdenguerestrictions: number = 0;
+  FirstNameWarTxt = "";
+  isdenguerestrictions = 0;
   patientBasicInfoFormForDengueSubmitted: boolean;
   pertehsilsList: any = [];
   provinceDB: any = null;
@@ -453,37 +453,37 @@ export class PatientRegistrationComponent implements OnInit {
   selectedOlaDiscount: any = null;
   OlaDocB2bPanelID: any = "";
   OlaHospitalPatientID: any = "";
-  byPassReqPatientData: boolean = false;
+  byPassReqPatientData = false;
   patientData: any = [];
   selectedDob: string;
   curDate: string;
   RefByDocID: any = null;
   CMSRequestNo: string = null;
   isMetal: any = 0;
-  showFoloroConscentFormBtn: boolean = false;
-  isEligibleForInsurance: boolean = false;
-  InsuarncePolicyHelpContent: string = "";
+  showFoloroConscentFormBtn = false;
+  isEligibleForInsurance = false;
+  InsuarncePolicyHelpContent = "";
   isByPassInsuarancePolicy: any;
   InsuarancePolicyDetail: any = {};
-  showMediConscentFormBtn: boolean = false;
-  isshowprogressbar: boolean = true;
-  isEligibleForInsurancePanel: boolean = true;
+  showMediConscentFormBtn = false;
+  isshowprogressbar = true;
+  isEligibleForInsurancePanel = true;
   InsuranceActiveDate: any = null;
   InsuranceActive: any;
-  isEligibleForInsuranceActiveDate: boolean = true;
-  Insuranceshouldntoffer: boolean = false;
+  isEligibleForInsuranceActiveDate = true;
+  Insuranceshouldntoffer = false;
   PatientInsuranceID: any = null;
   InsuranceStatusID: any = 0;
   isUpgradePolicy: any = false;
-  isUpgradePolicyAllowed: boolean = false;
-  isReactivePolicyAllowed: boolean = false;
-  isReactivePolicy: boolean = false;
-  InsurancePolicyNotExpired: boolean = false;
+  isUpgradePolicyAllowed = false;
+  isReactivePolicyAllowed = false;
+  isReactivePolicy = false;
+  InsurancePolicyNotExpired = false;
   InsuranceWillingExpireDate: any;
   PanelType: any = 0;
   stickerText: string = null;
   noRecordMessage: string = null;
-  isLockTPOnly: boolean = false;
+  isLockTPOnly = false;
   AryPanelid: number = null;
   OnlinePaymentReferenceID: any = null;
   isurgentbooking: any = false;
@@ -981,7 +981,7 @@ export class PatientRegistrationComponent implements OnInit {
           // let isOlaDocPatient = this.getHospitalPatientByHospitalID(3);
           // console.log(isOlaDocPatient);
           // console.log("this allParams", allParams)
-          let plist = this.patientTypeList;
+          const plist = this.patientTypeList;
           this.patientTypeList = [];
           plist.forEach(a => { if (a.TypeId == 8) { a.disabled = false } });
           plist.forEach(a => { this.patientTypeList.push(a) });
@@ -1041,7 +1041,7 @@ export class PatientRegistrationComponent implements OnInit {
             this.addTestsFromBooking(allParamsTP)
           }, 2000);
 
-          let plist = this.patientTypeList;
+          const plist = this.patientTypeList;
           this.patientTypeList = [];
           plist.forEach(a => { if (a.TypeId == 8) { a.disabled = false } });
           plist.forEach(a => { this.patientTypeList.push(a) });
@@ -1078,7 +1078,7 @@ export class PatientRegistrationComponent implements OnInit {
           this.unLinkOrbitPatient('');
           this.resetPatientBasicInfoFields();
           let telePatient: any = atob(params.bookingInfoTelenore);
-          let teleOwner: any = atob(params.ownerInfoTele);
+          const teleOwner: any = atob(params.ownerInfoTele);
           telePatient = JSON.parse(telePatient);
           this.telenorePatientInfo = telePatient;
           this.telenorecardOwnerInfo = teleOwner;
@@ -1122,7 +1122,7 @@ export class PatientRegistrationComponent implements OnInit {
           this.patientBasicInfo.patchValue({
             B2BDoc: 0
           });
-          let plist = this.patientTypeList;
+          const plist = this.patientTypeList;
           this.patientTypeList = [];
           plist.forEach(a => { if (a.TypeId == 8) { a.disabled = true } });
           plist.forEach(a => { this.patientTypeList.push(a) });
@@ -1167,7 +1167,7 @@ export class PatientRegistrationComponent implements OnInit {
       this.patientBasicInforFormSubmitted = true;
       let valid = true;
       // return valid;
-      let maxLengthErrors = [];
+      const maxLengthErrors = [];
       Object.keys(this.patientBasicInfo.controls).forEach((a) => {
         // console.log(this.patientBasicInfo.controls[a].errors ? 'invalud' : 'valid')
         if (this.patientBasicInfo.controls[a].errors) {
@@ -1183,8 +1183,8 @@ export class PatientRegistrationComponent implements OnInit {
       }
 
       const dob: any = (this.patientBasicInfo.value as any).DateOfBirth;
-      let selectedDob1 = moment(new Date(dob?.year, dob?.month, dob?.day)).format();
-      let selectedDob = moment(new Date(`${dob?.month}-${dob?.day}-${dob?.year}`)).format();
+      const selectedDob1 = moment(new Date(dob?.year, dob?.month, dob?.day)).format();
+      const selectedDob = moment(new Date(`${dob?.month}-${dob?.day}-${dob?.year}`)).format();
       this.selectedDob = moment(new Date(`${dob?.month}-${dob?.day}-${dob?.year}`)).format('DD-MM-yyyy');
       this.curDate = moment(new Date()).format('DD-MM-yyyy');
       if (moment(new Date()).diff(moment(selectedDob)) < 0) {
@@ -1196,7 +1196,7 @@ export class PatientRegistrationComponent implements OnInit {
       //   this.toastr.warning('Please fill required fields');
       // }
       if (valid) {
-        let data: any = this.patientBasicInfo.getRawValue();
+        const data: any = this.patientBasicInfo.getRawValue();
         this.patientBasicInfoFormForCovid.patchValue({
           CNIC: data.CNIC || '',
           PassportNo: data.PassportNo || '',
@@ -1278,8 +1278,8 @@ export class PatientRegistrationComponent implements OnInit {
         return valid;
       }
 
-      let isCovidAntigen = this.getValidAddedTestsProfiles().filter(a => a.isCovidTestProfile).find(a => a.TPId == 2177);
-      let isCovidPCR = this.getValidAddedTestsProfiles().filter(a => a.isCovidTestProfile).find(a => a.TPId == 2153);
+      const isCovidAntigen = this.getValidAddedTestsProfiles().filter(a => a.isCovidTestProfile).find(a => a.TPId == 2177);
+      const isCovidPCR = this.getValidAddedTestsProfiles().filter(a => a.isCovidTestProfile).find(a => a.TPId == 2153);
       if ((this.getValidAddedTestsProfiles().find(a => a.isCovidTestProfile)) && !this.patientBasicInfoFormForCovidValid().valid) {
         // console.log('this.patientBasicInfoFormForCovidValid() ', this.patientBasicInfoFormForCovidValid());
         if (!this.isAirportLocation()) { //} && (isCovidAntigen || isCovidPCR)) {
@@ -1309,11 +1309,11 @@ export class PatientRegistrationComponent implements OnInit {
             || this.selectedPatientType === 1
             || this.selectedPatientType < 2
             || this.selectedPatientType === 8)) {
-          let dicsounts: number[] = [
+          const dicsounts: number[] = [
             this.B2BDocList.find(a => a.B2BDoctorID == this.patientBasicInfo.getRawValue().B2BDoc).Discount || 0, // this.selectedB2BDoctor.Discount || 0
             (this.selectedDiscountCard?.DiscountInPercent || 0)
           ];
-          let discountType = this.B2BDocList.find(a => a.B2BDoctorID == this.patientBasicInfo.getRawValue().B2BDoc).DiscountTypeID || 0;
+          const discountType = this.B2BDocList.find(a => a.B2BDoctorID == this.patientBasicInfo.getRawValue().B2BDoc).DiscountTypeID || 0;
           this.oldDiscountPercentage = this.discountPercentage;
 
           if (this.selectedOlaDiscount === null) {
@@ -1341,7 +1341,7 @@ export class PatientRegistrationComponent implements OnInit {
       return valid;
     };
 
-    let params = {
+    const params = {
       UserID: this.loggedInUser.userid
     }
 
@@ -1424,13 +1424,13 @@ export class PatientRegistrationComponent implements OnInit {
   ngAfterViewInit() {
     // console.log('ngAfterViewInit');
     this.video = this.videoElement.nativeElement;
-    let formVal = this.patientBasicInfo.value.dmy;
+    const formVal = this.patientBasicInfo.value.dmy;
     this.patientBasicInfo.get('DateOfBirth').valueChanges.subscribe(val => {
       // console.log('DateOfBirth subscribe ',  val);
       // console.log(val);
       // let selectedDob = new Date(val.year, val.month, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
-      let selectedDob = new Date(val.year, val.month - 1, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
-      let _ageObj = this.calculateAge(selectedDob);
+      const selectedDob = new Date(val.year, val.month - 1, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
+      const _ageObj = this.calculateAge(selectedDob);
       // console.log('_ageObj _ageObj _ageObj ', _ageObj);
       this.patientBasicInfo.patchValue({
         //Age: obj.years ? (obj.years + ' years') : obj.months ? (obj.months + ' months') : (obj.days + 'days')
@@ -1464,8 +1464,8 @@ export class PatientRegistrationComponent implements OnInit {
     // });
 
     this.patientBasicInfo.get('Salutation').valueChanges.subscribe((val: any) => {
-      let genderValue = this.patientBasicInfo.value.Gender;
-      let salutationForGender = this.salutationsList.filter(a => a.SalutationTitle == val).length ? this.salutationsList.filter(a => a.SalutationTitle == val)[0].ForGender : '';
+      const genderValue = this.patientBasicInfo.value.Gender;
+      const salutationForGender = this.salutationsList.filter(a => a.SalutationTitle == val).length ? this.salutationsList.filter(a => a.SalutationTitle == val)[0].ForGender : '';
       if (genderValue != salutationForGender && salutationForGender) {
         // setTimeout(() => {
         this.patientBasicInfo.patchValue({
@@ -1513,7 +1513,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getPanelIDForB2b() {
 
-    let params = {}
+    const params = {}
     this.shareSrv.getData(API_ROUTES.PANEL_IDS_FOR_OLA_B2B, params).subscribe((resp: any) => {
 
       if (resp.StatusCode = 200) {
@@ -1522,14 +1522,14 @@ export class PatientRegistrationComponent implements OnInit {
     }, (err) => { console.log(err) })
   }
   getHospitalPatientByHospitalID(hospitalID: number, mobileNo: string, isopenSearchPatientform: any) {
-    let params = {
+    const params = {
       HospitalID: hospitalID,
       MobileNo: mobileNo
     }
     this.shareSrv.getData(API_ROUTES.GET_HOSPITAL_PATIENT_BY_HOSPITALID, params).subscribe({
       next: (resp: any) => {
         if (resp && resp.PayLoadStr && resp.StatusCode == 200) {
-          let payloadArr = JSON.parse(resp.PayLoadStr);
+          const payloadArr = JSON.parse(resp.PayLoadStr);
           this.OlaDocPatients = payloadArr.Table ? JSON.parse(resp.PayLoadStr).Table : [];
           console.log("this.OlaDocPatients", this.OlaDocPatients);
           if (this.OlaDocPatients.length) {
@@ -1537,7 +1537,7 @@ export class PatientRegistrationComponent implements OnInit {
           }
           else {
             if (isopenSearchPatientform === 1) {
-              let form = this.patientBasicInfo.getRawValue();
+              const form = this.patientBasicInfo.getRawValue();
               this.searchPatientByPhoneNo(form.MobileNO);
             }
           }
@@ -1554,7 +1554,7 @@ export class PatientRegistrationComponent implements OnInit {
       return;
     }
     else {
-      let params = {
+      const params = {
         "PatientID": this.patientBasicInfo.value.PatientID
       }
       this.lookupService.getMobileDeviceTokensByPatientID(params).subscribe((resp: any) => {
@@ -1579,7 +1579,7 @@ export class PatientRegistrationComponent implements OnInit {
       })
     }
   }
-  operatorPrefixes: { [key: string]: number } = {
+  operatorPrefixes: Record<string, number> = {
     '0340': 1, '0341': 1, '0342': 1, '0343': 1, '0344': 1, '0345': 1, '0346': 1, '0347': 1, '0348': 1, '0349': 1, // Telenor
     // '0300': 2, '0301': 2, '0302': 2, '0303': 2, '0304': 2, '0305': 2, // Mobilink
     '0310': 3, '0311': 3, '0312': 3, '0313': 3, '0314': 3, '0315': 3, '0316': 3, '0317': 3, '0318': 3, '0319': 3,  // Zong
@@ -1591,7 +1591,7 @@ export class PatientRegistrationComponent implements OnInit {
     '0300': 2, '0301': 2, '0302': 2, '0303': 2, '0304': 2, '0305': 2, '0306': 2, '0307': 2, '0308': 2, '0309': 2 //jazz + mobilink
   };
   MobileChange(MobileNO) {
-    let form = this.patientBasicInfo.getRawValue();
+    const form = this.patientBasicInfo.getRawValue();
 
     const firstFourDigits = form.MobileNO.substring(0, 4);
     const operatorID = this.operatorPrefixes[firstFourDigits];
@@ -1636,7 +1636,7 @@ export class PatientRegistrationComponent implements OnInit {
       this.FirstNameWarTxt = "";
     }
     else {
-      let val = patientBasicInfo.controls.FirstName.value;
+      const val = patientBasicInfo.controls.FirstName.value;
       const lowerVal = val.toLowerCase();
       const invalidNames = ['muhammad', 'mehammad', 'mohammad', 'mohammad', 'muhamad', 'muhmmad', 'muhammad', 'muhamad', 'mohd'];
       if (invalidNames.includes(lowerVal)) {
@@ -1704,8 +1704,8 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getTehsilsByDistrictID() {
     this.tehsils = [];
-    let val = this.patientBasicInfoFormForDengue.getRawValue();
-    let params = {
+    const val = this.patientBasicInfoFormForDengue.getRawValue();
+    const params = {
       "DistrictID": val.DistrictID
     }
     this.lookupService.getTehsilsByDistrictID(params).subscribe((resp: any) => {
@@ -1718,8 +1718,8 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getTehsilsByPerDistrictID() {
     this.pertehsilsList = [];
-    let val = this.patientBasicInfoFormForDengue.getRawValue();
-    let params = {
+    const val = this.patientBasicInfoFormForDengue.getRawValue();
+    const params = {
       "DistrictID": val.Per_DistrictID
     }
     this.lookupService.getTehsilsByDistrictID(params).subscribe((resp: any) => {
@@ -1757,8 +1757,8 @@ export class PatientRegistrationComponent implements OnInit {
     }, (err) => { console.log("err", err) })
   }
   CheckHCTime(event) {
-    let SelHCDateTime = this.HCDateTime.year + "-" + this.HCDateTime.month + "-" + this.HCDateTime.day; + ' ' + this.HCtime.hour + ':' + this.HCtime.minute;
-    let outputDate = new Date(SelHCDateTime);
+    const SelHCDateTime = this.HCDateTime.year + "-" + this.HCDateTime.month + "-" + this.HCDateTime.day; + ' ' + this.HCtime.hour + ':' + this.HCtime.minute;
+    const outputDate = new Date(SelHCDateTime);
     console.log("outputDate", outputDate);
     event.hour || this.HCtime.hour ? outputDate.setHours(event.hour || this.HCtime.hour) : '';
     event.minute || this.HCtime.minute ? outputDate.setMinutes(event.minute || this.HCtime.minute) : '';
@@ -1793,7 +1793,7 @@ export class PatientRegistrationComponent implements OnInit {
       this.InvalidHCTime = true;
     }
     // this.RiderScheduleData = this.RiderScheduleData.filter(a => { console.log(new Date(a.HCDateTime).getDate()); return new Date(a.HCDateTime).getDate() == new Date(outputDate).getDate() });
-    let sametimeExist = this.RiderScheduleData.filter(a => { return new Date(a.HCDateTime).getTime() == outputDate.getTime() });
+    const sametimeExist = this.RiderScheduleData.filter(a => { return new Date(a.HCDateTime).getTime() == outputDate.getTime() });
     if (sametimeExist.length) {
       this.toastr.warning("Booking With Same Date Time Already Exist");
     }
@@ -1828,7 +1828,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   currentRoutePatch = null;
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissions = (this.storageService.getLoggedInUserProfilePermissions(_activatedroute) || []); // .filter(a=>a.state == _activatedroute);
     // this.screenPermissions.forEach(a=>{
     //   this.screenPermissionsObj[a.key] = a.key;
@@ -1878,7 +1878,7 @@ export class PatientRegistrationComponent implements OnInit {
 
   /*  start - camera */
   initCamera(config: any) {
-    var browser = <any>navigator;
+    const browser = navigator as any;
 
     browser.getUserMedia = (browser.getUserMedia ||
       browser.webkitGetUserMedia ||
@@ -1919,16 +1919,16 @@ export class PatientRegistrationComponent implements OnInit {
     this.canvas.nativeElement.getContext('2d').clearRect(0, 0, this.videoDimensions.width, this.videoDimensions.height);
   }
   capture() {
-    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
+    const context = this.canvas.nativeElement.getContext("2d").drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
     this.patientBasicInfo.patchValue({
       PatientPic: this.canvas.nativeElement.toDataURL("image/png")
     });
   }
   captureDocument() {
-    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
-    let imageURL = this.canvas.nativeElement.toDataURL("image/png");
-    let _fileName = 'capture_' + +new Date();
-    let _fileObject = {
+    const context = this.canvas.nativeElement.getContext("2d").drawImage(this.video, 0, 0, this.videoDimensions.width, this.videoDimensions.height);
+    const imageURL = this.canvas.nativeElement.toDataURL("image/png");
+    const _fileName = 'capture_' + +new Date();
+    const _fileObject = {
       uniqueIdentifier: (+new Date()),
       fileName: _fileName,
       fileType: 'image/png',
@@ -1956,7 +1956,7 @@ export class PatientRegistrationComponent implements OnInit {
     let count = 1;
     mediaDevices.forEach(mediaDevice => {
       if (mediaDevice.kind === 'videoinput') {
-        let obj = {
+        const obj = {
           id: mediaDevice.deviceId,
           name: mediaDevice.label || `Camera ${count++}`
         }
@@ -2000,8 +2000,8 @@ export class PatientRegistrationComponent implements OnInit {
       return;
     }
     this.paymentInforFormSubmitted = true;
-    let data = this.getFinalDataSet();
-    let paymentFormValidity: any = this.isPaymentFieldsValid();
+    const data = this.getFinalDataSet();
+    const paymentFormValidity: any = this.isPaymentFieldsValid();
     // console.log(paymentFormValidity);
     console.log("discount:", this.discountPercentage);
     if (!paymentFormValidity.valid) {
@@ -2009,7 +2009,7 @@ export class PatientRegistrationComponent implements OnInit {
       return;
     }
 
-    let intRemarksLen = (this.allRemarks.InternalRemarks || '').trim().length;
+    const intRemarksLen = (this.allRemarks.InternalRemarks || '').trim().length;
     if (
       ((this.discountPercentage && !this.discountFieldDisabled)
         || this.parseNumbericValues(this.patientVisitInfo.netAmount) - this.parseNumbericValues(this.getTotal(this.addedPaymentModes, 'amount')))
@@ -2022,11 +2022,11 @@ export class PatientRegistrationComponent implements OnInit {
       this.allRemarks.InternalRemarksClass = '';
     }
 
-    let fbrRequestData: any = this.formatDataForFBR(data);
+    const fbrRequestData: any = this.formatDataForFBR(data);
 
 
     data.testProfile.forEach(a => {
-      let t = fbrRequestData.Items.find(b => b.ItemCode == a.TPId);
+      const t = fbrRequestData.Items.find(b => b.ItemCode == a.TPId);
       if (t) {
         a.TaxRateFBR = t.TaxRate;
         a.SaleValueFBR = t.SaleValue;
@@ -2070,10 +2070,10 @@ export class PatientRegistrationComponent implements OnInit {
 
   }
   createVisitPost(data) {
-    let IsPrintMOConsent = this.selectedTestProfiles.filter(a => { return a.IsPrintMOConsent === true });
+    const IsPrintMOConsent = this.selectedTestProfiles.filter(a => { return a.IsPrintMOConsent === true });
 
-    let patientVisitInvoiceWinRef: any = this.openInvoiceWindow();
-    let patientRisMOConsentWinRef: any = null;
+    const patientVisitInvoiceWinRef: any = this.openInvoiceWindow();
+    const patientRisMOConsentWinRef: any = null;
     // if (ismoallowed.length)
     //   patientRisMOConsentWinRef = this.openRisMOConsentWindow();
     // patientVisitInvoiceWinRef.location = ''; // fix for iOS devices // https://stackoverflow.com/a/39387533 // window.open(url, '_blank'); not working on iMac/Safari
@@ -2235,7 +2235,7 @@ export class PatientRegistrationComponent implements OnInit {
               this.toastr.warning("Please Select Approving Authority");
             }
             else {
-              let params = this.getHCBookingFinalDataSet();
+              const params = this.getHCBookingFinalDataSet();
               this.spinner.show();
               this.hcService.bookHcPatient(params).subscribe((resp: any) => {
                 this.spinner.hide();
@@ -2286,7 +2286,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   saveQManagementTokenWithVisit(visitId) {
     visitId = (visitId || '').toString().replaceAll('-', '');
-    let params = {
+    const params = {
       visitId: visitId,
       tokenId: this.getParseQMgmtTokenForSaving(), // getParseQMgmtToken(),
       userId: this.loggedInUser.userid
@@ -2308,7 +2308,7 @@ export class PatientRegistrationComponent implements OnInit {
     window.open(url.toString(), '_blank');
   }
   openInvoiceWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank', 'width=900;height=100;');
+    const patientVisitInvoiceWinRef = window.open('', '_blank', 'width=900;height=100;');
     patientVisitInvoiceWinRef.opener = null;
     // create a new div element
     const heading = document.createElement("h1");
@@ -2322,7 +2322,7 @@ export class PatientRegistrationComponent implements OnInit {
     return patientVisitInvoiceWinRef;
   }
   openRisMOConsentWindow() {
-    let patientMOConsentWinRef = window.open('', '_blank', 'width=900;height=100;');
+    const patientMOConsentWinRef = window.open('', '_blank', 'width=900;height=100;');
     patientMOConsentWinRef.opener = null;
     // create a new div element
     const heading = document.createElement("h1");
@@ -2420,7 +2420,7 @@ export class PatientRegistrationComponent implements OnInit {
   getLookupsForRegistration() {
     this.lookupService.getLookupsForRegistration({ branchId: this.loggedInUser.locationid }).subscribe((res: any) => {
       if (res && res.PayLoadDS && Object.keys(res.PayLoadDS).length) {
-        let _responsees = res.PayLoadDS;
+        const _responsees = res.PayLoadDS;
         // try {
         //   _responsees = JSON.parse(_responsees);
         // } catch (ex) {}
@@ -2442,7 +2442,7 @@ export class PatientRegistrationComponent implements OnInit {
         this.salutationsList = _responsees.Table4 || [];
         //this.paymentModesList = _responsees.Table5 || []; // this.paymentModesList = this.paymentModesList.filter(a => a.ModeId != 5); this.selectedPaymentModeToAdd = this.paymentModesList.length ? this.paymentModesList[0] : {}; // this.addedPaymentModes.push(this.selectedPaymentModeToAdd);       
         // this.paymentModesList = [{ModeId: 2, Title: "Credit Card"}, {ModeId: 3, Title: "Cheque"}, {ModeId: 4, Title: "Demand Draft"}]; this.selectedPaymentModeToAdd = this.paymentModesList.length ? this.paymentModesList[0] : {};
-        let notAllowedPatientTypes = [6];
+        const notAllowedPatientTypes = [6];
         if (!this.route.snapshot.queryParams.p) {
           notAllowedPatientTypes.push(8);
         }
@@ -2470,7 +2470,7 @@ export class PatientRegistrationComponent implements OnInit {
     // this.spinner.show('GetBranches');
     this.lookupService.GetBranches().subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -2494,7 +2494,7 @@ export class PatientRegistrationComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       mobileCode: (mobileNo || this.patientBasicInfo.value.MobileNO || '')
     }
     if (params.mobileCode && params.mobileCode.length > 3) {
@@ -2618,7 +2618,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getMaritalStatus() {
     this.maritalStatusList = [];
-    let _params = {
+    const _params = {
     }
     this.lookupService.maritalStatus(_params).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -2636,7 +2636,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getTestProfileList(tpname) {
     this.testProfileList = [];
-    let _params = {
+    const _params = {
       tpids: null,
       code: (this.searchByCodeNameRadio == 'code' ? tpname : null),
       desc: (this.searchByCodeNameRadio == 'name' ? tpname : null),
@@ -2672,7 +2672,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getRefByDoctors() {
     this.refByDocList = [{ Name: 'Self', QRCodeNumber :''  }];
-    let _params = {};
+    const _params = {};
     this.spinner.show(this.spinnerRefs.refByDocField);
     this.lookupService.getRefByDoctors(_params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.refByDocField);
@@ -2717,7 +2717,7 @@ export class PatientRegistrationComponent implements OnInit {
       B2BDoc: 0
     });
     this.selectedB2BDoctor = null;
-    let _params = {
+    const _params = {
       // B2BDoctorID: b2bDoctorID
     };
     this.spinner.show(this.spinnerRefs.B2BDocField);
@@ -2741,7 +2741,7 @@ export class PatientRegistrationComponent implements OnInit {
 
   getRefByB2bDoctorsMapping(refId, b2bDocID) {
     if (b2bDocID || refId) {
-      let _params = {
+      const _params = {
         refId: refId,
         B2BDoctorID: b2bDocID
       };
@@ -2783,7 +2783,7 @@ export class PatientRegistrationComponent implements OnInit {
             this.refByDocList = [{ Name: 'Self', QRCodeNumber :''  }];
             // this.refByDocList = data; 
             data.map(a => {
-              let aa = { "Name": a.RefByDocName, "RefId": a.RefId, "QRCodeNumber": a.QRCodeNumber || '' }
+              const aa = { "Name": a.RefByDocName, "RefId": a.RefId, "QRCodeNumber": a.QRCodeNumber || '' }
               this.refByDocList.push(aa);
             })
             console.log("refByDocListrefByDocListrefByDocListrefByDocList", this.refByDocList);
@@ -2939,7 +2939,7 @@ export class PatientRegistrationComponent implements OnInit {
   getPanels() {
     this.panelsList = [];
     this.mainPanelsList = [];
-    let _params = {
+    const _params = {
       branchId: !this.btnAndViewPermissions.hcBookingBtn ? this.loggedInUser.locationid : null
     }
     if (!this.loggedInUser.locationid) {
@@ -2967,7 +2967,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getApprovingAuthoritiesByDiscount() {
     try {
-      let dis = Number(this.discountPercentage);
+      const dis = Number(this.discountPercentage);
       if (dis > this.discountMaxValue) {
         this.discountPercentage = this.discountMaxValue;
       }
@@ -2975,7 +2975,7 @@ export class PatientRegistrationComponent implements OnInit {
     this.discountApprovingAuthorityList = [];
     if (!this.discountPercentage)
       this.selectedApprovAuth = 0;
-    let _params = {
+    const _params = {
       discountPercentage: this.discountPercentage || ''
     }
     this.lookupService.getApprovingAuthoritiesByDiscount(_params).subscribe((res: any) => {
@@ -3040,7 +3040,7 @@ export class PatientRegistrationComponent implements OnInit {
       return;
     }
     this.spinner.show(this.spinnerRefs.searchEmployee);
-    let params = {
+    const params = {
       PatientId: event.PatientId || null
     };
     this.lookupService.GetFreeTestApprovalDependents(params).subscribe((res: any) => {
@@ -3060,7 +3060,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getAirlines() {
     this.airlinesList = [];
-    let params = {
+    const params = {
       panelId: this.selectedPanel || ''
     };
     this.lookupService.getAirlines(params).subscribe((res: any) => {
@@ -3079,7 +3079,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getAirports() {
     this.airportsList = [];
-    let params = {};
+    const params = {};
     this.lookupService.getAirports(params).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -3096,7 +3096,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   getVaccines() {
     this.vaccinesList = [];
-    let params = {};
+    const params = {};
     this.lookupService.getVaccines(params).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -3117,7 +3117,7 @@ export class PatientRegistrationComponent implements OnInit {
     if (!patientId) {
       return;
     }
-    let params = {
+    const params = {
       patientId: patientId // this.patientBasicInfo.get('PatientID').value;
     }
     this.spinner.show(this.spinnerRefs.discountCards);
@@ -3138,11 +3138,11 @@ export class PatientRegistrationComponent implements OnInit {
   }
   /* end -lookups */
   getDosageList() {
-    let vaccID = this.patientVaccineDetails.value.VaccineID;
+    const vaccID = this.patientVaccineDetails.value.VaccineID;
     console.log(vaccID);
-    let objSelectedVacc = this.vaccinesList.find(o => o.VaccineID === vaccID);
+    const objSelectedVacc = this.vaccinesList.find(o => o.VaccineID === vaccID);
     if (objSelectedVacc) {
-      let vaccDosageReq = objSelectedVacc.DoseRequired;
+      const vaccDosageReq = objSelectedVacc.DoseRequired;
       if (vaccDosageReq === 2) {
         this.vaccinesDosageList = [{ id: 1, name: 'Dose 1' }, { id: 2, name: 'Dose 2' }];
       }
@@ -3171,10 +3171,10 @@ export class PatientRegistrationComponent implements OnInit {
     // let params = JSON.parse(JSON.stringify(this.patientBasicInfo.value));
     // params.Email = params.Emails || params.Email || '';
 
-    let patientInfo = this.patientBasicInfo.getRawValue(); //  this.patientBasicInfo.value;
-    let totalCalculatedDiscount = 0;
-    let formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
+    const patientInfo = this.patientBasicInfo.getRawValue(); //  this.patientBasicInfo.value;
+    const totalCalculatedDiscount = 0;
+    const formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
 
 
     let _patImg = null;
@@ -3184,7 +3184,7 @@ export class PatientRegistrationComponent implements OnInit {
       } catch (e) { }
     }
 
-    let patientObj = {
+    const patientObj = {
       PatientId: patientInfo.PatientID || null,
       Title: patientInfo.Salutation,
       ISalutationID: ((this.salutationsList.find(a => a.SalutationTitle == patientInfo.Salutation) || {}).SalutationID || 0),
@@ -3226,7 +3226,7 @@ export class PatientRegistrationComponent implements OnInit {
       });
     }
 
-    let valid = this.isPatientBasicInfoFormValid(0);
+    const valid = this.isPatientBasicInfoFormValid(0);
     if (valid) {
       // console.log('valid');
       // params.PatientVaccineNo = +new Date();
@@ -3268,7 +3268,7 @@ export class PatientRegistrationComponent implements OnInit {
     this.patientBasicInfoFormForCovidSubmitted = false;
     this.patientBasicInfoForCovidPopupRef = this.appPopupService.openModal(this.patientBasicInfoForCovidPopup);
 
-    let covidDetails = this.patientBasicInfo.value;
+    const covidDetails = this.patientBasicInfo.value;
     this.patientBasicInfoFormForCovid.patchValue({
       CNIC: covidDetails.CNIC,
       PassportNo: covidDetails.PassportNo,
@@ -3287,8 +3287,8 @@ export class PatientRegistrationComponent implements OnInit {
   openPatientBasicInfoFormForDenguePopup() {
     this.patientBasicInfoFormForDengueSubmitted = false;
     this.patientBasicInfoForDenguePopupRef = this.appPopupService.openModal(this.patientBasicInfoForDenguePopup);
-    let covidDetails = this.patientBasicInfo.value;
-    let dengue = this.patientBasicInfoFormForDengue.value;
+    const covidDetails = this.patientBasicInfo.value;
+    const dengue = this.patientBasicInfoFormForDengue.value;
     this.patientBasicInfoFormForDengue.patchValue({
       CNIC: covidDetails.CNIC,
       PassportNo: covidDetails.PassportNo,
@@ -3307,12 +3307,12 @@ export class PatientRegistrationComponent implements OnInit {
   savePatientBasicInfoFormForCovidPopup() {
     console.log(this.patientBasicInfoFormForCovid);
     this.patientBasicInfoFormForCovidSubmitted = true;
-    let covidFormValidity = this.patientBasicInfoFormForCovidValid();
+    const covidFormValidity = this.patientBasicInfoFormForCovidValid();
     if (!covidFormValidity.valid) { // this.patientBasicInfoFormForCovid.valid) {
       this.toastr.warning('<b>' + covidFormValidity.invalidFields.join('</b>, <b>') + '</b>', 'Invalid Fields', { enableHtml: true });
       return;
     }
-    let covidDetails = this.patientBasicInfoFormForCovid.getRawValue();
+    const covidDetails = this.patientBasicInfoFormForCovid.getRawValue();
     this.patientBasicInfo.patchValue({
       CNIC: covidDetails.CNIC,
       PassportNo: covidDetails.PassportNo,
@@ -3338,12 +3338,12 @@ export class PatientRegistrationComponent implements OnInit {
   savePatientBasicInfoFormForDenguePopup() {
     console.log(this.patientBasicInfoFormForDengue);
     this.patientBasicInfoFormForDengueSubmitted = true;
-    let covidFormValidity = this.patientBasicInfoFormForDengueValid();
+    const covidFormValidity = this.patientBasicInfoFormForDengueValid();
     if (!covidFormValidity.valid) { // this.patientBasicInfoFormForCovid.valid) {
       this.toastr.warning('<b>' + covidFormValidity.invalidFields.join('</b>, <b>') + '</b>', 'Invalid Fields', { enableHtml: true });
       return;
     }
-    let covidDetails = this.patientBasicInfoFormForDengue.getRawValue();
+    const covidDetails = this.patientBasicInfoFormForDengue.getRawValue();
     this.patientBasicInfo.patchValue({
       CNIC: covidDetails.CNIC,
       PassportNo: covidDetails.PassportNo,
@@ -3384,13 +3384,13 @@ export class PatientRegistrationComponent implements OnInit {
     });
   }
   patientBasicInfoFormForCovidValid() {
-    let validityObj = {
+    const validityObj = {
       valid: false,
       invalidFields: [],
       message: ''
     }
-    let covidFormControls = this.patientBasicInfoFormForCovid.controls;
-    let covidFormControlsValues = this.patientBasicInfoFormForCovid.getRawValue();
+    const covidFormControls = this.patientBasicInfoFormForCovid.controls;
+    const covidFormControlsValues = this.patientBasicInfoFormForCovid.getRawValue();
     console.log(covidFormControlsValues);
     console.log(covidFormControls);
     /*
@@ -3484,7 +3484,7 @@ export class PatientRegistrationComponent implements OnInit {
     // return this.patientBasicInfoFormForCovid.valid;
   }
   patientBasicInfoFormForDengueValid() {
-    let validityObj = {
+    const validityObj = {
       valid: false,
       invalidFields: [],
       message: ''
@@ -3492,8 +3492,8 @@ export class PatientRegistrationComponent implements OnInit {
     if (this.provinceDB != 2 && this.provinceDB != 1) {
       this.logProvinceNotPunjabInfo(this.loggedInUser.provinceID);
     }
-    let covidFormControls = this.patientBasicInfoFormForDengue.controls;
-    let covidFormControlsValues = this.patientBasicInfoFormForDengue.getRawValue();
+    const covidFormControls = this.patientBasicInfoFormForDengue.controls;
+    const covidFormControlsValues = this.patientBasicInfoFormForDengue.getRawValue();
     console.log(covidFormControlsValues);
     console.log(covidFormControls);
     /*
@@ -3614,9 +3614,9 @@ export class PatientRegistrationComponent implements OnInit {
     // { year: 1789, month: 7, day: 14 },
     // this.resetPatientFlightDetailsPopup();
     if (this.PreTravelBookingPatient && this.PreTravelBookingPatient.FlightNo) {
-      let flightdate = this.PreTravelBookingPatient.FlightDate.split('T');
+      const flightdate = this.PreTravelBookingPatient.FlightDate.split('T');
       console.log("flightdate", flightdate);
-      let patientData = this.patientBasicInfo.getRawValue();
+      const patientData = this.patientBasicInfo.getRawValue();
       this.patientFlightDetails.patchValue({
         PassportNo: patientData.PassportNo || '' || this.PreTravelBookingPatient.PassportNo,
         AirlineId: this.PreTravelBookingPatient.AirlineID,
@@ -3627,7 +3627,7 @@ export class PatientRegistrationComponent implements OnInit {
       });
     }
     else if (this.patientFlightDetails) {
-      let patientData = this.patientBasicInfo.getRawValue();
+      const patientData = this.patientBasicInfo.getRawValue();
       this.patientFlightDetails.patchValue({
         PassportNo: patientData.PassportNo || '',
 
@@ -3657,7 +3657,7 @@ export class PatientRegistrationComponent implements OnInit {
   checkElligiblePatientForPolicy(orbitPatientID) {
     this.isUpgradePolicyAllowed = false;
     this.InsuranceActiveDate = null
-    let params = {
+    const params = {
       "PatientID": orbitPatientID
     }
     this.shareSrv.getData(API_ROUTES.INSURANCE_DETAIL_BYPID, params).subscribe((resp: any) => {
@@ -3760,7 +3760,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
 
   updatePolicyWilingStatus() {
-    let params = {
+    const params = {
       "PatientID": this.patientBasicInfo.getRawValue().PatientID,
       "CreatedBy": this.loggedInUser.userid,
       "InsuranceStatusID": this.isPatientWilling == true ? 1 : 0
@@ -3778,12 +3778,12 @@ export class PatientRegistrationComponent implements OnInit {
   savePatientFlightDetailsPopup() {
     console.log(this.patientFlightDetails);
     this.patientFlightDetailsFormSubmitted = true;
-    let flightDetailsFormValidity = this.patientFlightDetailsValid();
+    const flightDetailsFormValidity = this.patientFlightDetailsValid();
     if (!flightDetailsFormValidity.valid) { // this.patientBasicInfoFormForCovid.valid) {
       this.toastr.warning('<b>' + flightDetailsFormValidity.invalidFields.join('</b>, <b>') + '</b>', 'Invalid Fields', { enableHtml: true });
       return;
     }
-    let _flightDetails = this.patientFlightDetails.getRawValue();
+    const _flightDetails = this.patientFlightDetails.getRawValue();
     console.log(_flightDetails);
     // this.patientFlightDetails.patchValue({
     //   VisitId: null,
@@ -3823,7 +3823,7 @@ export class PatientRegistrationComponent implements OnInit {
     });
   }
   patientFlightDetailsValid() {
-    let validityObj = {
+    const validityObj = {
       valid: false,
       invalidFields: [],
       message: ''
@@ -3904,8 +3904,8 @@ export class PatientRegistrationComponent implements OnInit {
   }
   openAssignRiderPopup() {
     this.RidersDetail();
-    let isradio = this.selectedTestProfiles.find(a => { return a.IsHCRadioSrv === true });
-    let ismoallowed = this.selectedTestProfiles.find(a => { return a.IsMOAllowed === true });
+    const isradio = this.selectedTestProfiles.find(a => { return a.IsHCRadioSrv === true });
+    const ismoallowed = this.selectedTestProfiles.find(a => { return a.IsMOAllowed === true });
     if (isradio) {
       this.enableRadioServicesActions = true;
     }
@@ -3932,7 +3932,7 @@ export class PatientRegistrationComponent implements OnInit {
     this.SelRider.selRiderID = Riderdata.RiderID;
     this.SelRider.selRiderName = Riderdata.RiderFirstName + ' ' + Riderdata.RiderLastName;
     this.SelRider.selRiderContactNumber = Riderdata.ReferenceContactNo;
-    let params = {
+    const params = {
       "RiderID": Riderdata.RiderID
     }
     this.HCMService.GetRiderScheduleByRiderID(params).subscribe((resp: any) => {
@@ -3956,13 +3956,13 @@ export class PatientRegistrationComponent implements OnInit {
     }, (err) => { console.log(err); this.toastr.error("something went wrong ") })
   }
   RidersDetail() {
-    let params = {
+    const params = {
       RiderID: 0,
       LocID: this.selBranchid
     }
     this.HCMService.GetRiders(params).subscribe((resp: any) => {
       this.RidersDetailList = resp.PayLoad;
-      let aa = this.RidersDetailList.filter(a => { return a.RiderStatusID == 1 }); console.log(aa);
+      const aa = this.RidersDetailList.filter(a => { return a.RiderStatusID == 1 }); console.log(aa);
       if (!this.selBranchid) {
         this.techList = this.RidersDetailList.filter(a => { return a.HCUserTypeID == 2 });
         this.HelpingStaffList = this.RidersDetailList.filter(a => { return a.HCUserTypeID == 3 });
@@ -3977,7 +3977,7 @@ export class PatientRegistrationComponent implements OnInit {
       this.toastr.warning('Please enter all fields');
       return;
     }
-    let _vaccineDetails = this.patientVaccineDetails.getRawValue();
+    const _vaccineDetails = this.patientVaccineDetails.getRawValue();
     console.log(_vaccineDetails);
     this.patientVaccineDetailsPopupRef.close();
   }
@@ -3994,11 +3994,11 @@ export class PatientRegistrationComponent implements OnInit {
     });
   }
   patientVaccineDetailsValid() {
-    let invalidFields = [];
+    const invalidFields = [];
     console.log('this.patientVaccineDetails.value ', this.patientVaccineDetails.value);
     console.log('this.patientVaccineDetails.controls ', this.patientVaccineDetails.controls);
 
-    let fieldsToValidate = Object.keys(this.patientVaccineDetails.controls);
+    const fieldsToValidate = Object.keys(this.patientVaccineDetails.controls);
     fieldsToValidate.forEach((a, i) => {
       if (Object.keys(this.patientVaccineDetails.controls).includes(a)) {
         if (!this.patientVaccineDetails.controls[a].value) {
@@ -4018,7 +4018,7 @@ export class PatientRegistrationComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.BookingNo = bookingNo;
       // this.resetPatientBasicInfoFields();
-      let patientSearchParams = {
+      const patientSearchParams = {
         BookingID: (bookingNo || '').trim(),
         BranchID: this.loggedInUser.locationid
       }
@@ -4159,7 +4159,7 @@ export class PatientRegistrationComponent implements OnInit {
   isOutsource = false;
   searchOutSourcePatients(allParams) {
 
-    let params = {
+    const params = {
       "HospitalPatientID": allParams.HospitalPatientID,
       "BranchID": this.loggedInUser.locationid
     }
@@ -4174,7 +4174,7 @@ export class PatientRegistrationComponent implements OnInit {
         }
         if (fullDataSet && fullDataSet.Table && fullDataSet.Table.length) {
           this.outHospitalID = fullDataSet.Table[0].HospitalID;
-          let orderNumber = fullDataSet.Table[0].HospitalOrderNo;
+          const orderNumber = fullDataSet.Table[0].HospitalOrderNo;
 
           if (this.outHospitalID === 1) {
             this.getVisitsAgainstOrderNumbers(orderNumber);
@@ -4308,7 +4308,7 @@ export class PatientRegistrationComponent implements OnInit {
 
 
     // this.resetPatientBasicInfoFields();
-    let patientSearchParams = {
+    const patientSearchParams = {
       BookingID: (bookingNo || '').trim(),
       BranchID: this.loggedInUser.locationid
     }
@@ -4420,7 +4420,7 @@ export class PatientRegistrationComponent implements OnInit {
 
   closeOlaDocPopup() {
     this.appPopupService.closeModal(this.OlaDocPopupRef);
-    let form = this.patientBasicInfo.getRawValue();
+    const form = this.patientBasicInfo.getRawValue();
     if (!this.OrbitPatientID)
       this.searchPatientByPhoneNo(form.MobileNO);
   }
@@ -4452,7 +4452,7 @@ export class PatientRegistrationComponent implements OnInit {
     this.selectedOlaDiscount = patient.Discount;
     this.getRefByB2bDoctorsMapping(null, this.OlaDocB2bPanelID)
     this.appPopupService.closeModal();
-    let form = this.patientBasicInfo.getRawValue();
+    const form = this.patientBasicInfo.getRawValue();
 
     //  this.populatePatientFields(patient); 
 
@@ -4486,7 +4486,7 @@ export class PatientRegistrationComponent implements OnInit {
       PatientPic: ''
     });
     // patientId = 65201868;
-    let patientSearchParams = {
+    const patientSearchParams = {
       PatientID: patientId,
     }
     if (patientSearchParams.PatientID) {
@@ -4539,7 +4539,7 @@ export class PatientRegistrationComponent implements OnInit {
     this.selectedRecentVisit = null;
     this.recentRegistrations = [];
     this.appPopupService.openModal(this.recentRegistrationsPopup);
-    let params = {
+    const params = {
       userId: userId || this.loggedInUser.userid,
     }
     if (params.userId) {
@@ -4586,8 +4586,8 @@ export class PatientRegistrationComponent implements OnInit {
       // console.log(res);
       if (res && res.StatusCode == 200) {
         if (res.PayLoad && res.PayLoad.length) {
-          let _patPic = (res.PayLoad[0].Pic || '');
-          let _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
+          const _patPic = (res.PayLoad[0].Pic || '');
+          const _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
           if (_formattedPic) {
             this.resizeImage('', this.resizePatientProfilePic.width, this.resizePatientProfilePic.height, 0, '', _formattedPic).then((res: string) => {
               this.patientBasicInfo.patchValue({
@@ -4608,7 +4608,7 @@ export class PatientRegistrationComponent implements OnInit {
 
   }
   searchPatientByPhoneNo(mobileNO) {
-    let patientSearchParams = {
+    const patientSearchParams = {
       MobileNO: mobileNO,
     }
     if (patientSearchParams.MobileNO) {
@@ -4681,7 +4681,7 @@ export class PatientRegistrationComponent implements OnInit {
   }
   pendingTPIds: number[] = [];
   selectedEmployeeRequestId: number = null;
-  isVoucherVerifiedArea: boolean = true;
+  isVoucherVerifiedArea = true;
 employeeDependentForBookingSelectedEvent(dep) {
   console.log(dep);
   this.pendingTPIds = [];
@@ -4713,7 +4713,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   
   controlFieldsForEmployee(disable) {
-    let patinfo = this.patientBasicInfo.getRawValue();
+    const patinfo = this.patientBasicInfo.getRawValue();
     this.discountMaxValue = 100;
     if (!this.urlBookingID && !patinfo.BookingPatientID)
       this.patientBasicInfoDisabled = disable ? true : null;
@@ -4764,16 +4764,16 @@ employeeDependentForBookingSelectedEvent(dep) {
     //   pvNo: ""
     // }
     this.OrbitPatientID = data.OrbitPatientID || data.PatientID;
-    let _patPic = (data.OrbitPatientPic || data.PatientPic || '');
-    let _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
-    let _formattedDob = { day: moment(data.DateOfBirth).get('date'), month: (moment(data.DateOfBirth).get('month') + 1), year: moment(data.DateOfBirth).get('year') };
+    const _patPic = (data.OrbitPatientPic || data.PatientPic || '');
+    const _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
+    const _formattedDob = { day: moment(data.DateOfBirth).get('date'), month: (moment(data.DateOfBirth).get('month') + 1), year: moment(data.DateOfBirth).get('year') };
     // console.log('populatePatientFields ', _formattedDob);
     data.MobileOperatorID = (data.MobileOperatorID || '') == -1 ? '' : (data.MobileOperatorID || '');
     this.cd.detectChanges();
 
     if (data.PanelID) {
       this.selectedPatientType = 2
-      let TID = {
+      const TID = {
         TypeId: 2
       }
       // this.getTestProfileList('');
@@ -4901,7 +4901,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
     this.reApplyPermissions();
 
-    let form = this.patientBasicInfo.getRawValue();
+    const form = this.patientBasicInfo.getRawValue();
 
     if (!this.OlaDocPatients.length && form.MobileNO) {
       if (this.OlaDocB2bPanelID != "") {
@@ -4913,7 +4913,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   getSalutationByTitle(salutation) {
     if (isNaN(salutation || 0)) {
-      let selectedSalutation = this.salutationsList.filter(a => {
+      const selectedSalutation = this.salutationsList.filter(a => {
         return a.SalutationTitle == salutation;
       });
       if (selectedSalutation && selectedSalutation.length) {
@@ -4926,7 +4926,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   getSalutationById(salutationId) {
     let salutation = salutationId;
-    let selectedSalutation = this.salutationsList.filter(a => {
+    const selectedSalutation = this.salutationsList.filter(a => {
       return a.SalutationID == salutationId;
     });
     if (selectedSalutation && selectedSalutation.length) {
@@ -4963,7 +4963,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
 
   checkSalutaion() {
-    let patientData = this.patientBasicInfo.getRawValue();
+    const patientData = this.patientBasicInfo.getRawValue();
     console.log("patientData.Salutation ", patientData.Salutation);
     if (patientData.Salutation === 'Other') {
       this.byPassReqPatientData = true
@@ -5002,7 +5002,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     return new Promise((resolve, reject) => {
 
       testsData.forEach(element => {
-        let tp = this.testProfileList.find(a => a.TPId == element.TPID);
+        const tp = this.testProfileList.find(a => a.TPId == element.TPID);
         // if(tp) {
         //   tp = JSON.parse(JSON.stringify(tp));
         //   tp.ProcessId = 1;
@@ -5010,7 +5010,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         // }
         if (tp) {
           if (!this.selectedTestProfiles.find(a => a.TPId == tp.TPId)) {
-            let aa = JSON.parse(JSON.stringify(tp));
+            const aa = JSON.parse(JSON.stringify(tp));
             aa.ProcessId = 1;
             this.selectedTestProfiles.push(aa);
             resolve(this.selectedTestProfiles)
@@ -5121,13 +5121,13 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
   }
   loadImage(file, fileName = 'file') {
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
-        let _fileName = file.name || '';
+        const imageURL = reader.result as string;
+        const _fileName = file.name || '';
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
           fileType: file.type || '',
@@ -5178,7 +5178,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
 
     try {
-      var browser = <any>navigator;
+      const browser = navigator as any;
       browser.getUserMedia = (browser.getUserMedia ||
         browser.webkitGetUserMedia ||
         browser.mozGetUserMedia ||
@@ -5216,7 +5216,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = '', base64Data = '') {
     const self = this;
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       if (!file && !base64Data) {
         resolve('');
       }
@@ -5227,7 +5227,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       let blob = null;
 
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_' + +new Date();
+      const canvas_id = 'hiddenCanvas_' + +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;
@@ -5322,7 +5322,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
 
   getVisitAttachmentsData() {
-    let docs = [];
+    const docs = [];
     /*
     public class DocumentsModelForVisit
     {
@@ -5356,7 +5356,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     return docs;
   }
   hcBookingAttachments() {
-    let attachments = [];
+    const attachments = [];
     if (this.visitAttachments.length) {
       this.visitAttachments.forEach(a => {
         attachments.push({
@@ -5375,8 +5375,8 @@ employeeDependentForBookingSelectedEvent(dep) {
     let InsuranceStatusID = null;
     let PatientInsuranceID = this.PatientInsuranceID;
     let InsurancePolicyID = this.InsuarancePolicyDetail.InsurancePolicyID;
-    let isOfferExpire = this.InsuranceActive ? this.InsuranceActive.isOfferExpire : null
-    let isReactivePolicy = this.isReactivePolicy === true ? "true" : "false";
+    const isOfferExpire = this.InsuranceActive ? this.InsuranceActive.isOfferExpire : null
+    const isReactivePolicy = this.isReactivePolicy === true ? "true" : "false";
     if (this.patientVisitInfo.netAmount >= this.InsuarancePolicyDetail.ActiveOnPaidAmount) {
       if (this.isUpgradePolicyAllowed) {
         InsuranceStatusID = 6
@@ -5404,7 +5404,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       InsurancePolicyID = null
       // isOfferExpire = null
     }
-    let patientInfo = this.patientBasicInfo.getRawValue();
+    const patientInfo = this.patientBasicInfo.getRawValue();
     if (patientInfo.BookingPatientID && this.BookingNoFromDB !== patientInfo.BookingPatientID) {
       this.toastr.error("Your booking id is not valid, Please contact home collection department asap");
       return;
@@ -5421,9 +5421,9 @@ employeeDependentForBookingSelectedEvent(dep) {
     //   totalCalculatedDiscount += _discountedValue;
     // })
     // let formattedDob = moment(new Date(`${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}-${patientInfo.DateOfBirth.year}`)).format();
-    let formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
-    let patientObj = {
+    const formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const _branchId = this.loggedInUser.locationid; //patientInfo.BranchID || this.loggedInUser.locationid || 0;
+    const patientObj = {
       PatientId: patientInfo.PatientID || this.OrbitPatientID || null,
       Title: patientInfo.Salutation,
       ISalutationID: ((this.salutationsList.find(a => a.SalutationTitle == patientInfo.Salutation) || {}).SalutationID || 0),
@@ -5462,15 +5462,15 @@ employeeDependentForBookingSelectedEvent(dep) {
       EmergencyContactRelation: patientInfo.EmergencyContactRelation || '',
       */
     }
-    let testProfileArr = [];
-    let ecltestProfileArr = [];
-    let telenoretestProfileArr = [];
+    const testProfileArr = [];
+    const ecltestProfileArr = [];
+    const telenoretestProfileArr = [];
 
     this.getValidAddedTestsProfiles().forEach((a, i) => {
       let _discountedValue = a.IsDiscountable && this.discountPercentage ? (((a.TestProfilePrice || 0) * this.discountPercentage) / 100) : 0;
       _discountedValue = Math.round(_discountedValue);
       totalCalculatedDiscount += _discountedValue;
-      let testProfileObj = {
+      const testProfileObj = {
         PacslinkSectionName: a.ModalityCode,
         SubSectionID: a.SubSectionID,
         VisitId: null,
@@ -5626,7 +5626,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       }
     }
 
-    let ecltestProfileArrObj = {
+    const ecltestProfileArrObj = {
       "Orders": [{
         HospitalMRNo: this.outSourceHospitalPatData.length && this.outSourceHospitalPatData[0].HospitalMRNo ? this.outSourceHospitalPatData[0].HospitalMRNo : null,
         HospitalOrderNo: this.outSourceHospitalPatData.length && this.outSourceHospitalPatData[0].HospitalOrderNo ? this.outSourceHospitalPatData[0].HospitalOrderNo : null,
@@ -5646,9 +5646,9 @@ employeeDependentForBookingSelectedEvent(dep) {
       totalCalculatedDiscount = this.patientVisitInfo.grossAmount;
     }
     */
-    var ismob = this.detectMob();
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
-    let visitObj = {
+    const ismob = this.detectMob();
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const visitObj = {
       VisitID: null,
       PatientID: patientInfo.PatientID || null,
       // VisitNo: this.patientVisitInfo.visitNo,
@@ -5685,8 +5685,8 @@ employeeDependentForBookingSelectedEvent(dep) {
       */
     }
 
-    let paymentArr = []; // git branches testing
-    let payObj = {
+    const paymentArr = []; // git branches testing
+    const payObj = {
       VisitID: null,
       Amount: 0,
       ModeId: 0,
@@ -5701,7 +5701,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
     let redeemingRewardPoints = 0;
     this.addedPaymentModes.forEach(a => {
-      let _payObj = JSON.parse(JSON.stringify(payObj));
+      const _payObj = JSON.parse(JSON.stringify(payObj));
       _payObj.Amount = this.parseNumbericValues(a.amount || 0);
       _payObj.ModeId = a.ModeId || 0;
       _payObj.InstNo = a.InstOwner || null,
@@ -5729,7 +5729,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
     */
 
-    let filesData = this.getVisitAttachmentsData();
+    const filesData = this.getVisitAttachmentsData();
     /**/
     // paymentArr = paymentArr.filter( a => a.PaidAmount); // remove credit or cash entry if amount is zero
     if (!paymentArr.length) { //} && !this.selectedPanel) {
@@ -5742,7 +5742,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     //   }
     // }
 
-    let _flightDetails = this.patientFlightDetails.getRawValue();
+    const _flightDetails = this.patientFlightDetails.getRawValue();
     console.log(_flightDetails);
     let formattedFlightDate = null;
     if (_flightDetails.FlightDate) {
@@ -5769,7 +5769,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       } catch (e) { }
     }
 
-    let _patVaccineDetails = this.patientVaccineDetails.value;
+    const _patVaccineDetails = this.patientVaccineDetails.value;
 
     let patVaccineDetails = [];
     if (_patVaccineDetails.VaccineID > 0) {
@@ -5779,10 +5779,10 @@ employeeDependentForBookingSelectedEvent(dep) {
         formattedVaccineDate = `${_patVaccineDetails.VaccineDate.year}-${_patVaccineDetails.VaccineDate.month}-${_patVaccineDetails.VaccineDate.day}`
       }
 
-      let objSelectedVacc = this.vaccinesList.find(o => o.VaccineID == _patVaccineDetails.VaccineID);
+      const objSelectedVacc = this.vaccinesList.find(o => o.VaccineID == _patVaccineDetails.VaccineID);
       if (objSelectedVacc) {
         _VaccinationStatus = 100;
-        let vaccDosageReq = objSelectedVacc.DoseRequired;
+        const vaccDosageReq = objSelectedVacc.DoseRequired;
         console.log("dose req:", vaccDosageReq, objSelectedVacc);
         if (vaccDosageReq == 1 && _patVaccineDetails.Dosage == 1) {
           _VaccinationStatus = 2;
@@ -5810,16 +5810,16 @@ employeeDependentForBookingSelectedEvent(dep) {
       regModule = '2';
     }
 
-    let userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
+    const userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
     userWithoutPic.pic = '';
-    let details = {
+    const details = {
       appVersion: CONSTANTS.APP_VERSION,
       webDeskVersion: this.auth.getWebDeskVersionFromStorage(),
       user: userWithoutPic
     };
-    let mobNoti = [];
+    const mobNoti = [];
     this.MobDeviceNotificationsList.map(a => {
-      let obj = {
+      const obj = {
         MobileDeviceNotificationID: a.MobileDeviceNotificationID,
         DeviceToken: a.DeviceToken,
         Title: a.Title,
@@ -5850,7 +5850,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         // ]
       }
     }
-    let AryCookieValue = this.getCookie("arytokendata");
+    const AryCookieValue = this.getCookie("arytokendata");
     let parsedValue = null;
     if (AryCookieValue) {
       try {
@@ -5862,9 +5862,9 @@ employeeDependentForBookingSelectedEvent(dep) {
         console.error("Invalid cookie JSON:", e);
       }
     }
-    let preTravelnfo = this.patientBasicInfoFormForCovid.getRawValue();
-    let denguelnfo = this.patientBasicInfoFormForDengue.getRawValue();
-    let RegistrationModel = {
+    const preTravelnfo = this.patientBasicInfoFormForCovid.getRawValue();
+    const denguelnfo = this.patientBasicInfoFormForDengue.getRawValue();
+    const RegistrationModel = {
       // FBRInvoiceNo: '',
       DiscountPerc: this.discountPercentage,
       RadiologistID: this.RadiologistID,
@@ -5928,10 +5928,10 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   getHCBookingFinalDataSet() {
     let totalCalculatedDiscount = 0;
-    let testProfileArr = [];
-    var testProfileArrr = {};
-    var testProfileObj = {};
-    let filesData = this.hcBookingAttachments();
+    const testProfileArr = [];
+    let testProfileArrr = {};
+    const testProfileObj = {};
+    const filesData = this.hcBookingAttachments();
 
     this.getValidAddedTestsProfiles().forEach(a => {
       let _discountedValue = a.IsDiscountable && this.discountPercentage ? (((a.TestProfilePrice || 0) * this.discountPercentage) / 100) : 0;
@@ -5962,15 +5962,15 @@ employeeDependentForBookingSelectedEvent(dep) {
 
 
     // testProfileArrr = testProfileArr;
-    let patientInfo = this.patientBasicInfo.getRawValue();
-    let preTravelnfo = this.patientBasicInfoFormForCovid.getRawValue();
-    let formattedDob = patientInfo.DateOfBirth.year + "-" + patientInfo.DateOfBirth.month + "-" + patientInfo.DateOfBirth.day;//`${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let formattedHCdDateTime = this.HCDateTime.year + "-" + this.HCDateTime.month + "-" + this.HCDateTime.day + ' ' + this.HCtime.hour + ':' + this.HCtime.minute;//`${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
-    let OnlineBookedTPNames = this.selectedTestProfiles.map(a => { return a.TestProfileCodeDesc }).join(',');
-    let radiosrv = this.selectedTestProfiles.find(a => { return a.IsHCRadioSrv }) ? 1 : 0;
+    const patientInfo = this.patientBasicInfo.getRawValue();
+    const preTravelnfo = this.patientBasicInfoFormForCovid.getRawValue();
+    const formattedDob = patientInfo.DateOfBirth.year + "-" + patientInfo.DateOfBirth.month + "-" + patientInfo.DateOfBirth.day;//`${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const formattedHCdDateTime = this.HCDateTime.year + "-" + this.HCDateTime.month + "-" + this.HCDateTime.day + ' ' + this.HCtime.hour + ':' + this.HCtime.minute;//`${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const OnlineBookedTPNames = this.selectedTestProfiles.map(a => { return a.TestProfileCodeDesc }).join(',');
+    const radiosrv = this.selectedTestProfiles.find(a => { return a.IsHCRadioSrv }) ? 1 : 0;
     console.log("radiosrv");
     console.log("this.linkdedPatient", this.linkdedPatient);
-    let PatientData = {
+    const PatientData = {
       FirstName: patientInfo.FirstName, //Conversions.capitalizeFirstLetter(patientInfo.FirstName || ''),
       LastName: patientInfo.LastName, //Conversions.capitalizeFirstLetter(patientInfo.LastName || ''),
       DateOfBirth: formattedDob,
@@ -6043,7 +6043,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   }
   openConscentForm() {
-    let styleSheet = `
+    const styleSheet = `
       <style>
         body {
           width: 21cm;
@@ -6132,18 +6132,18 @@ employeeDependentForBookingSelectedEvent(dep) {
         }
       </style>`;
 
-    let printedByText = `${this.loggedInUser.username || ''} @ ${moment(new Date()).format('DD-MMM-YYYY HH:mm:ss')}`;
-    let header = `<div class="header-area">
+    const printedByText = `${this.loggedInUser.username || ''} @ ${moment(new Date()).format('DD-MMM-YYYY HH:mm:ss')}`;
+    const header = `<div class="header-area">
                       <div class="branch-name"><span class="label">Islamabad Diagnostic Centre (Pvt Ltd</span></div>
                         <div class="report-name"><span class="label">Consent & Case report form for Novel Coronavirus COVID-19</span></div>
                         </div>`;
-    let footer = `<div class="divFooter printed-by-area">${printedByText}</div>`;
+    const footer = `<div class="divFooter printed-by-area">${printedByText}</div>`;
 
     setTimeout(() => {
       let data = ConscentForms.covid.airlinesOath; // general;
 
       if (this.selectedPanel) {
-        let panelConscent = ConscentForms.covid[this.selectedPanel];
+        const panelConscent = ConscentForms.covid[this.selectedPanel];
         if (panelConscent) {
           data += '<div class="pagebreak"> </div>';
           data += panelConscent;
@@ -6189,8 +6189,8 @@ employeeDependentForBookingSelectedEvent(dep) {
       // });
 
 
-      let patData = this.patientBasicInfo.getRawValue();
-      let flightData = this.patientFlightDetails.getRawValue();
+      const patData = this.patientBasicInfo.getRawValue();
+      const flightData = this.patientFlightDetails.getRawValue();
       let flightDate = "";
       if (flightData.FlightDate && flightData.FlightDate.day && flightData.FlightDate.month && flightData.FlightDate.year) {
         flightDate = moment(new Date(`${flightData.FlightDate.month}-${flightData.FlightDate.day}-${flightData.FlightDate.year}`)).format('DD-MMM-YYYY');
@@ -6213,7 +6213,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       data = this.helperSrv.replaceAll(data, '[PATIENT_EMAIL]', patData.Emails);
       data = this.helperSrv.replaceAll(data, '[PATIENT_VISIT_DATE]', moment().format('DD-MMM-YYYY HH:mm'));
       // CNIC
-      let cnic = (patData.CNIC || '').toString().padEnd(13, ' ').split('');
+      const cnic = (patData.CNIC || '').toString().padEnd(13, ' ').split('');
       cnic.forEach((digit, idx) => {
         // data = data.replace('[PATIENT_CNIC_'+idx+']', digit);
         data = this.helperSrv.replaceAll(data, '[PATIENT_CNIC_' + idx + ']', digit);
@@ -6247,7 +6247,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       data = this.helperSrv.replaceAll(data, '[PATIENT_SAMPLE_COLLECTION_LOC]', '');
       //BookingReferenceNo
 
-      let customWindow = window.open('Covid Registration Conscent Form1', 'Covid Registration Conscent Form1' + +new Date());
+      const customWindow = window.open('Covid Registration Conscent Form1', 'Covid Registration Conscent Form1' + +new Date());
       customWindow.document.write('<html><head>' + styleSheet + '');
       customWindow.document.write('</head><body>');
       // customWindow.document.write('<h3>' + header + '</h3>');
@@ -6263,7 +6263,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
 
   openFloroConsentForm() {
-    let styleSheet = `
+    const styleSheet = `
      <style>
        body {
             font-family: Arial, sans-serif;
@@ -6311,7 +6311,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
 
 
-    let data = ` <!-- Header Section -->
+    const data = ` <!-- Header Section -->
     <table class="header-table">
         <tr>
             <th>Name</th>
@@ -6368,13 +6368,13 @@ employeeDependentForBookingSelectedEvent(dep) {
     </div>
  `;
 
-    let customWindow = window.open('', '_blank', 'width=800,height=600');
+    const customWindow = window.open('', '_blank', 'width=800,height=600');
     customWindow.document.write(`<html><head>${styleSheet}</head><body>${data}</body></html>`);
     customWindow.document.close();
     customWindow.print();
   }
   openMediConsentForm() {
-    let styleSheet = `
+    const styleSheet = `
     <style>   body {
                         font-family: Arial, sans-serif;
                         margin: 20px;
@@ -6410,7 +6410,7 @@ employeeDependentForBookingSelectedEvent(dep) {
                 </style>
     `;
 
-    let data = `
+    const data = `
     <h1>IV/Oral Medication/Cannulation Consent Form</h1>
                 <p>
                     I do hereby consent for the IV medications as advised by the physician's prescription. I understand that
@@ -6428,7 +6428,7 @@ employeeDependentForBookingSelectedEvent(dep) {
                 </div>
     `;
 
-    let customWindow = window.open('', '_blank', 'width=800,height=600');
+    const customWindow = window.open('', '_blank', 'width=800,height=600');
     customWindow.document.write(`<html><head>${styleSheet}</head><body>${data}</body></html>`);
     customWindow.document.close();
     customWindow.print();
@@ -6437,12 +6437,12 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   addNewPaymentMethod() {
 
-    let _selPayMod = this.selectedPaymentModeToAdd;
+    const _selPayMod = this.selectedPaymentModeToAdd;
     if (!_selPayMod || !_selPayMod.ModeId) {
       return;
     }
     _selPayMod.uniqueId = +new Date();
-    let _payMod = this.addedPaymentModes.find(a => a.uniqueId == _selPayMod.uniqueId);
+    const _payMod = this.addedPaymentModes.find(a => a.uniqueId == _selPayMod.uniqueId);
     if (!_payMod || _selPayMod.ModeId == 2) {
       // this.connectToCCMachine();
       // this.addedPaymentModes = this.addedPaymentModes.filter( a => a.amount); // 
@@ -6467,7 +6467,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
   }
   connectToCCMachine() {
-    let obj = {
+    const obj = {
       user: this.loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -6515,7 +6515,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   discountValueChanged() {
     this.selectedApprovAuth = 0;
     try {
-      let dis = Number(this.discountPercentage);
+      const dis = Number(this.discountPercentage);
       if (dis > this.discountMaxValue) {
         this.discountPercentage = this.discountMaxValue;
       }
@@ -6529,7 +6529,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       this.recalculateAmountsVoucher();
       return
     }
-    let testProfileCost = this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice');
+    const testProfileCost = this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice');
 
     let totalCalculatedDiscount = 0;
     this.nonDiscountableTests = [];
@@ -6543,11 +6543,11 @@ employeeDependentForBookingSelectedEvent(dep) {
       totalCalculatedDiscount += _discountedValue;
     })
 
-    let _discountedValue = this.parseNumbericValues(totalCalculatedDiscount); // this.parseNumbericValues((testProfileCost * this.discountPercentage) / 100);
+    const _discountedValue = this.parseNumbericValues(totalCalculatedDiscount); // this.parseNumbericValues((testProfileCost * this.discountPercentage) / 100);
     this.discountedCharges = this.parseNumbericValues((testProfileCost - _discountedValue));
     this.patientVisitInfo.discount = this.parseNumbericValues(_discountedValue);
 
-    let _payInfo = {
+    const _payInfo = {
       grossAmount: this.parseNumbericValues(Number(testProfileCost)),
       netAmount: this.parseNumbericValues(Number(testProfileCost - this.patientVisitInfo.discount))
     }
@@ -6578,7 +6578,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   currencyNoteReceivedChanged() {
     this.currencyNoteChangeAmount = this.parseNumbericValues(this.currencyNoteReceived);
-    let cashMode = this.addedPaymentModes.find(a => a.ModeId == 1);
+    const cashMode = this.addedPaymentModes.find(a => a.ModeId == 1);
     if (cashMode) {
       // console.log(this.currencyNoteReceived, this.currencyNoteChangeAmount, cashMode, '   1111  ',  this.parseNumbericValues(this.currencyNoteReceiveda) - this.parseNumbericValues(cashMode.amount));
       this.currencyNoteChangeAmount = this.parseNumbericValues(this.currencyNoteReceived) - this.parseNumbericValues(cashMode.amount);
@@ -6603,7 +6603,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         paymentMode.amount = availableRewardPoints;
       }
     }
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
     // console.log('paymentModesValueUpdated ', totalAmountByPaymentModes, this.patientVisitInfo.netAmount, totalAmountByPaymentModes > this.patientVisitInfo.netAmount);
     if (totalAmountByPaymentModes > this.patientVisitInfo.netAmount) {
       this.toastr.warning('Amount is exceeded than bill amount');
@@ -6784,7 +6784,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       }
     }
 
-    let MaxHealthPanels = [
+    const MaxHealthPanels = [
       '1721', //"MAX-IDCAFG"
       '487',  //"MAX10P"
       '488', //"MAX20P"
@@ -6856,7 +6856,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
       // setTimeout(() => {
       // let disAllowedToPanel = (this.panelsList.find(a => a.PanelId == e.PanelId) || { MaxDiscount: 0 }).MaxDiscount || 0;
-      let disAllowedToPanel = this.panelsList.length > 0
+      const disAllowedToPanel = this.panelsList.length > 0
         ? (this.panelsList.find(a => a.PanelId == e.PanelId)?.MaxDiscount ?? 0)
         : this.discountMaxValue;
       this.discountMaxValue = disAllowedToPanel; // (this.panelsList.find(a => a.PanelId == e.PanelId) || {MaxDiscount: 100}).MaxDiscount || 100;
@@ -6919,7 +6919,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   GetARYToken() {
     this.spinner.show();
-    let params = {
+    const params = {
       BranchCode: this.loggedInUser.currentLocation,
       CreatedBy: this.loggedInUser.userid || 0
     };
@@ -6930,7 +6930,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
         if (resp?.Status === true && resp?.ResponseCode === "200") {
           try {
-            let tokenData = JSON.parse(resp.ResponseDescription);
+            const tokenData = JSON.parse(resp.ResponseDescription);
 
             if (tokenData?.Token && tokenData?.TokenKey) {
               // this.toastr.success("Token generated successfully.");
@@ -6978,7 +6978,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     this.spinner.show();
     this.selectedTestProfiles = []
 
-    let cookieValue = this.getCookie("arytokendata");
+    const cookieValue = this.getCookie("arytokendata");
     let parsedValue = null;
     if (cookieValue) {
       try {
@@ -6992,7 +6992,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
 
 
-    let params = {
+    const params = {
       "PhoneNumber": this.patientBasicInfo.getRawValue().MobileNO.replace(/^0/, '92'), //"923331666981"
       "CreatedBy": this.loggedInUser.userid || 0,
       "ARYToken": parsedValue.Token,//cookieARYValue.tokenData.Token,
@@ -7044,7 +7044,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   //create ARY Customer
   createARYSahoolatCustomer() {
     //here
-    let cookieValue = this.getCookie("arytokendata");
+    const cookieValue = this.getCookie("arytokendata");
     let parsedValue = null;
     if (cookieValue) {
       try {
@@ -7056,7 +7056,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         console.error("Invalid cookie JSON:", e);
       }
     }
-    let params = {
+    const params = {
       CellNo: this.patientBasicInfo.getRawValue().MobileNO ? this.patientBasicInfo.getRawValue().MobileNO.replace(/^0/, '92') : this.patientBasicInfo.getRawValue().PhoneNO.replace(/^0/, '92'),
       City: "Islamabad",
       CNICNo: this.patientBasicInfo.getRawValue().CNIC || "",  // Valid CNIC format
@@ -7130,11 +7130,11 @@ employeeDependentForBookingSelectedEvent(dep) {
     console.log('sdfsfd ', e);
   }
   isWhatsapCheckChange() {
-    let WhatsapNo = this.patientBasicInfo.getRawValue().WhatsapNo;
-    let isWhatsapNumber = this.patientBasicInfo.getRawValue().isWhatsapNumber;
+    const WhatsapNo = this.patientBasicInfo.getRawValue().WhatsapNo;
+    const isWhatsapNumber = this.patientBasicInfo.getRawValue().isWhatsapNumber;
 
     if (isWhatsapNumber && WhatsapNo === '') {
-      let mobileno = this.patientBasicInfo.getRawValue().MobileNO;
+      const mobileno = this.patientBasicInfo.getRawValue().MobileNO;
       this.patientBasicInfo.patchValue({
         WhatsapNo: mobileno
       })
@@ -7183,7 +7183,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     //   this.toastr.warning('Packages are removed, Please select them again.');
     // })
     // don't include Package parameters
-    let tpIds = this.selectedTestProfiles.filter(a => !a.forPkg).map(a => a.TPId).join(',').trim();
+    const tpIds = this.selectedTestProfiles.filter(a => !a.forPkg).map(a => a.TPId).join(',').trim();
     if (!tpIds) {
       return;
     }
@@ -7194,7 +7194,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     if (panel && panel.PanelId) {
       panelId = panel.PanelId
     }
-    let _params = {
+    const _params = {
       tpids: tpIds,
       code: null,
       desc: null,
@@ -7241,7 +7241,7 @@ employeeDependentForBookingSelectedEvent(dep) {
           // let pkg  = this.selectedTestProfiles.find(b => ((b.TPId == a.TPId || b.TPId == a.forPkg) && b.TypeId == 3));
           // let pkgTests  = this.selectedTestProfiles.filter(b => b.forPkg == a.TPId);
 
-          let matchedPkg = resp.find(b => b.TPId == a.TPId || b.TPId == a.forPkg);
+          const matchedPkg = resp.find(b => b.TPId == a.TPId || b.TPId == a.forPkg);
           if (matchedPkg) {
             a.TaxRate = matchedPkg.TaxRate || 0;
             if (a.TypeId == 3) {
@@ -7261,7 +7261,7 @@ employeeDependentForBookingSelectedEvent(dep) {
           //   this.selectedTestProfiles.filter(c => c.TypeId == 3 && c.TPId == a.TPId)
           // }
         } else { // For Tests and Profiles
-          let matched = resp.find(b => b.TPId == a.TPId); // || b.TPId == a.forPkg
+          const matched = resp.find(b => b.TPId == a.TPId); // || b.TPId == a.forPkg
           if (matched) {
             a.TestProfilePrice = matched.TestProfilePrice || 0;
             a.TaxRate = matched.TaxRate || 0;
@@ -7312,7 +7312,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   */
   selectEventngbTP(event, eventType) {
     // event && event.item 
-    let selectedObj = (event && event.item ? event.item : '');
+    const selectedObj = (event && event.item ? event.item : '');
     if (selectedObj.SubSectionID == 18) {
       // || selectedObj.SubSectionID == 7 || selectedObj.SubSectionID == 47
       this.appPopupService.openModal(this.isMetalPopup);
@@ -7322,7 +7322,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       console.log(selectedObj);
       // getVisitHomeCollectionTest
       if (this.VisitHomeSamplingTest.length) {
-        let IsVisitHomeSampleTest = this.VisitHomeSamplingTest.filter(a => { return a.TPId == selectedObj.TPId })
+        const IsVisitHomeSampleTest = this.VisitHomeSamplingTest.filter(a => { return a.TPId == selectedObj.TPId })
         // if (selectedObj.TPId == 709 || selectedObj.TPId == 2142 || selectedObj.TPId == 2157) {
         if (IsVisitHomeSampleTest.length) {
           this.toastr.error("You Are Not Allowed To Add This Test, Please Contact Home Sample Collection Department");
@@ -7361,7 +7361,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         }
         // ==========================================================
 
-        let _params = {
+        const _params = {
           packageId: selectedObj.TPId,
           branchId: this.loggedInUser.locationid,
           panelId: (this.selectedPanel || '') // this.selectedPanel ? this.selectedPanel.PaselectEventngbTPnelId : '' //this.patientBasicInfo.value.corporateClientID || '',
@@ -7441,10 +7441,10 @@ employeeDependentForBookingSelectedEvent(dep) {
       }
       
       if (!this.selectedTestProfiles.find(a => a.TPId == selectedObj.TPId)) {
-        let aa = JSON.parse(JSON.stringify(selectedObj));
+        const aa = JSON.parse(JSON.stringify(selectedObj));
         aa.ProcessId = this.outSourceHospitalPatData.length && this.outSourceHospitalPatData[0].PatientType == 'ER' ? 2 : 1;
         if (this.outHospitalID !== null && this.outHospitalID != 0) {
-          let mc = this.testProfileList.find(a => { if (a.TPId == aa.TPId) { return a.ModalityCode } })
+          const mc = this.testProfileList.find(a => { if (a.TPId == aa.TPId) { return a.ModalityCode } })
           aa.ModalityCode = aa.ModalityCode ? mc.ModalityCode : null;
         }
         this.selectedTestProfiles.push(aa);
@@ -7453,7 +7453,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         console.log("this.isRadiologyTest", this.isRadiologyTest);
         console.log("Updated", this.selectedTestProfiles);
         if (aa.TypeId == 1 || aa.TypeId == 3) {
-          let profilesIds = this.selectedTestProfiles.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
+          const profilesIds = this.selectedTestProfiles.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
           this.checkIfTestAlreadyAddedInProfile(profilesIds);
         } else if (aa.TypeId == 2) {
           this.checkIfTestAlreadyAddedInProfile(aa.TPId);
@@ -7461,7 +7461,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         // this.outSourceHospitalTPData 
 
         if (selectedObj.AssociatedTPIDs) {
-          let comm = selectedObj.AssociatedTPIDs.split(',');
+          const comm = selectedObj.AssociatedTPIDs.split(',');
           try {
             comm.forEach(a => {
               if (!this.selectedTestProfiles.find(c => c.TPId == a)) {
@@ -7474,7 +7474,7 @@ employeeDependentForBookingSelectedEvent(dep) {
                     else {
                       this.selectedTestProfiles.push(b);
                       if (b.TypeId == 1 || b.TypeId == 3) {
-                        let profilesIds = this.selectedTestProfiles.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
+                        const profilesIds = this.selectedTestProfiles.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
                         this.checkIfTestAlreadyAddedInProfile(profilesIds);
                       } else if (b.TypeId == 2) {
                         this.checkIfTestAlreadyAddedInProfile(b.TPId);
@@ -7510,16 +7510,16 @@ employeeDependentForBookingSelectedEvent(dep) {
     }, 100);
   }
   checkIfTestAlreadyAddedInProfile(profileIds) {
-    let _profileIds = profileIds;
+    const _profileIds = profileIds;
     if (!_profileIds) {
       return;
     }
-    let params = {
+    const params = {
       profileIds: _profileIds
     }
     this.tpService.getTestsByProfileId(params).subscribe((res: any) => {
       if (res.StatusCode == 200 && res.PayLoad) {
-        let testsAlreadyInProfile = [];
+        const testsAlreadyInProfile = [];
         this.selectedTestProfiles.filter(a => a.TypeId == 1).forEach(a => {
           if (res.PayLoad.find(b => b.TestId == a.TPId)) {
             testsAlreadyInProfile.push(a);
@@ -7544,12 +7544,12 @@ employeeDependentForBookingSelectedEvent(dep) {
     if (targetIDs.includes(tp.SubSectionID.toString())) {
       // Show warning if the condition is met
       // this.toastr.warning('${{TestProfileName}} is not a profile');
-      let TestProfileCode = tp.TestProfileCode;
-      let TestProfileName = tp.TestProfileName;
+      const TestProfileCode = tp.TestProfileCode;
+      const TestProfileName = tp.TestProfileName;
       this.tpParametersForPopover = [{ Code: TestProfileCode, Name: TestProfileName }];
       return;
     }
-    let params = {
+    const params = {
       TPId: tp.TPId
     }
     this.tpParametersForPopover = [{ Code: 'Loading...', Name: '' }];
@@ -7613,7 +7613,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   checkIfRevomedTestIsHCTest(selTpData) {
     // selectedObj.TPId == 709 || selectedObj.TPId == 2142 || selectedObj.TPId == 2157
     let found = false;
-    let IsVisitHomeSampleTest = this.VisitHomeSamplingTest.filter(a => { return a.TPId == selTpData.TPId })
+    const IsVisitHomeSampleTest = this.VisitHomeSamplingTest.filter(a => { return a.TPId == selTpData.TPId })
     // if (selectedObj.TPId == 709 || selectedObj.TPId == 2142 || selectedObj.TPId == 2157) {
     if (IsVisitHomeSampleTest.length)
       return found = true;
@@ -7629,7 +7629,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     } else {
       this.showConscentFormBtn = false;
     }
-    let isfloro = this.selectedTestProfiles.filter(a => {
+    const isfloro = this.selectedTestProfiles.filter(a => {
       return a.SubSectionID == 36
     });
     // && a.TPId !== 923 && a.TPId !== 915 && a.TPId !== 431
@@ -7637,10 +7637,10 @@ employeeDependentForBookingSelectedEvent(dep) {
     //     && a.TPId !== 417
     //     && a.TPId !== 450 && a.TPId !== 451
     //     && a.TPId !== 920 && a.TPId !== 383 && a.TPId !== 2327
-    let tpid = this.selectedTestProfiles.filter(a => {
+    const tpid = this.selectedTestProfiles.filter(a => {
       return a.TPId == 919
     })
-    let tpidMedi = this.selectedTestProfiles.filter(a => {
+    const tpidMedi = this.selectedTestProfiles.filter(a => {
       return a.TPId == 2541
     })
     if (isfloro.length && !tpid.length) {
@@ -7705,7 +7705,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       });
     }
     else {
-      let _calculatedDob = this.calculateDOB(value, this.patientBasicInfo.value.dmy);
+      const _calculatedDob = this.calculateDOB(value, this.patientBasicInfo.value.dmy);
       this.patientBasicInfo.patchValue({
         DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
       });
@@ -7718,7 +7718,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         Age: 1
       });
     }
-    let _calculatedDob = this.calculateDOB(this.patientBasicInfo.value.Age, value);
+    const _calculatedDob = this.calculateDOB(this.patientBasicInfo.value.Age, value);
     this.patientBasicInfo.patchValue({
       DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
     });
@@ -7796,9 +7796,9 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
 
   isPaymentFieldsValid() {
-    let result = { valid: false, code: '', message: '' };
-    let minReceivableAmount = Math.round((this.minimumReceivablePercentage.dynamic * this.parseNumbericValues(this.patientVisitInfo.netAmount)) / 100);
-    let totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
+    const result = { valid: false, code: '', message: '' };
+    const minReceivableAmount = Math.round((this.minimumReceivablePercentage.dynamic * this.parseNumbericValues(this.patientVisitInfo.netAmount)) / 100);
+    const totalAmountByPaymentModes = this.addedPaymentModes.map(a => this.parseNumbericValues(a.amount)).reduce((a, b) => a + b, 0);
     if (totalAmountByPaymentModes < minReceivableAmount) {
       result.valid = false;
       result.message = `Please Receive minimum amount of Rs: "${minReceivableAmount}"`;
@@ -7808,8 +7808,8 @@ employeeDependentForBookingSelectedEvent(dep) {
       result.message = '';
     }
 
-    let creditCardEntry: any = this.addedPaymentModes.find(a => a.ModeId == 2);
-    let JazzCashEntry: any = this.addedPaymentModes.find(a => a.ModeId == 8);
+    const creditCardEntry: any = this.addedPaymentModes.find(a => a.ModeId == 2);
+    const JazzCashEntry: any = this.addedPaymentModes.find(a => a.ModeId == 8);
     if (creditCardEntry && this.parseNumbericValues(creditCardEntry.amount) > 0 && (!creditCardEntry.CCNo || !creditCardEntry.CCTNo)) {
       result.valid = false;
       result.message = 'Please enter "Credit Card No" and "Slip No"';
@@ -7843,7 +7843,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
     let _panelType = 0
     if (this.selectedPanel) { // don't add payments for Credit Panel
-      let _selectedPanel = this.panelsList.find(a => a.PanelId == this.selectedPanel) || {};
+      const _selectedPanel = this.panelsList.find(a => a.PanelId == this.selectedPanel) || {};
       _panelType = _selectedPanel.PanelType || 0;
     }
     console.log(this.selectedPanel, _panelType);
@@ -7889,8 +7889,8 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   printFTFCertificate(param) {
     setTimeout(() => {
-      let data = document.getElementById(param).innerHTML;
-      let documentWindow = window.open();
+      const data = document.getElementById(param).innerHTML;
+      const documentWindow = window.open();
       documentWindow.document.write(`
       <html>
         <head>
@@ -7961,16 +7961,16 @@ employeeDependentForBookingSelectedEvent(dep) {
     // var ageDate = new Date(ageDifMs); // miliseconds from epoch
     // return Math.abs(ageDate.getUTCFullYear() - 1970);
 
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
-    let formVal = this.patientBasicInfo.getRawValue();
+    const formVal = this.patientBasicInfo.getRawValue();
 
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
@@ -7979,7 +7979,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       // if(obj.months >= 12) {obj.months = 0; obj.years = 1}
     }
     else if (diffDays == 0 && formVal.dmy == '3') {
-      let _calculatedDob = this.calculateDOB(1, this.patientBasicInfo.value.dmy);
+      const _calculatedDob = this.calculateDOB(1, this.patientBasicInfo.value.dmy);
       obj.years = Math.floor(1);
       this.patientBasicInfo.patchValue({
         DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
@@ -7989,7 +7989,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       obj.months = Math.floor(1);
     }
     else if (diffDays == 0 && formVal.dmy == '1') {
-      let _calculatedDob = this.calculateDOB(1, this.patientBasicInfo.value.dmy);
+      const _calculatedDob = this.calculateDOB(1, this.patientBasicInfo.value.dmy);
       obj.days = Math.floor(1);
       this.patientBasicInfo.patchValue({
         DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
@@ -8021,7 +8021,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     } else if (dmy == '3') {
       dob = moment(dob).subtract(number, 'years')
     }
-    let calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
+    const calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
     /*
     this.patientBasicInfo.patchValue({
       DateOfBirth: calculatedDob, // moment(dob).format(this.dateFormat)
@@ -8053,13 +8053,13 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   isAirline() {
     // console.log('isAirline ', this.selectedPanel && this.panelsList.find(a => a.PanelId == this.selectedPanel).isAirLine)
-    let isAirline = this.panelsList.length ? this.panelsList && this.selectedPanel && this.panelsList.find(a => a.PanelId == this.selectedPanel).isAirLine : '';
+    const isAirline = this.panelsList.length ? this.panelsList && this.selectedPanel && this.panelsList.find(a => a.PanelId == this.selectedPanel).isAirLine : '';
     this._isAirline = isAirline;
     return isAirline;
   }
   isEmbassy() {
     // console.log('isEmbassy ', this.selectedPanel && this.panelsList.find(a => a.PanelId == this.selectedPanel).isEmbassy)
-    let isEmbassy = this.panelsList.length ? this.panelsList && this.selectedPanel && this.panelsList.find(a => a.PanelId == this.selectedPanel).isEmbassy : '';
+    const isEmbassy = this.panelsList.length ? this.panelsList && this.selectedPanel && this.panelsList.find(a => a.PanelId == this.selectedPanel).isEmbassy : '';
     this._isEmbassy = isEmbassy;
     return isEmbassy;
   }
@@ -8109,7 +8109,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         });
         break;
     }
-    let intRemarksLen = (this.allRemarks.InternalRemarks || '').trim().length;
+    const intRemarksLen = (this.allRemarks.InternalRemarks || '').trim().length;
     if (
       ((this.discountPercentage && !this.discountFieldDisabled)
         || this.parseNumbericValues(this.patientVisitInfo.netAmount) - this.parseNumbericValues(this.getTotal(this.addedPaymentModes, 'amount')))
@@ -8125,7 +8125,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = {
+    const _settings = {
       ...{
         // relativeTo: this.route,
         replaceUrl: true,
@@ -8188,11 +8188,11 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   /* start - FBR - function */
   formatDataForFBR(data) {
-    let testsData = data.testProfile || [];
-    let paymentData = data.payment || [];
-    let visitData = data.visit.length ? data.visit[0] : {};
+    const testsData = data.testProfile || [];
+    const paymentData = data.payment || [];
+    const visitData = data.visit.length ? data.visit[0] : {};
     let paymentModeSelected = 1;
-    let fbrPaymentModes = {
+    const fbrPaymentModes = {
       cash: 1, // Cash
       card: 2, // Card
       giftVoucher: 3, // Gift Voucher
@@ -8232,7 +8232,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
       if (this.selectedPanel) { // use Check as payment mode for Credit Panel
         let _panelType = 0
-        let _selectedPanel = this.panelsList.find(a => a.PanelId == this.selectedPanel) || {};
+        const _selectedPanel = this.panelsList.find(a => a.PanelId == this.selectedPanel) || {};
         _panelType = _selectedPanel.PanelType || 0;
         if (_panelType == 2) {
           paymentModeSelected = fbrPaymentModes.cheque;
@@ -8254,7 +8254,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     if (this.getValidAddedTestsProfiles() && this.getValidAddedTestsProfiles().length) {
       taxRate = (this.getValidAddedTestsProfiles()[0].TaxRate || 0);
     }
-    let valueWithAndWithoutTax = this.helperSrv.calculateTaxValue(((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice')) || 0) - (visitData.AdjAmount || 0), taxRate);
+    const valueWithAndWithoutTax = this.helperSrv.calculateTaxValue(((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice')) || 0) - (visitData.AdjAmount || 0), taxRate);
     //new code commented// let valueWithAndWithoutTax = this.helperSrv.calculateTaxValue(((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice')) || 0), taxRate);
     // let totalBillAmount = (this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) + calculatedTax;
     // let totalSale = (totalBillAmount || 0) - calculatedTax - (visitData.AdjAmount || 0);
@@ -8273,7 +8273,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       calculatedTax = 0;
     }
 
-    let params = {
+    const params = {
       "InvoiceNumber": "",
       "POSID": 0, // 966130
       "USIN": "0", // VisitId
@@ -8294,7 +8294,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       "Items": []
     };
     testsData.forEach(tp => {
-      let _texRate = (this.getValidAddedTestsProfiles().find(a => a.TPId == tp.TPId) || { TaxRate: 0 }).TaxRate;
+      const _texRate = (this.getValidAddedTestsProfiles().find(a => a.TPId == tp.TPId) || { TaxRate: 0 }).TaxRate;
       tp.TaxRate = (_texRate || 0); //(tp.TaxRate || 0);
       // let taxCharged = this.calculateTaxValue((tp.Price || 0), tp.TaxRate).taxValue; // ((tp.TaxRate || 0) * ((tp.Price || 0) - (tp.Discount || 0)) / 100) || 0;
 
@@ -8302,18 +8302,18 @@ employeeDependentForBookingSelectedEvent(dep) {
       // let totalBillAmount = (this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) + calculatedTax;
       // let totalSale = (totalBillAmount || 0) - calculatedTax - (visitData.AdjAmount || 0);
 
-      let tpValueWithAndWithoutTax = this.helperSrv.calculateTaxValue((tp.Price || 0) - tp.Discount, tp.TaxRate);
+      const tpValueWithAndWithoutTax = this.helperSrv.calculateTaxValue((tp.Price || 0) - tp.Discount, tp.TaxRate);
       // let totalBillAmount = (this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) + calculatedTax;
       // let totalSale = (totalBillAmount || 0) - calculatedTax - (visitData.AdjAmount || 0);
 
-      let taxCharged = tpValueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
-      let saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
-      let totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
+      const taxCharged = tpValueWithAndWithoutTax.taxValue;// ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
+      const saleAmount = tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
+      const totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
 
       // let saleAmount = ((tp.Price || 0) - (taxCharged || 0)) || 0; // - (tp.Discount || 0)) || 0;
       // let totalAmount = (saleAmount || 0) + (taxCharged || 0) - (tp.Discount || 0);
 
-      let item = {
+      const item = {
         "ItemCode": tp.TPId,
         "ItemName": tp.Title,
         "PCTCode": tp.PCTCode || '98160000', // {radiology: '98179000', lab: '98160000'} , // "98173000", // "11001010", https://download1.fbr.gov.pk/Docs/2021101313103753401chapte-98&99.pdf // page 4
@@ -8376,7 +8376,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   getMACAddress(loggedInUser: UserModel) {
     // setTimeout(() => {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -8423,9 +8423,9 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
   getPOSID() {
     // console.log("loggedInUser", this.loggedInUser)
-    var ismob = this.detectMob();
+    const ismob = this.detectMob();
     // console.log("aa", ismob)
-    let params = {
+    const params = {
       macAddress: this.loggedInUser.macAdr,
       branchId: this.loggedInUser.locationid,
       userId: this.loggedInUser.userid,
@@ -8503,7 +8503,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   ngOnDestroy() {
     this.isLockTPOnly = false;
     this.stickerText = '';
-    let patientData = this.patientBasicInfo.getRawValue();
+    const patientData = this.patientBasicInfo.getRawValue();
     if (!patientData) {
       return;
     }
@@ -8536,7 +8536,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   getVisitsAgainstOrderNumbers(orderNumber) {
     this.isOrderRegForECLAllowed = true;
-    let params = {
+    const params = {
       "HospitalOrderNo": (orderNumber)
     }
     this.ecl.getVisitsAgainstOrderNumbers(params).subscribe((resp: any) => {
@@ -8560,7 +8560,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
 
   logProvinceNotPunjabInfo(provinceid) {
-    let params = {
+    const params = {
       "Msg": "user province id is not correct. current userid is " + 1 + "but it should be 2"
     }
     this.lookupService.logData(params).subscribe((resp: any) => {
@@ -8571,7 +8571,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   getVisitsForInvoice(patient) {
     this.patientVisitsPopupRef = this.appPopupService.openModal(this.patientVisitsPopup, { size: 'lg' });
     this.patientVisitsList = [];
-    let params = { patientID: patient };
+    const params = { patientID: patient };
     if (params.patientID) {
       this.spinner.show(this.spinnerRefs.patientVisits);
       this.patientVisitsList = [{ Message: 'Loading...' }];
@@ -8603,7 +8603,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   visitDetails = null;
   getVisitDetails(visitID) {
-    let params = { VisitId: visitID.replace(/-/g, '') };
+    const params = { VisitId: visitID.replace(/-/g, '') };
     this.visitDetails = {
       // pateintInfo: null,
       // visitInfo: null,
@@ -8746,7 +8746,7 @@ employeeDependentForBookingSelectedEvent(dep) {
     }
 
     // 5) Count unique package-presence per TPId (we want TPIds that exist in more than one package/external set)
-    const tpidPackageCount: { [tpid: number]: number } = {};
+    const tpidPackageCount: Record<number, number> = {};
     packageTestsMap.forEach(entry => {
       const seen = new Set<number>();
       (entry.tests || []).forEach(t => {
@@ -8952,7 +8952,7 @@ employeeDependentForBookingSelectedEvent(dep) {
       });
 
     // 4) Count TPId occurrences across packages (including EXTERNAL)
-    const tpidCount: { [key: number]: number } = {};
+    const tpidCount: Record<number, number> = {};
     packageTestsMap.forEach(entry => {
       const seen = new Set<number>();
       (entry.tests || []).forEach(t => {
@@ -8992,7 +8992,7 @@ employeeDependentForBookingSelectedEvent(dep) {
 
   // utility function to check if duplicates still exist
   hasDuplicatesInSelectedProfiles(): boolean {
-    const tpidCount: { [key: string]: number } = {};
+    const tpidCount: Record<string, number> = {};
 
     this.selectedTestProfiles.forEach(test => {
       const key = String(test.TPId);
@@ -9174,7 +9174,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         const nameInput = document.getElementById('swal-refdoc-name') as HTMLInputElement;
         const citySelect = document.getElementById('swal-city') as HTMLSelectElement;
 
-        let docName = nameInput.value.trim();
+        const docName = nameInput.value.trim();
         const city = citySelect.value;
 
         // Reset previous error
@@ -9188,7 +9188,7 @@ employeeDependentForBookingSelectedEvent(dep) {
         }
 
         // 2. Now extract the part after "Dr." so short names like "Dr. Al" also get caught
-        let cleanName = docName.replace(/^Dr\.?/i, '').trim();
+        const cleanName = docName.replace(/^Dr\.?/i, '').trim();
 
         // If nothing left after removing Dr.
         if (!cleanName) {
@@ -9244,7 +9244,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   radoiologistList = [];
   getRadiologistInfo() {
     this.radoiologistList = [];
-    let params = {
+    const params = {
       EmpID: null
     };
     this.spinner.show(this.spinnerRefs.radoiologistList);
@@ -9353,14 +9353,14 @@ employeeDependentForBookingSelectedEvent(dep) {
       };
       this.JSONParamOfZindagiQR = objParm;
       const resp: any = await this.postexService.createQrCodeViaProxy(objParm, this.authData).toPromise();
-      let data = resp;//JSON.parse(resp.Result);
+      const data = resp;//JSON.parse(resp.Result);
       this.JSONresponseOfZindagiQR = data;
       this.spinner.hide(this.spinnerRefs.OnlineBanking);
       if (data && data.dynamicQrRes && data.dynamicQrRes.responseCode === 'WB0000') {
         this.hideQrString = true;
         this.qrString = data.dynamicQrRes.qrString;
       } else if (data && data.errorcode && data.errorcode === '4006') {
-        let resetResp = await this.resetAuthorizationforJSBank(this.authData.clientId);
+        const resetResp = await this.resetAuthorizationforJSBank(this.authData.clientId);
         console.log("🚀 resetResp:", resetResp)
         await this.generateQRCode(OnlineMode);
       } else {
@@ -9529,7 +9529,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
 
   InsertOnlinePaymentQrCodeCredentials() {
-    let param = {
+    const param = {
       OnlinePaymentReferenceID: this.JSONParamOfZindagiQR?.dynamicQrReq?.referenceNumber ?? "",
       PaymentModeCategoryID: 6, //this.selectedPaymentCategoryToAdd.PaymentModeCategoryID,
       PaymentModeID: 6, // this.selectedPaymentModeToAdd.ModeId,
@@ -9569,7 +9569,7 @@ employeeDependentForBookingSelectedEvent(dep) {
    GetPaymentModeByPaymentModeCategory() {
     // this.qrString = '';
     // this.hideQrString = false;
-    let params = { PaymentModeCategoryID: this.selectedPaymentCategoryToAdd.PaymentModeCategoryID };
+    const params = { PaymentModeCategoryID: this.selectedPaymentCategoryToAdd.PaymentModeCategoryID };
     this.lookupService.GetPaymentModeByPaymentModeCategory(params).subscribe((resp: any) => {
       console.log(resp);
       if (resp && resp.PayLoad.length && resp.StatusCode == 200) {
@@ -9591,9 +9591,9 @@ employeeDependentForBookingSelectedEvent(dep) {
   selectedPaymentCategoryToAdd: any = '';
 
   GetOnlinePaymentReferenceforQRCode(): Promise<any> {
-    let formValues = this.patientBasicInfo.getRawValue();
+    const formValues = this.patientBasicInfo.getRawValue();
     return new Promise((resolve, reject) => {
-      let param = {
+      const param = {
         PaymentModeCategoryID: this.selectedPaymentCategoryToAdd?.PaymentModeCategoryID,
         PaymentModeID: this.selectedPaymentModeToAdd?.ModeId,
 
@@ -9677,7 +9677,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   }
 
   InsertOnlinePaymenVerificationCredentials() {
-    let tran = this.JSONreponseOfZindagiInquiry?.accountInfoRes?.transactionStatus[0];
+    const tran = this.JSONreponseOfZindagiInquiry?.accountInfoRes?.transactionStatus[0];
     const param = {
       OnlinePaymentReferenceID: this.refnumberforQRCode[0]?.ReferenceID || 0,
       PaymentModeCategoryID: 6,
@@ -9874,7 +9874,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   verfiyMCBPayment() {
     if (!this.OnlinePaymentReferenceID)
       return;
-    let params = {
+    const params = {
       "orderId": this.OnlinePaymentReferenceID
     }
     const url = `${API_ROUTES.MCB_VERIFY_ORDER}/${this.OnlinePaymentReferenceID}`;
@@ -9925,7 +9925,7 @@ employeeDependentForBookingSelectedEvent(dep) {
   isVoucher = false;
   isVoucherVerified = false;
   voucherEligibleTPIds: number[] = [];
-  voucherDiscountPercentage: number = 0;
+  voucherDiscountPercentage = 0;
   voucherAmountSummaryHtml = '';
   descountPerc = 0;
 

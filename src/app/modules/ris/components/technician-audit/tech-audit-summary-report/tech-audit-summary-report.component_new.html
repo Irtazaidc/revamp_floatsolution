@@ -17,7 +17,7 @@
     <div class="card-body" style="padding: 1.5rem 2.25rem">
         <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='my-tech-audit-summary-report'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='my-tech-audit-summary-report'">
                     <label for="TechnologistID" class="control-label">Technologist:</label>
                     <ng-select style="width: 100%;" 
                     [ngClass]="{'invalid': _form.get('TechnologistID').errors && _form.get('TechnologistID').touched, 'invalid-highlighted': _form.get('TechnologistID').errors}" 
@@ -31,7 +31,7 @@
                         >
                     </ng-select>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='my-tech-audit-summary-report' && screenIdentity !='tech-audit-summary-report-branch-mgr'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='my-tech-audit-summary-report' && screenIdentity !=='tech-audit-summary-report-branch-mgr'">
                     <label for="AuditorTechnologistID" class="control-label">Auditor:</label>
                     <ng-select style="width: 100%;" 
                         [items]="technologistList" 
@@ -79,7 +79,7 @@
                         
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='tech-audit-summary-report-branch-mgr'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='tech-audit-summary-report-branch-mgr'">
                     <div class="form-group">
                         <label for="QualityAssurance" class="control-label">Quality Assurance:</label>
                         <ng-select style="width: 100%;" 
@@ -105,7 +105,7 @@
                         </ng-select>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='my-tech-audit-summary-report' && screenIdentity!='tech-audit-summary-report-branch-mgr'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='my-tech-audit-summary-report' && screenIdentity!=='tech-audit-summary-report-branch-mgr'">
                     <label for="TechnologistID" class="control-label">Branch:</label>
                     <ng-select style="width: 100%;" 
                         [items]="branchList" 
@@ -214,7 +214,7 @@
                                                                     </td>
                                                                     <td style="width: 10%;">{{ childRow.Section }}</td>
                                                                     <td style="width: 10%;">{{ childRow.TPCode }}
-                                                                        <small class="text-danger" *ngIf="childRow.isShared && screenIdentity!='radiologist-audit-findings'">(Shared)</small><br>
+                                                                        <small class="text-danger" *ngIf="childRow.isShared && screenIdentity!=='radiologist-audit-findings'">(Shared)</small><br>
                                                                         <ng-container *ngFor="let element of starRatingElementsInner" class="text-right">
                                                                             <star-rating 
                                                                                 [(value)]="childRow.Rating" 
@@ -225,7 +225,7 @@
                                                                                 readonly={{element.readonly}}>
                                                                             </star-rating>
                                                                         </ng-container >
-                                                                        <i *ngIf="childRow.TechRemarks && childRow.TechRemarks!=''" [ngbPopover]="childRow.TechRemarks" [popoverTitle]="'Tech Remarks'" ngbTooltip="Click to view tech remarks or double click to open the form"
+                                                                        <i *ngIf="childRow.TechRemarks && childRow.TechRemarks!==''" [ngbPopover]="childRow.TechRemarks" [popoverTitle]="'Tech Remarks'" ngbTooltip="Click to view tech remarks or double click to open the form"
                                                                         class="far fa-comment-dots text-danger mr-4" aria-hidden="true"></i>
                                                                         <ng-template #popContent>
                                                                             <ng-container *ngIf="childRow.FeedBackBy">
@@ -242,7 +242,7 @@
                                                                                         </li>
                                                                                         </ul>
                                                                                     </ng-container>
-                                                                                    <p *ngIf="childRow.FeedBackRemarks || childRow.FeedBackRemarks!=''" style="border-top: 1px dashed #cccdd3;"><strong>Remarks:</strong>{{childRow.FeedBackRemarks||'NA'}}</p>
+                                                                                    <p *ngIf="childRow.FeedBackRemarks || childRow.FeedBackRemarks!==''" style="border-top: 1px dashed #cccdd3;"><strong>Remarks:</strong>{{childRow.FeedBackRemarks||'NA'}}</p>
                                                                                 </div>
                                                                                
                                                                             </ng-container>
@@ -252,7 +252,7 @@
                                                                         </ng-template>
 
 
-                                                                        <i *ngIf="childRow.FeedBackBy && childRow.FeedBackBy!=''" [ngbPopover]="popContent" [popoverTitle]="'Doctor Feedback'" ngbTooltip="Click to view Radiologist (Dr) Feadback"
+                                                                        <i *ngIf="childRow.FeedBackBy && childRow.FeedBackBy!==''" [ngbPopover]="popContent" [popoverTitle]="'Doctor Feedback'" ngbTooltip="Click to view Radiologist (Dr) Feadback"
                                                                         class="fas fa-user-md text-danger" aria-hidden="true"></i>
                                                                     </td>
                                                                     <td style="width: 9%;"> 
@@ -262,16 +262,16 @@
                                                                     <td style="width: 19%;">
                                                                         <!-- <strong class="text-primary">Remarks:</strong>{{childRow.Remarks ||'NA'}}
                                                                         <br><strong class="text-primary">Recommendation:</strong>{{childRow.Recommendation ||'NA'}} -->
-                                                                        <ng-container *ngIf="(childRow.Remarks && childRow.Remarks != '') || (childRow.Recommendation && childRow.Recommendation != '')|| (childRow.ManagerRemarks && childRow.ManagerRemarks != ''); else noRemarksSection">
+                                                                        <ng-container *ngIf="(childRow.Remarks && childRow.Remarks !== '') || (childRow.Recommendation && childRow.Recommendation !== '')|| (childRow.ManagerRemarks && childRow.ManagerRemarks !== ''); else noRemarksSection">
                                                                             <span >
-                                                                                <span *ngIf="(childRow.Remarks && childRow.Remarks != '')" style="word-break: break-word">
+                                                                                <span *ngIf="(childRow.Remarks && childRow.Remarks !== '')" style="word-break: break-word">
                                                                                     <strong class="text-primary">Remarks:</strong>{{childRow.Remarks ||'NA'}} 
                                                                                 </span><br>
-                                                                                <span *ngIf="(childRow.Recommendation && childRow.Recommendation != '')" style="word-break: break-word">
+                                                                                <span *ngIf="(childRow.Recommendation && childRow.Recommendation !== '')" style="word-break: break-word">
                                                                                     <strong class="text-primary">Recommendation:</strong>{{childRow.Recommendation ||'NA'}}
                                                                                 </span>
                                                                                 <br>
-                                                                                <span *ngIf="(childRow.ManagerRemarks && childRow.ManagerRemarks != '')" style="word-break: break-word">
+                                                                                <span *ngIf="(childRow.ManagerRemarks && childRow.ManagerRemarks !== '')" style="word-break: break-word">
                                                                                     <strong class="text-danger">Manager Remarks</strong>{{childRow.ManagerRemarks ||'NA'}}
                                                                                 </span>
                                                                             <!-- <p></strong class="text-primary">Tech Reply:</strong>{{childRow.FeedBackRemarks||'NA'}}</p> -->
@@ -280,7 +280,7 @@
                                                                           <ng-template #noRemarksSection>
                                                                             <span>--</span>
                                                                           </ng-template>
-                                                                        <p *ngIf="childRow.TechRemarks && childRow.TechRemarks!=''" style="border-top: 1px dashed #cccdd3;"><strong class="text-danger">Tech Reply:</strong>{{childRow.TechRemarks||'NA'}}</p>
+                                                                        <p *ngIf="childRow.TechRemarks && childRow.TechRemarks!==''" style="border-top: 1px dashed #cccdd3;"><strong class="text-danger">Tech Reply:</strong>{{childRow.TechRemarks||'NA'}}</p>
                                                                     </td>
                                                                     <td style="width: 20%;">
                                                                         <ng-container *ngIf="childRow.FeedBackBy; else noDrFeedback">
@@ -300,7 +300,7 @@
                                                                                     </li>
                                                                                     </ul>
                                                                                 </ng-container>
-                                                                                <p *ngIf="childRow.FeedBackRemarks || childRow.FeedBackRemarks!=''" style="border-top: 1px dashed #cccdd3;"><strong>Remarks:</strong>{{childRow.FeedBackRemarks||'NA'}}</p>
+                                                                                <p *ngIf="childRow.FeedBackRemarks || childRow.FeedBackRemarks!==''" style="border-top: 1px dashed #cccdd3;"><strong>Remarks:</strong>{{childRow.FeedBackRemarks||'NA'}}</p>
                                                                             </div>
                                                                         </ng-container>
                                                                         <ng-template #noDrFeedback>

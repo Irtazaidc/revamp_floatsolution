@@ -28,8 +28,8 @@ export class EncDcrptStringComponent implements OnInit {
   }
 
   encryptString() {
-    let formData = this.encDecform.getRawValue();
-    let param = {
+    const formData = this.encDecform.getRawValue();
+    const param = {
       "stringToEncrypt": formData.string
     }
     this.spinner.show();
@@ -49,8 +49,8 @@ export class EncDcrptStringComponent implements OnInit {
   }
   decryptString() {
     this.spinner.show();
-    let formData = this.encDecform.getRawValue();
-    let param = {
+    const formData = this.encDecform.getRawValue();
+    const param = {
       "stringToDecrypt": formData.string
     }
     this.shared.decryptString(param).subscribe((resp: any) => {

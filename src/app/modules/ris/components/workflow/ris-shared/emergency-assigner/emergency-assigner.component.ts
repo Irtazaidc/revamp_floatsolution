@@ -16,7 +16,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class EmergencyAssignerComponent implements OnInit {
 
-   @Input('paramsValues') paramsValues: any;
+   @Input() paramsValues: any;
   
    EmergencyAssignerDataList = [];
 
@@ -51,7 +51,7 @@ export class EmergencyAssignerComponent implements OnInit {
         this.toastr.warning("Please select section");
         return
       }
-      let Objparams = {
+      const Objparams = {
         DateFrom: params.dateFrom,
         DateTo: params.dateTo,
         LocIDs:  params.branch?.length > 0 ? params.branch.join(",") : params.branchAll.join(","),

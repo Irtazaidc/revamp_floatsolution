@@ -87,14 +87,14 @@ export class CategoryWiseComponent implements OnInit {
   }
   getAnalyticsData(){
     this.catWiseList = []
-    let formValues = this.FilterFrom.getRawValue();
+    const formValues = this.FilterFrom.getRawValue();
 
     if(this.FilterFrom.invalid){
       this.toasrt.warning('Please Fill The Mandatory fields');
       return;
     } 
     
-    let param = {
+    const param = {
       dateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       dateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
     }
@@ -103,7 +103,7 @@ export class CategoryWiseComponent implements OnInit {
     this.spinner.hide(this.spinnerRefs.analyticTable)
       console.log("reportingDataList ~ res:", res)
       if (res && res.StatusCode == 200 && res.PayLoadStr) {
-        let data = res.PayLoadStr;
+        const data = res.PayLoadStr;
         this.catWiseList = JSON.parse(data); 
         console.log("catWiseList ~ this.catWiseList:", this.catWiseList)
       }
@@ -120,7 +120,7 @@ export class CategoryWiseComponent implements OnInit {
 
   displayChart(){
 
-    let newData = [
+    const newData = [
       { data: [65, 59, 80, 81, 56, 55, 40], label: 'Product A' },
     ];
     this.barChartData =  newData;

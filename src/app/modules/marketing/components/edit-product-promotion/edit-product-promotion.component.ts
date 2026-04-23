@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -24,7 +24,7 @@ import moment from 'moment';
   templateUrl: './edit-product-promotion.component.html',
   styleUrls: ['./edit-product-promotion.component.scss']
 })
-export class EditProductPromotionComponent implements OnInit {
+export class EditProductPromotionComponent implements OnInit, AfterViewInit {
 
   urlPattern = "(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?";
 
@@ -33,8 +33,8 @@ export class EditProductPromotionComponent implements OnInit {
   ImageToUpload: File = null
   ImageUrl: any;
   ImageUrl_temp: any;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   pageHeader: any = '';
   urlID: any = null;
   ProductPromotionID: any = null;
@@ -125,7 +125,7 @@ export class EditProductPromotionComponent implements OnInit {
     this.ProductPromotionIDEnc = id;
     // this.spinner.show();;
     let response = [];
-    let Params = {
+    const Params = {
       ProductPromotionIDEnc: id
     }
     if (!Params.ProductPromotionIDEnc) {
@@ -174,7 +174,7 @@ export class EditProductPromotionComponent implements OnInit {
         // this.branchIds = this.ProductsPromotionsRow[0].LocIDs.substring(0, this.ProductsPromotionsRow[0].LocIDs.length - 1).split(',').map(id => parseInt(id.trim(), 10));
         // this.cityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',').map(id => parseInt(id.trim(), 10));
         this.cityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',').map(id => parseInt(id.trim(), 10));
-        let incCityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',');
+        const incCityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',');
         // this.isDisabledPromotionFor = this.ProductsPromotionsRow[0].PromotionFor == 4 ? true : false;
         this.isDisabledPromotionFor = true;
         this.citiesList.forEach(city => {
@@ -210,7 +210,7 @@ export class EditProductPromotionComponent implements OnInit {
   endDateGreaterValidation = false;
   addUpdateProductPromotion(data) {
     let cityIds = ""
-    let checkedCities = this.citiesList.filter(a => a.checked);
+    const checkedCities = this.citiesList.filter(a => a.checked);
     if (checkedCities.length) {
       cityIds = checkedCities.map(city => city.CityID).join(',');
     } else {
@@ -246,8 +246,8 @@ export class EditProductPromotionComponent implements OnInit {
     }
     // let branchIds = this.branchIds.join(",");
     //let cityIds = this.cityIds.join(",");
-    let bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
-    var fileExtension = "";
+    const bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
+    let fileExtension = "";
     let image = null;
     if (this.ImageToUpload != null) {
       if (this.PromotionFor == 4 && (this.Width > 300 || this.Height > 500)) {
@@ -390,8 +390,8 @@ export class EditProductPromotionComponent implements OnInit {
 
   //   reader.readAsDataURL(file);
   // }
-  Height: number = 0;
-  Width: number = 0;
+  Height = 0;
+  Width = 0;
   loadItemsImage(event) {
     const file = (event.target as HTMLInputElement).files[0];
         this.ImageToUpload = file;
@@ -420,15 +420,15 @@ export class EditProductPromotionComponent implements OnInit {
 
   loadImage(file, fileName = 'file') {
 
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
+        const imageURL = reader.result as string;
         this.ImageUrl_temp = imageURL.replace('data:' + file.type + ';base64,', '');
         console.log("file to load",this.ImageUrl_temp);
-        let _fileName = file.name || '';
+        const _fileName = file.name || '';
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
           filtType: file.type || '',
@@ -456,7 +456,7 @@ export class EditProductPromotionComponent implements OnInit {
 
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = '', base64Data = '') {
     const self = this;
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       if (!file && !base64Data) {
         resolve('');
       }
@@ -467,7 +467,7 @@ export class EditProductPromotionComponent implements OnInit {
       let blob = null;
 
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_' + +new Date();
+      const canvas_id = 'hiddenCanvas_' + +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;
@@ -556,7 +556,7 @@ export class EditProductPromotionComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -577,20 +577,20 @@ export class EditProductPromotionComponent implements OnInit {
     }
   }
   getCities() {
-    let param = { isHomeSamplingCity: null }
+    const param = { isHomeSamplingCity: null }
     this.citiesList = [];
     this.lookupService.getHCCities(param).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.citiesList = _response;
     }, (err) => {
       console.log(err)
     })
   }
   getProductPromotionCity() {
-    let param = { PromotionFor: this.PromotionFor }
+    const param = { PromotionFor: this.PromotionFor }
     this.citiesList = [];
     this.lookupService.getProductPromotionCity(param).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.citiesList = _response;
       console.log("Promotin cities are: ", this.citiesList)
     }, (err) => {
@@ -712,7 +712,7 @@ export class EditProductPromotionComponent implements OnInit {
     if (value == 0) {
     }
     else {
-      let _calculatedDob = this.calculateDOB(value, this.dmy);
+      const _calculatedDob = this.calculateDOB(value, this.dmy);
       this.EndDate = _calculatedDob;
       console.log("end date from days field is: ", this.EndDate)
     }
@@ -722,21 +722,21 @@ export class EditProductPromotionComponent implements OnInit {
     if ((value == 2 || value == 3) && !this.PromotionAge) {
       this.PromotionAge = 1;
     }
-    let _calculatedDob = this.calculateDOB(this.PromotionAge, value);
+    const _calculatedDob = this.calculateDOB(this.PromotionAge, value);
     this.EndDate = _calculatedDob
     console.log("end date from ymd dropdown is: ", this.EndDate)
   }
 
   calculateDOB(number, dmy) {
-    let startDateTime = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
+    const startDateTime = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
 
-    let inputDate = startDateTime;
+    const inputDate = startDateTime;
 
     // Parse the input date with the initial format
-    let parsedDate = moment(inputDate, 'MM/DD/YYYY HH:mm:ss.SSS');
+    const parsedDate = moment(inputDate, 'MM/DD/YYYY HH:mm:ss.SSS');
 
     // Format the date in the desired format
-    let formattedDate = parsedDate.format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)');
+    const formattedDate = parsedDate.format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)');
 
 
     let dob: any = formattedDate//new Date();
@@ -755,36 +755,36 @@ export class EditProductPromotionComponent implements OnInit {
     } else if (dmy == '3') {
       dob = moment(dob).add(number, 'years')
     }
-    let calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
+    const calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
     return calculatedDob;
   }
   ngAfterViewInit() {
-    let formVal = this.dmy;
+    const formVal = this.dmy;
     this.StartDate.valueChanges.subscribe(val => {
-      let selectedDob = new Date(val.year, val.month - 1, val.day); 
-      let _ageObj = this.calculateAge(selectedDob);
+      const selectedDob = new Date(val.year, val.month - 1, val.day); 
+      const _ageObj = this.calculateAge(selectedDob);
         this.PromotionAge=_ageObj.years ? _ageObj.years : _ageObj.months ? _ageObj.months : _ageObj.days
         this.dmy = _ageObj.years ? '3' : _ageObj.months ? '2' : _ageObj.days || formVal.dmy == 1 ? '1' : '3'
     });
 
   }
   calculateAge(birthday) {
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
 
-    let oneDay = 24 * 60 * 60 * 1000; 
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; 
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
       obj.months = Math.floor(diffDays / 30);
     }
     else if (diffDays == 0 && this.dmy == '3') {
-      let _calculatedDob = this.calculateDOB(1, this.dmy);
+      const _calculatedDob = this.calculateDOB(1, this.dmy);
       obj.years = Math.floor(1);
         this.EndDate = _calculatedDob;
     }
@@ -792,7 +792,7 @@ export class EditProductPromotionComponent implements OnInit {
       obj.months = Math.floor(1);
     }
     else if (diffDays == 0 && this.dmy == '1') {
-      let _calculatedDob = this.calculateDOB(1, this.dmy);
+      const _calculatedDob = this.calculateDOB(1, this.dmy);
       obj.days = Math.floor(1);
        this.EndDate = _calculatedDob;
     }

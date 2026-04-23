@@ -5,7 +5,7 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild, AfterViewInit, OnChanges,
 } from "@angular/core";
 import moment from "moment";
 import { Conversions } from "../../../../shared/helpers/conversions";
@@ -25,9 +25,9 @@ import { LookupService } from "src/app/modules/patient-booking/services/lookup.s
   templateUrl: "./patient-basic-info.component.html",
   styleUrls: ["./patient-basic-info.component.scss"],
 })
-export class PatientBasicInfoComponent implements OnInit {
+export class PatientBasicInfoComponent implements OnInit, AfterViewInit, OnChanges {
   @Input("PatientData") patientData: any = {};
-  @Input("VisitDateTime") VisitDateTime = {
+  @Input() VisitDateTime = {
     RegistrationDate: null,
     DeliveryDate: null,
   };
@@ -41,7 +41,7 @@ export class PatientBasicInfoComponent implements OnInit {
   _patientData: any = {};
   _patientId: number;
   _visitId: number;
-  isInsuranceActive: boolean = false; // Default value
+  isInsuranceActive = false; // Default value
 
   spinnerRefs = {
     patPicPopup: "patPicPopup",
@@ -122,7 +122,7 @@ export class PatientBasicInfoComponent implements OnInit {
   searchPatient(patientId, visitId) {
     // patientId = 65201868;
     this._patientData = {};
-    let patientSearchParams = {
+    const patientSearchParams = {
       PatientID: patientId,
       VisitId: visitId,
     };
@@ -169,8 +169,8 @@ export class PatientBasicInfoComponent implements OnInit {
         this.spinner.hide();
         if (res && res.StatusCode == 200) {
           if (res.PayLoad && res.PayLoad.length) {
-            let _patPic = res.PayLoad[0].Pic || "";
-            let _formattedPic = _patPic
+            const _patPic = res.PayLoad[0].Pic || "";
+            const _formattedPic = _patPic
               ? _patPic.indexOf("data:image/") == -1
                 ? CONSTANTS.IMAGE_PREFIX.PNG + _patPic
                 : _patPic
@@ -197,7 +197,7 @@ export class PatientBasicInfoComponent implements OnInit {
     // let _formattedDob = {day:moment(data.DateOfBirth).get('date'),month:(moment(data.DateOfBirth).get('month')),year:moment(data.DateOfBirth).get('year')};
     let _formattedAge = "";
     if (data.DateOfBirth) {
-      let _ageObj: any = data.DateOfBirth
+      const _ageObj: any = data.DateOfBirth
         ? this.calculateAge(new Date(data.DateOfBirth))
         : {};
       _formattedAge = _ageObj.years
@@ -246,22 +246,22 @@ export class PatientBasicInfoComponent implements OnInit {
     // var ageDifMs = Date.now() - birthday.getTime();
     // var ageDate = new Date(ageDifMs); // miliseconds from epoch
     // return Math.abs(ageDate.getUTCFullYear() - 1970);
-    let obj = { days: 0, months: 0, years: 0 };
+    const obj = { days: 0, months: 0, years: 0 };
     if (!moment(birthday).isValid()) {
       return obj;
     }
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(
       birthday.getFullYear(),
       birthday.getMonth(),
       birthday.getDate()
     ); //(2021, 3, 2);
-    let currentDate: any = new Date(
+    const currentDate: any = new Date(
       new Date().getFullYear(),
       new Date().getMonth(),
       new Date().getDate()
     );
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {

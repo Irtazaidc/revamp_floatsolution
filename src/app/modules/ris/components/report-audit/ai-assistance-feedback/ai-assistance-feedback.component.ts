@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, OnDestroy, OnChanges, AfterViewInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AppPopupService } from '../../../../shared/helpers/app-popup.service';
 import { FilterByKeyPipe } from 'src/app/modules/shared/pipes/filter-by-key.pipe';
@@ -20,7 +20,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './ai-assistance-feedback.component.html',
   styleUrls: ['./ai-assistance-feedback.component.scss']
 })
-export class AiAssistanceFeedbackComponent implements OnInit {
+export class AiAssistanceFeedbackComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Please Confirm...!', // 'Are you sure?',
@@ -106,8 +106,8 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   }
 
   getRISWorkList() {
-    let formValues = this.risParamsForm.getRawValue();
-    let visitID = formValues.visitID;
+    const formValues = this.risParamsForm.getRawValue();
+    const visitID = formValues.visitID;
     if ((!formValues.dateFrom || !formValues.dateTo) && !visitID) {
       this.toastr.error('Please Select Date Range OR provide Visit ID (PIN)');
       this.isValidDateRange = false;
@@ -143,7 +143,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
     this.searchText = '';
     this.risWorkist = [];
     this.spinner.show(this.spinnerRefs.listSection);
-    let params = {
+    const params = {
       // DateFrom: val.visitID ? null : val.dateFrom,
       // DateTo: val.visitID ? null : val.dateTo,
       // RadiologistID: this.loggedInUser.userid
@@ -174,7 +174,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   searchText = '';
   refreshPagination() {
     // this.clearVariables(0);
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       // .map((item, i) => ({ id: i + 1, ...item }))
@@ -184,10 +184,10 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   filterResults() {
     // this.clearVariables(0);
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'TPFullName', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'TPFullName', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorkist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorkist, this.searchText, this.colNames, this.risWorkist);
     }
     this.pagination.filteredSearchResults = results;
@@ -202,7 +202,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -256,7 +256,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
     this.PatientID = row.PatientID;
     this.LocId = row.LocId;
     this.RadiologistID = row.RadiologistID;
-    let params = {
+    const params = {
       VisitID: row.VisitID,
       TPID: row.TPID,
       RadiologistID: this.RadiologistID
@@ -290,7 +290,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
     this.PatientID = row.PatientID;
     this.LocId = row.LocId;
     this.RadiologistID = row.RadiologistID;
-    let params = {
+    const params = {
       VisitID: row.VisitID,
       TPID: row.TPID,
       RadiologistID: this.RadiologistID
@@ -328,7 +328,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
       this.toastr.error("Please provide remarks", "Validation Error");
       return;
     }
-    let dataObj = {
+    const dataObj = {
       RISRequestAIFeedBackID: this.RISRequestAIFeedBackID,
       AuditorRadiologistRating: this.AuditorRadiologistRating,
       AuditorRadiologistRemarks: this.AuditorRadiologistRemarks,
@@ -358,7 +358,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   }
 
   searchByVisit() {
-    let visitID = this.risParamsForm.getRawValue().visitID;
+    const visitID = this.risParamsForm.getRawValue().visitID;
     if (visitID) {
       this.risParamsForm.patchValue({
         dateFrom: "",
@@ -400,10 +400,10 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   getPACSServers(visitID, TPID, rowIndex) {
     this.rowIndex = rowIndex;
     this.toastr.info("Working in progress", "Success");
-    let VisitID = visitID.replaceAll("-", "");
+    const VisitID = visitID.replaceAll("-", "");
     // 240301044020,@TPId INT=926--2123
     this.SysInfo = this.auth.getSystemInfoFromStorage();
-    let objParams = {
+    const objParams = {
       VisitId: VisitID,//'240301134040',//'240301044020',//VisitID,
       TPId: TPID,//926//926//TPID
       LocID: this.loggedInUser.locationid// Number(this.SysInfo.loginLocId)
@@ -413,14 +413,14 @@ export class AiAssistanceFeedbackComponent implements OnInit {
         this.PACSServers = resp.PayLoad || [];
         console.log("this.PACSServersthis.PACSServersthis.PACSServers", this.PACSServers);
         if (this.PACSServers.length === 1) {
-          var createLink = (this.PACSServers[0].BackupServer);
+          let createLink = (this.PACSServers[0].BackupServer);
           createLink = createLink.substring(0, createLink.length - 1)
-          let sanitizedPath = createLink.replace(/\\/g, '%5C');
-          let url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
-          let winRef = window.open((url), '_blank');
+          const sanitizedPath = createLink.replace(/\\/g, '%5C');
+          const url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
+          const winRef = window.open((url), '_blank');
         }
         else if (this.PACSServers.length === 2) {
-          let serverObj = [];
+          const serverObj = [];
           console.log("serverObj", serverObj);
           let createLink = serverObj.map(a => { return a.BackupServer }).join(',')
           console.log("serverObj", createLink);
@@ -434,7 +434,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
           b2 = b2.substring(0, b2.length - 1)
           b2 = b2.replace(/\\/g, '%5C');
 
-          let url = ('radiant://?n=f&v=%22' + b1 + '%22' + '&v=%22' + b2 + '%22');
+          const url = ('radiant://?n=f&v=%22' + b1 + '%22' + '&v=%22' + b2 + '%22');
 
           window.open((url), '_blank');
         }
@@ -514,13 +514,13 @@ export class AiAssistanceFeedbackComponent implements OnInit {
       // var createLink = (this.PACSServers[0].BackupServer);
 
       // createLink = createLink.substring(0, createLink.length - 1)
-      var createLink = imagePath
-      let sanitizedPath = createLink.replace(/\\/g, '%5C');
-      let url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
+      const createLink = imagePath
+      const sanitizedPath = createLink.replace(/\\/g, '%5C');
+      const url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
       // console.log("url is :", url)
 
       // let winRef = window.open((url), '_blank');
-      let winRef = window.open((url), '_blank');
+      const winRef = window.open((url), '_blank');
     } catch (error) {
       console.error('Error opening DICOM:', error);
       this.toastr.error("Could not open DICOM image");
@@ -600,7 +600,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   AIAssistanceRequestRow: any;
   getRISAIAssistanceRequestByVIsitIDTPIDDropDown(row, i) {
     this.rowIndex = i;
-    let params = {
+    const params = {
       VisitID: Number(row.VisitId),
       TPID: this.TPID
     };
@@ -651,7 +651,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
   }
   getRISAIAssistanceRequestByVIsitIDTPIDDoubleClick(row, i) {
     this.rowIndex = i;
-    let params = {
+    const params = {
       VisitID: Number(row.VisitId),
       TPID: this.TPID
     };
@@ -701,7 +701,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
     });
   }
   getRISAIAssistanceRequestByVIsitIDTPID() {
-    let params = {
+    const params = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID
     };
@@ -759,7 +759,7 @@ export class AiAssistanceFeedbackComponent implements OnInit {
       TPID: this.TPID
     };
     const tblVisitTestDetail = [firstObj];
-    let objParams = {
+    const objParams = {
       IsVPN: isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail,

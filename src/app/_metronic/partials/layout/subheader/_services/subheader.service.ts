@@ -90,7 +90,7 @@ export class SubheaderService implements OnDestroy {
     this.breadCrumbsSubject.next(breadcrumbs);
   }
 
-  setTitle(title: string = '') {
+  setTitle(title = '') {
     this.titleSubject.next(title);
   }
 
@@ -98,7 +98,7 @@ export class SubheaderService implements OnDestroy {
     this.descriptionSubject.next(description);
   }
 
-  private setSubheaderVersion(version: string = 'v1') {
+  private setSubheaderVersion(version = 'v1') {
     this.subheaderVersionSubject.next(version);
   }
 

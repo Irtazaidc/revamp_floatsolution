@@ -197,8 +197,8 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="noOfRacks" class="control-label">No. Of Racks</label>
-                                <input #noOfRacks [disabled]="event == 'update'" 
-                                    [ngClass]="{'invalid': rackForm.get('noOfRacks').errors && rackForm.get('noOfRacks').touched && event == 'create', 'invalid-highlighted': rackForm.get('noOfRacks').errors && event == 'create'}"
+                                <input #noOfRacks [disabled]="event === 'update'" 
+                                    [ngClass]="{'invalid': rackForm.get('noOfRacks').errors && rackForm.get('noOfRacks').touched && event === 'create', 'invalid-highlighted': rackForm.get('noOfRacks').errors && event === 'create'}"
                                     type="text" class="form-control" name="noOfRacks" formControlName="noOfRacks"
                                     placeholder="Enter No Of Racks">
                             </div>
@@ -232,7 +232,7 @@
                             <!-- <button *ngIf="event == 'create'" type="submit" class="btn btn-sm btn-primary pull-right"><i
                                     class="fa fa-save"></i></button> -->
 
-                            <button *ngIf="event == 'create'"
+                            <button *ngIf="event === 'create'"
                                 class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
                                 ngbTooltip="Create Rack" mwlConfirmationPopover [popoverTitle]="'Create Rack'"
                                 [popoverMessage]="'Are you sure want to save?'" [confirmText]="confirmationPopoverConfig.confirmText"
@@ -246,7 +246,7 @@
                                 {{actionLabel}}
                             </button>
                             &nbsp;&nbsp;
-                            <button *ngIf="event == 'update'"
+                            <button *ngIf="event === 'update'"
                                 class="btn btn-primary btn-sm waves-effect text-center mr-2 pull-right"
                                 ngbTooltip="Update Rack" mwlConfirmationPopover [popoverTitle]="'Update Rack'"
                                 [popoverMessage]="'Are you sure want to update?'" [confirmText]="confirmationPopoverConfig.confirmText"
@@ -260,7 +260,7 @@
                                 {{actionLabel}}
                             </button>
                             &nbsp;&nbsp;
-                            <button *ngIf="event == 'update'"
+                            <button *ngIf="event === 'update'"
                                 class="btn btn-primary btn-sm waves-effect mr-2 text-center pull-right"
                                 ngbTooltip="Print Barcode" mwlConfirmationPopover [popoverTitle]="'Print Barcode'"
                                 [popoverMessage]="'Are you sure want to print?'" [confirmText]="confirmationPopoverConfig.confirmText"

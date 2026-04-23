@@ -12,8 +12,8 @@ import { CONSTANTS } from 'src/app/modules/shared/helpers/constants';
 })
 export class DiscountCardComponent implements OnInit {
 
-  @Input('cardNO') cardNO: any;
-  @Output() discountCardDetails:EventEmitter<any>= new EventEmitter();  
+  @Input() cardNO: any;
+  @Output() discountCardDetails= new EventEmitter<any>();  
 
   discountCardlist=[];
   discountCardNumber=null;
@@ -40,7 +40,7 @@ export class DiscountCardComponent implements OnInit {
 
   getDiscountCardDetails(cardNO) {
     this.discountCardlist=[];
-    let params = 
+    const params = 
     { 
     cardNo: cardNO
     };

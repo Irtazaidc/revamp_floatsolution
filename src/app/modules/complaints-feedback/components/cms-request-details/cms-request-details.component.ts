@@ -18,7 +18,7 @@ import { ComplaintDashboardService } from '../../services/complaint-dashboard.se
 })
 export class CmsRequestDetailsComponent implements OnInit {
 
-  @Input('getCMSrequestID') getCMSrequestID:number;
+  @Input() getCMSrequestID:number;
   
   constructor(
     private complaintDashboardService: ComplaintDashboardService,
@@ -40,7 +40,7 @@ export class CmsRequestDetailsComponent implements OnInit {
   complaintDetailsList;
   selectedComplaintDetails() {
   
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.getCMSrequestID,
     };
     this.complaintDashboardService.getCMSRequest(objParm).subscribe((resp: any) => {

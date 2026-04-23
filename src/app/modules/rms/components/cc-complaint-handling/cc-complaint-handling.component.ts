@@ -57,7 +57,7 @@ export class CcComplaintHandlingComponent implements OnInit {
   getObjectData: any;
   showCityAreaSelector = false;
   CompaintID=null
-  remainingCharactersforFindings:number=2000;
+  remainingCharactersforFindings=2000;
   priorityList = [];
   subSectionList = [];
   labDeptID=-1;
@@ -185,8 +185,8 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   onChangeOfCategorizedTest() {
     this.getTestProfileList();
-    let formValues = this.ComplaintDetailsForm.getRawValue()
-    let categorizedTest = formValues.cmsCategoryID;
+    const formValues = this.ComplaintDetailsForm.getRawValue()
+    const categorizedTest = formValues.cmsCategoryID;
     this.testCategorization = categorizedTest;
   }
   saveComplaintRrequest() {
@@ -195,14 +195,14 @@ export class CcComplaintHandlingComponent implements OnInit {
       this.toastr.warning('Please Fill The Mandatory Fields');
       return;
     }
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
-    let formValues = this.ComplaintDetailsForm.getRawValue();
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
+    const formValues = this.ComplaintDetailsForm.getRawValue();
     formValues.callBackCheck=formValues.callBackCheck==true?1:0;
     formValues.smsCheck=formValues.smsCheck==true?1:0;
     formValues.visitID = (formValues.visitID || '').trim().toString().replace(/\D/g, '');
     formValues.DepartmentId=formValues.DepartmentId==7?formValues.DepartmentId=2:formValues.DepartmentId;
     // formValues.DepartmentId=formValues.DepartmentId==-1?formValues.DepartmentId=null:formValues.DepartmentId;
-    let objParam = {
+    const objParam = {
       CMSTypeID: formValues.requestTypeID,
       CMSCategoryID: formValues.cmsCategoryID,
       CMSSubCategoryID: formValues.cmsSubCategory,
@@ -343,7 +343,7 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   getLocationList() {
     this.branchList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.GetBranches().subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -367,7 +367,7 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   getCMSPriorityList() {
     this.priorityList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.GetCMSPriorityList().subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -394,8 +394,8 @@ export class CcComplaintHandlingComponent implements OnInit {
     });
   }
   getCMSsubCategoryData() {
-    let formValues=this.ComplaintDetailsForm.getRawValue();
-    let params={
+    const formValues=this.ComplaintDetailsForm.getRawValue();
+    const params={
       CMSCategoryID: formValues.cmsCategoryID,
     }
     this.getfeedback.getCMSsubCategory(params).subscribe((resp: any) => {
@@ -414,13 +414,13 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let formValues = this.ComplaintDetailsForm.getRawValue();
-    let objParm = {
+    const formValues = this.ComplaintDetailsForm.getRawValue();
+    const objParm = {
       SectionID: -1,
       LabDeptID: formValues.DepartmentId,
     }    
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       console.log(err)
@@ -446,7 +446,7 @@ export class CcComplaintHandlingComponent implements OnInit {
 
   getCityAreas(CityID) {
     this.cityAreasList = []
-    let objParam = {
+    const objParam = {
       CityID: CityID
     }
     this.lookupService.getHCCityAreas(objParam).subscribe((resp: any) => {
@@ -460,7 +460,7 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1, //null
       TestProfileCode: null,
       TestProfileName: null,
@@ -482,9 +482,9 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   getEmployeesData() {
     this.employeesList = [];
-    let formValues= this.ComplaintDetailsForm.getRawValue();
+    const formValues= this.ComplaintDetailsForm.getRawValue();
 
-    let objParam = {
+    const objParam = {
       DepartmentId: formValues.assignedDepartmentId || -1, 
       DesignationId: -1,
       locId: formValues.BranchID || -1,
@@ -688,13 +688,13 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
   getLabSectionIDList
   getLabSectionID() {
-    let formValues = this.ComplaintDetailsForm.getRawValue();
+    const formValues = this.ComplaintDetailsForm.getRawValue();
     if (formValues.TPId) {
-      let objParm = {
+      const objParm = {
         TPID:formValues.TPId || null,
       }    
       this.lookupService.GetTestInfoByTPID(objParm).subscribe((resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.getLabSectionIDList = _response;
         console.log(" this.getLabSectionIDList :", this.getLabSectionIDList )
         setTimeout(() => {
@@ -730,7 +730,7 @@ export class CcComplaintHandlingComponent implements OnInit {
     // formValues.dateTo = formValues.dateTo
     //   ? Conversions.formatDateObject(formValues.dateTo)
     //   : null;
-    let objParm = {
+    const objParm = {
       CreatedByUserID:this.loggedInUser.userid,
       // DateFrom: formValues.dateFrom,
       // DateTo: formValues.dateTo,
@@ -780,9 +780,9 @@ export class CcComplaintHandlingComponent implements OnInit {
   }
 
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.loadedDocuments.filter(a => !a.docId).forEach(a => {
-      let d = {
+      const d = {
         DocId: null,
         Title: a.fileName,
         Remarks: '',

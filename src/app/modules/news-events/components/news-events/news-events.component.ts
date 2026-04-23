@@ -19,7 +19,7 @@ export class NewsEventsComponent implements OnInit {
   // this.route.snapshot.paramMap.get('id')
   ProductsPromotionsList = []
   NewsEventsList = []
-  isSpinner: boolean = true;//Hide Loader
+  isSpinner = true;//Hide Loader
   ProductPromotionID=null;
   Action=null;
   newsAndEventsMessage = 'No Recored found';
@@ -27,7 +27,7 @@ export class NewsEventsComponent implements OnInit {
   @ViewChild('authenticateAdmin') authenticateAdmin;
   username: any = "";
   password: any = "";
-  disabledButtonModal: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonModal = false; // Button Enabled / Disables [By default Enabled]
   constructor(
     private route: ActivatedRoute,
     private toastr: ToastrService,
@@ -66,7 +66,7 @@ export class NewsEventsComponent implements OnInit {
   newsAndEvents() {
     this.spinner.show();
     let response = [];
-    let Params = {
+    const Params = {
       NewsAndEventsID: null,
       ForActive:null
     }
@@ -126,7 +126,7 @@ export class NewsEventsComponent implements OnInit {
    // id is NewsAndEventsID, action(1.Deletion, 2.Active, 3.Inactive)
    deleteDeactiveNewsEvent(id, action){
     this.spinner.show();
-    let data: any = {
+    const data: any = {
       NewsAndEventsID:id,
       DeleteActive:action
     };

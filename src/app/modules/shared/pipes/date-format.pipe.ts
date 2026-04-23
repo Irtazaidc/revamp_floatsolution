@@ -11,7 +11,7 @@ import { CONSTANTS } from '../helpers/constants';
 export class DateFormatPipe implements PipeTransform {
 
   transform(value: string, format?: string): unknown {
-    let _format: any = format || CONSTANTS.DATE_TIME_FORMAT.DATE_TIME;
+    const _format: any = format || CONSTANTS.DATE_TIME_FORMAT.DATE_TIME;
     try {
       value = moment(value).format(_format);
     } catch (ex) {}

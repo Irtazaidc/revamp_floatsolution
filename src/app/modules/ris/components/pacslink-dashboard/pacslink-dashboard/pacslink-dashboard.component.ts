@@ -18,10 +18,10 @@ import { Conversions } from "src/app/modules/shared/helpers/conversions";
 export class PacslinkDashboardComponent implements OnInit {
   pacsLogList: any = [];
   pacsParamForm: FormGroup;
-  isSpinner: boolean = true;
+  isSpinner = true;
   today : NgbDate = this.calendar.getToday();
   oneDayEarlier : NgbDate = this.calendar.getPrev(this.today, 'd', 1);
-  disabledButton: boolean = false;
+  disabledButton = false;
   pagination = {
     page: 1,
     pageSize: 10,

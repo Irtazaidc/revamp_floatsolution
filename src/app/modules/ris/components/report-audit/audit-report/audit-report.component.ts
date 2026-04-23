@@ -43,7 +43,7 @@ import { ActivatedRoute } from '@angular/router';
   ]
 })
 export class AuditReportComponent implements OnInit {
-  public starRatingElements: Array<ratingElement> = [];
+  public starRatingElements: ratingElement[] = [];
   @ViewChild('detailArea') detailArea: ElementRef;
   @ViewChild('vitalsModal') vitals;
   @ViewChild('emrModal') emrModal;
@@ -111,7 +111,7 @@ export class AuditReportComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let _ratingElement = new ratingElement();
+    const _ratingElement = new ratingElement();
     //ratingElement5.readonly = true;
     _ratingElement.readonly = true;
     _ratingElement.checkedcolor = "red";
@@ -146,12 +146,12 @@ export class AuditReportComponent implements OnInit {
   AuditList = []
   getRadiologistAudit() {
     this.AuditList = [];
-    let objParam = {
+    const objParam = {
       RadiologistID: this.RadiologistID,
       AuditorRadiologistID: this.loggedInUser.empid
     }
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_AUDIT, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.AuditList = _response;
       this.cd.detectChanges();
     }, (err) => {
@@ -265,12 +265,12 @@ export class AuditReportComponent implements OnInit {
   SubSectionID = null;
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -278,7 +278,7 @@ export class AuditReportComponent implements OnInit {
   }
   getRISRadiologistAuditWorklist() {
     this.getRadiologistByAuditor();
-    let objParam = {
+    const objParam = {
       AuditorRadiologistID: this.loggedInUser.userid,
       RadiologistVisitTPAuditID: this.RadiologistVisitTPAuditID,
       RadiologistID: this.EmpId,
@@ -295,7 +295,7 @@ export class AuditReportComponent implements OnInit {
         // console.log("there we goooo resp is: ",resp)
         if (objParam.RadiologistVisitTPAuditID) {
           this.risWorklistRow = resp.PayLoad || [];
-          let row = this.risWorklistRow[0]
+          const row = this.risWorklistRow[0]
           this.visitDetailBtnClicked = true;
           this.TPId = row.TPID;
           this.VisitID = row.PIN.replaceAll("-", "");
@@ -327,7 +327,7 @@ export class AuditReportComponent implements OnInit {
           this.AuditTypeID = row.AuditTypeID || 0;
           setTimeout(() => {
             this.starRatingElements.splice(0, this.starRatingElements.length);
-            let _ratingElement = new ratingElement();
+            const _ratingElement = new ratingElement();
             _ratingElement.readonly = this.AuditStatusID > 2 ? true : false;
             _ratingElement.checkedcolor = "red";
             _ratingElement.uncheckedcolor = "black";
@@ -365,7 +365,7 @@ export class AuditReportComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.PIN
+    const pin = text.PIN
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -424,7 +424,7 @@ export class AuditReportComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.VisitID && this.TPId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -480,7 +480,7 @@ export class AuditReportComponent implements OnInit {
     //   return;
     // } 
     else {
-      let objParam = {
+      const objParam = {
         AuditorRadiologistID: this.loggedInUser.userid || -99,
         RadiologistID: this.RadiologistID,
         CreatedBy: this.loggedInUser.userid || -99,
@@ -519,7 +519,7 @@ export class AuditReportComponent implements OnInit {
             this.RadiologistVisitTPAuditID = null;
             if (this.starRatingElements.length > 0) {
               this.starRatingElements.splice(0, this.starRatingElements.length);
-              let _ratingElement = new ratingElement();
+              const _ratingElement = new ratingElement();
               //ratingElement5.readonly = true;
               _ratingElement.checkedcolor = "red";
               _ratingElement.uncheckedcolor = "black";
@@ -549,7 +549,7 @@ export class AuditReportComponent implements OnInit {
 
   EmpId = null;
   getRadiologistByAuditor() {
-    let objParams = {
+    const objParams = {
       AuditorRadiologistID: this.loggedInUser.userid,
       DateFrom: this.DateFrom ? Conversions.formatDateObject(this.DateFrom) : null,
       DateTo: this.DateTo ? Conversions.formatDateObject(this.DateTo) : null,
@@ -663,7 +663,7 @@ export class AuditReportComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -686,11 +686,11 @@ export class AuditReportComponent implements OnInit {
 
 
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -708,8 +708,8 @@ export class AuditReportComponent implements OnInit {
       this.clickSubmit = false;
     }
 
-    let dsQuestions = this.feedbackQuestions.filter(a => a.checked);
-    let dataObj = {
+    const dsQuestions = this.feedbackQuestions.filter(a => a.checked);
+    const dataObj = {
       VisitID: Number(this.VisitId),
       TPID: this.TPId,
       Remarks: this.feedbackRemarks,
@@ -783,7 +783,7 @@ export class AuditReportComponent implements OnInit {
   disabledButtonDelete = false;
   isSpinnerDelete = true;
   deleteRecord() {
-    let params = {
+    const params = {
       TableName: "dbo.RadiologistVisitTPAudit",
       PrimaryKey: "RadiologistVisitTPAuditID",
       PrimaryKeyValue: this.RadiologistVisitTPAuditID,

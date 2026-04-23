@@ -19,13 +19,13 @@ import { HCCityAuthComponent } from '../hccity-auth/hccity-auth.component';
 })
 export class ZoneConfigComponent implements OnInit {
   ZonesList: any = [];
-  cardTitle: string = "Create Zone";
-  actionLabel: string = "Save";
+  cardTitle = "Create Zone";
+  actionLabel = "Save";
   spinnerRefs = {
     hcZoneDetailSection: 'hcZoneDetailSection',
     hcZoneDetailFormSection: 'hcZoneDetailFormSection'
   }
-  isSpinner: boolean = true;
+  isSpinner = true;
   loggedInUser: UserModel;
   hcZoneConfigForm = this.fb.group({
     zoneCode: ['', Validators.compose([Validators.required])],
@@ -131,8 +131,8 @@ export class ZoneConfigComponent implements OnInit {
   InsertUpdateHCZone(zoneDet) {
     this.isSpinner = false;
     this.spinner.show(this.spinnerRefs.hcZoneDetailFormSection);
-    let formValues = this.hcZoneConfigForm.getRawValue();
-    let params = {
+    const formValues = this.hcZoneConfigForm.getRawValue();
+    const params = {
       HCZoneID: this.selZoneDetail.length ? this.selZoneDetail[0].HCZoneID : null,
       ZoneName: formValues.zoneTitle,
       HCZoneCode: formValues.zoneCode,

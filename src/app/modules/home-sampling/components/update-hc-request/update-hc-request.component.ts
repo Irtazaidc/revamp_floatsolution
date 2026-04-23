@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -22,17 +22,17 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './update-hc-request.component.html',
   styleUrls: ['./update-hc-request.component.scss']
 })
-export class UpdateHcRequestComponent implements OnInit {
+export class UpdateHcRequestComponent implements OnInit, OnChanges {
   @Input('bookingID') bookingIDInput: any;
   minDate_hcdatetime_bs = { day: moment(new Date()).get('date'), month: (moment(new Date()).get('month') + 1), year: moment(new Date()).get('year') };
-  mapName: string = "";
+  mapName = "";
   salutationsList: any = [];
   testProfileList: any = [];
   loggedInUser: UserModel;
 
   // HCDateTime: any;
   // HCtime: any;
-  InvalidHCTime: boolean = false;
+  InvalidHCTime = false;
 
   meridian = true;
 
@@ -162,7 +162,7 @@ export class UpdateHcRequestComponent implements OnInit {
   }
   getTestProfileList(tpname) {
     this.testProfileList = [];
-    let _params = {
+    const _params = {
       tpids: null,
       code: (this.searchByCodeNameRadio == 'code' ? tpname : null),
       desc: (this.searchByCodeNameRadio == 'name' ? tpname : null),
@@ -196,13 +196,13 @@ export class UpdateHcRequestComponent implements OnInit {
   }
   selectEventngbTP(event, eventType) {
     // event && event.item
-    let selectedObj = (event && event.item ? event.item : '');
+    const selectedObj = (event && event.item ? event.item : '');
 
 
     if (selectedObj) {
 
       if (selectedObj.TypeId == 3) {
-        let _params = {
+        const _params = {
           packageId: selectedObj.TPId,
           branchId: this.loggedInUser.locationid,
           // panelId: (this.selectedPanel || '') // this.selectedPanel ? this.selectedPanel.PaselectEventngbTPnelId : '' //this.patientBasicInfo.value.corporateClientID || '',
@@ -223,8 +223,8 @@ export class UpdateHcRequestComponent implements OnInit {
                 element.TaxRate = selectedObj.TaxRate || 0
               });
 
-              let sameTestProfiles = data.forEach(a => { // if test/profile is in package then remove already added test/profile and use test/profile that is part of package
-                let exist = this.selectedTestProfiles.find(b => b.TPId == a.TPId);
+              const sameTestProfiles = data.forEach(a => { // if test/profile is in package then remove already added test/profile and use test/profile that is part of package
+                const exist = this.selectedTestProfiles.find(b => b.TPId == a.TPId);
                 if (exist) {
                   this.selectedTestProfiles = this.selectedTestProfiles.filter(b => b.TPId != a.TPId);
                 }
@@ -253,12 +253,12 @@ export class UpdateHcRequestComponent implements OnInit {
         });
       }
       if (!this.selectedTestProfiles.find(a => a.TPId == selectedObj.TPId)) {
-        let aa = JSON.parse(JSON.stringify(selectedObj));
+        const aa = JSON.parse(JSON.stringify(selectedObj));
         aa.ProcessId = 1;
         this.selectedTestProfiles.push(aa);
 
         if (aa.TypeId == 1 || aa.TypeId == 3) {
-          let profilesIds = this.selectedTestProfiles.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
+          const profilesIds = this.selectedTestProfiles.filter(a => a.TypeId == 2).map(a => a.TPId).join(',');
           this.checkIfTestAlreadyAddedInProfile(profilesIds);
         } else if (aa.TypeId == 2) {
           this.checkIfTestAlreadyAddedInProfile(aa.TPId);
@@ -280,16 +280,16 @@ export class UpdateHcRequestComponent implements OnInit {
     })
   }
   checkIfTestAlreadyAddedInProfile(profileIds) {
-    let _profileIds = profileIds;
+    const _profileIds = profileIds;
     if (!_profileIds) {
       return;
     }
-    let params = {
+    const params = {
       profileIds: _profileIds
     }
     this.tpService.getTestsByProfileId(params).subscribe((res: any) => {
       if (res.StatusCode == 200 && res.PayLoad) {
-        let testsAlreadyInProfile = [];
+        const testsAlreadyInProfile = [];
         this.selectedTestProfiles.filter(a => a.TypeId == 1).forEach(a => {
           if (res.PayLoad.find(b => b.TestId == a.TPId)) {
             testsAlreadyInProfile.push(a);
@@ -319,7 +319,7 @@ export class UpdateHcRequestComponent implements OnInit {
 
   }
   getBookingDetailByBookingID(bookingID) {
-    let params = {
+    const params = {
       BookingID: bookingID,
       UserId: this.loggedInUser.userid,
       BranchID: this.loggedInUser.locationid
@@ -332,9 +332,9 @@ export class UpdateHcRequestComponent implements OnInit {
       if (resp.StatusCode == 200 && resp.PayLoadDS.Table.length) {
 
         this.HCRequestData = resp.PayLoadDS.Table[0];
-        let formatedDatetime = this.HCRequestData.HCDateTime.split('T');
-        let formateddate = { day: moment(formatedDatetime[0]).get('date'), month: (moment(formatedDatetime[0]).get('month') + 1), year: moment(formatedDatetime[0]).get('year') };
-        let formatedTime = { hour: moment(this.HCRequestData.HCDateTime).get('hour'), minute: (moment(this.HCRequestData.HCDateTime).get('minute')) };
+        const formatedDatetime = this.HCRequestData.HCDateTime.split('T');
+        const formateddate = { day: moment(formatedDatetime[0]).get('date'), month: (moment(formatedDatetime[0]).get('month') + 1), year: moment(formatedDatetime[0]).get('year') };
+        const formatedTime = { hour: moment(this.HCRequestData.HCDateTime).get('hour'), minute: (moment(this.HCRequestData.HCDateTime).get('minute')) };
         console.log("HCRequestData/, ", this.HCRequestData);
         // if (this.HCRequestData.length) {
         this.updateBookingForm.patchValue({
@@ -369,7 +369,7 @@ export class UpdateHcRequestComponent implements OnInit {
     });
   }
   _getBookingDetailByBookingID(bookingID) {
-    let params = {
+    const params = {
       BookingID: bookingID,
       UserId: this.loggedInUser.userid
     }
@@ -379,9 +379,9 @@ export class UpdateHcRequestComponent implements OnInit {
       // if (resp.PayLoad[0].length) {
       if (resp.StatusCode == 200 && resp.PayLoad.length) {
         this.HCRequestData = resp.PayLoad[0];
-        let formatedDatetime = this.HCRequestData.HCDateTime.split('T');
-        let formateddate = { day: moment(formatedDatetime[0]).get('date'), month: (moment(formatedDatetime[0]).get('month') + 1), year: moment(formatedDatetime[0]).get('year') };
-        let formatedTime = { hour: moment(this.HCRequestData.HCDateTime).get('hour'), minute: (moment(this.HCRequestData.HCDateTime).get('minute')) };
+        const formatedDatetime = this.HCRequestData.HCDateTime.split('T');
+        const formateddate = { day: moment(formatedDatetime[0]).get('date'), month: (moment(formatedDatetime[0]).get('month') + 1), year: moment(formatedDatetime[0]).get('year') };
+        const formatedTime = { hour: moment(this.HCRequestData.HCDateTime).get('hour'), minute: (moment(this.HCRequestData.HCDateTime).get('minute')) };
         console.log("HCRequestData/, ", this.HCRequestData);
         // if (this.HCRequestData.length) {
         this.updateBookingForm.patchValue({
@@ -414,14 +414,14 @@ export class UpdateHcRequestComponent implements OnInit {
   }
 
   updateBookingRequest() {
-    let formData = this.updateBookingForm.getRawValue();
-    let selhcdatetime = formData.HCDateTime.year + '-' + formData.HCDateTime.month + '-' + formData.HCDateTime.day + ' ' + formData.HcTime.hour + ':' + formData.HcTime.minute
-    let testProfileArr = [];
+    const formData = this.updateBookingForm.getRawValue();
+    const selhcdatetime = formData.HCDateTime.year + '-' + formData.HCDateTime.month + '-' + formData.HCDateTime.day + ' ' + formData.HcTime.hour + ':' + formData.HcTime.minute
+    const testProfileArr = [];
     this.getValidAddedTestsProfiles().forEach(a => {
       //let _discountedValue = a.IsDiscountable && this.discountPercentage ? (((a.TestProfilePrice || 0) * this.discountPercentage) / 100) : 0;
       //_discountedValue = Math.round(_discountedValue);
       //totalCalculatedDiscount += _discountedValue;
-      let testProfileObj = {
+      const testProfileObj = {
         VisitId: null,
         TPId: a.TPId,
         Price: (a.TestProfilePrice || 0),
@@ -447,7 +447,7 @@ export class UpdateHcRequestComponent implements OnInit {
       }
       testProfileArr.push(testProfileObj);
     });
-    let params = {
+    const params = {
       "BookingID": this.queryParams.BID ? atob(this.queryParams.BID) : this.bookingIDInput,
       "PatientFirstName": formData.FirstName,
       "PatientLastName": formData.LastName,
@@ -492,10 +492,10 @@ export class UpdateHcRequestComponent implements OnInit {
   //#region DateTime Checks
   CheckHCTime(event) {
 
-    let selhcdate = this.updateBookingForm.controls["HCDateTime"].value;
-    let selhctime = this.updateBookingForm.controls["HcTime"].value;
-    let SelHCDateTime = selhcdate.year + "-" + selhcdate.month + "-" + selhcdate.day; + ' ' + selhctime.hour + ':' + selhctime.minute;
-    let outputDate = new Date(SelHCDateTime);
+    const selhcdate = this.updateBookingForm.controls["HCDateTime"].value;
+    const selhctime = this.updateBookingForm.controls["HcTime"].value;
+    const SelHCDateTime = selhcdate.year + "-" + selhcdate.month + "-" + selhcdate.day; + ' ' + selhctime.hour + ':' + selhctime.minute;
+    const outputDate = new Date(SelHCDateTime);
 
     outputDate.setHours(event.hour || selhctime.hour);
     outputDate.setMinutes(event.minute || selhctime.minute);
@@ -574,7 +574,7 @@ export class UpdateHcRequestComponent implements OnInit {
         }
       }
     }
-    let hashes = encryptedQueryString.split('&'); // atob
+    const hashes = encryptedQueryString.split('&'); // atob
     for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split(/=(.+)/); //.split('=');
       //vars.push(hash[0]);
@@ -595,7 +595,7 @@ export class UpdateHcRequestComponent implements OnInit {
         //vars.push('accNo');
         vars['accNo'] = vars['VisitNo'];
       }
-      let graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
+      const graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
       if (a == graphicalParameter) {
         if (vars[graphicalParameter] != 'false' && vars[graphicalParameter] != false && vars[graphicalParameter] != 0 && vars[graphicalParameter] != '0') {
           //vars.push('rpty');
@@ -617,18 +617,18 @@ export class UpdateHcRequestComponent implements OnInit {
     return this.selectedTestProfiles.filter(a => a.allowForReg != false);
   }
   RidersDetail() {
-    let params = {
+    const params = {
       RiderID: 0
     }
     this.HCService.GetRiders(params).subscribe((resp: any) => {
       this.RidersDetailList = resp.PayLoad;
-      let aa = this.RidersDetailList.filter(a => { return a.RiderStatusID == 1 });
+      const aa = this.RidersDetailList.filter(a => { return a.RiderStatusID == 1 });
 
     }, (err) => { console.log(err) })
   }
   showTPParameters(tp) {
     this.tpParametersForPopover = [];
-    let params = {
+    const params = {
       profileIds: tp.TPId
     }
     this.tpParametersForPopover = [{ Code: 'Loading...', Name: '' }];
@@ -660,7 +660,7 @@ export class UpdateHcRequestComponent implements OnInit {
       });
     }
     else {
-      let _calculatedDob = this.calculateDOB(value, this.updateBookingForm.value.dmy);
+      const _calculatedDob = this.calculateDOB(value, this.updateBookingForm.value.dmy);
       this.updateBookingForm.patchValue({
         DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
       });
@@ -677,7 +677,7 @@ export class UpdateHcRequestComponent implements OnInit {
     } else if (dmy == '3') {
       dob = moment(dob).subtract(number, 'years')
     }
-    let calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
+    const calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
     /*
     this.patientBasicInfo.patchValue({
       DateOfBirth: calculatedDob, // moment(dob).format(this.dateFormat)
@@ -692,7 +692,7 @@ export class UpdateHcRequestComponent implements OnInit {
         Age: 1
       });
     }
-    let _calculatedDob = this.calculateDOB(this.updateBookingForm.value.Age, value);
+    const _calculatedDob = this.calculateDOB(this.updateBookingForm.value.Age, value);
     this.updateBookingForm.patchValue({
       DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
     });

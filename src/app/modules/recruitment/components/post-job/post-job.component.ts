@@ -24,8 +24,8 @@ import { AuthService, UserModel } from 'src/app/modules/auth';
   styleUrls: ['./post-job.component.scss']
 })
 export class PostJobComponent implements OnInit {
-  JobDescription: string = '<p></p>';
-  Skills: string = '<p></p>';
+  JobDescription = '<p></p>';
+  Skills = '<p></p>';
   JobRequestForm = this.fb.group({
     JobTitle: ['', Validators.compose([Validators.required])],
     JobCategory: ['', Validators.compose([Validators.required])],
@@ -67,10 +67,10 @@ export class PostJobComponent implements OnInit {
     jobSearchSection:'jobSearchSection'
   }
   JobList = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  disabledButtonModal: boolean = false; // Button Enabled / Disables [By default Enabled] for modal
-  isSpinnerModal: boolean = true;//Hide Loader for modal
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  disabledButtonModal = false; // Button Enabled / Disables [By default Enabled] for modal
+  isSpinnerModal = true;//Hide Loader for modal
 
   @ViewChild('pendModal') pendModal;
   @ViewChild('cancelModal') cancelModal;
@@ -79,8 +79,8 @@ export class PostJobComponent implements OnInit {
   JobStatusID=null;
   ActionLabel ="Save"
   JobStatusIDParam: any;
-  AgeLimitError: boolean=false;
-  DateError: boolean=false;
+  AgeLimitError=false;
+  DateError=false;
   loggedInUser: UserModel;
   
   
@@ -207,14 +207,14 @@ export class PostJobComponent implements OnInit {
   searchJobRequest(){
     this.spinner.show(this.spinnerRefs.jobSearchSection);
     this.JobList =[];
-    let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const formValues = this.formSearchJob.getRawValue();
+    const objParm = {
       LocID:  formValues.branchIds,
       DepartmentID:  formValues.departmentIds,
       JobStatusID:  formValues.JobStatus?formValues.JobStatus:null
     }
     this.recruitment.searchJobRequest(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad || [];
+      const resSearchJob = res.PayLoad || [];
       // if(resSearchJob.length){
       //   resSearchJob = resSearchJob.filter( a=> (a.JobStatusID != 2 && a.JobStatusID != 5));
       // }
@@ -232,7 +232,7 @@ export class PostJobComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -335,7 +335,7 @@ export class PostJobComponent implements OnInit {
     this.JobStatusID=statusID;
     this.ExistingRow = [];
     this.ExistingRowRemarks =[];
-    let paramObj = {
+    const paramObj = {
       JobRequestID:this.JobRequestID
     }
     
@@ -373,13 +373,13 @@ export class PostJobComponent implements OnInit {
   addUpdateJobRequest(){
     this.spinner.show(this.spinnerRefs.jobRequestFormSection); 
     this.loadingProcess('show');
-    let formValues = this.JobRequestForm.getRawValue();
+    const formValues = this.JobRequestForm.getRawValue();
     this.JobRequestForm.markAllAsTouched();
     if(this.JobRequestForm.invalid) {
       this.spinner.hide(this.spinnerRefs.jobRequestFormSection);
       this.toastr.warning('Please fill the required fields...!'); return false;
     } else {
-      let formData = {
+      const formData = {
         JobRequestID : this.JobRequestID,
         JobTitle : formValues.JobTitle,
         DesignationID : formValues.Designation,
@@ -458,10 +458,10 @@ export class PostJobComponent implements OnInit {
 
   changeJobRequestStatus(){
     this.loadingProcess('show') 
-     let formValues = this.formStatusPopUp.getRawValue();
+     const formValues = this.formStatusPopUp.getRawValue();
      this.formStatusPopUp.markAllAsTouched();
     if(this.formStatusPopUp.valid) {
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid || -99,
         tblJobRequestStatus: [{
           "JobRequestID": this.JobRequestID,

@@ -21,8 +21,8 @@ export class FreeTestApprovalsComponent implements OnInit {
   pendingList: any[] = [];
   pendingItemList: any[] = [];
   ActionLabel = "Submit";
-  disabledButton: boolean = false;
-  requestRemarks: string = "";
+  disabledButton = false;
+  requestRemarks = "";
   confirmationPopoverConfig = {
     placements: ["top", "left", "right", "bottom"],
     popoverTitle:

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnChanges } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ThirdShortlistedApplicantsComponent } from 'src/app/modules/recruitment/components/third-shortlisted-applicants/third-shortlisted-applicants.component';
@@ -21,12 +21,12 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
   templateUrl: './action-buttons-large.component.html',
   styleUrls: ['./action-buttons-large.component.scss']
 })
-export class ActionButtonsLargeComponent implements OnInit {
+export class ActionButtonsLargeComponent implements OnInit, OnChanges {
   techHistoryModalPopupRef: NgbModalRef;
   @ViewChild('techHistoryModal') techHistoryModal;
-  @Input('isStatusChanged') isStatusChanged: any = [];
+  @Input() isStatusChanged: any = [];
   @Output() isShowCard = new EventEmitter<any>();
-  @Input('VisitDateTime') VisitDateTime = { RegistrationDate: null, DeliveryDate: null };
+  @Input() VisitDateTime = { RegistrationDate: null, DeliveryDate: null };
   loggedInUser: UserModel;
 
   PatientID: any = null;
@@ -112,7 +112,7 @@ export class ActionButtonsLargeComponent implements OnInit {
           this.toastr.warning("MO not performed against this test", "MO Consent")
         } else {
           url = url + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(this.VisitID), TPID: this.TPID }));
-          let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
+          const winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
         }
 
         break;
@@ -137,7 +137,7 @@ export class ActionButtonsLargeComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.VisitID && this.TPID) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPID
       }
@@ -181,7 +181,7 @@ export class ActionButtonsLargeComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -274,7 +274,7 @@ export class ActionButtonsLargeComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -295,11 +295,11 @@ export class ActionButtonsLargeComponent implements OnInit {
     }
   }
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -316,17 +316,17 @@ export class ActionButtonsLargeComponent implements OnInit {
     if (!this.RISWorkListID) {
       this.toastr.warning("No history recorded"); return;
     }
-    let objParams = {
+    const objParams = {
       RISWorkListID: this.RISWorkListID
     }
     this.sharedService.getData(API_ROUTES.GET_TECHNICIAN_HISTORY_JSON, objParams).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.techHistorySection);
       if (resp.StatusCode == 200) {
-        let technicianHitory = resp.PayLoad[0] || [];
+        const technicianHitory = resp.PayLoad[0] || [];
         this.objJson = technicianHitory.TechnicianHistoryJSON ? JSON.parse(technicianHitory.TechnicianHistoryJSON) : []
         // console.log("this.objJson:", this.objJson)
         if (this.objJson.length) {
-          for (let obj of this.objJson) {
+          for (const obj of this.objJson) {
             if (obj.technicianHitory !== "") {
               this.isHistory = true;
               break;

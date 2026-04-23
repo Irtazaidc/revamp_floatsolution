@@ -47,7 +47,7 @@ export class ShareAssignComponent implements OnInit {
   AssignedDataList = [];
   isDissabledChk = false;
   isFieldDisabled = false;
-  isChecked: boolean = true;
+  isChecked = true;
   searchAssignForm: FormGroup = this.formBuilder.group(this.Fields)
 
 
@@ -72,7 +72,7 @@ export class ShareAssignComponent implements OnInit {
   mainChk
   isValues
   radiologistLevel: any = []
-  isLargeScreen: boolean = false;
+  isLargeScreen = false;
   subSectionList: any = [];
   constructor(
     private formBuilder: FormBuilder,
@@ -157,12 +157,12 @@ export class ShareAssignComponent implements OnInit {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -170,13 +170,13 @@ export class ShareAssignComponent implements OnInit {
   }
 
   updateDoctorShare() {
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     if (this.searchAssignForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     };
-    let checkedItems = this.dataSetList.filter(a => a.checked);
+    const checkedItems = this.dataSetList.filter(a => a.checked);
     // console.log("🚀 checkedItems:", checkedItems)
     if (!checkedItems.length) {
       this.toastr.warning("Please select item(s) to update");
@@ -194,7 +194,7 @@ export class ShareAssignComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       CreatedBy: this.loggedInUser.userid || -99,
       LevelID: formValues.radlevel || null,
       tblRISLevelLocationTPShare: checkedItems.map(a => {
@@ -251,7 +251,7 @@ export class ShareAssignComponent implements OnInit {
   }
 
   getRadiologistInfoDetail() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.questionnaireSrv.getRadiologistInfoDetail(params).subscribe((res: any) => {
@@ -320,7 +320,7 @@ export class ShareAssignComponent implements OnInit {
 
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       BranchID: 1,
       isRadiologyTests: 1,
       SubSectionIDs: this.SubSectionIDs
@@ -411,13 +411,13 @@ export class ShareAssignComponent implements OnInit {
       this.isSubmitted = true;
       return;
     };
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     if (!formValues.TPID) {
       this.toastr.warning("Please select any test", "Validation error");
       return;
     }
     // let selectedTPID = event.TPId;
-    let objParams = {
+    const objParams = {
       TPID: formValues.TPID || null,
       // LevelID: formValues.radlevel || null,
       SubSectionIDs: (formValues.subSectionIDs && formValues.subSectionIDs.length) ? formValues.subSectionIDs.join(', ') : null
@@ -426,7 +426,7 @@ export class ShareAssignComponent implements OnInit {
     this.doctorShare.getAllLocationByTPID(objParams).subscribe((res: any) => {
       setTimeout(() => { this.spinner.hide(this.spinnerRefs.searchTable); }, 100);
       if (res.StatusCode == 200 && res.PayLoad.length) {
-        let locData = res.PayLoad;
+        const locData = res.PayLoad;
         this.dataSetList = this.mergeLocDataSets(locData, this.dataSetListExisting);
       }
       else {
@@ -456,8 +456,8 @@ export class ShareAssignComponent implements OnInit {
       this.isSubmitted = true;
       return;
     };
-    let formValues = this.searchAssignForm.getRawValue();
-    let objParams = {
+    const formValues = this.searchAssignForm.getRawValue();
+    const objParams = {
       BranchID: formValues.locID || null,
       isRadiologyTests: 1,   //1 for Radiology 0 for Lab
       // LevelID: formValues.radlevel || null,
@@ -496,14 +496,14 @@ export class ShareAssignComponent implements OnInit {
       this.isSubmitted = true;
       return;
     };
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     if (!formValues.locID) {
       this.toastr.warning("Please select any branch", "Validation error");
       return;
     }else{
       this.BranchId = true;
     }
-    let objParams = {
+    const objParams = {
       BranchID: formValues.locID || null,
       isRadiologyTests: 1,   // 1 for Radiology 0 for Lab
       LevelID: formValues.radlevel || null,
@@ -516,7 +516,7 @@ export class ShareAssignComponent implements OnInit {
 
       if (res.StatusCode == 200) {
         if (res.PayLoad.length) {
-          let testData = res.PayLoad;
+          const testData = res.PayLoad;
           // Merge dataSetListExisting into dataSetList
           this.dataSetList = this.mergeDataSets(testData, this.dataSetListExisting);
         } else {
@@ -541,7 +541,7 @@ export class ShareAssignComponent implements OnInit {
   }
 
   mergeDataSets(mainData: any[], existingData: any[]) {
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     // Iterate over each item in the main data array
     mainData.forEach(mainItem => {
       // Find the corresponding item in the existing data array based on TPId and LevelID
@@ -550,7 +550,7 @@ export class ShareAssignComponent implements OnInit {
 
       // If a match is found, append or update the fields from the matched item to the main item
       if (matchedItem) {
-        for (let key in matchedItem) {
+        for (const key in matchedItem) {
           // Skip TPID and LevelID to avoid overwriting the main item keys
           if (key !== 'TPID' && key !== 'LevelID') {
             mainItem[key] = matchedItem[key];
@@ -563,7 +563,7 @@ export class ShareAssignComponent implements OnInit {
     return mainData;
   }
   mergeLocDataSets(mainData: any[], existingData: any[]) {
-    let formValues = this.searchAssignForm.getRawValue();
+    const formValues = this.searchAssignForm.getRawValue();
     // Iterate over each item in the main data array
     mainData.forEach(mainItem => {
       // Find the corresponding item in the existing data array based on TPId and LevelID
@@ -571,7 +571,7 @@ export class ShareAssignComponent implements OnInit {
 
       // If a match is found, append or update the fields from the matched item to the main item
       if (matchedItem) {
-        for (let key in matchedItem) {
+        for (const key in matchedItem) {
           // Skip TPID and LevelID to avoid overwriting the main item keys
           if (key !== 'LocID' && key !== 'LevelID') {
             mainItem[key] = matchedItem[key];
@@ -704,8 +704,8 @@ export class ShareAssignComponent implements OnInit {
   }
   dataSetListExisting = [];
   getRISLevelLocationTPShare() {
-    let formValues = this.searchAssignForm.getRawValue();
-    let objParams = {
+    const formValues = this.searchAssignForm.getRawValue();
+    const objParams = {
       TPID: formValues.TPID || null,
       LevelID: formValues.radlevel || null,
       LocID: formValues.locID || null,
@@ -768,7 +768,7 @@ export class ShareAssignComponent implements OnInit {
   }
   
   copyDataToSelectedBranch() {
-      let formValues = this.searchAssignForm.getRawValue()
+      const formValues = this.searchAssignForm.getRawValue()
       // const locId = this.searchAssignForm.get('locID')
     if (!this.sourceBranchId) {
       this.toastr.warning("Please select branch first");

@@ -23,9 +23,9 @@ import moment from "moment";
 export class BranchClosingComponent implements OnInit {
   BranchClosingID: any;
   CardTitle = "Branch Closing";
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   ActionLabel = "Add";
-  isSpinner: boolean = true; //Hide Loader
+  isSpinner = true; //Hide Loader
 
   rowIndex = null;
 
@@ -175,7 +175,7 @@ export class BranchClosingComponent implements OnInit {
   branchList = [];
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -261,7 +261,7 @@ export class BranchClosingComponent implements OnInit {
   getAllSaleByFDO() {
     const formValues = this.branchClosingForm.getRawValue();
 
-    let params = {
+    const params = {
       userId: this.selectedUserId, // 2163, // 768 //
       fromDate: moment().subtract(7, "days").format("YYYY-MM-DDT00:00:00.000"),//Conversions.formatDateObject(formValues.saleDate) ?? null,
       toDate: Conversions.formatDateObject(formValues.saleDate) ?? null, //Conversions.formatDateObject(formValues.saleDate) ?? null
@@ -307,7 +307,7 @@ export class BranchClosingComponent implements OnInit {
 
   calculateNoteTotals() {
     this.grandTotal = 0;
-    for (let note of this.notes) {
+    for (const note of this.notes) {
       note.total = note.quantity * note.denomination;
       this.grandTotal += note.total;
     }
@@ -372,11 +372,11 @@ export class BranchClosingComponent implements OnInit {
       return;
     }  
 
-    let checkedItems = this.pagination.paginatedSearchResults.filter(
+    const checkedItems = this.pagination.paginatedSearchResults.filter(
       (a) => a.checked
     );
     // console.log("🚀 ~ BranchClosingComponent ~ saveBranhClosing ~ checkedItems:", checkedItems)
-    let docsToSave = this.formatUploadedDocsData().filter((a) => !a.docId) || [];
+    const docsToSave = this.formatUploadedDocsData().filter((a) => !a.docId) || [];
     if (!checkedItems?.length) {
       this.toastr.warning("Please select item(s) to update");
       return;
@@ -389,7 +389,7 @@ export class BranchClosingComponent implements OnInit {
         this.toastr.warning("Please attach only one document at a time.");
       return;
     }
-    let params = {
+    const params = {
       Cash: this.closingData.Cash,
       CreditCard: this.closingData.CreditCard,
       Others: this.closingData.Others,
@@ -438,7 +438,7 @@ export class BranchClosingComponent implements OnInit {
 
   refreshPagination() {
     this.pagination.filteredSearchResults = this.depositList;
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -458,7 +458,7 @@ export class BranchClosingComponent implements OnInit {
       return;
     }
     this.BranchSummaryReport = [];
-    let params = {
+    const params = {
       LocId: formValues.locId || null,
       date: Conversions.formatDateObject(formValues.saleDate) ?? null,
     };
@@ -516,11 +516,11 @@ export class BranchClosingComponent implements OnInit {
   }
   urlParams: any = {};
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.loadedDocuments
       .filter((a) => !a.docId)
       .forEach((a) => {
-        let d = {
+        const d = {
           DocId: null,
           Title: a.fileName,
           Remarks: "",
@@ -540,7 +540,7 @@ export class BranchClosingComponent implements OnInit {
   }
 
   SAveBranchClosing() {
-    let docsToSave =
+    const docsToSave =
       this.formatUploadedDocsData().filter((a) => !a.docId) || [];
   }
 
@@ -564,7 +564,7 @@ export class BranchClosingComponent implements OnInit {
     this.AccountCode = null;
   }
 
-  OriginalCash: number = 0;
+  OriginalCash = 0;
 
 
  getLatestTotalAmount() {
@@ -594,7 +594,7 @@ export class BranchClosingComponent implements OnInit {
   }
 
   getSlipHTML(): string {
-     let denomRows = this.notes.map(n => `
+     const denomRows = this.notes.map(n => `
       <tr class="denomination-row">
         <td></td>
         <td></td>

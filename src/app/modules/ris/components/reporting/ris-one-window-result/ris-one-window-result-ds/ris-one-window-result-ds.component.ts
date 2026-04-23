@@ -81,8 +81,8 @@ export class RisOneWindowResultDsComponent implements OnInit {
   }
 
   getVisitsForResultEntry(visitid = '') {
-    let formValues = this.searchVisitsForm.getRawValue();
-    let params = {
+    const formValues = this.searchVisitsForm.getRawValue();
+    const params = {
       locationIds: (formValues.branchIds || [this.loggedInUser.locationid]).join(','),
       statusIds: formValues.statusId || "", // 9 for report
       fromDate: formValues.fromDate ? Conversions.formatDateObject(formValues.fromDate) : '',
@@ -118,7 +118,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
       return;
     }
     this.searchPatient(visit.PatientId);
-    let params = {
+    const params = {
       visitId: visit.VisitId, // '201101056967', // '210301074271', //visit.VisitId,
       tpId: '1215'
     };
@@ -186,9 +186,9 @@ export class RisOneWindowResultDsComponent implements OnInit {
     if (!this.selectedVisit || !this.selectedVisit.VisitId) {
       return;
     }
-    let testResultsToSave = [];
+    const testResultsToSave = [];
     this.visitTestsList.forEach(a => {
-      let _obj = { ...a };
+      const _obj = { ...a };
 
       if (_obj.checked) {
         testResultsToSave.push(_obj);
@@ -212,7 +212,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
     //   userId: this.loggedInUser.userid,
     //   result: testResultsToSave[0].Result
     // };
-    let _params = {
+    const _params = {
       UserId: this.loggedInUser.userid,
       VisitId: this.selectedVisit.VisitId,
       TPId: this.tpid,
@@ -220,7 +220,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
       TestResults: []
     }
     testResultsToSave.forEach(tp => {
-      let _obj = {
+      const _obj = {
         VisitID: this.selectedVisit.VisitId,
         TestID: tp.TPID,
         ParamID: tp.ParamID,
@@ -235,7 +235,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
     this.visitResultsService.updatePatientVisitTestStatusFoRIS(_params).subscribe((res: any) => {
       this.spinner.hide();
       if (res && res.StatusCode == 200) {
-        let result = JSON.parse(res.PayLoadStr)
+        const result = JSON.parse(res.PayLoadStr)
         if (result[0].Result == 1) {
           this.toastr.success(res.Message);
         }
@@ -265,7 +265,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
   }
 
   searchPatient(patientId) {
-    let patientSearchParams = {
+    const patientSearchParams = {
       PatientID: patientId, //65201868
     }
     if (patientSearchParams.PatientID) {
@@ -290,12 +290,12 @@ export class RisOneWindowResultDsComponent implements OnInit {
   }
 
   populatePatientFields(data) {
-    let _patPic = (data.OrbitPatientPic || data.PatientPic || '');
-    let _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
+    const _patPic = (data.OrbitPatientPic || data.PatientPic || '');
+    const _formattedPic = _patPic ? ((_patPic.indexOf('data:image/') == -1) ? (CONSTANTS.IMAGE_PREFIX.PNG + _patPic) : _patPic) : '';
     // let _formattedDob = {day:moment(data.DateOfBirth).get('date'),month:(moment(data.DateOfBirth).get('month')),year:moment(data.DateOfBirth).get('year')};
     let _formattedAge = '';
     if (data.DateOfBirth) {
-      let _ageObj: any = data.DateOfBirth ? this.calculateAge(new Date(data.DateOfBirth)) : {};
+      const _ageObj: any = data.DateOfBirth ? this.calculateAge(new Date(data.DateOfBirth)) : {};
       _formattedAge = _ageObj.years ? (_ageObj.years + ' yr(s)') : (_ageObj.months + ' mon') ? _ageObj.months : (_ageObj.days + ' day(s)');
     }
     // console.log('populatePatientFields ', _formattedDob);
@@ -331,14 +331,14 @@ export class RisOneWindowResultDsComponent implements OnInit {
     // var ageDifMs = Date.now() - birthday.getTime();
     // var ageDate = new Date(ageDifMs); // miliseconds from epoch
     // return Math.abs(ageDate.getUTCFullYear() - 1970);
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
@@ -387,7 +387,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
   getTestStatus() {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.testStatusList = _response;
     }, (err) => {
     })
@@ -395,7 +395,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -408,7 +408,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
     }, (err) => { })
   }
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     console.log(this.screenPermissionsObj);
   }
@@ -518,7 +518,7 @@ export class RisOneWindowResultDsComponent implements OnInit {
   // Blur/Enter validation (clears invalid so it can’t be submitted)
   validateCreatinineValueSingle() {
   if (this.result !== null && this.result !== undefined && this.result !== '') {
-    let s = this.result.toString().trim().replace(/[^0-9.]/g, '');
+    const s = this.result.toString().trim().replace(/[^0-9.]/g, '');
 
     const decimalCount = (s.match(/\./g) || []).length;
     if (decimalCount > 1) {

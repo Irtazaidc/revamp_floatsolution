@@ -79,7 +79,7 @@ export class RiderShareReportComponent implements OnInit {
       }
 
       // Prepare parameters
-      let objParm = {
+      const objParm = {
         DateFrom: Conversions.formatDateObject(this.dateFrom),
         DateTo: Conversions.formatDateObject(this.dateTo),
         // RiderID: -1,   //this was for mobile application
@@ -106,7 +106,7 @@ export class RiderShareReportComponent implements OnInit {
   // Convert RidersDetailF to a Promise
   fetchRiderID(): Promise<number> {
     return new Promise((resolve, reject) => {
-      let params = {
+      const params = {
         RiderID: 0,
         LocID: this.currentCityID,
       };
@@ -129,7 +129,7 @@ export class RiderShareReportComponent implements OnInit {
   }
 
   RidersDetailF() {
-    let params = {
+    const params = {
       RiderID: 0,
       LocID: this.currentCityID,
     };

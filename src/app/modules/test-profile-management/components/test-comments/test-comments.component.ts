@@ -51,7 +51,7 @@ export class TestCommentsComponent implements OnInit {
   ModifiedBy = null;
   TPID: any;
   ExTPID: any;
-  isAuthenticated: boolean = false;
+  isAuthenticated = false;
   isHCTestProfile = false;
   isOnlineBookingAllowed = false;
   selectedAlternateTestCollectionMedium: any;
@@ -71,11 +71,11 @@ export class TestCommentsComponent implements OnInit {
 
   TPParams = [];
   CardTitle: string;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   TestProfileCode: any;
-  disabledButtonRemove: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerRemove: boolean = true;//Hide Loader
+  disabledButtonRemove = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerRemove = true;//Hide Loader
   constructor(
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
@@ -83,7 +83,7 @@ export class TestCommentsComponent implements OnInit {
     private auth: AuthService,
     private tpService: TestProfileService
   ) { }
-  hasQueryParams: boolean = false;
+  hasQueryParams = false;
   ngOnInit(): void {
     this.loadLoggedInUserInfo();
     this.getTestProfileList('');
@@ -152,7 +152,7 @@ export class TestCommentsComponent implements OnInit {
   searchText = "";
   getTestProfileList(tpname) {
     this.testProfileList = [];
-    let _params = {
+    const _params = {
       tpids: null,
       branchId: 1
     }
@@ -181,9 +181,9 @@ export class TestCommentsComponent implements OnInit {
   }
   rowIndex = null;
   TPRow = [];
-  TPComments: string = '<p></p>';
-  TPCode: string = '';
-  TestProfileName: string = '';
+  TPComments = '<p></p>';
+  TPCode = '';
+  TestProfileName = '';
   getTestCommentWithID(row, i) {
     this.TPCode = row.TestProfileCode;
     this.TestProfileName = row.TestProfileName;
@@ -192,7 +192,7 @@ export class TestCommentsComponent implements OnInit {
     this.TPNameCardHeader = this.TPCode + ' - ' + this.TestProfileName;
     let response = []
     this.spinner.show();
-    let params = {
+    const params = {
       TPID: this.TPID
     }
     this.spinner.show(this.spinnerRefs.mainFormSection);
@@ -212,7 +212,7 @@ export class TestCommentsComponent implements OnInit {
 
   TPNameCardHeader = "Test Profile Config";
   updateTPComments() {
-    let param = {
+    const param = {
       TPID: this.TPID,
       TPComments: this.TPComments,
       ModifyBy: this.loggedInUser.userid

@@ -19,7 +19,7 @@ import { TestProfileService } from "src/app/modules/patient-booking/services/tes
 import { AppPopupService } from "src/app/modules/shared/helpers/app-popup.service";
 import { NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { DoctorShareService } from "src/app/modules/ris/services/doctor-share.service";
-import { ChangeDetectorRef, NgZone } from "@angular/core";
+import { ChangeDetectorRef, NgZone, OnDestroy } from "@angular/core";
 import { Conversions } from "src/app/modules/shared/helpers/conversions";
 
 @Component({
@@ -29,7 +29,7 @@ import { Conversions } from "src/app/modules/shared/helpers/conversions";
   templateUrl: "./machine-mgt.component.html",
   styleUrls: ["./machine-mgt.component.scss"],
 })
-export class MachineMgtComponent implements OnInit {
+export class MachineMgtComponent implements OnInit, OnDestroy {
   @ViewChild("videoElement") videoElement: ElementRef;
   @ViewChild("showbranchSelectionModal") showbranchSelectionModal;
   branchPopupRef: NgbModalRef;
@@ -45,10 +45,10 @@ export class MachineMgtComponent implements OnInit {
   BranchesList: any = [];
   multiBranchesList: any = [];
   LabDeptID = -1;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonTests: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonParams: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonTests = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonParams = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
   spinnerRefs = {
     listSection: "listSection",
     testListSection: "testListSection",
@@ -150,7 +150,7 @@ export class MachineMgtComponent implements OnInit {
   getTestProfileList() {
     this.spinner.show(this.spinnerRefs.testListSection);
     this.testList = [];
-    let _param = {
+    const _param = {
       BranchID: 1,
       isRadiologyTests: 0,
       SubSectionIDs: null,
@@ -189,7 +189,7 @@ export class MachineMgtComponent implements OnInit {
       this.toastr.warning("Please select Machine first");
       return;
     }
-    let _param = {
+    const _param = {
       MachineID: this.MachineID,
       LocID: this.machineBranchId,
     };
@@ -197,7 +197,7 @@ export class MachineMgtComponent implements OnInit {
       (res: any) => {
         this.spinner.hide(this.spinnerRefs.paramsListSection);
         if (res && res.StatusCode == 200 && res.PayLoad) {
-          let data = res.PayLoad;
+          const data = res.PayLoad;
           this.allParamsList = data || [];
         }
       },
@@ -219,12 +219,12 @@ export class MachineMgtComponent implements OnInit {
 
   getSection() {
     this.SectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
     };
     this.lookupService.getSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.SectionList = _response.filter((a) => a.SectionId != 7);
       },
       (err) => {
@@ -235,13 +235,13 @@ export class MachineMgtComponent implements OnInit {
 
   getSubSectionByParent(SectionID) {
     this.SubSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: SectionID,
       LabDeptID: this.LabDeptID,
     };
     this.lookupService.getSubSectionByParent(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.SubSectionList = _response;
       },
       (err) => {
@@ -252,7 +252,7 @@ export class MachineMgtComponent implements OnInit {
 
   insertUpdateMachine() {
     this.spinner.show(this.spinnerRefs.machineFormSection);
-    let formValues = this.machineConfigForm.getRawValue();
+    const formValues = this.machineConfigForm.getRawValue();
     this.machineConfigForm.markAllAsTouched();
     if (this.machineConfigForm.invalid) {
       this.spinner.hide(this.spinnerRefs.machineFormSection);
@@ -261,7 +261,7 @@ export class MachineMgtComponent implements OnInit {
     } else {
       this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       this.isSpinner = false; // Button Spinner show
-      let formData = {
+      const formData = {
         MachineID: this.MachineID,
         MachineName: formValues.MachineName,
         MachineCode: formValues.MachineCode,
@@ -336,7 +336,7 @@ export class MachineMgtComponent implements OnInit {
       this.spinner.show(this.spinnerRefs.listSection);
     }
 
-    let params = {
+    const params = {
       MachineID: MachineID,
     };
     this.LabConfService.getMachine(params).subscribe(
@@ -351,7 +351,7 @@ export class MachineMgtComponent implements OnInit {
             this.ExistingSelectedTests = res.PayLoadDS["Table1"] || [];
             if (this.ExistingSelectedTests.length) {
               this.testList.forEach((element, index) => {
-                let matchedTests = this.ExistingSelectedTests.find(
+                const matchedTests = this.ExistingSelectedTests.find(
                   (a) => a.TPId == element.TPId
                 );
                 if (matchedTests) {
@@ -408,7 +408,7 @@ export class MachineMgtComponent implements OnInit {
     );
     this.spinner.hide();
   }
-  selectedTabIndex: number = 0;
+  selectedTabIndex = 0;
   clearForm() {
     this.rowIndex = null;
     this.selectedTabIndex = 0;
@@ -440,7 +440,7 @@ export class MachineMgtComponent implements OnInit {
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
         // this.spinner.hide('GetBranches');
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -465,7 +465,7 @@ export class MachineMgtComponent implements OnInit {
   associateTests() {
     this.disabledButtonTests = true; // Lock the button after for submit to wait till process is completed and respone is send
     this.isSpinner = false; // Button Spinner show
-    let selectedTests = this.testList.filter((a) => a.checked);
+    const selectedTests = this.testList.filter((a) => a.checked);
     let isValidPerformingTime = true;
     selectedTests.forEach((a) => {
       if (!a.PerformingTime) {
@@ -480,7 +480,7 @@ export class MachineMgtComponent implements OnInit {
       return;
     } else {
       if (selectedTests.length) {
-        let objParam = {
+        const objParam = {
           MachineID: this.MachineID,
           CreatedBy: this.loggedInUser.userid || -99,
           tblMachineTest: selectedTests.map((a) => {
@@ -528,7 +528,7 @@ export class MachineMgtComponent implements OnInit {
   associateParamss() {
     this.disabledButtonParams = true;
     this.isSpinner = false;
-    let selectedParams = this.allParamsList.filter((a) => a.Allow);
+    const selectedParams = this.allParamsList.filter((a) => a.Allow);
     console.log("selectedParams:", selectedParams);
     let isValid = true;
 
@@ -547,7 +547,7 @@ export class MachineMgtComponent implements OnInit {
       return;
     } else {
       // if (selectedParams.length) {
-      let objParam = {
+      const objParam = {
         MachineID: this.MachineID,
         LocID: this.machineBranchId,
         CreatedBy: this.loggedInUser.userid || -99,
@@ -707,7 +707,7 @@ export class MachineMgtComponent implements OnInit {
 
   refreshPagination() {
     this.pagination.filteredSearchResults = this.MachineList;
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -739,9 +739,9 @@ export class MachineMgtComponent implements OnInit {
     // }
   }
 
-tooltipVisible: boolean = false;
+tooltipVisible = false;
 hoveredMachineID: number | null = null;
-tooltipBranchesMap: { [key: number]: string } = {};
+tooltipBranchesMap: Record<number, string> = {};
 
 showTooltip(machineId: number) {
   this.hoveredMachineID = machineId;
@@ -806,7 +806,7 @@ calculateDuration() {
   }
 
 
-isFullDayMachine: boolean = false;
+isFullDayMachine = false;
 onMachineModeToggle(event: any): void {
   this.isFullDayMachine = event.target.checked;
 

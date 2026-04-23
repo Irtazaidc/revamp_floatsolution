@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -20,7 +20,7 @@ import { VisitService } from '../../services/visit.service';
   templateUrl: './delayed-cancellation-requests.component.html',
   styleUrls: ['./delayed-cancellation-requests.component.scss']
 })
-export class DelayedCancellationRequestsComponent implements OnInit {
+export class DelayedCancellationRequestsComponent implements OnInit, OnChanges {
 
  @ViewChild("visitInfoArea") private visitInfoArea: ElementRef;
 
@@ -29,7 +29,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   @ViewChild("tpCancellationPopup") tpCancellationPopup;
   tpCancellationPopupRef: NgbModalRef;
 
-  @Input('removeCancellationLimit') removeCancellationLimit = false;
+  @Input() removeCancellationLimit = false;
   loggedInUser: UserModel;
   CancelPeriod: number = null;
   AdvCancelPeriod: number = null;
@@ -133,8 +133,8 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   tpCancellationFormSubmitted = false;
 
   selectedTabIndex = 0;
-  isCancellationNotPossible: boolean = false;
-  goForAdvCancellation: boolean = false;
+  isCancellationNotPossible = false;
+  goForAdvCancellation = false;
   constructor(
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
@@ -184,7 +184,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   }
 
   getVisitDetails(visitID) {
-    let params = { VisitId: visitID };
+    const params = { VisitId: visitID };
     this.CancelPeriod = null;
     this.AdvCancelPeriod = null;
     this.PanelType = null;
@@ -333,7 +333,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
 
   getPaymentModes(filter = null) {
     this.paymentModes = [];
-    let params = { filter: filter };
+    const params = { filter: filter };
     this.spinner.show();
     this.lookupService.getPaymentModes(params).subscribe(
       (res: any) => {
@@ -355,7 +355,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   cancelVisit(visit) {
     return;
     console.log(visit);
-    let params = {
+    const params = {
       VisitID: visit.VisitID,
     };
     this.spinner.show();
@@ -484,7 +484,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
         .reduce((sum, item) => sum + item.DiscountedPrice, 0);
       this.RwsPoints = 0;
       let amountToRefund = 0;
-      let testsAmountAfterRefund = this.visitDetails.tpInfo
+      const testsAmountAfterRefund = this.visitDetails.tpInfo
         .filter((a) => a.TestStatusId > 0)
         .filter((a) => !a.checked)
         .map((a) => a.DiscountedPrice || 0)
@@ -772,7 +772,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   refundAmountValueChangeEvent() {
     let cancellationAmount = 0; // this.visitDetails.tpInfo.filter( a => a.checked).map(a=>a.DiscountedPrice || 0).reduce((acu, a) => {return acu+a;}, 0)
     let amountToRefund = 0;
-    let testsAmountAfterRefund = this.visitDetails.tpInfo
+    const testsAmountAfterRefund = this.visitDetails.tpInfo
       .filter((a) => a.TestStatusId > 0)
       .filter((a) => !a.checked)
       .map((a) => a.DiscountedPrice || 0)
@@ -889,9 +889,9 @@ export class DelayedCancellationRequestsComponent implements OnInit {
     //   TypeId: [1],
     //   ClosingId: [0]
     // });
-    let cancellationFormValues = this.tpCancellationForm.getRawValue();
+    const cancellationFormValues = this.tpCancellationForm.getRawValue();
 
-    let paymentArr = [];
+    const paymentArr = [];
 
     if (this.visitDetails.paymentInfo?.some(a => a.ModeId === 5)) {
       // Push reward points payment
@@ -935,7 +935,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       paymentArr.push(refundPayObj);
     } else {
       // Normal flow - push just the refund amount
-      let payObj: Payment = {
+      const payObj: Payment = {
         VisitID: this.selectedVisit.VisitID,
         Amount: this.tpCancellationForm.getRawValue().refundAmount || 0,
         ModeId: cancellationFormValues.paymentMode || 1,
@@ -963,8 +963,8 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       paymentArr.push(_payObj);
     });
     */
-    var ismob = this.detectMob();
-    let dataToPost = {
+    const ismob = this.detectMob();
+    const dataToPost = {
       createdBy: this.loggedInUser.userid,
       VisitID: this.selectedVisit.VisitID,
       Remarks: cancellationFormValues.remarks || "",
@@ -992,7 +992,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       return;
     }
 
-    let fbrRequestData: any = this.formatDataForFBR(arrayOfTests);
+    const fbrRequestData: any = this.formatDataForFBR(arrayOfTests);
     if (
       fbrRequestData.TotalSaleValue ||
       fbrRequestData.TotalTaxCharged ||
@@ -1059,10 +1059,10 @@ export class DelayedCancellationRequestsComponent implements OnInit {
 
   /* start - FBR - function */
   formatDataForFBR(arrayOfTests) {
-    let testsData = arrayOfTests.filter((a) => a.checked) || [];
+    const testsData = arrayOfTests.filter((a) => a.checked) || [];
     // let visitData = this.visitDetails.visitInfo.length ? this.visitDetails.visitInfo[0] : {};
     let paymentModeSelected = 1;
-    let fbrPaymentModes = {
+    const fbrPaymentModes = {
       cash: 1, // Cash
       card: 2, // Card
       giftVoucher: 3, // Gift Voucher
@@ -1070,7 +1070,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       mixed: 5, // Mixes
       cheque: 6, // cheque
     };
-    let cancellationFormVal = this.tpCancellationForm.getRawValue();
+    const cancellationFormVal = this.tpCancellationForm.getRawValue();
 
     switch (cancellationFormVal.paymentMode) {
       case 1:
@@ -1121,7 +1121,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
     if (testsData && testsData.length) {
       taxRate = testsData[0].TaxRateFBR || 0;
     }
-    let valueWithAndWithoutTax = this.helperService.calculateTaxValue(
+    const valueWithAndWithoutTax = this.helperService.calculateTaxValue(
       cancelAmountWithoutDiscount,
       taxRate
     );
@@ -1141,7 +1141,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       calculatedTax = 0;
     }
 
-    let params = {
+    const params = {
       InvoiceNumber: "",
       POSID: 0, // 966130
       USIN: this.selectedVisit.VisitID, // VisitId
@@ -1164,17 +1164,17 @@ export class DelayedCancellationRequestsComponent implements OnInit {
     testsData.forEach((tp) => {
       tp.TaxRate = tp.TaxRateFBR || 0;
 
-      let tpValueWithAndWithoutTax = this.helperService.calculateTaxValue(
+      const tpValueWithAndWithoutTax = this.helperService.calculateTaxValue(
         (tp.Price || 0) - (tp.Discount || 0),
         tp.TaxRate
       );
 
-      let taxCharged = tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
-      let saleAmount =
+      const taxCharged = tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (visitData.AdjAmount || 0)) * 17 / 100;
+      const saleAmount =
         tpValueWithAndWithoutTax.fullValue - tpValueWithAndWithoutTax.taxValue; // ((this.getTotal(this.getValidAddedTestsProfiles(), 'TestProfilePrice') || 0) - (calculatedTax || 0)) || 0; // - (visitData.AdjAmount || 0)) || 0;
-      let totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
+      const totalAmount = tpValueWithAndWithoutTax.fullValue; // - (tp.Discount || 0); // (totalSale || 0) + (calculatedTax || 0) - (visitData.AdjAmount || 0);
 
-      let item = {
+      const item = {
         ItemCode: tp.TPId,
         ItemName: tp.Test,
         PCTCode: tp.PCTCode || "98160000", // {radiology: '98179000', lab: '98160000'} , // "98173000", // "11001010", https://download1.fbr.gov.pk/Docs/2021101313103753401chapte-98&99.pdf // page 4
@@ -1219,7 +1219,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   }
 
   getMACAddress(loggedInUser: UserModel) {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href),
@@ -1287,7 +1287,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   }
 
   installmentAllowed() {
-    let res = {
+    const res = {
       allowed: true,
       reason: [],
     };
@@ -1325,7 +1325,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
 
   openInstallmentForm() {
     this.getPaymentModes("visit-installment");
-    let totalDueAmount = this.visitDetails.tpInfo
+    const totalDueAmount = this.visitDetails.tpInfo
       .filter((a) => a.TestStatusId > 0)
       .map((a) => a.DiscountedPrice || 0)
       .reduce((acu, a) => {
@@ -1340,7 +1340,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
     });
     // let testsAmountAfterRefund = this.visitDetails.tpInfo.filter(a => a.TestStatusId > 0).filter( a => !a.checked).map(a=>a.DiscountedPrice || 0).reduce((acu, a) => {return acu+a;}, 0)
 
-    let installmentAllowed = this.installmentAllowed();
+    const installmentAllowed = this.installmentAllowed();
     if (1) {
       // installmentAllowed.allowed) {
       this.visitInstallmentForm.controls.receivingAmount.enable();
@@ -1377,7 +1377,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       return;
     }
 
-    let formValues = this.visitInstallmentForm.getRawValue();
+    const formValues = this.visitInstallmentForm.getRawValue();
     if (formValues.receivingAmount > formValues.balance) {
       this.toastr.error(
         "Receiving amount shouldn't exceed the balance amount !",
@@ -1386,7 +1386,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       return;
     }
 
-    let payObj = {
+    const payObj = {
       VisitID: formValues.visitId,
       Amount: this.helperService.parseNumbericValues(
         formValues.receivingAmount || 0
@@ -1401,8 +1401,8 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       LocId: this.loggedInUser.locationid || 0,
       OnlinePaymentReferenceID: null,
     };
-    let paymentArr = [payObj];
-    let dataToPost = {
+    const paymentArr = [payObj];
+    const dataToPost = {
       createdBy: this.loggedInUser.userid || -99,
       payment: paymentArr,
     };
@@ -1477,7 +1477,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
   VerifyOTP = "";
   showOTPButtonWithoutSend = false;
   showOTPRefreshButton = false;
-  timeLeft: number = 30;
+  timeLeft = 30;
   interval;
   verifiedCancellation = false;
   confirmationPopoverConfigCell = {
@@ -1510,7 +1510,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
     //     }
 
 
-    let Obj = {
+    const Obj = {
       VisitID: this.selectedVisit?.VisitID, // Avoid undefined error
       ModifiedBy: this.loggedInUser?.userid || -99,
     };
@@ -1537,7 +1537,7 @@ export class DelayedCancellationRequestsComponent implements OnInit {
       },
       (err: any) => {
         this.spinner.hide();
-        let errorMsg = err?.message || "Unknown error occurred.";
+        const errorMsg = err?.message || "Unknown error occurred.";
         this.toastr.error("Server Error: " + errorMsg);
       }
     );

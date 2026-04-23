@@ -77,7 +77,7 @@ export class CcHcRequestComponent implements OnInit {
   saveCCHCRrequest() {
 
     this.isSubmitted = true;
-    let formValues = this.PatientDetails.getRawValue();
+    const formValues = this.PatientDetails.getRawValue();
 
     // let objParam = {
     //   CMSTypeID: 3, //3 for Type Req  request
@@ -95,7 +95,7 @@ export class CcHcRequestComponent implements OnInit {
     //   SourceID: 1,
     //   CMSRequestTypeDetailID: 1 // for CMSRequestType Home Collection
     // };
-    let objParm = {
+    const objParm = {
       CreatedByUserID: this.loggedInUser.userid,
       CityID: formValues.CityID,
       PatientName: formValues.patientName,
@@ -186,15 +186,15 @@ export class CcHcRequestComponent implements OnInit {
   saveComplaintRrequest() {
     
     this.loadLoggedInUserInfo();
-    let formValues = this.PatientDetails.getRawValue();
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
+    const formValues = this.PatientDetails.getRawValue();
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
     if(this.PatientDetails.invalid){
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
 
-    let objParam = {
+    const objParam = {
       CMSTypeID: 5, //5 for Type HC   request
       FullName: formValues.patientName,
       ComplainantName: formValues.patientName || null,
@@ -278,9 +278,9 @@ export class CcHcRequestComponent implements OnInit {
     }
   }
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.loadedDocuments.filter(a => !a.docId).forEach(a => {
-      let d = {
+      const d = {
         DocId: null,
         Title: a.fileName,
         Remarks: '',
@@ -356,7 +356,7 @@ export class CcHcRequestComponent implements OnInit {
     // formValues.dateTo = formValues.dateTo
     //   ? Conversions.formatDateObject(formValues.dateTo)
     //   : null;
-    let objParm = {
+    const objParm = {
       CreatedByUserID:this.loggedInUser.userid,
       // DateFrom: formValues.dateFrom,
       // DateTo: formValues.dateTo,

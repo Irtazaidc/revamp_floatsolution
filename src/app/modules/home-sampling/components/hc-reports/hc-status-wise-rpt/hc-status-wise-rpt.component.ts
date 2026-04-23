@@ -20,7 +20,7 @@ export class HcStatusWiseRptComponent implements OnInit {
   BookingStatusList: any = [];
   hcStatusWiseRptList= [];
   searchInHCStatusWiseRpt: any = "";
-  isDiscardEnable: boolean = false;
+  isDiscardEnable = false;
 
   isSubmitted = false
 
@@ -59,8 +59,8 @@ export class HcStatusWiseRptComponent implements OnInit {
     }
 
     this.spinner.show();
-    let formData = this.HCStatusWiseRptForm.getRawValue();
-    let params = {
+    const formData = this.HCStatusWiseRptForm.getRawValue();
+    const params = {
       HCBookingStatusID: formData.hcStatus,
       DateFrom: Conversions.formatDateObject(formData.dateFrom),
       DateTo: Conversions.formatDateObject(formData.dateTo)
@@ -88,7 +88,7 @@ export class HcStatusWiseRptComponent implements OnInit {
 
   discardHCShare(data) {
     if (data) {
-      let params = {
+      const params = {
         "RiderID": data.RiderID,
         "HCShareIDs": data.HCShareID, 
         "DiscardedBy": this.loggedInUser.userid
@@ -112,7 +112,7 @@ export class HcStatusWiseRptComponent implements OnInit {
       this.hcStatusWiseRptList.forEach(row => {
         this.excel.push(row);
       });      
-      let formData = this.HCStatusWiseRptForm.getRawValue();
+      const formData = this.HCStatusWiseRptForm.getRawValue();
       this.excelService.exportAsExcelFile(this.excel,'Share Report', 'Share Report' + formData.dateFrom ? Conversions.formatDateObject(formData.dateFrom) : '' + '-' + formData.dateFrom ? Conversions.formatDateObject(formData.dateTo) : null);
     }
   }

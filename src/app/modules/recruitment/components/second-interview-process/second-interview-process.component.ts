@@ -50,8 +50,8 @@ export class SecondInterviewProcessComponent implements OnInit {
     confirmPopoverCancel: () => {}
   }
 
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   formProcessInterview = this.fb.group({
     Remarks: ['', Validators.compose([Validators.required,Validators.minLength(50)])],
     Weightage: ['', Validators.compose([Validators.required, Validators.min(0), Validators.max(100)])],
@@ -92,17 +92,17 @@ export class SecondInterviewProcessComponent implements OnInit {
 
   getOpenJobRequestByJobStatus(){
     this.OpenJobsList =[];
-    let objParm = {
+    const objParm = {
       JobStatusID: 5
     }
     this.recruitment.getOpenJobRequestsByJobStatus(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.OpenJobsList = [];
-      let newArr = [];
+      const newArr = [];
       resSearchJob.forEach(a => {
-          let _obj = JSON.parse(JSON.stringify(a));
-          let alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
+          const _obj = JSON.parse(JSON.stringify(a));
+          const alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
           if(alreadyAddedIndex > -1) {
               newArr[alreadyAddedIndex].empIds.push(_obj.InterviewerID);
           } else {
@@ -122,8 +122,8 @@ export class SecondInterviewProcessComponent implements OnInit {
   getApplicantListByInterviewerID(){
     this.spinner.show(this.spinnerRefs.applicantListSection);  
     this.ApplicantList =[];
-    let formValues = this.formSearchJob.getRawValue();
-    let objParam = {
+    const formValues = this.formSearchJob.getRawValue();
+    const objParam = {
       JobRequestID:  formValues.JobRequestID,
       InterviewerUserID: this.loggedInUser.userid, //1076 //Hasssan UserID his userid is:688 //
       InterviewerStage:2,
@@ -131,7 +131,7 @@ export class SecondInterviewProcessComponent implements OnInit {
     }
     
     this.recruitment.getApplicantListByInterviewerID(objParam).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.ApplicantList = resSearchJob||[];
         this.spinner.hide(this.spinnerRefs.applicantListSection);
@@ -169,7 +169,7 @@ export class SecondInterviewProcessComponent implements OnInit {
     this.JobApplicantID = JobApplicantID;
     this.JobRequestID = JobRequestID;
     this.ApplicantDetailRow = []
-    let paramObj = {
+    const paramObj = {
       JobApplicantID:this.JobApplicantID
     }
     
@@ -211,10 +211,10 @@ export class SecondInterviewProcessComponent implements OnInit {
   }
   processInterview(){
     this.loadingProcess('show'); 
-     let formValues = this.formProcessInterview.getRawValue();
+     const formValues = this.formProcessInterview.getRawValue();
      this.formProcessInterview.markAllAsTouched();
     if(this.formProcessInterview.valid) {
-      let formData = {
+      const formData = {
         JobRequestID : this.JobRequestID,
         InterviewerID : this.loggedInUser.userid,
         ApplicantID : this.JobApplicantID,
@@ -226,7 +226,7 @@ export class SecondInterviewProcessComponent implements OnInit {
         CreatedBy : this.loggedInUser.userid || -99,
       };
       this.recruitment.insertUpdateApplicantInterviewersRecomm(formData).subscribe((data: any) => {
-        let res =  JSON.parse(data.PayLoadStr);
+        const res =  JSON.parse(data.PayLoadStr);
         if (res && res.length) {
           if (data.StatusCode == 200) {
             // this.toastr.success(data.Message);

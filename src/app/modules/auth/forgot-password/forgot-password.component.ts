@@ -65,10 +65,10 @@ export class ForgotPasswordComponent implements OnInit {
   inputLableVal = '<i class="fa fa-mobile fa-color" aria-hidden="true"></i> Phone Number';
   inputLableValUrdu = 'پاس ورڈ دوبارہ ترتیب دینے کے لیے، براہ کرم اپنا رجسٹرڈ موبائل نمبر درج کریں۔';
   inputPlace = "Enter cell number / اپنا فون نمبر درج کریں";
-  ShowInfoText: boolean = false
-  isSpinner: boolean = true;//Hide Loader
+  ShowInfoText = false
+  isSpinner = true;//Hide Loader
   router: any;
-  isEmailValid: boolean = true;
+  isEmailValid = true;
 
 
 
@@ -111,12 +111,12 @@ export class ForgotPasswordComponent implements OnInit {
   isCellDetail = false;
   accountList = [];
   emailEnc = null;
-  isChecked: boolean = true;
+  isChecked = true;
   ResetPassword(data, formId) {
     console.log("🚀 ~ ForgotPasswordComponent ~ ResetPassword ~ data:", data)
     data.isUseCell = this.isUseCell;
     data.emailEnc = this.emailEnc;
-    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (this.isUseCell == 1 && (!data.email.match(validRegex))) {
       this.Email = "";
       this.toasrt.error("Please provide a valid email address");
@@ -143,7 +143,7 @@ export class ForgotPasswordComponent implements OnInit {
         this.isSpinner = true;
         if (resp.StatusCode == 200) {
           if (resp.PayLoad.length) {
-            let parsedData = resp.PayLoad;
+            const parsedData = resp.PayLoad;
             this.accountList = parsedData;
             this.isActive = null;
             this.isEmailValid = true;
@@ -212,7 +212,7 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   validateNumber(e) {
-    let chekVale = parseInt(e)
+    const chekVale = parseInt(e)
     if (this.isEmailValid && !Number.isInteger(chekVale)) {
       this.PhoneNumber = "";
       this.toasrt.error("Please provide a valid cell number");
@@ -220,7 +220,7 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   validateEmail(input) {
-    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (this.isEmailValid && !input.match(validRegex)) {
       this.Email = "";
       this.toasrt.error("Please provide a valid email address");

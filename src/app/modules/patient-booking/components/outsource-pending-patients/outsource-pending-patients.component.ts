@@ -18,7 +18,7 @@ import { API_ROUTES } from 'src/app/modules/shared/helpers/api-routes';
   styleUrls: ['./outsource-pending-patients.component.scss']
 })
 export class OutsourcePendingPatientsComponent implements OnInit {
-  @Input('selOutPat') selOutPat;
+  @Input() selOutPat;
   WaitingPatientList: any = [];
   @Output() outHospitalPatSelectedEvent = new EventEmitter<any>();
   OutsourceHospitalPatientsList: any = [];
@@ -57,10 +57,10 @@ export class OutsourcePendingPatientsComponent implements OnInit {
   telenoreRespCardDetail: any = [];
   telenoreRespCardOwnerDetail: any = [];
   telenoreRespFamilyDetail: any = [];
-  showResult: boolean = false;
+  showResult = false;
   telenorePatientPayLoad: any = [];
   telenoreRespStr: any = "";
-  showPatienTypeDropdown: boolean = true;
+  showPatienTypeDropdown = true;
   constructor(private fb: FormBuilder,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
@@ -78,7 +78,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
 
     this.reEvaluateButtonsPermissions();
     // this.getPatientsFormD();
-    let formValues = this.outsourcePendingPatientsForm.getRawValue();
+    const formValues = this.outsourcePendingPatientsForm.getRawValue();
     if (formValues.orgId == 5) {
       this.showPatienTypeDropdown = false;
     }
@@ -100,9 +100,9 @@ export class OutsourcePendingPatientsComponent implements OnInit {
   }
 
   setDefualtDates() {
-    let today = Date();
-    let fDate = { day: moment(today).get('date') - 2, month: (moment(today).get('month') + 1), year: moment(today).get('year') };
-    let tDate = { day: moment(today).get('date'), month: (moment(today).get('month') + 1), year: moment(today).get('year') };
+    const today = Date();
+    const fDate = { day: moment(today).get('date') - 2, month: (moment(today).get('month') + 1), year: moment(today).get('year') };
+    const tDate = { day: moment(today).get('date'), month: (moment(today).get('month') + 1), year: moment(today).get('year') };
     this.outsourcePendingPatientsForm.patchValue({
       dateFrom: fDate,
       dateTo: tDate
@@ -112,7 +112,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
     // this.HCForm.setValue["dateTo"] =  moment(Date());
   }
   OutOrgChangeEvent() {
-    let formValues = this.outsourcePendingPatientsForm.getRawValue()
+    const formValues = this.outsourcePendingPatientsForm.getRawValue()
     this.selOutPat = this.outsourceHospitals.find(a => { return a.HospitalID == formValues.orgId });
     this.reEvaluateButtonsPermissions();
     if (formValues.orgId == 5) {
@@ -124,7 +124,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
     this.ecl.geteclPendingPatients().subscribe((resp: any) => {
       console.log("resp", resp);
       if (resp && resp.StatusCode == 200 && resp.PayLoadStr) {
-        let parsedData = JSON.parse(resp.PayLoadStr) || '';
+        const parsedData = JSON.parse(resp.PayLoadStr) || '';
         this.WaitingPatientList = parsedData.Orders;
         console.log("resp", this.WaitingPatientList);
         // this.InsertUpdPatients();
@@ -136,8 +136,8 @@ export class OutsourcePendingPatientsComponent implements OnInit {
     });
   }
   getPatientsFormD() {
-    let formValues = this.outsourcePendingPatientsForm.getRawValue();
-    let params = {
+    const formValues = this.outsourcePendingPatientsForm.getRawValue();
+    const params = {
       "HospitalID": formValues.hospitalId || 1, //ECL Hospital ID
       "dateFrom": formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
       "dateTo": formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null,
@@ -165,7 +165,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
     this.OutsourceHospitalPatientsList = [];
     this.FilOutsourceHospitalPatientsList = [];
     this.spinner.show();
-    let formValues = this.outsourcePendingPatientsForm.getRawValue();
+    const formValues = this.outsourcePendingPatientsForm.getRawValue();
     // if (formValues.orgId == 5 || formValues.orgId == 4 || formValues.orgId == 6 || formValues.orgId == 7 || formValues.orgId == 9) {
     //   this.getPatientInfoByHospitalID(formValues);
     //   return;
@@ -174,7 +174,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
     if (formValues.orgId == 1 || formValues.orgId == 2 ) {
 
 
-      let params = {
+      const params = {
         "OrgID": formValues.orgId, //ECL Hospital ID
         "MobileNo": formValues.mobile,
         "HospitalID": formValues.orgId,
@@ -221,7 +221,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
   }
   getPatientInfoByHospitalID(formValues) {
     this.spinner.show();
-    let params = {
+    const params = {
       "OrgID": formValues.orgId, //ECL Hospital ID
       "MobileNo": formValues.mobile,
       "HospitalID": formValues.orgId,
@@ -250,15 +250,15 @@ export class OutsourcePendingPatientsComponent implements OnInit {
     if (this.route.routeConfig.path == 'regForHS') {
       _url = ['pat-reg/regForHS'];
     }
-    let formValues = this.outsourcePendingPatientsForm.getRawValue();
+    const formValues = this.outsourcePendingPatientsForm.getRawValue();
     if (formValues.orgId == 1)
       this.updateUrlParams_navigateTo(_url, { outHospital: btoa(JSON.stringify({ HospitalPatientID: patient.HospitalPatientID, patSrc: 10 })) });
     else if (formValues.orgId == 2) {
       // telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.MobileNumber + '-' + telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.Name + '-' +
       //                       telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.PackageName + '-' + telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.Validity;      
-      let telenoreMRN = this.telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.MobileNumber
+      const telenoreMRN = this.telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.MobileNumber
         + '-' + patient.Name + '-' + patient.Relation
-      let dataToInsert = {
+      const dataToInsert = {
         "FirstName": patient.Name,
         "MobileNo": this.telenoreResp.GetCustomerdetailsResult.LabCustomerdetails.MobileNumber,
         "HospitalMRNo": telenoreMRN,
@@ -337,7 +337,7 @@ export class OutsourcePendingPatientsComponent implements OnInit {
   }
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = {
+    const _settings = {
       ...{
         // relativeTo: this.route,
         replaceUrl: true,

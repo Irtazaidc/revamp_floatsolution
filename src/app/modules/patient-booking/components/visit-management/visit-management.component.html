@@ -397,7 +397,7 @@
                                                                 <td>{{v.BranchCode}} <small
                                                                         class="text-primary">{{v.ReceivedBy}} |
                                                                         {{v.ReceivedOn|date:'dd-MMM-yyyy HH:mm:ss'}}</small><small
-                                                                        *ngIf="v.Remarks && v.Remarks!=''"
+                                                                        *ngIf="v.Remarks && v.Remarks!==''"
                                                                         ngbTooltip="Click to view remarks"
                                                                         class="cursor-pointer"
                                                                         ngbPopover="{{v.Remarks||''}}"

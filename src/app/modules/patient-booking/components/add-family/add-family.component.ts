@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, OnInit, Input, ViewChild, } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ViewChild, OnChanges, AfterViewInit, } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CONSTANTS } from 'src/app/modules/shared/helpers/constants';
@@ -21,7 +21,7 @@ import moment from 'moment';
   templateUrl: './add-family.component.html',
   styleUrls: ['./add-family.component.scss']
 })
-export class AddFamilyComponent implements OnInit {
+export class AddFamilyComponent implements OnInit, OnChanges, AfterViewInit {
 
 
   @ViewChild('showAddNew') showAddNew;
@@ -49,9 +49,9 @@ export class AddFamilyComponent implements OnInit {
   }
   addNewPatient: FormGroup;
 
-  showForm: boolean = false;
+  showForm = false;
   familyCardlist = [];
-  familyCardMemberCount: number = 0;
+  familyCardMemberCount = 0;
   insertFamilyCardlist = [];
   relationshiplist = [];
   tableValues = [];
@@ -125,8 +125,8 @@ export class AddFamilyComponent implements OnInit {
     this.addNewPatient.get('DateOfBirth').valueChanges.subscribe(val => {
       // console.log('DateOfBirth subscribe ',  val);
       if (val) {
-      let selectedDob = new Date(val.year, val.month - 1, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
-      let _ageObj = this.calculateAge(selectedDob);
+      const selectedDob = new Date(val.year, val.month - 1, val.day); //moment(new Date(`${val.month}-${val.day}-${val.year}`)).format();
+      const _ageObj = this.calculateAge(selectedDob);
       // console.log('_ageObj _ageObj _ageObj ', _ageObj);
       
       this.addNewPatient.patchValue({
@@ -144,17 +144,17 @@ export class AddFamilyComponent implements OnInit {
   calculateAge(birthday) { // birthday is a date
    console.log("🚀 calculateAge ~ birthday:", birthday)
    
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     // if (!moment(birthday).isValid()) {
     //   return obj;
     // }
     if (!(birthday instanceof Date) || isNaN(birthday.getTime())) {
       return obj;
     }
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
@@ -174,18 +174,18 @@ export class AddFamilyComponent implements OnInit {
     } else if (dmy == '3') {
       dob = moment(dob).subtract(number, 'years')
     }
-    let calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
+    const calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
     return calculatedDob;
     
   }
   ageChange(value) {
-    let _calculatedDob = this.calculateDOB(value, this.addNewPatient.value.dmy);
+    const _calculatedDob = this.calculateDOB(value, this.addNewPatient.value.dmy);
     this.addNewPatient.patchValue({
       DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
     });
   }
   dmyChange(value) {
-    let _calculatedDob = this.calculateDOB(this.addNewPatient.value.Age, value);
+    const _calculatedDob = this.calculateDOB(this.addNewPatient.value.Age, value);
     this.addNewPatient.patchValue({
       DateOfBirth: _calculatedDob, // moment(dob).format(this.dateFormat)
     });
@@ -257,7 +257,7 @@ export class AddFamilyComponent implements OnInit {
 
   getFamilyCardDetails() {
     this.familyCardlist = [];
-    let params = {
+    const params = {
       cardId: this.cardIdValue,
     };
     this.discountCardService.getFamilyDiscountCardDetails(params).subscribe((res: any) => {
@@ -292,7 +292,7 @@ export class AddFamilyComponent implements OnInit {
 
   getMaritalStatus() {
     this.maritalStatusList = [];
-    let _params = {
+    const _params = {
     }
     this.lookupService.maritalStatus(_params).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -326,12 +326,12 @@ export class AddFamilyComponent implements OnInit {
       return
     }
     if(this.familyCardlist?.length <= 4 ){
-    let patientInfo = this.addNewPatient.getRawValue();
-    let formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
+    const patientInfo = this.addNewPatient.getRawValue();
+    const formattedDob = `${patientInfo.DateOfBirth.year}-${patientInfo.DateOfBirth.month}-${patientInfo.DateOfBirth.day}`;
     // let formattedDob = Conversions.formatDateObjectToString(patientInfo.DateOfBirth);
-    let _branchId = this.loggedInUser.locationid;
+    const _branchId = this.loggedInUser.locationid;
 
-    let patientObj = {
+    const patientObj = {
       PatientId: null,
       Title: patientInfo.Salutation,
       ISalutationID: ((this.salutationsList.find(a => a.SalutationTitle == patientInfo.Salutation) || {}).SalutationID || 0),
@@ -418,7 +418,7 @@ export class AddFamilyComponent implements OnInit {
     //  console.log("~ changeRalation ~ event:", event)
     //  console.log("~ changeRalation ~ event:", event.target.value)
     if (event.target.value) {
-      let relation = this.relationshiplist.find(a => a.RelationshipID == event.target.value);
+      const relation = this.relationshiplist.find(a => a.RelationshipID == event.target.value);
       // console.log("Relationhsoiujsod_________", relation);
       this.RelationshipName = relation.Relationship;
       // console.log("🚀  this.RelationshipName:", this.RelationshipName)
@@ -431,10 +431,10 @@ export class AddFamilyComponent implements OnInit {
     this.familyCardMemberCount = this.familyCardlist?.length;
     this.tableValuesForExistingPatient = data;
     this.patientId = this.tableValuesForExistingPatient["OrbitPatientID"];
-    let birthdate = new Date(this.tableValuesForExistingPatient['DateOfBirth']);
-    let today = new Date();
+    const birthdate = new Date(this.tableValuesForExistingPatient['DateOfBirth']);
+    const today = new Date();
     let age = today.getFullYear() - birthdate.getFullYear();
-    let m = today.getMonth() - birthdate.getMonth();
+    const m = today.getMonth() - birthdate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
       age--;
     }
@@ -473,7 +473,7 @@ export class AddFamilyComponent implements OnInit {
           this.toastr.error('Patient is Already Associated');
         }
        else{
-        let params =
+        const params =
         {
           CardId: this.cardIdValue,
           PatientId: this.patientId,

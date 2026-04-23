@@ -34,12 +34,12 @@ export class OutsourceHospitalDetailsComponent implements OnInit {
     ContactPerson: ["", Validators.required],
   });
   OutSourceHospitalID = null
-  errorMessage: string = "";
+  errorMessage = "";
   isSubmitted = false;
   isSpinner = true;
   disabledButton = false;
   ActionLabel ="Save";
-  disabledButtonTests: boolean = false; 
+  disabledButtonTests = false; 
   CardTitle ="Add Hospital";
   HospitalNameToShowOnCard: any='';
 
@@ -86,7 +86,7 @@ export class OutsourceHospitalDetailsComponent implements OnInit {
   // Function for Api call for insertcase on onSubmit click
 
   onSubmit() {
-    let formValues = this.HospitalDetailsForm.getRawValue();
+    const formValues = this.HospitalDetailsForm.getRawValue();
     if (this.HospitalDetailsForm.invalid) {
       this.toastr.error("Please fill in all required fields correctly.");
       this.isSubmitted = true;

@@ -31,9 +31,9 @@ export class ActivationReportComponent implements OnInit {
 
 
   messActivationList: any = [];
-  isSpinner: boolean = true;
+  isSpinner = true;
   isDisable = false;
-  ForMealType: number = -1;
+  ForMealType = -1;
   isSubmitted = false;
   searchText = "";
   maxDate: any;
@@ -76,7 +76,7 @@ export class ActivationReportComponent implements OnInit {
   }
 
    refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -109,7 +109,7 @@ export class ActivationReportComponent implements OnInit {
   }
 
   getMessActivationData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom
       ? Conversions.formatDateObject(formValues.dateFrom)
       : null;
@@ -152,7 +152,7 @@ export class ActivationReportComponent implements OnInit {
       this.isDisable = true;
     }
 
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
       LocIDs: formValues.LocIDs.join(","),
@@ -188,7 +188,7 @@ export class ActivationReportComponent implements OnInit {
 
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(

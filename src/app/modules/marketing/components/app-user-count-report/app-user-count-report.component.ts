@@ -134,7 +134,7 @@ export class AppUserCountReportComponent implements OnInit {
     this.BranchesList = [];
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -243,7 +243,7 @@ export class AppUserCountReportComponent implements OnInit {
           });
 
           /* ================= GROUP BY BRANCH + CITY ================= */
-          const groupedObj: { [key: string]: any[] } = {};
+          const groupedObj: Record<string, any[]> = {};
 
           this.appUserDataList.forEach((row) => {
             const key = `${row.BranchName} - ${row.City}`;

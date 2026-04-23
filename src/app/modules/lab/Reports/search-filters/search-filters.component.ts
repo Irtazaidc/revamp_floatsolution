@@ -19,7 +19,7 @@ import { LabTatsService } from '../../services/lab-tats.service';
 })
 export class SearchFiltersComponent implements OnInit {
 
-  @Input('buttonControls') buttonControls = ['dateFrom', 'dateTo'];
+  @Input() buttonControls = ['dateFrom', 'dateTo'];
 
   TestProfileDataList
 
@@ -93,7 +93,7 @@ export class SearchFiltersComponent implements OnInit {
 
 
   getSampleTransportationList(){
-    let formValues  = this.searchfilterform.getRawValue();
+    const formValues  = this.searchfilterform.getRawValue();
     
     if (this.searchfilterform.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -101,7 +101,7 @@ export class SearchFiltersComponent implements OnInit {
       return;
     }
  
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
       LocID : formValues.locID || null,

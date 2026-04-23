@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -24,12 +24,12 @@ import { NgForm } from '@angular/forms';
   templateUrl: './products-promotion.component.html',
   styleUrls: ['./products-promotion.component.scss']
 })
-export class ProductsPromotionComponent implements OnInit {
+export class ProductsPromotionComponent implements OnInit, AfterViewInit {
   IsValidUser: any = null;
   // this.route.snapshot.paramMap.get('id')
   ProductsPromotionsList = []
   NewsEventsList = []
-  isSpinner: boolean = true;//Hide Loader
+  isSpinner = true;//Hide Loader
   ProductPromotionID = null;
   Action = null;
   productPromotionMessage = 'No Recored found';
@@ -37,7 +37,7 @@ export class ProductsPromotionComponent implements OnInit {
   @ViewChild('authenticateAdmin') authenticateAdmin;
   username: any = "";
   password: any = "";
-  disabledButtonModal: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonModal = false; // Button Enabled / Disables [By default Enabled]
   checked
   constructor(
     private route: ActivatedRoute,
@@ -108,11 +108,11 @@ export class ProductsPromotionComponent implements OnInit {
     this.StartTime = { hour: 0, minute: 0, second: 0 };
     this.EndTime = { hour: 23, minute: 59, second: 59 };
     setTimeout(() => {
-      let dStart =  Conversions.formatDateObject(this.StartDate);
-      let dEnd =  Conversions.formatDateObject(this.EndDate);
-      let startDate = moment(dStart);
-      let endDate = moment(dEnd);
-      let duration = moment.duration(endDate.diff(startDate));
+      const dStart =  Conversions.formatDateObject(this.StartDate);
+      const dEnd =  Conversions.formatDateObject(this.EndDate);
+      const startDate = moment(dStart);
+      const endDate = moment(dEnd);
+      const duration = moment.duration(endDate.diff(startDate));
       this.PromotionAge = duration.asDays();
       this.endHourHandlerChange();
     this.startHourHandlerChange();
@@ -127,7 +127,7 @@ export class ProductsPromotionComponent implements OnInit {
     //this.showSpinner();
     this.spinner.show(this.spinnerRefs.listSection);
     let response = [];
-    let Params = {
+    const Params = {
       ProductPromotionID: null,
       ForActive: this.ForActive,
       ShowImage: 1
@@ -160,7 +160,7 @@ export class ProductsPromotionComponent implements OnInit {
   // id is ProductPromotionID, action(1.Deletion, 2.Active, 3.Inactive)
   deleteProductPromotion(id, action) {
     this.spinner.show();
-    let data: any = {
+    const data: any = {
       ProductPromotionID: id,
       DeleteActive: action,
       ModifiedBy: this.loggedInUser.userid || -99,
@@ -190,7 +190,7 @@ export class ProductsPromotionComponent implements OnInit {
 
   changeDetailVisibality(row, event) {
     // console.log(event.checked)
-    let dataObj = {
+    const dataObj = {
       ProductPromotionID: row.ProductPromotionID,
       PromotionTitle: row.PromotionTitle,
       PromotionDescription: row.PromotionDescription,
@@ -286,7 +286,7 @@ export class ProductsPromotionComponent implements OnInit {
   ImageToUpload: File = null
   ImageUrl: any;
   ImageUrl_temp: any;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   pageHeader: any = '';
   urlID: any = null;
   ProductPromotionIDEnc: any = null;
@@ -370,7 +370,7 @@ export class ProductsPromotionComponent implements OnInit {
     this.ProductPromotionIDEnc = id;
     // this.spinner.show();;
     let response = [];
-    let Params = {
+    const Params = {
       ProductPromotionIDEnc: id
     }
     if (!Params.ProductPromotionIDEnc) {
@@ -421,7 +421,7 @@ export class ProductsPromotionComponent implements OnInit {
         // this.branchIds = this.ProductsPromotionsRow[0].LocIDs.substring(0, this.ProductsPromotionsRow[0].LocIDs.length - 1).split(',').map(id => parseInt(id.trim(), 10));
         // this.cityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',').map(id => parseInt(id.trim(), 10));
         this.cityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',').map(id => parseInt(id.trim(), 10));
-        let incCityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',');
+        const incCityIds = this.ProductsPromotionsRow[0].OrgCityIDs.substring(0, this.ProductsPromotionsRow[0].OrgCityIDs.length - 1).split(',');
         // this.isDisabledPromotionFor = this.ProductsPromotionsRow[0].PromotionFor == 4 ? true : false;
         this.isDisabledPromotionFor = true;
         this.citiesList.forEach(city => {
@@ -461,7 +461,7 @@ export class ProductsPromotionComponent implements OnInit {
   endDateGreaterValidation = false;
   addUpdateProductPromotion(data) {
     let cityIds = ""
-    let checkedCities = this.citiesList.filter(a => a.checked);
+    const checkedCities = this.citiesList.filter(a => a.checked);
     if (checkedCities.length) {
       cityIds = checkedCities.map(city => city.CityID).join(',');
     } else {
@@ -487,11 +487,11 @@ export class ProductsPromotionComponent implements OnInit {
     // return;
     startDateTime = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
     endDateTime = (this.EndDate && this.EndTime) ? Conversions.mergeDateTime(this.EndDate, this.EndTime) : null;
-    let startDateTimeString = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
-    let endDateTimeString = (this.EndDate && this.EndTime) ? Conversions.mergeDateTime(this.EndDate, this.EndTime) : null;
+    const startDateTimeString = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
+    const endDateTimeString = (this.EndDate && this.EndTime) ? Conversions.mergeDateTime(this.EndDate, this.EndTime) : null;
 
-    let startDateTimeDate = new Date(startDateTimeString);
-    let endDateTimeDate = new Date(endDateTimeString);
+    const startDateTimeDate = new Date(startDateTimeString);
+    const endDateTimeDate = new Date(endDateTimeString);
 
     // console.log("start date: ",startDateTime, "end date: ",endDateTime);return;
     if(startDateTimeDate>endDateTimeDate){
@@ -503,10 +503,10 @@ export class ProductsPromotionComponent implements OnInit {
     }
     // let branchIds = this.branchIds.join(",");
     //let cityIds = this.cityIds.join(",");
-    let bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
-    var fileExtension = "";
-    var fileExtensionImg = "";
-    var fileExtensionThumb = "";
+    const bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
+    const fileExtension = "";
+    const fileExtensionImg = "";
+    const fileExtensionThumb = "";
     let image = null;
     let imageThumb = null;
     if (this.ImageToUpload != null) {
@@ -691,8 +691,8 @@ export class ProductsPromotionComponent implements OnInit {
 
   //   reader.readAsDataURL(file);
   // }
-  Height: number = 0;
-  Width: number = 0;
+  Height = 0;
+  Width = 0;
   loadItemsImage(event) {
     const file = (event.target as HTMLInputElement).files[0];
         this.ImageToUpload = file;
@@ -721,17 +721,17 @@ export class ProductsPromotionComponent implements OnInit {
   }
   Thumbnail: any;
   loadImage(file, fileName = 'file') {
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
+        const imageURL = reader.result as string;
         this.ImageUrl_temp = imageURL.replace('data:' + file.type + ';base64,', '');
         let _fileName = file.name || fileName || '';
         if (_fileName.length > 50) {
           _fileName = (_fileName || '').toString().substring(0, 50);
         }
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           docId: null,
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
@@ -760,14 +760,14 @@ export class ProductsPromotionComponent implements OnInit {
 
   loadImage_bak(file, fileName = 'file') {
 
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
+        const imageURL = reader.result as string;
         this.ImageUrl_temp = imageURL.replace('data:' + file.type + ';base64,', '');
-        let _fileName = file.name || '';
+        const _fileName = file.name || '';
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
           filtType: file.type || '',
@@ -795,7 +795,7 @@ export class ProductsPromotionComponent implements OnInit {
 
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = '', base64Data = '') {
     const self = this;
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       if (!file && !base64Data) {
         resolve('');
       }
@@ -806,7 +806,7 @@ export class ProductsPromotionComponent implements OnInit {
       let blob = null;
 
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_' + +new Date();
+      const canvas_id = 'hiddenCanvas_' + +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;
@@ -895,7 +895,7 @@ export class ProductsPromotionComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -916,20 +916,20 @@ export class ProductsPromotionComponent implements OnInit {
     }
   }
   getCities() {
-    let param = { isHomeSamplingCity: null }
+    const param = { isHomeSamplingCity: null }
     this.citiesList = [];
     this.lookupService.getHCCities(param).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.citiesList = _response;
     }, (err) => {
       console.log(err)
     })
   }
   getProductPromotionCity() {
-    let param = { PromotionFor: this.PromotionFor }
+    const param = { PromotionFor: this.PromotionFor }
     this.citiesList = [];
     this.lookupService.getProductPromotionCity(param).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.citiesList = _response;
       // console.log("Promotin cities are: ", this.citiesList)
     }, (err) => {
@@ -1051,7 +1051,7 @@ export class ProductsPromotionComponent implements OnInit {
     if (value == 0) {
     }
     else {
-      let _calculatedDob = this.calculateDOB(value, this.dmy);
+      const _calculatedDob = this.calculateDOB(value, this.dmy);
       this.EndDate = _calculatedDob;
     }
   }
@@ -1060,20 +1060,20 @@ export class ProductsPromotionComponent implements OnInit {
     if ((value == 2 || value == 3) && !this.PromotionAge) {
       this.PromotionAge = 1;
     }
-    let _calculatedDob = this.calculateDOB(this.PromotionAge, value);
+    const _calculatedDob = this.calculateDOB(this.PromotionAge, value);
     this.EndDate = _calculatedDob;
   }
 
   calculateDOB(number, dmy) {
-    let startDateTime = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
+    const startDateTime = (this.StartDate && this.StartTime) ? Conversions.mergeDateTime(this.StartDate, this.StartTime) : null;
 
-    let inputDate = startDateTime;
+    const inputDate = startDateTime;
 
     // Parse the input date with the initial format
-    let parsedDate = moment(inputDate, 'MM/DD/YYYY HH:mm:ss.SSS');
+    const parsedDate = moment(inputDate, 'MM/DD/YYYY HH:mm:ss.SSS');
 
     // Format the date in the desired format
-    let formattedDate = parsedDate.format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)');
+    const formattedDate = parsedDate.format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)');
     let dob: any = formattedDate//new Date();
     dmy = dmy || '3';
     if (dmy == '1') {
@@ -1083,15 +1083,15 @@ export class ProductsPromotionComponent implements OnInit {
     } else if (dmy == '3') {
       dob = moment(dob).add(number, 'years')
     }
-    let calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
+    const calculatedDob = { day: moment(dob).get('date'), month: (moment(dob).get('month') + 1), year: moment(dob).get('year') };
     return calculatedDob;
   }
   ngAfterViewInit() {
-    let formVal = this.dmy;
+    const formVal = this.dmy;
     if(this.StartDate?.property !== undefined){
       this.StartDate.valueChanges.subscribe(val => {
-        let selectedDob = new Date(val.year, val.month - 1, val.day); 
-        let _ageObj = this.calculateAge(selectedDob);
+        const selectedDob = new Date(val.year, val.month - 1, val.day); 
+        const _ageObj = this.calculateAge(selectedDob);
           this.PromotionAge=_ageObj.years ? _ageObj.years : _ageObj.months ? _ageObj.months : _ageObj.days
           this.dmy = _ageObj.years ? '3' : _ageObj.months ? '2' : _ageObj.days || formVal.dmy == 1 ? '1' : '3'
       });
@@ -1099,22 +1099,22 @@ export class ProductsPromotionComponent implements OnInit {
   }
 
   calculateAge(birthday) {
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
 
-    let oneDay = 24 * 60 * 60 * 1000; 
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; 
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {
       obj.months = Math.floor(diffDays / 30);
     }
     else if (diffDays == 0 && this.dmy == '3') {
-      let _calculatedDob = this.calculateDOB(1, this.dmy);
+      const _calculatedDob = this.calculateDOB(1, this.dmy);
       obj.years = Math.floor(1);
         this.EndDate = _calculatedDob;
     }
@@ -1122,7 +1122,7 @@ export class ProductsPromotionComponent implements OnInit {
       obj.months = Math.floor(1);
     }
     else if (diffDays == 0 && this.dmy == '1') {
-      let _calculatedDob = this.calculateDOB(1, this.dmy);
+      const _calculatedDob = this.calculateDOB(1, this.dmy);
       obj.days = Math.floor(1);
        this.EndDate = _calculatedDob;
     }
@@ -1167,18 +1167,18 @@ export class ProductsPromotionComponent implements OnInit {
       this.EndDate = Conversions.getEndDateObjectNew();
       this.StartTime = { hour: 0, minute: 0, second: 0 };
       this.EndTime = { hour: 23, minute: 59, second: 59 };
-      let dStart =  Conversions.formatDateObject(this.StartDate);
-      let dEnd =  Conversions.formatDateObject(this.EndDate);
-      let startDate = moment(dStart);
-      let endDate = moment(dEnd);
-      let duration = moment.duration(endDate.diff(startDate));
+      const dStart =  Conversions.formatDateObject(this.StartDate);
+      const dEnd =  Conversions.formatDateObject(this.EndDate);
+      const startDate = moment(dStart);
+      const endDate = moment(dEnd);
+      const duration = moment.duration(endDate.diff(startDate));
       this.PromotionAge = duration.asDays();
       this.PromotionFor = 1;
     }, 200);
   }
 
   tabSelected(event: MatTabChangeEvent): void {
-    let selectedIndex = event.index;
+    const selectedIndex = event.index;
     if (selectedIndex === 0) {
       this.ForActive = 1
       this.resetForm();

@@ -178,10 +178,10 @@
                                         name="searchByCodeNameRadio" (click)="tpFilterType('code')"
                                         id="radioTPByCode" />
                                     <label class="form-check-label ml-1" for="radioTPByCode">Code</label>
-                                    <input type="checkbox" *ngIf="searchByCodeNameRadio == 'code'" class="ml-1"
+                                    <input type="checkbox" *ngIf="searchByCodeNameRadio === 'code'" class="ml-1"
                                         name="chkSearchByExactMatch" id="chkSearchByExactMatch"
                                         [(ngModel)]="chkSearchByExactMatch">
-                                    <label for="chkSearchByExactMatch" *ngIf="searchByCodeNameRadio == 'code'"
+                                    <label for="chkSearchByExactMatch" *ngIf="searchByCodeNameRadio === 'code'"
                                         class="form-check-label"> <small>Exact match</small></label>
                                 </small>
                             </span>

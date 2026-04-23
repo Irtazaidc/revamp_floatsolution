@@ -31,7 +31,7 @@
         </div>
         <div class="card-toolbar">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button *ngIf="screenIdentity=='tech-audit'" type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
+                <button *ngIf="screenIdentity==='tech-audit'" type="button"  class="btn btn-sm btn-success" (click)="advancedSearch()"
                     ngbTooltip="Advanced Search"><i class="ti-search"></i>Advanced</button>
             </div>
         </div>
@@ -158,10 +158,10 @@
                     </ng-select>
 
                 </div>
-                <div *ngIf="screenIdentity=='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                <div *ngIf="screenIdentity==='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
                     <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
                 </div>
-                <div *ngIf="advancedSearchEnabled && screenIdentity=='tech-audit'" [@fadeInOutTranslate] class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                <div *ngIf="advancedSearchEnabled && screenIdentity==='tech-audit'" [@fadeInOutTranslate] class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                     <label for="TechnicianID">InitializedBy</label>
                     <div class="form-group">
                         <div class="input-group">
@@ -179,7 +179,7 @@
 
                 </div>
 
-                <div *ngIf="screenIdentity!='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
+                <div *ngIf="screenIdentity!=='tech-audit'" class="col-xs-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 mt-8">
                     <button class="btn btn-primary"><span><i class="fa fa-search"></i></span></button>
                 </div>
             </div>

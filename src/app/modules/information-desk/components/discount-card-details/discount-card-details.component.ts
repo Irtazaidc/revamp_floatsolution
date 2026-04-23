@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { HelperService } from 'src/app/modules/shared/helpers/helper.service';
   templateUrl: './discount-card-details.component.html',
   styleUrls: ['./discount-card-details.component.scss']
 })
-export class DiscountCardDetailsComponent implements OnInit {
+export class DiscountCardDetailsComponent implements OnInit, OnChanges {
 
   spinnerRefs = {
     usersList: 'usersList',
@@ -26,7 +26,7 @@ export class DiscountCardDetailsComponent implements OnInit {
 
   searchForm: FormGroup;
 
-  isSubmitted: boolean = false;
+  isSubmitted = false;
 
   cardUsersList:any = []; 
   familyCardlist:any[] = null;
@@ -85,8 +85,8 @@ export class DiscountCardDetailsComponent implements OnInit {
       this.isSubmitted = true;
       return;
     };
-    let formValue = this.searchForm.getRawValue();
-    let params =
+    const formValue = this.searchForm.getRawValue();
+    const params =
     {
       PhoneNo: formValue.contactNumber || null, 
       CardNo: formValue.cardNumber || null, 
@@ -121,7 +121,7 @@ export class DiscountCardDetailsComponent implements OnInit {
 
   getFamilyCardDetails(cardId) {
     this.familyCardlist = null;
-    let params =
+    const params =
     {
       cardId: cardId, //this.cardIdValue,
     };
@@ -145,7 +145,7 @@ export class DiscountCardDetailsComponent implements OnInit {
   }
 
   validateFields(): ValidatorFn {
-    return (formGroup: FormGroup): {[key: string]: any} | null => {
+    return (formGroup: FormGroup): Record<string, any> | null => {
       const contactNumber = formGroup.get('contactNumber').value;
       const cardNumber = formGroup.get('cardNumber').value;
   

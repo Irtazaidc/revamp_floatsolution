@@ -96,7 +96,7 @@ export class ToolbarComponent implements OnInit {
     this.storageService.setQManagementCounterNo(event.target.value);
   }
   callForToken() {
-    let params = {
+    const params = {
       branchId: this.loggedInUser.locationid,
       counterNo: this.selectedQTokenCounter || ''
     }
@@ -129,7 +129,7 @@ export class ToolbarComponent implements OnInit {
     })
   }
   attendToken() {
-    let params = {
+    const params = {
       branchId: this.loggedInUser.locationid,
       counterNo: this.selectedQTokenCounter || ''
     }

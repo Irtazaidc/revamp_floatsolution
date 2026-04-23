@@ -9,7 +9,7 @@ let loadedResolve: any, reportLoaded = new Promise((res) => { loadedResolve = re
 let renderedResolve: any, reportRendered = new Promise((res) => { renderedResolve = res; });
 // const powerbi: powerbiClient.service.Service = window["powerbi"];
 
-declare var $: any;
+declare let $: any;
 @Component({
   standalone: false,
 

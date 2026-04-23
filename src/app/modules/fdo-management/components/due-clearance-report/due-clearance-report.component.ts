@@ -94,7 +94,7 @@ export class DueClearanceReportComponent implements OnInit {
   }
 
   getDueClearanceReport() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Complete All The Fields");
@@ -102,7 +102,7 @@ export class DueClearanceReportComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocIds: formValues.locID ? formValues.locID.join(",") : null,
@@ -173,7 +173,7 @@ export class DueClearanceReportComponent implements OnInit {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad || [];
+        const _response = resp.PayLoad || [];
         this.testStatusList = _response;
       },
       (err) => {}
@@ -186,7 +186,7 @@ export class DueClearanceReportComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.paymentMethodList = _response.Table5 || [];
           this.patientTypeList = _response.Table6 || [];
         },

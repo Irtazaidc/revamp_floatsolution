@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { QuestionnaireService } from 'src/app/modules/ris/services/questionnaire.service';
@@ -13,10 +13,10 @@ import { HelperService } from 'src/app/modules/shared/helpers/helper.service';
   templateUrl: './radiologist-infov2.component.html',
   styleUrls: ['./radiologist-infov2.component.scss']
 })
-export class RadiologistInfov2Component implements OnInit {
+export class RadiologistInfov2Component implements OnInit, OnChanges {
 
- @Input('paramPayload') paramPayload: any;
-  @Input('selectedValueChange') selectedValueChange: any;
+ @Input() paramPayload: any;
+  @Input() selectedValueChange: any;
   constructor(
     private spinner: NgxSpinnerService,
     private questionnaireSrv : QuestionnaireService,
@@ -62,7 +62,7 @@ export class RadiologistInfov2Component implements OnInit {
     this.cd.detectChanges();
   }
   getRadiologistInfo(EmpID){
-    let params = {
+    const params = {
       EmpID: EmpID,
       // DateFrom :this.dateFrom,
       // DateTo: this.dateTo
@@ -87,14 +87,14 @@ export class RadiologistInfov2Component implements OnInit {
   }
   getEmployeePic(EmpID){
     this.spinner.show(this.spinnerRefs.drPic);
-    let params = {
+    const params = {
       EmpID:EmpID
     }
     this.questionnaireSrv.getEmployeePic(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.drPic);
       if (res.StatusCode == 200) {
         if(res.PayLoad.length && res.PayLoad[0].EmployeePic){
-          let resp = this.helper.formateImagesData(res.PayLoad,'EmployeePic');
+          const resp = this.helper.formateImagesData(res.PayLoad,'EmployeePic');
           this.radiologistPic = resp[0].EmployeePic;
         }else{
           this.radiologistPic=null;

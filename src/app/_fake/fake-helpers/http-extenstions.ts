@@ -29,7 +29,7 @@ export function baseFilter(entities: any[], requestObj: ITableState) {
   return responseObj;
 }
 
-export function sortArray(incomingArray: any[], sortField: string = '', sortOrder: string = 'asc'): any[] {
+export function sortArray(incomingArray: any[], sortField = '', sortOrder = 'asc'): any[] {
   if (!sortField) {
     return incomingArray;
   }
@@ -57,13 +57,13 @@ export function filterArray(incomingArray: any[], requestObj: ITableState): any[
   let result: any[] = incomingArray;
   const filtrationFields = Object.keys(requestObj.filter);
   filtrationFields.forEach((keyName: string) => {
-    // tslint:disable-next-line:triple-equals
+   
     result = result.filter(el => el[keyName] == requestObj.filter[keyName]);
   });
   return result;
 }
 
-export function searchInArray(incomingArray: any[], searchTerm: string = ''): any[] {
+export function searchInArray(incomingArray: any[], searchTerm = ''): any[] {
   if (!searchTerm) {
     return incomingArray;
   }

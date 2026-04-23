@@ -83,7 +83,7 @@ export class SecondOpinionReportComponent implements OnInit {
   }
   radoiologistList = [];
   getRadiologistInfo() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_INFO, params).subscribe((res: any) => {
@@ -102,7 +102,7 @@ export class SecondOpinionReportComponent implements OnInit {
     }, (err) => { console.log(err) })
   }
   checkBranch(e) {
-    let visitID = this._form.getRawValue().VisitID;
+    const visitID = this._form.getRawValue().VisitID;
     if (!e.length && visitID)
       this.validateBranch = true;
     else
@@ -112,7 +112,7 @@ export class SecondOpinionReportComponent implements OnInit {
     if (searchInput) { searchInput.value = null; }
   }
   getAllLocationByUserID() {
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid
     }
     this.lookupSrv.getAllLocationByUserID(param).subscribe((resp: any) => {
@@ -124,12 +124,12 @@ export class SecondOpinionReportComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.lookupSrv.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -169,7 +169,7 @@ export class SecondOpinionReportComponent implements OnInit {
 
   assesmentCategories = [];
   getRISAssesmentCategory() {
-    let params = {};
+    const params = {};
     this.sharedService.getData(API_ROUTES.GET_RIS_ASSESMENT_CATEGORY, params).subscribe((res: any) => {
       this.assesmentCategories = res.PayLoad || [];
     }, (err) => {
@@ -214,14 +214,14 @@ export class SecondOpinionReportComponent implements OnInit {
 
   inValidDateRange
   getSecondOpinionSumaryReport() {
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     this._form.markAllAsTouched();
     if ((!formValues.VisitID || formValues.VisitID == '') && formValues.dateFrom === 'Invalid date' && formValues.dateTo === 'Invalid date') {
       this.toastr.warning("Please provide date range!", "Date Range Required");
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: (!formValues.VisitID && formValues.dateFrom) ? Conversions.formatDateObject(formValues.dateFrom) : null,
       DateTo: (!formValues.VisitID && formValues.dateTo) ? Conversions.formatDateObject(formValues.dateTo) : null,
       VisitID: formValues.VisitID ? formValues.VisitID.replaceAll("-", "") : null,
@@ -278,7 +278,7 @@ export class SecondOpinionReportComponent implements OnInit {
 
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo;
+    const pin = text.VisitNo;
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -298,7 +298,7 @@ export class SecondOpinionReportComponent implements OnInit {
         isReviewerName: this.isReviewerName
       }
     )));
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
   }
 
   disabledButtonPrintSummary = false;
@@ -306,7 +306,7 @@ export class SecondOpinionReportComponent implements OnInit {
   printSecondOpinionSummaryReport() {
     this.disabledButtonPrintSummary = true;
     this.isSpinnerPrintSummary = false;
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     const url = environment.patientReportsPortalUrl + 'second-opinion-summary-report?p=' + btoa(JSON.stringify({
       DateFrom: (!formValues.VisitID && formValues.dateFrom) ? Conversions.formatDateObject(formValues.dateFrom) : null,
       DateTo: (!formValues.VisitID && formValues.dateTo) ? Conversions.formatDateObject(formValues.dateTo) : null,
@@ -321,7 +321,7 @@ export class SecondOpinionReportComponent implements OnInit {
     setTimeout(() => {
       this.disabledButtonPrintSummary = false;
       this.isSpinnerPrintSummary = true;
-      let winRef = window.open(url.toString(), '_blank');
+      const winRef = window.open(url.toString(), '_blank');
     }, 500);
 
   }

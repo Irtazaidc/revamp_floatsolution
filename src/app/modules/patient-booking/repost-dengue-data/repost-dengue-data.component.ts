@@ -61,9 +61,9 @@ export class RepostDengueDataComponent implements OnInit {
 
       }
       else {
-        let curcnic1 = cur.CNIC.substring(0, 5);
-        let curcnic2 = cur.CNIC.substring(5, 12);
-        let curcnic3 = cur.CNIC.substring(12, 13);
+        const curcnic1 = cur.CNIC.substring(0, 5);
+        const curcnic2 = cur.CNIC.substring(5, 12);
+        const curcnic3 = cur.CNIC.substring(12, 13);
         cur.CNIC = curcnic1 + '-' + curcnic2 + '-' + curcnic3;
       }
 
@@ -205,7 +205,7 @@ export class RepostDengueDataComponent implements OnInit {
     }, [])
     console.log("resultresultresultresultresult", result);
     for (let i = 0; i < result.length; i++) {
-      let params = {
+      const params = {
         t: this.Token,
         patient: result[i],
         IsReposted: 1

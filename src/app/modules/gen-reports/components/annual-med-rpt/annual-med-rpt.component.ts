@@ -78,14 +78,14 @@ export class AnnualMedRptComponent implements OnInit {
 
 
   getAnnualMedicalrpt() {
-    let formValues = this.medicForm.getRawValue();
+    const formValues = this.medicForm.getRawValue();
 
     if (this.medicForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       PanelID: formValues.panelId || null,
@@ -118,7 +118,7 @@ export class AnnualMedRptComponent implements OnInit {
   getPanelList() {
     
     this.panelList = [];
-    let _param = {}
+    const _param = {}
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -126,7 +126,7 @@ export class AnnualMedRptComponent implements OnInit {
           data = JSON.parse(data);
         } catch (ex) { }
         this.panelList = data || [];
-        let aa = "1714, 379, 391, 532, 379";
+        const aa = "1714, 379, 391, 532, 379";
         this.panelList.map(a => {
           // if (a.PanelId === 1714 || a.PanelId === 379 || a.PanelId === 391 || a.PanelId === 532) {
           if (a.PanelId === 1714 || a.PanelId === 532 || a.PanelId === 379 || a.PanelId === 403) {
@@ -145,8 +145,8 @@ export class AnnualMedRptComponent implements OnInit {
   getTestProfileList() {
     this.TestProfileList = [];
     this.TestProfileList1 = [];
-    let formValues = this.medicForm.getRawValue();
-    let _param = {
+    const formValues = this.medicForm.getRawValue();
+    const _param = {
       PanelIDs: formValues.panelId || null, //"1714",
     };
     this.tpservice.getTestProfileByPanelID(_param).subscribe((res: any) => {

@@ -72,26 +72,26 @@
                 </thead>
                 <tbody id="">
                    
-                    <tr scope="row" *ngFor="let hcRpt of hcBookingDetailData; let i = index">
-                        <td scope="row"> {{hcRpt.BookingDate | date : "dd MMM, yyyy, h:mm a"}}</td>
-                        <td scope="row"> {{hcRpt.bookingTime?moment(hcRpt.bookingTime, "HH:mm:ss.SSSSSSS").format("h:mm A"):'-' }}</td>
-                        <td scope="row"> {{hcRpt.BookingPatientID }}</td>
-                        <td scope="row"> {{hcRpt.SalutationTitle}} {{hcRpt.FirstName}} {{hcRpt.LastName}} </td>
-                        <td scope="row"> {{hcRpt.MobileNO}} </td>
-                        <td scope="row"> {{hcRpt.AppointmentDateTime | date : "dd MMM, yyyy, h:mm a"}} </td>
+                    <tr *ngFor="let hcRpt of hcBookingDetailData; let i = index">
+                        <td> {{hcRpt.BookingDate | date : "dd MMM, yyyy, h:mm a"}}</td>
+                        <td> {{hcRpt.bookingTime?moment(hcRpt.bookingTime, "HH:mm:ss.SSSSSSS").format("h:mm A"):'-' }}</td>
+                        <td> {{hcRpt.BookingPatientID }}</td>
+                        <td> {{hcRpt.SalutationTitle}} {{hcRpt.FirstName}} {{hcRpt.LastName}} </td>
+                        <td> {{hcRpt.MobileNO}} </td>
+                        <td> {{hcRpt.AppointmentDateTime | date : "dd MMM, yyyy, h:mm a"}} </td>
                         <!-- <td scope="row"> {{hcRpt.BookedByName || '-'}} </td> -->
-                        <td scope="row"> {{ hcRpt.BookingAssignedAt ? (hcRpt.BookingAssignedAt | date: "dd MMM, yyyy, h:mm a") : '-' }} </td>
-                        <td scope="row"> {{hcRpt.BookingAssignedByEmpName || '-'}} </td>
-                        <td scope="row"> {{hcRpt.RiderName || '-'}} </td>
-                        <td scope="row"> {{hcRpt.RequestAcceptedAt ? (hcRpt.RequestAcceptedAt | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
-                        <td scope="row"> {{hcRpt.BookingCompletedBy || '-'}} </td>
-                        <td scope="row"> {{hcRpt.BookingCompletedAt ? (hcRpt.BookingCompletedAt | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
-                        <td scope="row"> {{hcRpt.SampleNotCollectedBy || '-'}} </td>
-                        <td scope="row"> {{hcRpt.SampleCollectedBy || '-'}} </td>
-                        <td scope="row"> {{hcRpt.BookingCloseByStaf || '-'}} </td>
-                        <td scope="row"> {{hcRpt.BookingCloseAtStaf ? (hcRpt.BookingCloseAtStaf | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
-                        <td scope="row"> {{hcRpt.LastStatus || '-'}} </td>
-                        <td scope="row">{{hcRpt.TotalAmount || '-'}} </td>
+                        <td> {{ hcRpt.BookingAssignedAt ? (hcRpt.BookingAssignedAt | date: "dd MMM, yyyy, h:mm a") : '-' }} </td>
+                        <td> {{hcRpt.BookingAssignedByEmpName || '-'}} </td>
+                        <td> {{hcRpt.RiderName || '-'}} </td>
+                        <td> {{hcRpt.RequestAcceptedAt ? (hcRpt.RequestAcceptedAt | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
+                        <td> {{hcRpt.BookingCompletedBy || '-'}} </td>
+                        <td> {{hcRpt.BookingCompletedAt ? (hcRpt.BookingCompletedAt | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
+                        <td> {{hcRpt.SampleNotCollectedBy || '-'}} </td>
+                        <td> {{hcRpt.SampleCollectedBy || '-'}} </td>
+                        <td> {{hcRpt.BookingCloseByStaf || '-'}} </td>
+                        <td> {{hcRpt.BookingCloseAtStaf ? (hcRpt.BookingCloseAtStaf | date : "dd MMM, yyyy, h:mm a") : '-'}} </td>
+                        <td> {{hcRpt.LastStatus || '-'}} </td>
+                        <td>{{hcRpt.TotalAmount || '-'}} </td>
                     </tr>
                 </tbody>
             </table>

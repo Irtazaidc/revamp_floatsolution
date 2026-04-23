@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, OnChanges } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from "ngx-toastr";
@@ -14,10 +14,10 @@ import { QuestionnaireService } from "src/app/modules/ris/services/questionnaire
   templateUrl: "./radiologist-availability.component.html",
   styleUrls: ["./radiologist-availability.component.scss"],
 })
-export class RadiologistAvailabilityComponent implements OnInit {
+export class RadiologistAvailabilityComponent implements OnInit, OnChanges {
   @Input() doctorslocationId: any;
 
-  isSpinner: boolean = true; //Hide Loader
+  isSpinner = true; //Hide Loader
   radoiologistList: any[] = [];
   doctorsList: any[] = [];
   filteredRadiologistList: any[] = [];
@@ -125,7 +125,7 @@ export class RadiologistAvailabilityComponent implements OnInit {
   }
 
   getRadiologistWorkWeek() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
     this.lookupService.getWorkWeek(params).subscribe(
       (res: any) => {
@@ -146,7 +146,7 @@ export class RadiologistAvailabilityComponent implements OnInit {
 
   getRadiologistInfoDetail() {
     this.filteredTableData = [];
-    let formValues = this.radiologistAvlForm.getRawValue();
+    const formValues = this.radiologistAvlForm.getRawValue();
 
     if (
       this.radiologistAvlForm.invalid ||
@@ -159,7 +159,7 @@ export class RadiologistAvailabilityComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       EmpID: formValues.EmpID || null,
       LocIDs: formValues.LocIDs.join(","),
       WorkWeekID: formValues.WorkWeekID || null,
@@ -207,7 +207,7 @@ export class RadiologistAvailabilityComponent implements OnInit {
 
   getRadiologistsByLocIDs() {
   // Prepare parameters
-  let params = {
+  const params = {
     LocIDs: this.selectedBranchIDs?.length
       ? this.selectedBranchIDs.join(",") // Use selected branch IDs
       : this.BranchesList.map((b) => b.LocId).join(","), // Default to all branch IDs if none selected
@@ -248,7 +248,7 @@ filterDoctorsBySelectedDoctor(selectedDoctor: any) {
   }
 
   // Get the selected doctor's location ID
-  let selectedDoctorLocID = selectedDoctor.LocId;
+  const selectedDoctorLocID = selectedDoctor.LocId;
 
   // Filter doctors who belong to the same location
   this.filteredRadiologistList = this.radoiologistList.filter(
@@ -329,7 +329,7 @@ filterDoctorsBySelectedDoctor(selectedDoctor: any) {
     this.BranchesList = [];
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -352,7 +352,7 @@ filterDoctorsBySelectedDoctor(selectedDoctor: any) {
   }
 
   checkBranch(e) {
-    let visitID = this.radiologistAvlForm.getRawValue().visitID;
+    const visitID = this.radiologistAvlForm.getRawValue().visitID;
     if (!e.length && visitID) this.validateBranch = true;
     else this.validateBranch = false;
 
@@ -364,7 +364,7 @@ filterDoctorsBySelectedDoctor(selectedDoctor: any) {
     }
   }
   getRadiologistTime() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
     this.lookupService.getDHRMGeneralShift(params).subscribe(
       (res: any) => {
@@ -433,13 +433,13 @@ filterDoctorsBySelectedDoctor(selectedDoctor: any) {
   }
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     };
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
       },
       (err) => {

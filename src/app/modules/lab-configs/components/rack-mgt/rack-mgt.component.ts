@@ -33,14 +33,14 @@ export class RackMgtComponent implements OnInit {
     rackDetailSection: 'rackDetailSection',
     rackFormSection: 'rackFormSection'
   }
-  cardTitle: string = "Add Rack";
-  actionLabel: string = "Save";
-  isSpinner: boolean = true;
+  cardTitle = "Add Rack";
+  actionLabel = "Save";
+  isSpinner = true;
   racksDetailData: any = [];
   rackDetailDisplayedColumns = ['RackCode', 'RackType', 'Status', 'LockedIn'];
 
   rackBranhID: any = 1;
-  event: string = "create";
+  event = "create";
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Confirmation Alert', // 'Are you sure?',
@@ -68,14 +68,14 @@ export class RackMgtComponent implements OnInit {
 
   createRack() {
     this.spinner.show(this.spinnerRefs.rackFormSection);
-    let values = this.rackForm.getRawValue();
+    const values = this.rackForm.getRawValue();
     this.rackForm.markAllAsTouched();
     if (this.rackForm.invalid) {
       this.spinner.hide(this.spinnerRefs.rackFormSection);
       this.toastr.warning('Please fill the required fields');
       return false;
     } else {
-      let params = {
+      const params = {
         "RackBranchID": values.rackBranch,
         "RackDescription": values.rackDesc,
         "RackCapacity": values.rackCapacity,
@@ -101,8 +101,8 @@ export class RackMgtComponent implements OnInit {
 
   updateRack() {
     this.spinner.show(this.spinnerRefs.rackFormSection);
-    let values = this.rackForm.getRawValue();
-    let params = {
+    const values = this.rackForm.getRawValue();
+    const params = {
       "RackID" : this.RackID,
       "RackBranchID": values.rackBranch,
       "RackDescription": values.rackDesc,
@@ -122,7 +122,7 @@ export class RackMgtComponent implements OnInit {
     })
   }
   printBarcode(){
-    let rackNo  = this.selrackDetail[0].RackNo;
+    const rackNo  = this.selrackDetail[0].RackNo;
     if(rackNo) {
       const url = environment.EmailServiceUrl + 'smp-bc/gen-barcode?p='+ btoa(JSON.stringify({BarCode: rackNo, appName: 'WebMedicubes:rackManagment', timeStemp: +new Date()}));
       window.open(url.toString(), '_blank');
@@ -149,7 +149,7 @@ export class RackMgtComponent implements OnInit {
       // this.rackForm.disable();
     } else {
       this.racksDetailData = [];
-      let params = {
+      const params = {
         "rackBranchID": this.rackBranhID
       }
       this.rackSerice.getRacksDetail(params).subscribe((resp: any) => {

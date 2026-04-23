@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, UserModel } from 'src/app/modules/auth';
@@ -13,7 +13,7 @@ import { SharedService } from 'src/app/modules/shared/services/shared.service';
   templateUrl: './dicom-dropdown-button.component.html',
   styleUrls: ['./dicom-dropdown-button.component.scss']
 })
-export class DICOMDropdownButtonComponent implements OnInit {
+export class DICOMDropdownButtonComponent implements OnInit, OnChanges {
 
   @Input() btnPayload: any;
 
@@ -75,7 +75,7 @@ export class DICOMDropdownButtonComponent implements OnInit {
   isVPN = false; 
   getPACSServers() {
     this.SysInfo = this.auth.getSystemInfoFromStorage();
-    let objParams_ = {
+    const objParams_ = {
       VisitId: this.VisitID,
       TPId: this.TPID,
       LocID: this.loggedInUser.locationid// this.SysInfo.loginLocId
@@ -85,7 +85,7 @@ export class DICOMDropdownButtonComponent implements OnInit {
       VisitID: this.VisitID,
       TPID: this.TPID
     }];
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail

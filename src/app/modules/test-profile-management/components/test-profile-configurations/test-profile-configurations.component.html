@@ -1158,14 +1158,14 @@
                                 </tr>
                                 <tr *ngFor="let range of item.ranges; let i = index">
                                     <td>{{i+1}}</td>
-                                    <td>{{(range.AgeType | uppercase) == 'Y' ? 'Year': (range.AgeType | uppercase)=='M'?
+                                    <td>{{(range.AgeType | uppercase) === 'Y' ? 'Year': (range.AgeType | uppercase)==='M'?
                                         'Month' :'Day'}}</td>
-                                    <td>{{(range.Gender | uppercase) == 'M' ? 'Male': (range.Gender | uppercase)=='F'?
+                                    <td>{{(range.Gender | uppercase) === 'M' ? 'Male': (range.Gender | uppercase)==='F'?
                                         'Female' :'Both'}}</td>
                                     <!-- <td>{{range.AgeFrom}}-{{range.AgeTo}}</td> -->
-                                    <td>{{(range.AgeType | uppercase) == 'D' ?
+                                    <td>{{(range.AgeType | uppercase) === 'D' ?
                                         (getFormatedStringFromDays(range.AgeFrom)): range.AgeFrom}} - {{(range.AgeType |
-                                        uppercase) == 'D' ? (getFormatedStringFromDays(range.AgeTo)): range.AgeTo}}</td>
+                                        uppercase) === 'D' ? (getFormatedStringFromDays(range.AgeTo)): range.AgeTo}}</td>
                                     <td>{{range.RangeFrom}} - {{range.RangeTo}}</td>
                                     <td>{{range.RangeText}}</td>
                                     <td class="text-right">
@@ -1349,7 +1349,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <ng-container *ngIf="TestRanges=='' then  noRec else  showRec">
+                            <ng-container *ngIf="TestRanges==='' then  noRec else  showRec">
 
                             </ng-container>
                             <ng-template #noRec>
@@ -1365,19 +1365,19 @@
                             <ng-template #showRec>
                                 <tr *ngFor="let range of TestRanges; let i = index">
                                     <td>{{i+1}}</td>
-                                    <td>{{(range.AgeType | uppercase) == 'Y' ? 'Year': (range.AgeType | uppercase)=='M'?
+                                    <td>{{(range.AgeType | uppercase) === 'Y' ? 'Year': (range.AgeType | uppercase)==='M'?
                                         'Month' :'Day'}}</td>
-                                    <td>{{(range.Gender | uppercase) == 'M' ? 'Male': (range.Gender | uppercase)=='F'?
+                                    <td>{{(range.Gender | uppercase) === 'M' ? 'Male': (range.Gender | uppercase)==='F'?
                                         'Female' :'Both'}}</td>
                                     <!-- <td>{{getFormatedStringFromDays(range.AgeFrom)}} - {{getFormatedStringFromDays(range.AgeTo)}}</td> -->
                                     <td>
 
 
-                                        {{(range.AgeType | uppercase) == 'D' ?
+                                        {{(range.AgeType | uppercase) === 'D' ?
                                         (getFormatedStringFromDays(range.AgeFrom)): 
                                         range.AgeFrom }}{{getPostfixForValue(range.AgeType)}}
                                         - {{(range.AgeType |
-                                        uppercase) == 'D' ? (getFormatedStringFromDays(range.AgeTo)): 
+                                        uppercase) === 'D' ? (getFormatedStringFromDays(range.AgeTo)): 
                                         range.AgeTo}}{{getPostfixForValue(range.AgeType)}}
                                     
                                     

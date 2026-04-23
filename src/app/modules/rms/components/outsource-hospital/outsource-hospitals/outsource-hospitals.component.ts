@@ -52,7 +52,7 @@ export class OutsourceHospitalsComponent implements OnInit {
 
   getHospitalDetail() {
     this.HospitalDetailExistingRow = [];
-    let params = {
+    const params = {
       OutSourceHospitalID:  null,
     };
     this.spinner.show(this.spinnerRefs.listSection)
@@ -60,7 +60,7 @@ export class OutsourceHospitalsComponent implements OnInit {
       (res: any) => {
         this.spinner.hide(this.spinnerRefs.listSection)
         if (res.StatusCode == 200) {
-          let dataset = JSON.parse(res.PayLoadStr || "[]");
+          const dataset = JSON.parse(res.PayLoadStr || "[]");
           this.HospitalDetailExistingRow = dataset["Table"] || [];
           this.HospitalDetailExistingRow=this.HospitalDetailExistingRow.reverse();
           this.refreshPagination();
@@ -95,7 +95,7 @@ export class OutsourceHospitalsComponent implements OnInit {
 
   refreshPagination() {
     this.pagination.filteredSearchResults = this.HospitalDetailExistingRow;
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

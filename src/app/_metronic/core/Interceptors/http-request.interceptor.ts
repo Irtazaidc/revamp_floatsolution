@@ -21,7 +21,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token:AuthModel = this.auth.getAuthFromLocalStorage() || new AuthModel();
-    let _headers = {}
+    const _headers = {}
     _headers['Content-Type'] = (request.headers.get('Content-Type') || 'application/json');
     _headers['Authorization'] = (request.headers.get('Authorization') || `Bearer ${token.authToken || ''}`);
 

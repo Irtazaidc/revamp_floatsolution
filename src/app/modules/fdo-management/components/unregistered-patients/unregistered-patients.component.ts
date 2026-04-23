@@ -44,7 +44,7 @@ export class UnregisteredPatientsComponent implements OnInit {
 
   searchText = "";
   maxDate: any;
-  isActive: number = 1;
+  isActive = 1;
   filterForm: FormGroup = this.formBuilder.group(this.Fields);
 
   constructor(
@@ -72,7 +72,7 @@ export class UnregisteredPatientsComponent implements OnInit {
     this.pagination.paginatedSearchResults = [];
     this.searchText = "";
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toastr.warning("Please Select Mandatory Fields");
@@ -80,7 +80,7 @@ export class UnregisteredPatientsComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       Date: Conversions.formatDateObject(formValues.date) || null,
     };
 
@@ -110,7 +110,7 @@ export class UnregisteredPatientsComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

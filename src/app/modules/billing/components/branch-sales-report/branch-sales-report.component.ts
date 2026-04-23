@@ -25,9 +25,9 @@ import { SharedService } from "src/app/modules/shared/services/shared.service";
 export class BranchSalesReportComponent implements OnInit {
   BranchClosingID: any;
   CardTitle = "Branch Closing";
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   ActionLabel = "Add";
-  isSpinner: boolean = true; //Hide Loader
+  isSpinner = true; //Hide Loader
   selectedDespitId = null
   rowIndex = null;
 
@@ -68,7 +68,7 @@ export class BranchSalesReportComponent implements OnInit {
     cancelClicked: false,
     confirmPopoverCancel: () => { },
   };
-  allowRemove: boolean = false;
+  allowRemove = false;
   depositList: any = [];
   accountDetails = []
   // {
@@ -157,7 +157,7 @@ export class BranchSalesReportComponent implements OnInit {
           }));
           this.accountDetails = (res.PayLoadDS['Table1'] || []);
           this.selectedDespitId = (res.PayLoadDS['Table2'] || [])
-          let documentdData = (res.PayLoadDS['Table2'] || [])
+          const documentdData = (res.PayLoadDS['Table2'] || [])
           this.BranchClosingDocumentdData = this.helper.formateImagesData(documentdData, 'DocDirPath')
           this.refreshPagination();
           this.GrandTotal = this.gettotalOfAll();
@@ -185,7 +185,7 @@ export class BranchSalesReportComponent implements OnInit {
   branchList = [];
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -271,7 +271,7 @@ export class BranchSalesReportComponent implements OnInit {
   getAllSaleByFDO() {
     const formValues = this.filterForm.getRawValue();
 
-    let params = {
+    const params = {
       userId: this.selectedUserId, // 2163, // 768 //
       fromDate: moment().subtract(7, "days").format("YYYY-MM-DDT00:00:00.000"), //Conversions.formatDateObject(formValues.DateFrom) ?? null,
       toDate: Conversions.formatDateObject(formValues.DateFrom) ?? null,
@@ -316,7 +316,7 @@ export class BranchSalesReportComponent implements OnInit {
 
   calculateNoteTotals() {
     this.grandTotal = 0;
-    for (let note of this.notes) {
+    for (const note of this.notes) {
       note.total = note.quantity * note.denomination;
       this.grandTotal += note.total;
     }
@@ -372,8 +372,8 @@ export class BranchSalesReportComponent implements OnInit {
       this.toastr.warning("Please enter remarks (minimum 10 characters)");
       return;
     }
-    let checkedItems = this.depositList.filter((a) => a.checked);
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
+    const checkedItems = this.depositList.filter((a) => a.checked);
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
     if (!checkedItems.length) {
       this.toastr.warning("Please select item(s) to update");
       return;
@@ -382,7 +382,7 @@ export class BranchSalesReportComponent implements OnInit {
       this.toastr.warning("Please select documents to upload");
       return;
     }
-    let params = {
+    const params = {
       Cash: this.closingData.Cash,
       CreditCard: this.closingData.CreditCard,
       Others: this.closingData.Others,
@@ -424,10 +424,10 @@ export class BranchSalesReportComponent implements OnInit {
   }
 
   refreshPagination() {
-    let mergedData: any[] = [];
+    const mergedData: any[] = [];
     let serialNo = 1;
 
-    let maxLength = Math.max(this.depositList.length, this.accountDetails.length);
+    const maxLength = Math.max(this.depositList.length, this.accountDetails.length);
 
     for (let i = 0; i < maxLength; i++) {
       if (this.depositList[i]) {
@@ -447,7 +447,7 @@ export class BranchSalesReportComponent implements OnInit {
 
     // pagination
     this.pagination.filteredSearchResults = mergedData;
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
 
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
@@ -470,7 +470,7 @@ export class BranchSalesReportComponent implements OnInit {
       return;
     }
     this.BranchSummaryReport = [];
-    let params = {
+    const params = {
       LocId: formValues.locId || null,
       date: Conversions.formatDateObject(formValues.DateFrom) ?? null,
     };
@@ -522,9 +522,9 @@ export class BranchSalesReportComponent implements OnInit {
     }
   }
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.loadedDocuments.filter(a => !a.docId).forEach(a => {
-      let d = {
+      const d = {
         DocId: null,
         Title: a.fileName,
         Remarks: '',
@@ -544,7 +544,7 @@ export class BranchSalesReportComponent implements OnInit {
   }
 
   SAveBranchClosing() {
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
   }
 
 

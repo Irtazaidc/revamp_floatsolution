@@ -9,7 +9,7 @@ import {
   Output,
   QueryList,
   ViewChild,
-  ViewChildren,
+  ViewChildren, AfterViewInit,
 } from "@angular/core";
 import { AuthService, UserModel } from "src/app/modules/auth";
 import { ActivatedRoute } from "@angular/router";
@@ -48,20 +48,20 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
     ]),
   ],
 })
-export class KnowledgeBasedDashboardComponent implements OnInit {
+export class KnowledgeBasedDashboardComponent implements OnInit, AfterViewInit {
   @Output() sendParamID = new EventEmitter<any>();
 
   marker: any;
   branchList: any[] = [];
   selectedBranch: any;
-  locationWiseChecked: boolean = false;
+  locationWiseChecked = false;
   isSubmitted = false;
 
   screenPermissionsObj;
-  inquiryReportPermission: boolean = false;
-  servicesPermission: boolean = false;
-  machinestPermission: boolean = false;
-  doctorsPermission: boolean = false;
+  inquiryReportPermission = false;
+  servicesPermission = false;
+  machinestPermission = false;
+  doctorsPermission = false;
 
   selectedTabIndex = 0;
   ParamID: number | null = 0;
@@ -176,22 +176,22 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
 
   getPermissions() {
     this.screenPermissionsObj = this.auth.getUserPermissionsFromLocalStorage();
-    let inquiryReport = this.screenPermissionsObj.find(
+    const inquiryReport = this.screenPermissionsObj.find(
       (i) => i.state === "inquiry-report",
     );
     this.inquiryReportPermission = inquiryReport ? true : false;
 
-    let services = this.screenPermissionsObj.find(
+    const services = this.screenPermissionsObj.find(
       (i) => i.state === "branch-services-log",
     );
     this.servicesPermission = services ? true : false;
 
-    let machines = this.screenPermissionsObj.find(
+    const machines = this.screenPermissionsObj.find(
       (i) => i.state === "machine-status-log",
     );
     this.machinestPermission = machines ? true : false;
 
-    let doctors = this.screenPermissionsObj.find(
+    const doctors = this.screenPermissionsObj.find(
       (i) => i.state === "radiologist-availability",
     );
     this.doctorsPermission = doctors ? true : false;
@@ -285,7 +285,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   ];
 
   selectedDepartment: any;
-  selectedDepartmentId: number = -1;
+  selectedDepartmentId = -1;
   selectedSubSectionId: number | null = null;
   selectedTestId: number | null = null;
 
@@ -330,14 +330,14 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   }
   // Fetch Subsections for Department (Lab or Imaging)
   getSubSection() {
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     };
     // Assuming lookupService is fetching the subsections for both departments
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
 
         // Based on the selected department, populate the corresponding subSections
@@ -359,9 +359,9 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   }
 
   getTestProfile() {
-    let subSectIDs = this.subSectionIDs.join(",");
+    const subSectIDs = this.subSectionIDs.join(",");
     this.testProfileList = [];
-    let objParm = {
+    const objParm = {
       TPID: null,
       TestProfileCode: null,
       TestProfileName: null,
@@ -370,7 +370,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
     };
     this.testProfileService.getTestsProfileForAnalytics(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
 
         this.testProfileList = _response;
       },
@@ -446,7 +446,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   }
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe(
       (res: any) => {
         if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -464,8 +464,8 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   }
   minutesToHours(minutes) {
     if (!minutes) return "";
-    var h: any = Math.floor(minutes / 60);
-    var m: any = minutes % 60;
+    let h: any = Math.floor(minutes / 60);
+    let m: any = minutes % 60;
     h = h < 10 ? "0" + h : h;
     m = m < 10 ? "0" + m : m;
     return h + ":" + m;
@@ -487,9 +487,9 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
     }
 
     this.testList = [];
-    let formValues = this.testProfileListForm.getRawValue();
+    const formValues = this.testProfileListForm.getRawValue();
 
-    let _param: any = {
+    const _param: any = {
       DiseaseId: formValues.DiseaseId || null,
       BodyPartId: formValues.BodyPartId || null,
       SymptomId: formValues.SymptomId || null,
@@ -513,7 +513,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.testInfoTable);
 
         if (res && res.StatusCode == 200 && res.PayLoad) {
-          let data = res.PayLoad;
+          const data = res.PayLoad;
 
           this.testList = data || [];
           this.subSectionId = _param.SubSectionId;
@@ -535,7 +535,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   testListChanged(e) {
     this.TPId = e.TPID;
     this.spinner.show(this.spinnerRefs.testGeneralSection);
-    let objParm = {
+    const objParm = {
       TPId: this.TPId,
     };
     this.testProfileService.getTestProfileDetailByTPID(objParm).subscribe(
@@ -557,7 +557,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
           this.testInstructuon = this.testGeneralData
             ? this.testGeneralData["Instruction"].replace(/\r\n/g, "<br>")
             : this.testGeneralData["Instruction"];
-          let TypeId = this.testGeneralData["TypeId"];
+          const TypeId = this.testGeneralData["TypeId"];
           if (TypeId === 3) {
             this.getPackageList(this.testGeneralData);
           } else {
@@ -579,7 +579,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   }
 
   getPackageList(e) {
-    let _params = {
+    const _params = {
       packageId: e.TPId,
       branchId: this.selectedLocId || null,
       panelId: this.selectedPanelId || "",
@@ -606,7 +606,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   getTATByTPID(location) {
     this.repTimeShow = true;
     this.LocId = location.LocId;
-    let objParm = {
+    const objParm = {
       TPId: this.TPId,
       LocID: this.LocId,
     };
@@ -630,7 +630,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
 
   GetBodyParts() {
     let response = [];
-    let BodyPartCount = [];
+    const BodyPartCount = [];
 
     this.BodyPartCount = response.length;
     this.TPService.GetBodyparts().subscribe(
@@ -659,7 +659,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
 
   GetDiseases() {
     let response = [];
-    let ObjParams = {
+    const ObjParams = {
       DiseasesID: this.DiseasesID,
     };
     this.DiseaseCount = response.length;
@@ -748,13 +748,13 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   }
 
   statusList;
-  disabledButton: boolean = false;
-  isSpinner: boolean = true;
+  disabledButton = false;
+  isSpinner = true;
   advertisementList: any[] = [];
   ForActive = -1;
 
   getPromotionAdd() {
-    let formValues = this.promotionAddForm.getRawValue();
+    const formValues = this.promotionAddForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(
@@ -778,7 +778,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
       return;
     }
 
-    let param = {
+    const param = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       ForActive: this.ForActive,
@@ -805,8 +805,8 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
     );
   }
 
-  selectedImage: string = "";
-  showModal: boolean = false;
+  selectedImage = "";
+  showModal = false;
 
   openModal(image: string): void {
     this.selectedImage = image;
@@ -878,7 +878,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   selectedBranchData: any = null;
   branchLatitude: number | null = null;
   branchLongitude: number | null = null;
-  branchAddress: string = "";
+  branchAddress = "";
 
   onBranchSelected(branch: any) {
     if (branch) {
@@ -910,7 +910,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   TickerList: any;
 
   getKBSTicker() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
 
     this.lookupService.getActiveKBSTickerDetail(params).subscribe(
@@ -956,14 +956,14 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
 
   // Properties
   // searchText: string = "";
-  baseUrl: string = "https://localhost:59357/api/"; // MUST END WITH SLASH
+  baseUrl = "https://localhost:59357/api/"; // MUST END WITH SLASH
   documentsList: any[] = [];
   groupedDocuments: any[] = [];
 
   // Preview modal properties
   selectedDocument: any = null;
   previewUrl: SafeResourceUrl = "";
-  isImageFile: boolean = true;
+  isImageFile = true;
 
   loadDocuments() {
     const params = { search: this.searchText };
@@ -1249,11 +1249,11 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
 
   // Properties from reference code
   selectedImg: any = null;
-  imageRotation: number = 0;
-  imageScale: number = 1;
+  imageRotation = 0;
+  imageScale = 1;
 
   // Preview modal
-  showPreviewModal: boolean = false;
+  showPreviewModal = false;
 
   imageError;
 
@@ -1320,7 +1320,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
       ? extensionOrFilename.split(".").pop()?.toLowerCase()
       : extensionOrFilename.toLowerCase();
 
-    const mimeTypes: { [key: string]: string } = {
+    const mimeTypes: Record<string, string> = {
       // Images
       jpg: "image/jpeg",
       jpeg: "image/jpeg",
@@ -1501,7 +1501,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   tryAlternativeUrls(doc: any, originalUrl: string) {
     const alternativeUrls = [];
     const path = doc.DocumentPath;
-    let cleanPath = path.startsWith("/") ? path.substring(1) : path;
+    const cleanPath = path.startsWith("/") ? path.substring(1) : path;
 
     // Try different URL patterns
     alternativeUrls.push(`${this.baseUrl}api/${cleanPath}`);
@@ -1611,7 +1611,7 @@ export class KnowledgeBasedDashboardComponent implements OnInit {
   AdminAccessPermissionForDeleteButton = false;
   screenDocumentDeleteButtonPermissionsObj;
   getDocumentDeleteButtonPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     this.screenDocumentDeleteButtonPermissionsObj =
       this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     console.log("User Screen Permsions___", this.screenDocumentDeleteButtonPermissionsObj);

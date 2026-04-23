@@ -101,15 +101,15 @@ export class ManageSalesDepositSlipsComponent implements OnInit {
   }
 
   saveSalesDepositSlipsDate() {
-    let formValues = this.SaveDepositSlipsForm.getRawValue();
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId || a.docId) || [];
+    const formValues = this.SaveDepositSlipsForm.getRawValue();
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId || a.docId) || [];
     console.log("saveSalesDepositSlipsDate ~ docsToSave:", docsToSave)
     if (this.SaveDepositSlipsForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let params = {
+    const params = {
       SaleDate: Conversions.formatDateObject(formValues.Salesdate) || null,
       LocId: formValues.BranchId || null,
       Title: formValues.Title || '',
@@ -190,9 +190,9 @@ export class ManageSalesDepositSlipsComponent implements OnInit {
 
   }
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.loadedDocuments.filter(a => !a.docId || a.docId).forEach(a => {
-      let d = {
+      const d = {
         DocId: null,
         Title: a.fileName,
         Remarks: '',
@@ -213,7 +213,7 @@ export class ManageSalesDepositSlipsComponent implements OnInit {
 
 
   getSalesDepositSlipReportData() {
-    let formValues = this.searchDepositSlipsForm.getRawValue();
+    const formValues = this.searchDepositSlipsForm.getRawValue();
     this.SalesSlipDataList = [];
 
     if (this.searchDepositSlipsForm.invalid) {
@@ -222,7 +222,7 @@ export class ManageSalesDepositSlipsComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       SaleDate: Conversions.formatDateObject(formValues.Date) || null,
       LocIds: formValues.BranchId.join(',') || null,
     };

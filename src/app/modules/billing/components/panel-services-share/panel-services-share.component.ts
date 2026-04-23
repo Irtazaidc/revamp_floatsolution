@@ -69,7 +69,7 @@ export class PanelServicesShareComponent implements OnInit {
   panelList = [];
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe(
       (res: any) => {
         if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -89,7 +89,7 @@ export class PanelServicesShareComponent implements OnInit {
   getPanelServicesShareData() {
     this.pagination.paginatedSearchResults = [];
 
-    let formValues = this.filterDelayForm.getRawValue();
+    const formValues = this.filterDelayForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(
@@ -125,7 +125,7 @@ export class PanelServicesShareComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       FromDate: formValues.dateFrom
         ? Conversions.formatDateObject(formValues.dateFrom)
         : null,
@@ -189,7 +189,7 @@ export class PanelServicesShareComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

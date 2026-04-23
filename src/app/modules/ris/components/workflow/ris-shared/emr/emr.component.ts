@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -9,8 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './emr.component.html',
   styleUrls: ['./emr.component.scss']
 })
-export class EmrComponent implements OnInit {
-  @Input('visitInfo') visitInfo = {};
+export class EmrComponent implements OnInit, OnChanges {
+  @Input() visitInfo = {};
   selVisit: any = "";
   selPIN: any = "";
   cusselpin: any = "";

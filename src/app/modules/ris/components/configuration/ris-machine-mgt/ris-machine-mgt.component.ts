@@ -35,9 +35,9 @@ export class RISMachineMgtComponent implements OnInit {
   BranchesList: any = [];
   filteredAvailableRadiologist = [];
   LabDeptID = -1;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonTests: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonTests = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
   spinnerRefs = {
     listSection: "listSection",
     testListSection: "testListSection",
@@ -137,7 +137,7 @@ export class RISMachineMgtComponent implements OnInit {
   }
 
   getOperationalTime() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
     this.lookupService.getDHRMGeneralShift(params).subscribe(
       (res: any) => {
@@ -160,7 +160,7 @@ export class RISMachineMgtComponent implements OnInit {
   getTestProfileList() {
     this.spinner.show(this.spinnerRefs.testListSection);
     this.testList = [];
-    let _param = {
+    const _param = {
       BranchID: 1,
       isRadiologyTests: 1,
       SubSectionIDs: null,
@@ -182,13 +182,13 @@ export class RISMachineMgtComponent implements OnInit {
   }
   machineManufactureList = [];
   getMachineManufacture() {
-    let _param = {};
+    const _param = {};
     this.sharedService
       .getData(API_ROUTES.GET_MACHINE_MANUFACTURE, _param)
       .subscribe(
         (res: any) => {
           if (res && res.StatusCode == 200 && res.PayLoad) {
-            let data = res.PayLoad;
+            const data = res.PayLoad;
             this.machineManufactureList = data || [];
           }
         },
@@ -217,13 +217,13 @@ export class RISMachineMgtComponent implements OnInit {
 
   getSubSectionByParent(SectionID) {
     this.SubSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: SectionID,
       LabDeptID: this.LabDeptID,
     };
     this.lookupService.getSubSectionByParent(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.SubSectionList = _response;
       },
       (err) => {
@@ -234,7 +234,7 @@ export class RISMachineMgtComponent implements OnInit {
 
   insertUpdateMachine() {
     this.spinner.show(this.spinnerRefs.machineFormSection);
-    let formValues = this.machineConfigForm.getRawValue();
+    const formValues = this.machineConfigForm.getRawValue();
     this.machineConfigForm.markAllAsTouched();
     if (this.machineConfigForm.invalid) {
       this.spinner.hide(this.spinnerRefs.machineFormSection);
@@ -243,7 +243,7 @@ export class RISMachineMgtComponent implements OnInit {
     } else {
       this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       this.isSpinner = false; // Button Spinner show
-      let formData = {
+      const formData = {
         RISMachineID: this.RISMachineID,
         MachineName: formValues.MachineName,
         MachineCode: formValues.MachineCode,
@@ -317,7 +317,7 @@ export class RISMachineMgtComponent implements OnInit {
       this.spinner.show(this.spinnerRefs.listSection);
     }
 
-    let params = {
+    const params = {
       RISMachineID: RISMachineID,
     };
     this.risCommonService.getRISMachine(params).subscribe(
@@ -408,7 +408,7 @@ export class RISMachineMgtComponent implements OnInit {
   };
   refreshPagination() {
   // use filteredResults if it exists, otherwise fall back to MachineList
-  let dataToPaginate = this.filteredResults?.length
+  const dataToPaginate = this.filteredResults?.length
     ? this.filteredResults
     : this.MachineList;
 
@@ -451,7 +451,7 @@ export class RISMachineMgtComponent implements OnInit {
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
         // this.spinner.hide('GetBranches');
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -476,7 +476,7 @@ export class RISMachineMgtComponent implements OnInit {
   associateTests() {
     this.disabledButtonTests = true; // Lock the button after for submit to wait till process is completed and respone is send
     this.isSpinner = false; // Button Spinner show
-    let selectedTests = this.testList.filter((a) => a.checked);
+    const selectedTests = this.testList.filter((a) => a.checked);
     console.log("selected test are ", selectedTests);
     let isValidPerformingTime = true;
     selectedTests.forEach((a) => {
@@ -492,7 +492,7 @@ export class RISMachineMgtComponent implements OnInit {
       return;
     } else {
       if (selectedTests.length) {
-        let objParam = {
+        const objParam = {
           RISMachineID: this.RISMachineID,
           CreatedBy: this.loggedInUser.userid || -99,
           tblMachineTest: selectedTests.map((a) => {
@@ -557,7 +557,7 @@ export class RISMachineMgtComponent implements OnInit {
   getTestList(TestSubSectionID, ExistingSelectedTests) {
     this.spinner.show(this.spinnerRefs.testListSection);
     this.testList = [];
-    let _param = {
+    const _param = {
       TPID: null,
       TestProfileCode: null,
       TestProfileName: null,
@@ -570,11 +570,11 @@ export class RISMachineMgtComponent implements OnInit {
         (res: any) => {
           this.spinner.hide(this.spinnerRefs.testListSection);
           if (res && res.StatusCode == 200 && res.PayLoad) {
-            let data = res.PayLoad;
+            const data = res.PayLoad;
             this.testList = data || [];
             if (this.testList.length && ExistingSelectedTests.length) {
               this.testList.forEach((element, index) => {
-                let matchedTests = this.ExistingSelectedTests.find(
+                const matchedTests = this.ExistingSelectedTests.find(
                   (a) => a.TPId == element.TPID
                 );
                 if (matchedTests) {
@@ -653,13 +653,13 @@ export class RISMachineMgtComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: 2,
     };
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
       },
       (err) => {
@@ -669,7 +669,7 @@ export class RISMachineMgtComponent implements OnInit {
   }
 
   checkBranch(e) {
-    let visitID = this.radiologistAvlForm.getRawValue().visitID;
+    const visitID = this.radiologistAvlForm.getRawValue().visitID;
     if (!e.length && visitID) this.validateBranch = true;
     else this.validateBranch = false;
 
@@ -728,7 +728,7 @@ export class RISMachineMgtComponent implements OnInit {
 
 
 
-isFullDayMachine: boolean = false;
+isFullDayMachine = false;
 
 onMachineModeToggle(event: any): void {
   this.isFullDayMachine = event.target.checked;

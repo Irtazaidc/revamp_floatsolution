@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 // import { StorageService } from '../../../../shared/helpers/storage.service';
@@ -14,12 +14,12 @@ import { AuthService, UserModel } from 'src/app/modules/auth';
   templateUrl: './visit-remarks.component.html',
   styleUrls: ['./visit-remarks.component.scss']
 })
-export class VisitRemarksComponent implements OnInit {
+export class VisitRemarksComponent implements OnInit, AfterViewInit, OnChanges {
 
-  @Input('propVisitNo') propVisitNo = '';
-  @Input('editing') editing = { save: false }; // {save: true}
-  @Input('moduleName') moduleName = '';
-  @Input('showRemarksPriority') showRemarksPriority = true; //Adding remarks field and button will show by default , will false for panel security conversion.
+  @Input() propVisitNo = '';
+  @Input() editing = { save: false }; // {save: true}
+  @Input() moduleName = '';
+  @Input() showRemarksPriority = true; //Adding remarks field and button will show by default , will false for panel security conversion.
 
   loggedInUser: UserModel;
 
@@ -71,7 +71,7 @@ export class VisitRemarksComponent implements OnInit {
 
   getVisitRemarks() {
     this.visitRemarks = [{ Remarks: 'Fetching remarks...' }];
-    let params = {
+    const params = {
       visitId: this.propVisitNo,
     }
     if (!params.visitId) {
@@ -100,7 +100,7 @@ export class VisitRemarksComponent implements OnInit {
 
 
   saveVisitRemarks() {
-    let params = {
+    const params = {
       VisitId: this.propVisitNo,
       ModuleName: this.moduleName || 'Receive Phlebotomy',
       Remarks: (this.visitRemarksToSave || '').toString().trim(),

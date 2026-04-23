@@ -104,10 +104,10 @@ export class RISDictionaryComponent implements OnInit {
   CategoryID = null;
   searchText = '';
   existingRow = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonDelete: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerDelete: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonDelete = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerDelete = true;//Hide Loader
 
   spinnerRefs = {
     listSection: 'listSection',
@@ -195,13 +195,13 @@ export class RISDictionaryComponent implements OnInit {
         this.confirmationPopoverConfig['popoverTitle'] = 'Are you <b>sure</b> want to ' + this.ActionLabel.toLowerCase() + ' ?';
     }
     this.spinner.show(this.spinnerRefs.formSection);
-    let params = {
+    const params = {
       RISDictionaryID: this.RISDictionaryID
     };
     this.risSharedService.getData(API_ROUTES.GET_RIS_DICTIONARY_BY_RIS_DICTIONARY_ID, params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.formSection);
       if (res.StatusCode == 200) {
-        let formExistingData = res.PayLoad[0];
+        const formExistingData = res.PayLoad[0];
         console.log("formExistingData___________________", formExistingData)
         // this.isMainDictionary = formExistingData["CategoryID"] == 1 ? true : false;
         this.selectedColor = formExistingData["TextColor"];
@@ -251,12 +251,12 @@ export class RISDictionaryComponent implements OnInit {
   }
   saveDictionary(formValues) {
     //  Remove the outer <p> tag
-    let htmlContent = formValues.TextDescription;
+    const htmlContent = formValues.TextDescription;
     const withoutOuterP = this.removeOuterPTags(htmlContent);
     this.spinner.show(this.spinnerRefs.formSection);
     this.disabledButton = true;
     this.isSpinner = false;
-    let formData = {
+    const formData = {
       RISDictionaryID: this.RISDictionaryID,
       CategoryID: this.isMainDictionary ? 1 : 2,
       TextCode: formValues.TextCode.trim(),
@@ -305,7 +305,7 @@ export class RISDictionaryComponent implements OnInit {
   TextHTMLTag = "";
   insertUpdateDictionary() {
     this.TextHTMLTag = "";
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     // this.TextHTMLTag = `<span [ngClass]="{'bold': ` + formValues.isBold + `, 'italic': ` + formValues.isItalic + `, 'underline': ` + formValues.isUnderline + `}">This is some text</span>`;
     this.TextHTMLTag = this.makeHtml(formValues);
     this._form.markAllAsTouched();
@@ -314,8 +314,8 @@ export class RISDictionaryComponent implements OnInit {
     } else {
       // let checkDuplicateMain = this.dataListGlobal.find(el => el.CategoryID == 1 && el.TextCode.trim() === formValues.TextCode.trim());
       // let checkDuplicateUser = this.dataListGlobal.find(el => el.CategoryID == 2 && el.TextCode.trim() === formValues.TextCode.trim());
-      let checkDuplicateMain = this.dataListGlobal.find(el => el.CategoryID == 1 && el.TextCode.trim().localeCompare(formValues.TextCode.trim()) === 0);
-      let checkDuplicateUser = this.dataListGlobal.find(el => el.CategoryID == 2 && el.TextCode.trim().localeCompare(formValues.TextCode.trim()) === 0);
+      const checkDuplicateMain = this.dataListGlobal.find(el => el.CategoryID == 1 && el.TextCode.trim().localeCompare(formValues.TextCode.trim()) === 0);
+      const checkDuplicateUser = this.dataListGlobal.find(el => el.CategoryID == 2 && el.TextCode.trim().localeCompare(formValues.TextCode.trim()) === 0);
 
       if (this.RISDictionaryID && this.TextCode === formValues.TextCode) {
         this.saveDictionary(formValues)
@@ -382,7 +382,7 @@ export class RISDictionaryComponent implements OnInit {
   getRISDictionaryByUserID() {
     this.spinner.show(this.spinnerRefs.listSection);
     this.dataListGlobal = [];
-    let params = {
+    const params = {
       UserID: this.loggedInUser.userid || -99,
       CategoryID: (this.screenIdentity == 'ris-user-dictionary') ? 2 : 1
     };
@@ -419,7 +419,7 @@ export class RISDictionaryComponent implements OnInit {
   deleteRISDictionary() {
     this.spinner.show(this.spinnerRefs.listSection);
     this.spinner.show(this.spinnerRefs.formSection);
-    let params = {
+    const params = {
       RISDictionaryID: this.RISDictionaryID,
       CreatedBy: this.loggedInUser.userid || -99
     };

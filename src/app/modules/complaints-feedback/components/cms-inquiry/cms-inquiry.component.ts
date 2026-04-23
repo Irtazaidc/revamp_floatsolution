@@ -83,13 +83,13 @@ export class CmsInquiryComponent implements OnInit {
     });
   }
   getSearchCMSRequest(){
-    let formValues = this.filterFormforCMSInquiry.getRawValue();
+    const formValues = this.filterFormforCMSInquiry.getRawValue();
     formValues.PIN = (formValues.PIN || '').trim().toString().replace(/\D/g, '');
     if(formValues.byCMSrequestID){
       this.getCMSrequestInquiry();
       return
     }
-    let objParm = {
+    const objParm = {
           CMSRequestID: formValues.byCMSrequestID || null,
           CMSRequestNo: formValues.byCMSrequestNo || null,
           CellNo:formValues.cellNo || null, 
@@ -115,9 +115,9 @@ export class CmsInquiryComponent implements OnInit {
   getCMSrequestInquiry() {
     this.cmsInquiryTable = [];
     this.cmsInquiryList = [];
-    let formValues = this.filterFormforCMSInquiry.getRawValue();
+    const formValues = this.filterFormforCMSInquiry.getRawValue();
       this.CMSrequestID = formValues.byCMSrequestID;
-      let objParm = {
+      const objParm = {
         CMSRequestID: this.CMSrequestID || formValues.byCMSrequestNo ||  null,
         // CMSRequestNo: formValues.byCMSrequestNo || null,
       };
@@ -145,7 +145,7 @@ export class CmsInquiryComponent implements OnInit {
 
   loadedDocuments: any[];
   allowRemove=true;
-  filtercomp:number = 26;
+  filtercomp = 26;
   screenIdentity='CMS'
   getLoadedDocs(event) {
     console.log("event:", event);
@@ -182,7 +182,7 @@ export class CmsInquiryComponent implements OnInit {
     return source && source.length > size ? source.slice(0, size - 1) + "…" : source;
   }
   getHistoryOfCMSContactBackTracking() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.CMSrequestID || null,
     };
     this.complaintDashboardService.getHistoryOfCMSContactBack(objParm).subscribe((resp: any) => {
@@ -206,7 +206,7 @@ export class CmsInquiryComponent implements OnInit {
     }, 500);
   }
   openSearchRecordPopUP(){
-    let formValues = this.filterFormforCMSInquiry.getRawValue();
+    const formValues = this.filterFormforCMSInquiry.getRawValue();
     if(formValues.byCMSrequestID){
       this.CMSrequestID=formValues.byCMSrequestID;
     }
@@ -224,7 +224,7 @@ export class CmsInquiryComponent implements OnInit {
     }, 500);
   }
   selectedComplaintByRequest() {
-    let objParm = {
+    const objParm = {
       CMSRequestID: this.CMSrequestID || null,
     };
     this.complaintDashboardService.getCMSRequest(objParm).subscribe((resp: any) => {
@@ -242,7 +242,7 @@ export class CmsInquiryComponent implements OnInit {
   
   getResponsiblePerson() {
 
-    let objParm = {
+    const objParm = {
     CMSRequestID: this.CMSrequestID || null,     
     };
     this.sharedService
@@ -273,7 +273,7 @@ export class CmsInquiryComponent implements OnInit {
       );
   } 
   getMeasuresTakenData() {
-    let objParm = {
+    const objParm = {
     CMSRequestID: this.CMSrequestID || null,     
     };
     this.sharedService
@@ -374,7 +374,7 @@ export class CmsInquiryComponent implements OnInit {
   }
   screenPermissionsObj
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissions = (this.storageService.getLoggedInUserProfilePermissions(_activatedroute) || []); // .filter(a=>a.state == _activatedroute);
     // this.screenPermissions.forEach(a=>{
     //   this.screenPermissionsObj[a.key] = a.key;

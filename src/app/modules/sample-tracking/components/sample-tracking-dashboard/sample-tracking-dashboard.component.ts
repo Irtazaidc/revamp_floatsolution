@@ -58,14 +58,14 @@ export class SampleTrackingDashboardComponent implements OnInit {
   loggedInUser: UserModel;
 
   // Toggle Sections
-  isStatsSectionVisible: boolean = true;
-  isChartsSectionVisible: boolean = true;
+  isStatsSectionVisible = true;
+  isChartsSectionVisible = true;
 
   // Chart Data for Pie Chart
   pieChartDatasets: any[] = [];
   pieChartLabels: Label[] = ['Dispatched', 'Rider Sent', 'Delayed', 'Due Today', 'No ETA'];
-  pieChartType: string = 'pie';
-  pieChartLegend: boolean = false;
+  pieChartType = 'pie';
+  pieChartLegend = false;
   pieChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -93,8 +93,8 @@ export class SampleTrackingDashboardComponent implements OnInit {
   // Chart Data for Bar Chart
   barChartData: ChartDataSets[] = [{ data: [] }];
   barChartLabels: Label[] = ['Dispatched', 'Rider Sent', 'Delayed', 'Due Today', 'No ETA'];
-  barChartType: string = 'bar';
-  barChartLegend: boolean = true;
+  barChartType = 'bar';
+  barChartLegend = true;
   barChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -874,9 +874,9 @@ export class SampleTrackingDashboardComponent implements OnInit {
   // Add these properties to your component
   attachmentViewType: 'grid' | 'list' = 'grid';
   selectedAttachment: any = null;
-  translateX: number = 0;
-  translateY: number = 0;
-  imageRotation: number = 0;
+  translateX = 0;
+  translateY = 0;
+  imageRotation = 0;
   zoomFactor = 1;
   isDragging = false;
   prevX = 0;
@@ -1023,7 +1023,7 @@ export class SampleTrackingDashboardComponent implements OnInit {
   // Get MIME type helper
   getMimeType(extension: string): string {
     const ext = (extension || '').toLowerCase();
-    const mimeTypes: { [key: string]: string } = {
+    const mimeTypes: Record<string, string> = {
       'jpg': 'image/jpeg',
       'jpeg': 'image/jpeg',
       'png': 'image/png',

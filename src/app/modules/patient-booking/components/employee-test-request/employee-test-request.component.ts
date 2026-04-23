@@ -28,7 +28,7 @@ export class EmployeeTestRequestComponent implements OnInit {
   loggedInUser: UserModel;
   Form: FormGroup;
   ActionLabel = "Save";
-  disabledButton: boolean = false; 
+  disabledButton = false; 
 
   confirmationPopoverConfig = {
     placements: ["top", "left", "right", "bottom"],
@@ -60,7 +60,7 @@ export class EmployeeTestRequestComponent implements OnInit {
   chkSearchByExactMatch = true;
   selectedTPID: number = null;
   selectedTPIDs: any[] = [];
-  totalTPPrice: number = 0;
+  totalTPPrice = 0;
   discountPercentage = 0;
   discountedCharges = 0;
   discountAmount = 0;
@@ -209,7 +209,7 @@ export class EmployeeTestRequestComponent implements OnInit {
     this.lookupService.getDependentList(objParam).subscribe(
       (res: any) => {
         if (res && res.StatusCode === 200 && res.PayLoad) {
-          let data = res.PayLoad || [];
+          const data = res.PayLoad || [];
           this.dependentsList = data;
           console.log("Dependents List:", this.dependentsList);
         } else {
@@ -222,10 +222,10 @@ export class EmployeeTestRequestComponent implements OnInit {
       },
     );
   }
-  loadingPreviousAmount: boolean = false;
+  loadingPreviousAmount = false;
 
-  previousVisitTotal: number = 0;
-  previousPendingTotal: number = 0;
+  previousVisitTotal = 0;
+  previousPendingTotal = 0;
 
   loadPreviousAmount(empid: number) {
     if (!empid) {
@@ -279,7 +279,7 @@ export class EmployeeTestRequestComponent implements OnInit {
     );
   }
 
-  loadingDependents: boolean = false;
+  loadingDependents = false;
 
   loadDependentsForUser(userId: number) {
     if (!userId) {
@@ -597,7 +597,7 @@ export class EmployeeTestRequestComponent implements OnInit {
     this.loadedDocuments = Array.isArray(event) ? event : event ? [event] : [];
   }
 
-isloading: boolean = false;
+isloading = false;
 
   submitRequest() {
     if (!this.Form.get("DependentID")?.value) {
@@ -768,8 +768,8 @@ openRequestPopup(content: any, row: any) {
   });
 }
 
-cancelRemarks: string = '';
-cancelLoading: boolean = false;
+cancelRemarks = '';
+cancelLoading = false;
 
 normalizeStatus(status: string): string {
   return (status || '').toUpperCase().trim();

@@ -96,7 +96,7 @@
         </div>
 
 
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-9" *ngIf="screenIdentity!='reporting-worklist'">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-9" *ngIf="screenIdentity!=='reporting-worklist'">
             <div class="text-right mt-2">
                 <!-- MO Worklist Filter -->
                 <button tabindex="1" class="btn mr-1" [ngClass]="active==2 ? 'btn-primary' : 'btn-outline-primary'" (click)="getActive(2,null,1,'bg-primary','MO');setAssignerLayout(0)">
@@ -119,7 +119,7 @@
                 </button>
 
                 <!-- Assigner -->
-                <button tabindex="5" class="btn mr-1" [ngClass]="active==6 ? 'btn-warning' : 'btn-outline-warning'" (click)="getActive(6,null,12,'bg-warning','Assigner');setAssignerLayout(1)" *ngIf="screenIdentity!='tech-worklist'">
+                <button tabindex="5" class="btn mr-1" [ngClass]="active==6 ? 'btn-warning' : 'btn-outline-warning'" (click)="getActive(6,null,12,'bg-warning','Assigner');setAssignerLayout(1)" *ngIf="screenIdentity!=='tech-worklist'">
                     <i class="flaticon-list"></i> Assigner <span class="badge badge-light badge-light-custom">{{countAssignerSubAll}}</span>
                 </button>
                  <!-- Reset and will be make function when fully shift to web -->
@@ -128,11 +128,11 @@
                 </button> -->
 
                 <!-- All  Layout for assigner-->
-                <button tabindex="6" *ngIf="screenIdentity=='tech-worklist'" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-100,'bg-purple','All List');setAssignerLayout(1)">
+                <button tabindex="6" *ngIf="screenIdentity==='tech-worklist'" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-100,'bg-purple','All List');setAssignerLayout(1)">
                     <i class="flaticon2-grids" [ngClass]="showAllTab || active==7 ? 'text-white' : 'text-purple'"></i> All
                 </button>
                 <!-- All  Layout for other then assigner-->
-                <button tabindex="6" *ngIf="screenIdentity!='tech-worklist'" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-99,'bg-purple','All List');setAssignerLayout(0)">
+                <button tabindex="6" *ngIf="screenIdentity!=='tech-worklist'" class="btn mr-1" [ngClass]="showAllTab || active==7 ? 'btn-purple' : 'btn-outline-purple'" (click)="getActive(7,-1,-99,'bg-purple','All List');setAssignerLayout(0)">
                     <i class=" flaticon2-grids" [ngClass]="showAllTab || active==7 ? 'text-white' : 'text-purple'"></i> All
                 </button>
 
@@ -181,7 +181,7 @@
                     <input type="text" placeholder="type atleast 2 characters to filter" (keyup)="filterResults()" class="form-control form-control-sm" [(ngModel)]="searchText" name="searchText"/>
                 </div>
             </div>
-            <div [ngClass]="{'col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6': countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist', 'col-12': (countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist')}" *ngIf="countCheckoutWorklist>0 && screenIdentity=='tech-worklist'">
+            <div [ngClass]="{'col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6': countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist', 'col-12': (countCheckoutWorklist > 0 && screenIdentity === 'tech-worklist')}" *ngIf="countCheckoutWorklist>0 && screenIdentity==='tech-worklist'">
                 <div class="news-container" style="display: flex; justify-content: center; align-items: flex-start; height: 34px; color: white; border-radius: 4px; background-color: #99201c; background-image: linear-gradient(316deg, #99201c 0%, #f56545 74%); overflow: hidden; font-family: monospace;"
                 >
                     <div *ngIf="showUrdu" class="news-alert urdu-slide" style="padding-top: 4px;">{{ urduNews }}</div>
@@ -195,11 +195,11 @@
         <!-- <pre>
             {{ pagination.paginatedSearchResults|json}}
         </pre> -->
-        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!='bulk-queue-manager'">
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity!=='bulk-queue-manager'">
             <div class="col-12">
                 <!-- <strong>No record found</strong> -->
                 
-                <ng-container *ngIf="screenIdentity=='reporting-worklist'; else showNoRecSection">
+                <ng-container *ngIf="screenIdentity==='reporting-worklist'; else showNoRecSection">
                     <app-no-record-found></app-no-record-found>
                   </ng-container>
                   
@@ -213,7 +213,7 @@
             </div>
         </div>
         <!--begin:: MO worklist and Tech worklist-->
-        <div class="row" *ngIf="screenIdentity!='bulk-queue-manager' && screenIdentity!='reporting-worklist'">
+        <div class="row" *ngIf="screenIdentity!=='bulk-queue-manager' && screenIdentity!=='reporting-worklist'">
             <div class="col-md-12">
                 <div class="table-responsive" style="min-height: 330px;">
                     <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
@@ -222,7 +222,7 @@
                                 <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
                                     <ng-container>
                                         <th style="cursor: pointer"
-                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='DeliveryDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy')">
+                                            *ngIf="(header !== 'RISWorkListID' && header !== 'TPId' && header !== 'PatientId' && header !== 'StatusId' && header !=='RISStatusID' && header !=='ProcessId' && header !=='MOBy' && header !=='StatusBadgeClass' && header !=='isMedicalOfficerIntervention' && header !=='EmpId' && header !=='PhoneNumber' && header !=='DeliveryDate' && header !=='isConsentRead' && header !=='TPCode' && header !=='isTechHistoryRequred' && header !=='TestStatus' && header !=='InitializedOn' && header!=='TranscribedBy')">
                                             {{header}}</th>
                                     </ng-container>
                                 </ng-container>
@@ -234,22 +234,22 @@
                             <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "  (dblclick)="verifyUserBiomateric(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
                                 <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
                                     <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy')">
-                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        *ngIf="(objKey !== 'RISWorkListID' && objKey !== 'TPId' && objKey !== 'PatientId' && objKey !== 'StatusId' && objKey !=='RISStatusID' && objKey !=='ProcessId' && objKey !=='MOBy' && objKey!=='StatusBadgeClass' && objKey!=='isMedicalOfficerIntervention' && objKey!=='EmpId' && objKey!=='PhoneNumber' && objKey!=='DeliveryDate' && objKey!=='isConsentRead' && objKey!=='TPCode' && objKey!=='isTechHistoryRequred' && objKey!=='TestStatus'  && objKey!=='InitializedOn' && objKey!=='TranscribedBy')">
+                                        <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                             <i 
                                                 [ngClass]="returnCopyClasses(i)"
                                                 class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
                                                 (click)="copyText(row,i)">&nbsp;</i>
                                         </span>
-                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
-                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate')" >{{ row[objKey]||'Registered' }}</span>
-                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+                                        <span class="cursor-pointer" *ngIf="(objKey === 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey !== 'Workflow Status' && objKey !== 'TestStatus' && objKey !== 'InitializedBy' && objKey !== 'TPCode' && objKey !== 'PatientName' && objKey !== 'RegistrationDate')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey === 'Workflow Status' && (objKey!=null || objKey!=='') && objKey !== 'InitializedBy')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
             
-                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <label *ngIf="objKey === 'TestStatus' && objKey !== 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
                                         <!-- Add ngbTooltip to TPCode column -->
                                         <!-- <span class="cursor-pointer" *ngIf="objKey == 'TPCode'" ngbTooltip="{{row.TPName}}">{{ row[objKey] }}</span> -->
-                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'RegistrationDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }}</span>
                                     </td>
                                 </ng-container>
                                 <td *ngIf="pagination.paginatedSearchResults.length && screenIdentity === 'reporting-worklist'"><label class="badge badge-primary badge-border-white cursor-pointer" >{{ row.TestStatus}}</label>
@@ -268,32 +268,32 @@
                                                     <span><i class="fa fa-info-circle text-primary cursor-pointer"></i>
                                                         Visit Detail</span>
                                                 </button> -->
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='mo-worklist'" (click)="openQuestionnaireModal(row)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='mo-worklist'" (click)="openQuestionnaireModal(row)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-question-circle text-primary cursor-pointer"></i> MO
                                                         Questionnaire</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && (screenIdentity=='tech-worklist' || screenIdentity=='queue-management' || screenIdentity=='queue-manager') && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && (screenIdentity==='tech-worklist' || screenIdentity==='queue-management' || screenIdentity==='queue-manager') && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistory(row)" class="dropdown-item">
                                                     <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
                                                         History</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="openPopupModal(row,i)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='tech-worklist'" (click)="openPopupModal(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
                                                         CheckIn/Out</span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                <button *ngIf="screenIdentity==='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-qrcode text-primary cursor-pointer"></i>
                                                         Print Radio Lable</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistoryReport(row)" class="dropdown-item">
                                                     <span><i class="fa fa-file text-primary cursor-pointer"></i>
                                                         MO History Report </span>
                                                 </button>
-                                                <button *ngIf="(screenIdentity=='tech-worklist' && row.RISStatusID>=4 && row.RISStatusID!=7)" (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
+                                                <button *ngIf="(screenIdentity==='tech-worklist' && row.RISStatusID>=4 && row.RISStatusID!=7)" (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
                                                     <span><i class="fas fa-x-ray text-primary cursor-pointer"></i>
                                                         DICOM </span>
                                                 </button>
@@ -310,11 +310,11 @@
                                                     <span><i class="ti-receipt text-primary cursor-pointer"></i>
                                                         EMR </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity!='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
+                                                <button *ngIf="screenIdentity!=='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
                                                     <span><i class="ti-flag-alt text-danger cursor-pointer"></i>
                                                         Mark Sensitivity </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
+                                                <button *ngIf="screenIdentity==='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
                                                     <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
                                                         Reporting </span>
                                                 </button>
@@ -332,7 +332,7 @@
         <!--end:: MO worklist and Tech worklist-->
 
         <!--begin::Reporting worklist section-->
-        <div class="row" *ngIf="screenIdentity=='reporting-worklist'">
+        <div class="row" *ngIf="screenIdentity==='reporting-worklist'">
             <div class="col-md-12">
                 <div class="table-responsive" style="min-height: 330px;">
                     <table *ngIf="risWorkist.length" class="table table-hover" cellpadding=0 cellspacing=0>
@@ -341,7 +341,7 @@
                                 <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
                                     <ng-container>
                                         <th style="cursor: pointer"
-                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='RegistrationDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy')">
+                                            *ngIf="(header !== 'RISWorkListID' && header !== 'TPId' && header !== 'PatientId' && header !== 'StatusId' && header !=='RISStatusID' && header !=='ProcessId' && header !=='MOBy' && header !=='StatusBadgeClass' && header !=='isMedicalOfficerIntervention' && header !=='EmpId' && header !=='PhoneNumber' && header !=='RegistrationDate' && header !=='isConsentRead' && header !=='TPCode' && header !=='isTechHistoryRequred' && header !=='TestStatus' && header !=='InitializedOn' && header!=='TranscribedBy')">
                                             {{header}}</th>
                                     </ng-container>
                                 </ng-container>
@@ -353,20 +353,20 @@
                             <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "  (dblclick)="verifyUserBiomateric(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
                                 <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
                                     <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='RegistrationDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy')">
-                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        *ngIf="(objKey !== 'RISWorkListID' && objKey !== 'TPId' && objKey !== 'PatientId' && objKey !== 'StatusId' && objKey !=='RISStatusID' && objKey !=='ProcessId' && objKey !=='MOBy' && objKey!=='StatusBadgeClass' && objKey!=='isMedicalOfficerIntervention' && objKey!=='EmpId' && objKey!=='PhoneNumber' && objKey!=='RegistrationDate' && objKey!=='isConsentRead' && objKey!=='TPCode' && objKey!=='isTechHistoryRequred' && objKey!=='TestStatus'  && objKey!=='InitializedOn' && objKey!=='TranscribedBy')">
+                                        <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                             <i 
                                                 [ngClass]="returnCopyClasses(i)"
                                                 class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
                                                 (click)="copyText(row,i)">&nbsp;</i>
                                         </span>
-                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
-                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate' && objKey != 'DeliveryDate' && objKey != 'RemainingTime (hh:mm)')" >{{ row[objKey]||'Registered' }}</span>
-                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy' && objKey != 'RemainingTime (hh:mm)')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+                                        <span class="cursor-pointer" *ngIf="(objKey === 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey !== 'Workflow Status' && objKey !== 'TestStatus' && objKey !== 'InitializedBy' && objKey !== 'TPCode' && objKey !== 'PatientName' && objKey !== 'RegistrationDate' && objKey !== 'DeliveryDate' && objKey !== 'RemainingTime (hh:mm)')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey === 'Workflow Status' && (objKey!=null || objKey!=='') && objKey !== 'InitializedBy' && objKey !== 'RemainingTime (hh:mm)')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
             
-                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <label *ngIf="objKey === 'TestStatus' && objKey !== 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
                                         <!-- <label *ngIf="objKey == 'RemainingTime (hh:mm)'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label> -->
-                                        <label *ngIf="objKey == 'RemainingTime (hh:mm)'">
+                                        <label *ngIf="objKey === 'RemainingTime (hh:mm)'">
                                             <ng-container *ngIf="row.StatusId < 9; else dash">
                                                 <strong ngbTooltip="Remaining Time hh:mm" [ngClass]="getRemainingTimeBadgeColor(row['RemainingTime (hh:mm)'])" class="badge badge-border-white cursor-pointer" style="padding: 7px 3px !important;">
                                                     {{ row[objKey] }}
@@ -379,8 +379,8 @@
                                         <!-- <label *ngIf="objKey == 'DeliveryDate' " >{{ row[objKey]}} ({{row.RemainingTime}})</label> -->
                                         <!-- Add ngbTooltip to TPCode column -->
                                         <!-- <span class="cursor-pointer" *ngIf="objKey == 'TPCode'" ngbTooltip="{{row.TPName}}">{{ row[objKey] }}</span> -->
-                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'DeliveryDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }} 
+                                        <span class="cursor-pointer" *ngIf="objKey === 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'DeliveryDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }} 
                                             <!-- <strong *ngIf="row.StatusId<9" ngbTooltip="Remaining Time hh:mm<br>akjlds" [ngClass]="getRemainingTimeBadgeColor(row.RemainingTime)" class="badge  badge-border-white cursor-pointer" style="padding: 7px 3px !important;">{{row.RemainingTime}} (hh:mm)</strong>  -->
                                         </span>
                                     </td>
@@ -401,27 +401,27 @@
                                                     <span><i class="fa fa-info-circle text-primary cursor-pointer"></i>
                                                         Visit Detail</span>
                                                 </button> -->
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='mo-worklist'" (click)="openQuestionnaireModal(row)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='mo-worklist'" (click)="openQuestionnaireModal(row)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-question-circle text-primary cursor-pointer"></i> MO
                                                         Questionnaire</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && (screenIdentity=='tech-worklist' || screenIdentity=='queue-management' || screenIdentity=='queue-manager') && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && (screenIdentity==='tech-worklist' || screenIdentity==='queue-management' || screenIdentity==='queue-manager') && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistory(row)" class="dropdown-item">
                                                     <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
                                                         History</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="openPopupModal(row,i)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='tech-worklist'" (click)="openPopupModal(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
                                                         CheckIn/Out</span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
+                                                <button *ngIf="screenIdentity==='tech-worklist' && (row.RISStatusID>=3)" (click)="printRadioLable(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-qrcode text-primary cursor-pointer"></i>
                                                         Print Radio Lable</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistoryReport(row)" class="dropdown-item">
                                                     <span><i class="fa fa-file text-primary cursor-pointer"></i>
                                                         MO History Report </span>
@@ -439,19 +439,19 @@
                                                     <span><i class="ti-receipt text-primary cursor-pointer"></i>
                                                         EMR </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity!='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
+                                                <button *ngIf="screenIdentity!=='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
                                                     <span><i class="ti-flag-alt text-danger cursor-pointer"></i>
                                                         Mark Sensitivity </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
+                                                <button *ngIf="screenIdentity==='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item pb-2">
                                                     <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
                                                         Reporting </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="printReport(row,i)" class="dropdown-item pb-2">
+                                                <button *ngIf="screenIdentity==='reporting-worklist'" (click)="printReport(row,i)" class="dropdown-item pb-2">
                                                     <span><i class="ti-printer text-primary cursor-pointer"></i>
                                                         Print Report </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
+                                                <button *ngIf="screenIdentity==='reporting-worklist'" (click)="getPACSServers(row.VisitNo,row.TPId,i)" class="dropdown-item pb-2">
                                                     <span><i class="fas fa-x-ray text-primary cursor-pointer"></i>
                                                         DICOM </span>
                                                 </button>
@@ -471,7 +471,7 @@
         <!--end::Table and rows section-->
 
         <!--start::Pagination-->
-        <div class="row" *ngIf="risWorkist.length && screenIdentity!='bulk-queue-manager'">
+        <div class="row" *ngIf="risWorkist.length && screenIdentity!=='bulk-queue-manager'">
             <div class="col-12">
                 <div class="d-flex justify-content-between p-2">
                     <ngb-pagination [collectionSize]="pagination.collectionSize" [(page)]="pagination.page" size="" [pageSize]="pagination.pageSize" [boundaryLinks]="true" [maxSize]="5" [rotate]="true" (pageChange)="refreshPagination()">
@@ -501,7 +501,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div *ngIf="VisitId && screenIdentity=='reporting-worklist'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div *ngIf="VisitId && screenIdentity==='reporting-worklist'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <app-pacs [PIN]="VisitIDWithDashes"></app-pacs>
                         </div>
                     </div>
@@ -517,7 +517,7 @@
         <!-- end:: Visit Details Section -->
 
         <!--Start::Queue management Bulk-->
-        <div  class="row" *ngIf="screenIdentity=='bulk-queue-manager'">
+        <div  class="row" *ngIf="screenIdentity==='bulk-queue-manager'">
             <div class="col-12">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button [ngClass]="isAll ? 'btn-primary' : 'btn-outline-primary'"  (click)="assignerFilter(6,null,12,'bg-warning','Assigner',1);setAssignerLayout(1)" type="button" class="btn btn-mini "><i class="fa fa-th" aria-hidden="true"></i>All <span class="badge badge-light badge-light-custom" style="margin-right: -2px;">{{countAssignerSubAll}}</span></button>
@@ -537,7 +537,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager'">
                                 <label for="EmpId">Initializer:</label>
                                 <ng-select style="width: 100%;"  
                                     class="mr-1"
@@ -549,7 +549,7 @@
                                     (change)="selectRadiologistForAllinit($event)">
                                 </ng-select>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager'">
                                 <label for="EmpId">Section:</label>
                                 <ng-select style="width: 100%;"  
                                     class="mt-1 mr-1" 
@@ -563,7 +563,7 @@
                                     >
                                 </ng-select>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-11" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-11" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager'">
                                 <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.readiologinstSummarySection" size="medium"
                                     color="#fff" type="square-loader" [fullScreen]="false" style="opacity: 0.7;">
                                     <p style="color: white"> Loading... </p>
@@ -654,7 +654,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager'">
                                 <label for="EmpId">DS:</label>
                                 <ng-select style="width: 100%;"  
                                     class="mr-1"
@@ -666,7 +666,7 @@
                                     (change)="selectRadiologistForAllDS($event)">
                                 </ng-select>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager'">
                                 <label for="EmpId">Section:</label>
                                 <ng-select style="width: 100%;"  
                                     class="mt-1 mr-1" 
@@ -680,7 +680,7 @@
                                     >
                                 </ng-select>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-11" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager'">
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 mt-11" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager'">
                                 <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.readiologinstSummarySectionDSBy" size="medium"
                                     color="#fff" type="square-loader" [fullScreen]="false" style="opacity: 0.7;">
                                     <p style="color: white"> Loading... </p>
@@ -799,7 +799,7 @@
                                 <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
                                     <ng-container>
                                         <th style="cursor: pointer"
-                                            *ngIf="(header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header!='TPCode' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='checked'  && header !='PhoneNumber' && header !='RegistrationDate' && header !='DeliveryDate' && header !='isConsentRead' && header !='TestStatus' && header !='SubSectionId' && header !='InitializedBy' && header !='InitializedOn' && header !='InitByEmpID' && header !='DSByEmpID' && header!='isMetal' && header !='isPreMedical' && header !='RadiologistID')">
+                                            *ngIf="(header !== 'RISWorkListID' && header !== 'TPId' && header !== 'PatientId' && header !== 'StatusId' && header !=='RISStatusID' && header !=='ProcessId' && header!=='TPCode' && header !=='MOBy' && header !=='StatusBadgeClass' && header !=='isMedicalOfficerIntervention' && header !=='EmpId' && header !=='checked'  && header !=='PhoneNumber' && header !=='RegistrationDate' && header !=='DeliveryDate' && header !=='isConsentRead' && header !=='TestStatus' && header !=='SubSectionId' && header !=='InitializedBy' && header !=='InitializedOn' && header !=='InitByEmpID' && header !=='DSByEmpID' && header!=='isMetal' && header !=='isPreMedical' && header !=='RadiologistID')">
                                             {{header}}</th>
                                     </ng-container>
                                 </ng-container>
@@ -846,8 +846,8 @@
                                 </td>
                                 <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
                                     <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                        *ngIf="(objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='TPCode' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention'&& objKey!='EmpId' && objKey!='checked' && objKey!='PhoneNumber' && objKey!='RegistrationDate' && objKey!='DeliveryDate' && objKey!='isConsentRead' && objKey!='TestStatus' && objKey!='SubSectionId' && objKey!='InitializedBy' && objKey!='InitializedOn' && objKey!='InitByEmpID' && objKey!='DSByEmpID' && objKey!='isMetal' && objKey!='isPreMedical' && objKey!='RadiologistID')">
-                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        *ngIf="(objKey !== 'RISWorkListID' && objKey !== 'TPId' && objKey !== 'PatientId' && objKey !== 'StatusId' && objKey !=='RISStatusID' && objKey !=='ProcessId' && objKey !=='TPCode' && objKey !=='MOBy' && objKey!=='StatusBadgeClass' && objKey!=='isMedicalOfficerIntervention'&& objKey!=='EmpId' && objKey!=='checked' && objKey!=='PhoneNumber' && objKey!=='RegistrationDate' && objKey!=='DeliveryDate' && objKey!=='isConsentRead' && objKey!=='TestStatus' && objKey!=='SubSectionId' && objKey!=='InitializedBy' && objKey!=='InitializedOn' && objKey!=='InitByEmpID' && objKey!=='DSByEmpID' && objKey!=='isMetal' && objKey!=='isPreMedical' && objKey!=='RadiologistID')">
+                                        <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                             <i
                                                 [ngClass]="returnCopyClassesBulk(i)"
                                                 ngbPopover="copied" triggers="click:mouseleave"
@@ -858,15 +858,15 @@
             
                                         <!-- <lable [ngClass]="{'{{row.StatusBadgeClass}} badge-border-white': (objKey == 'Workflow Status' && (objKey!=null || objKey!=''))}" >{{ row[objKey]||'MO Pending' }}-{{row.StatusBadgeClass}}</lable> -->
             
-                                        <label class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'TPName')" >{{ row[objKey]||'Registered' }}</label>
-                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!=''))" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+                                        <label class="cursor-pointer" *ngIf="(objKey !== 'Workflow Status' && objKey !== 'TestStatus' && objKey !== 'TPCode' && objKey !== 'PatientName' && objKey !== 'TPName')" >{{ row[objKey]||'Registered' }}</label>
+                                        <label *ngIf="(objKey === 'Workflow Status' && (objKey!=null || objKey!==''))" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
             
-                                        <label *ngIf="objKey == 'TPCode'" ngbTooltip="{{row.TPName}}"  class="cursor-pointer" >{{ row[objKey]}}</label>
-                                        <label *ngIf="objKey == 'TestStatus'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
-                                        &nbsp;<span *ngIf="(objKey == 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Assigned">
+                                        <label *ngIf="objKey === 'TPCode'" ngbTooltip="{{row.TPName}}"  class="cursor-pointer" >{{ row[objKey]}}</label>
+                                        <label *ngIf="objKey === 'TestStatus'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        &nbsp;<span *ngIf="(objKey === 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Assigned">
                                             <i class="fa fa-check text-primary" [ngClass]="{'text-white': i==rowIndexBulk}" aria-hidden="true" style="font-size: 12px;"></i>
                                         </span>
-                                        &nbsp;<span *ngIf="(objKey == 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Un-assigned">
+                                        &nbsp;<span *ngIf="(objKey === 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Un-assigned">
                                             <button *ngIf="row.RISStatusID==8 && row.StatusId<9" type="button" [disabled]="isDisabledUnassignmentBulk"
                                                 class="btn btn-mini btn-warning" mwlConfirmationPopover
                                                 [popoverTitle]="confirmationPopoverConfig.popoverTitle"
@@ -885,20 +885,20 @@
                                             </button>
                                         </span>
                                         <!-- <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span> -->
-                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">
+                                        <span class="cursor-pointer" *ngIf="objKey === 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">
                                             {{ row[objKey] }} 
                                             <i style="font-size: 12px;" 
-                                               *ngIf="objKey == 'PatientName' && row.isMetal" 
+                                               *ngIf="objKey === 'PatientName' && row.isMetal" 
                                                class="fa fa-exclamation-triangle blink-red" 
                                                [ngbTooltip]="'This patient has metal implants.'" 
                                                placement="bottom" 
                                                tooltipClass="metal-tooltip">
                                             </i>
                                         </span>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'TPName'" >
+                                        <span class="cursor-pointer" *ngIf="objKey === 'TPName'" >
                                             {{ row[objKey] }} 
                                             <i style="font-size: 15px;" 
-                                               *ngIf="objKey == 'TPName' && row.isPreMedical" 
+                                               *ngIf="objKey === 'TPName' && row.isPreMedical" 
                                                class="fas fa-notes-medical text-danger" 
                                                [ngbTooltip]="'Study for Medical Fitness'">
                                             </i>
@@ -913,25 +913,25 @@
                                                 <i class="fas fa-ellipsis-h cursor-pointer"></i>
                                             </button>
                                             <div class="dropdown-menu pb-2" ngbDropdownMenu>
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='bulk-queue-manager'"  (click)="openVisitDetailModal(row,i)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='bulk-queue-manager'"  (click)="openVisitDetailModal(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-eye text-primary cursor-pointer"></i> View Detail</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='bulk-queue-manager' && row.RISStatusID==8 && row.StatusId<9"  (click)="getRowInfoForUnassign(row)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='bulk-queue-manager' && row.RISStatusID==8 && row.StatusId<9"  (click)="getRowInfoForUnassign(row)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-times-circle text-primary cursor-pointer"></i> Unassign</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && (screenIdentity=='tech-worklist' || screenIdentity=='queue-management' || screenIdentity=='queue-manager') && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && (screenIdentity==='tech-worklist' || screenIdentity==='queue-management' || screenIdentity==='queue-manager') && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistory(row)" class="dropdown-item">
                                                     <span><i class="fa fa-eye text-primary cursor-pointer"></i> View MO
                                                         History</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && screenIdentity=='tech-worklist'" (click)="openPopupModal(row,i)"
+                                                <button *ngIf="actionsPermission[0]==='ques' && screenIdentity==='tech-worklist'" (click)="openPopupModal(row,i)"
                                                     class="dropdown-item">
                                                     <span><i class="fa fa-check-square text-primary cursor-pointer"></i>
                                                         CheckIn/Out</span>
                                                 </button>
-                                                <button *ngIf="actionsPermission[0]=='ques' && row.RISStatusID && row.MOBy"
+                                                <button *ngIf="actionsPermission[0]==='ques' && row.RISStatusID && row.MOBy"
                                                     (click)="openMOHistoryReport(row)" class="dropdown-item">
                                                     <span><i class="fa fa-file text-primary cursor-pointer"></i>
                                                         MO History Report </span>
@@ -944,11 +944,11 @@
                                                     <span><i class="ti-receipt text-primary cursor-pointer"></i>
                                                         EMR </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity!='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
+                                                <button *ngIf="screenIdentity!=='reporting-worklist'" (click)="markSensitivity(row)" class="dropdown-item">
                                                     <span><i class="ti-flag-alt text-danger cursor-pointer"></i>
                                                         Mark Sensitivity </span>
                                                 </button>
-                                                <button *ngIf="screenIdentity=='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item">
+                                                <button *ngIf="screenIdentity==='reporting-worklist'" (click)="openReportingModalPopup(row,i)" class="dropdown-item">
                                                     <span><i class="ti-pencil-alt text-primary cursor-pointer"></i>
                                                         Reporting </span>
                                                 </button>
@@ -964,7 +964,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-12" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager' && !isAssigned">
+            <div class="col-12" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager' && !isAssigned">
                 <hr>
                 <button type="button" 
                     [disabled]="isDisabledAssignmentBulk"
@@ -985,7 +985,7 @@
                         [hidden]="isSpinnerAssignmentBulk"></i>
                 </button>
             </div>
-            <div class="col-12" *ngIf="risWorkist.length && screenIdentity=='bulk-queue-manager' && isAssigned">
+            <div class="col-12" *ngIf="risWorkist.length && screenIdentity==='bulk-queue-manager' && isAssigned">
                 <hr>
                 <button type="button" 
                     [disabled]="isDisabledAssignmentBulk"
@@ -1008,7 +1008,7 @@
 
             </div>
         </div>
-        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity=='bulk-queue-manager'">
+        <div class="row text-center" *ngIf="!risWorkist.length && screenIdentity==='bulk-queue-manager'">
             <div class="col-12">
                 <!-- <strong>No record found</strong> -->
                 <img class="img-fluid" src="assets/images/brand/no-data-found-primary.svg" style="height: 178px;" alt="No Data Found image">
@@ -1022,7 +1022,7 @@
     <!--end::All worklists except Queue management-->
 
     <!--Start::Queue management-->
-    <div class="card-body" *ngIf="isAssigner && (screenIdentity=='queue-management' || screenIdentity=='queue-manager')">
+    <div class="card-body" *ngIf="isAssigner && (screenIdentity==='queue-management' || screenIdentity==='queue-manager')">
         <!-- <h1>Queue Management</h1> -->
         <ngx-spinner class="spinner-info" bdColor="rgba(0,0,0,0.8)" [name]="spinnerRefs.listSection" size="medium"
             color="#fff" type="square-loader" [fullScreen]="false">
@@ -1079,28 +1079,28 @@
                                         <tr #firstRow *ngFor="let row of pagination.paginatedSearchResults; let i = index " [ngClass]="{'text-danger': (row.ProcessId == 2)}" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
                                             <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
                                                 <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                                    *ngIf="(objKey == 'VisitNo' || objKey == 'TPCode')">
-                                                    <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                                    *ngIf="(objKey === 'VisitNo' || objKey === 'TPCode')">
+                                                    <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                                         <i 
                                                             [ngClass]="returnCopyClasses(i)"
                                                             ngbPopover="copied" triggers="click:mouseleave"
                                                             (click)="copyText(row,i)">&nbsp;</i>
                                                     </span>
                                                     <span (click)="assignTest(row,i)" >
-                                                        <span *ngIf="(objKey == 'VisitNo' && objKey != 'TPCode')" class="cursor-pointer">{{ row[objKey]}} </span>
+                                                        <span *ngIf="(objKey === 'VisitNo' && objKey !== 'TPCode')" class="cursor-pointer">{{ row[objKey]}} </span>
                                                         <i  style="font-size: 12px;"
-                                                            *ngIf="row.isMetal && objKey == 'VisitNo' && objKey != 'TPCode'" 
+                                                            *ngIf="row.isMetal && objKey === 'VisitNo' && objKey !== 'TPCode'" 
                                                             class="fa fa-exclamation-triangle blink-red" 
                                                             [ngbTooltip]="'This patient has metal implants.'" 
                                                             placement="top" 
                                                             tooltipClass="metal-tooltip">
                                                         </i>
-                                                        <span *ngIf="(objKey == 'TPCode')" class="cursor-pointer"  ngbTooltip="{{row.TPName}}">{{ row[objKey]}} </span>
-                                                        <span *ngIf="(objKey == 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Assigned">&nbsp;
+                                                        <span *ngIf="(objKey === 'TPCode')" class="cursor-pointer"  ngbTooltip="{{row.TPName}}">{{ row[objKey]}} </span>
+                                                        <span *ngIf="(objKey === 'VisitNo') && row.RISStatusID==8"  ngbTooltip="Assigned">&nbsp;
                                                             <i class="fa fa-check text-primary" [ngClass]="{'text-white': i==rowIndex}" aria-hidden="true" style="font-size: 12px;"></i>
                                                         </span>
                                                         <i  style="font-size: 15px;"
-                                                            *ngIf="row.isPreMedical && objKey == 'TPCode' && objKey != 'VisitNo'" 
+                                                            *ngIf="row.isPreMedical && objKey === 'TPCode' && objKey !== 'VisitNo'" 
                                                             class="fas fa-notes-medical text-danger pull-right" 
                                                             [ngClass]="{'text-white': i==rowIndex}"
                                                             [ngbTooltip]="'Study for Medical Fitness'" 
@@ -2121,7 +2121,7 @@
                         Initialized By: {{InitializedBy}}</strong></label>
                 </div>
             </div> -->
-            <div class="col-12" *ngIf="radiologistRefByMappingInfo.length && screenIdentity=='bulk-queue-manager'">
+            <div class="col-12" *ngIf="radiologistRefByMappingInfo.length && screenIdentity==='bulk-queue-manager'">
                 <span><i style="font-size: 12px;" aria-hidden="true" class="flaticon2-arrow blink-red"></i><strong class="text-warning">RefBy: </strong><span class="text-primary"> {{refByDrName}}</span> <strong class="text-warning ml-2">Associated Radiologist(s): </strong><span class="text-primary">{{associatedRadiologists}}</span></span>
                 <br *ngIf="radiologistRefByMappingInfo.length">
                 <span *ngIf="RadiologistID">

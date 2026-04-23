@@ -29,8 +29,8 @@ export class DiseaseConfigComponent implements OnInit {
   testFinderList: any = [];
   isSubmitted = false;
   labDeptID = -1;
-  isSpinner: boolean = true;
-  disabledButton: boolean = false;
+  isSpinner = true;
+  disabledButton = false;
   isDisable = false;
   spinnerRefs = {
     testProfilesDropdown: "testProfilesDropdown",
@@ -85,7 +85,7 @@ export class DiseaseConfigComponent implements OnInit {
     // }
     // return;
 
-    let objtParams = {
+    const objtParams = {
       Gender: this.Gender,
       BodyParts: this.selectedBodyparts,
       Diseases: this.selectedDiseases,
@@ -113,7 +113,7 @@ export class DiseaseConfigComponent implements OnInit {
 
   GetBodyParts() {
     let response = [];
-    let BodyPartCount = [];
+    const BodyPartCount = [];
 
     this.BodyPartCount = response.length;
     this.TPService.GetBodyparts().subscribe(
@@ -143,7 +143,7 @@ export class DiseaseConfigComponent implements OnInit {
 
   GetDiseases() {
     let response = [];
-    let ObjParams = {
+    const ObjParams = {
       DiseasesID: this.DiseasesID,
     };
     this.DiseaseCount = response.length;
@@ -168,7 +168,7 @@ export class DiseaseConfigComponent implements OnInit {
 
   GetTestProfileDataByID(param) {
     let response = [];
-    let ObjParams = {
+    const ObjParams = {
       TPID: param,
     };
     this.spinner.show(this.spinnerRefs.mainFormSection);

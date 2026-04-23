@@ -3,7 +3,8 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "2bc0844e-bf95-4cac-ba12-456654832b89"
+    "analytics": "2bc0844e-bf95-4cac-ba12-456654832b89",
+    "schematicCollections": ["angular-eslint"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -36,10 +37,7 @@
                 "output": "assets"
               }
             ],
-            "styles": [
-              "node_modules/ngx-toastr/toastr.css",
-              "src/styles.scss"
-            ],
+            "styles": ["node_modules/ngx-toastr/toastr.css", "src/styles.scss"],
             "security": {
               "allowedHosts": []
             }
@@ -82,6 +80,12 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }

@@ -25,14 +25,14 @@ import { concatMap, finalize } from 'rxjs/operators';
   styleUrls: ['./fbr-invoice-reposting.component.scss']
 })
 export class FbrInvoiceRepostingComponent implements OnInit {
-  collectionSize: number = 0;
+  collectionSize = 0;
   paginatedfbrSearchResults: any = [];
-  page: number = 1;
-  pageSize: number = 10;
+  page = 1;
+  pageSize = 10;
   visitDetailPopupRef: NgbModalRef;
 
 
-  isSpinner: boolean = true;
+  isSpinner = true;
   unPostedInvoiceList: any;
   unPostedVisitDetails: any;
   selectedVisit = { VisitID: null };
@@ -124,7 +124,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
     this.unPostedVisitDetails = {};
     this.selectedVisit = { VisitID: null };
 
-    let formValues = this.fbrRepostingForm.getRawValue()
+    const formValues = this.fbrRepostingForm.getRawValue()
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -156,7 +156,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
 
 
 
-    let param = {
+    const param = {
       DateFrom: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
       DateTo: formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo) : null
     }
@@ -223,16 +223,16 @@ export class FbrInvoiceRepostingComponent implements OnInit {
     this.spinner.show();
     if (visit && visit.VisitID && visit.FBRRequestID && this.unPostedVisitDetails.Table2 && this.unPostedVisitDetails.Table2.length && this.unPostedVisitDetails.Table2.find(a => a.FBRRequestID == visit.FBRRequestID)) {
       // if(this.unPostedVisitDetails && this.unPostedVisitDetails.Table2 && this.unPostedVisitDetails.Table2.length && this.unPostedVisitDetails.Table2[0].RequestJSON) {
-      let regModule = '3';
-      let userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
+      const regModule = '3';
+      const userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
       userWithoutPic.pic = '';
-      let details = {
+      const details = {
         appVersion: CONSTANTS.APP_VERSION,
         webDeskVersion: this.auth.getWebDeskVersionFromStorage(),
         user: userWithoutPic
       };
 
-      let params = {
+      const params = {
         CreatedBy: this.loggedInUser.userid,
         BranchId: this.loggedInUser.locationid,
         MACAddress: this.loggedInUser.macAdr,
@@ -271,7 +271,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
 
   isBatchSpinner = false;
   isPosting = false;
-  visitPostStatus: { [visitId: number]: 'success' | 'fail' | 'skipped' | 'loading' } = {};
+  visitPostStatus: Record<number, 'success' | 'fail' | 'skipped' | 'loading'> = {};
 
 
   async repostSelectedVisits() {
@@ -352,17 +352,17 @@ export class FbrInvoiceRepostingComponent implements OnInit {
 
 
   getFinalDataSet() {
-    let regModule = '3';
+    const regModule = '3';
 
-    let userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
+    const userWithoutPic: UserModel = JSON.parse(JSON.stringify(this.loggedInUser));
     userWithoutPic.pic = '';
-    let details = {
+    const details = {
       appVersion: CONSTANTS.APP_VERSION,
       webDeskVersion: this.auth.getWebDeskVersionFromStorage(),
       user: userWithoutPic
     };
 
-    let RegistrationModel: any = {
+    const RegistrationModel: any = {
       CreatedBy: this.loggedInUser.userid,
       BranchId: this.loggedInUser.locationid,
       MACAddress: this.loggedInUser.macAdr || '',
@@ -379,8 +379,8 @@ export class FbrInvoiceRepostingComponent implements OnInit {
   }
 
   formatDataForFBR(data) {
-    let testsData = data.Table1 || [];
-    let visitData = data.Table.length ? data.Table[0] : {};
+    const testsData = data.Table1 || [];
+    const visitData = data.Table.length ? data.Table[0] : {};
 
     // tax calculation formula
     // (ActualPrice * TaxRate/100) + (ActualValue) = ValueWithTax
@@ -389,7 +389,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
     // (ValueWithTax * 100) / (TaxRate + 100)
     // (900 * 100) / (TaxRate + 100) = 769.2308
 
-    let params = {
+    const params = {
       "InvoiceNumber": "",
       "POSID": visitData.POSID, // 966130
       "USIN": visitData.VisitID, // VisitId
@@ -410,7 +410,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
       "Items": []
     };
     testsData.forEach(tp => {
-      let item = {
+      const item = {
         "ItemCode": tp.ItemCode,
         "ItemName": tp.ItemName,
         "PCTCode": tp.PCTCode || '98160000', // {radiology: '98179000', lab: '98160000'} , // "98173000", // "11001010", https://download1.fbr.gov.pk/Docs/2021101313103753401chapte-98&99.pdf // page 4
@@ -440,7 +440,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
 
   getMACAddress(loggedInUser: UserModel) {
     // setTimeout(() => {
-    let obj = {
+    const obj = {
       user: loggedInUser,
       timestamp: +new Date(),
       screen: encodeURIComponent(window.location.href)
@@ -458,7 +458,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
     this.getPOSID();
   }
   getPOSID() {
-    let params = {
+    const params = {
       macAddress: this.loggedInUser.macAdr,
       branchId: this.loggedInUser.locationid,
       userId: this.loggedInUser.userid
@@ -503,7 +503,7 @@ export class FbrInvoiceRepostingComponent implements OnInit {
 
 
   selectedVisits: any[] = [];
-  selectAll: boolean = false;
+  selectAll = false;
 
   toggleAllCheckboxes() {
     if (this.selectAll) {

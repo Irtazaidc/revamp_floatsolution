@@ -77,7 +77,7 @@ export class GeneralDocsComponent implements OnInit {
     this.loggedInUser = this.auth.currentUserValue;
   }
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissionsObj = this.storageService.getLoggedInUserProfilePermissionsObj(_activatedroute);
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     console.log(this.screenPermissionsObj);
@@ -139,17 +139,17 @@ export class GeneralDocsComponent implements OnInit {
       this.spinner.hide(this.spinnerRefs.getDocs);
       if(res && res.StatusCode == 200) {
         // this.toastr.success('Documents loaded successfully');
-        let fetchedDocs = res.PayLoad || [];
-        let docArr = [];
+        const fetchedDocs = res.PayLoad || [];
+        const docArr = [];
         fetchedDocs.forEach(a=> {
           let docImg = a.GDocBase64 || a.Doc || '';
           if(docImg && docImg.indexOf('data:') == -1) { // check if image prefix is already appended
             docImg = 'data:' + (a.GDocType || 'image/png') + ';base64,' + docImg;
           }  
-          let thumb = this.getThumbByFileType(a.GDocType); // (this.docsThumbs.find(b => b.type == a.GDocType) || {img: ''}).img;
+          const thumb = this.getThumbByFileType(a.GDocType); // (this.docsThumbs.find(b => b.type == a.GDocType) || {img: ''}).img;
           a.GDocType = thumb ? 'image/png' : (a.GDocType || 'image/png');
           a.GDocBase64Thumbnail = thumb || a.GDocBase64Thumbnail || docImg;
-          let _obj:IVisitDocs = { // = new VisitDocs();
+          const _obj:IVisitDocs = { // = new VisitDocs();
             docId: a.DocId,
             // visitId: null,
             uniqueIdentifier: +new Date(),
@@ -216,7 +216,7 @@ export class GeneralDocsComponent implements OnInit {
   }
 
   saveDocs() {
-    let docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
+    const docsToSave = this.formatUploadedDocsData().filter(a => !a.docId) || [];
     console.log(this.formatUploadedDocsData())
     console.log("docs to save ",docsToSave)
     if(!docsToSave.length) {
@@ -227,7 +227,7 @@ export class GeneralDocsComponent implements OnInit {
       this.toastr.warning('DocType and RefId not provided');
       return;
     }
-    let params = {
+    const params = {
       UserId: this.loggedInUser.userid,
       Docs: docsToSave
     }
@@ -248,9 +248,9 @@ export class GeneralDocsComponent implements OnInit {
   }
 
   formatUploadedDocsData() {
-    let docs = [];
+    const docs = [];
     this.docs.filter(a => !a.docId).forEach(a => {
-      let d = {
+      const d = {
         DocId: null,
         Title: a.fileName,
         Remarks: a.Remarks,

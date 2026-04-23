@@ -18,11 +18,11 @@ import { SharedService } from "src/app/modules/shared/services/shared.service";
 })
 export class InsuranceInquiryReportComponent implements OnInit {
   reportInquiryParams: FormGroup;
-  isSpinner: boolean = true;
+  isSpinner = true;
   reportInquiryList: any = [];
   isDisable = false;
   searchText = "";
-  sortAsc: boolean = true; // start with ascending
+  sortAsc = true; // start with ascending
   inquiryList: any[] = [];
   isSubmitted = false;
   spinnerRefs = {
@@ -61,7 +61,7 @@ export class InsuranceInquiryReportComponent implements OnInit {
   ngOnInit(): void {}
 
   getInsuranceInquiryReport() {
-    let formValues = this.reportInquiryParams.getRawValue();
+    const formValues = this.reportInquiryParams.getRawValue();
     this.reportInquiryList = [];
 
     // if (this.reportInquiryParams.invalid) {
@@ -70,7 +70,7 @@ export class InsuranceInquiryReportComponent implements OnInit {
     //   this.isSubmitted = true;
     //   return;
     // }
-    let objParm = {
+    const objParm = {
       MRNo: formValues.MRNo || null,
       CNIC: formValues.CNIC || null,
       Cell: formValues.Cell || null,
@@ -166,7 +166,7 @@ export class InsuranceInquiryReportComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

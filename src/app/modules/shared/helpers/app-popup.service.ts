@@ -13,9 +13,9 @@ export class AppPopupService {
 
 
   openModal(content, settings = {}) {
-    let defaultSettings = {size: 'xl'};
-    let _settings = {...defaultSettings, ...settings};
-    let modalRef = this.modalService.open(content, _settings);
+    const defaultSettings = {size: 'xl'};
+    const _settings = {...defaultSettings, ...settings};
+    const modalRef = this.modalService.open(content, _settings);
     modalRef.result.then((result) => {
     }, (reason) => {
     });

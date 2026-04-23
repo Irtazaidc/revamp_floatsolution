@@ -61,9 +61,9 @@ export class HcBookingActivityComponent implements OnInit {
       return;
     }
 
-    let hcformData = this.filterForm.getRawValue();
+    const hcformData = this.filterForm.getRawValue();
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -86,7 +86,7 @@ export class HcBookingActivityComponent implements OnInit {
       return;
     }
 
-     let params = {
+     const params = {
        DateFrom: Conversions.formatDateObject(hcformData.dateFrom),
        DateTo: Conversions.formatDateObject(hcformData.dateTo),
      }
@@ -108,7 +108,7 @@ export class HcBookingActivityComponent implements OnInit {
       return
     }
      this.hcBookingDetailData = [];
-     let params = {
+     const params = {
        HCBookingPatientId: selectBPatientId,
      }
      this.spinner.show(this.spinnerRefs.hcRequesDetail);
@@ -188,7 +188,7 @@ export class HcBookingActivityComponent implements OnInit {
          this.excelData.push(row);
        });
        this.excelData = this.excelData.map(aa => {
-         let objD = aa;
+         const objD = aa;
          delete objD.isBranchSelected;
          return objD;
        })

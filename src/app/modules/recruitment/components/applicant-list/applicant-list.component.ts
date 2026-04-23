@@ -51,10 +51,10 @@ export class ApplicantListComponent implements OnInit {
     confirmPopoverCancel: () => { }
   }
   loggedInUser: UserModel;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerShortListed: boolean = true;//Hide Loader
-  isSpinnerRejected: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerShortListed = true;//Hide Loader
+  isSpinnerRejected = true;//Hide Loader
 
   formUpdateStatus: FormGroup;
   RemarksErrorMessage: string;
@@ -128,7 +128,7 @@ export class ApplicantListComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -183,18 +183,18 @@ export class ApplicantListComponent implements OnInit {
 
   getOpenJobRequestByJobStatus(){
     this.OpenJobsList =[];
-    let objParm = {
+    const objParm = {
       JobStatusID: 5
     }
   
     this.recruitment.getOpenJobRequestsByJobStatus(objParm).subscribe((res:any)=>{
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if(res.StatusCode==200){
         this.OpenJobsList = [];
-      let newArr = [];
+      const newArr = [];
       resSearchJob.forEach(a => {
-          let _obj = JSON.parse(JSON.stringify(a));
-          let alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
+          const _obj = JSON.parse(JSON.stringify(a));
+          const alreadyAddedIndex = newArr.findIndex(b => b.JobRequestID == a.JobRequestID);
           if(alreadyAddedIndex > -1) {
               newArr[alreadyAddedIndex].empIds.push(_obj.InterviewerID);
           } else {
@@ -219,13 +219,13 @@ export class ApplicantListComponent implements OnInit {
   getApplicantList() {
     this.spinner.show(this.spinnerRefs.applicantListSection);
     this.ApplicantList = [];
-    let formValues = this.formSearchJob.getRawValue();
-    let objParm = {
+    const formValues = this.formSearchJob.getRawValue();
+    const objParm = {
       JobRequestID: null,
       ApplicantStatusID: null,
     }
     this.recruitment.getApplicantList(objParm).subscribe((res: any) => {
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if (res.StatusCode == 200) {
         this.ApplicantList = resSearchJob || [];
         this.ApplicantList = this.ApplicantList.filter( a=> (a.ApplicantStatusID == 1));
@@ -243,14 +243,14 @@ export class ApplicantListComponent implements OnInit {
   searchApplicantList() {
     this.spinner.show(this.spinnerRefs.applicantListSection);
     this.ApplicantList = [];
-    let formValues = this.formSearchJob.getRawValue();
-    let objParam = {
+    const formValues = this.formSearchJob.getRawValue();
+    const objParam = {
       JobRequestID: formValues.JobRequestID ? formValues.JobRequestID : null,
       ApplicantStatusID: formValues.ApplicantStatusID ? formValues.ApplicantStatusID : null
     }
     console.log('form object is:', objParam)
     this.recruitment.getApplicantList(objParam).subscribe((res: any) => {
-      let resSearchJob = res.PayLoad;
+      const resSearchJob = res.PayLoad;
       if (res.StatusCode == 200) {
         this.ApplicantList = resSearchJob || [];
         this.ApplicantList = this.ApplicantList.filter( a=> (a.ApplicantStatusID == 1));
@@ -277,7 +277,7 @@ export class ApplicantListComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.applicantDetailModal);
     this.JobApplicantID = applicantID;
     this.ApplicantDetailRow = []
-    let paramObj = {
+    const paramObj = {
       JobApplicantID: this.JobApplicantID
     }
 
@@ -344,10 +344,10 @@ export class ApplicantListComponent implements OnInit {
       alertMessage = 'Something went wrong';
     }
     this.loadingProcess('show', statusID);
-    let formValues = this.formUpdateStatus.getRawValue();
+    const formValues = this.formUpdateStatus.getRawValue();
     this.formUpdateStatus.markAllAsTouched();
     if (this.formUpdateStatus.valid) {
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid || -99,
         tblJobApplicantStatus: [{
           "JobApplicantID": this.JobApplicantID,
@@ -358,7 +358,7 @@ export class ApplicantListComponent implements OnInit {
         }]
       }
       this.recruitment.updateJobApplicantStatusWithRemarks(objParam).subscribe((data: any) => {
-        let res = JSON.parse(data.PayLoadStr);
+        const res = JSON.parse(data.PayLoadStr);
         if (res && res.length) {
           if (data.StatusCode == 200) {
             this.toastr.success(alertMessage);
@@ -412,12 +412,12 @@ export class ApplicantListComponent implements OnInit {
 
 
   applicantProcess(isFinalize:boolean) {
-    let interviewDate  = (this.InterviewDate)?Conversions.formatDateObject(this.InterviewDate):null;
+    const interviewDate  = (this.InterviewDate)?Conversions.formatDateObject(this.InterviewDate):null;
 
     if(interviewDate !=null){
       this.loadingProcess('show', 0);
     this.spinner.show(this.spinnerRefs.applicantListSection);
-    let jobListChecked = this.ApplicantList.filter(a => a.checked);
+    const jobListChecked = this.ApplicantList.filter(a => a.checked);
     // console.warn('applicant fiter list is: ',jobListChecked)
     let isValidStatus = true;
     let isValidRemarks = true;
@@ -438,7 +438,7 @@ export class ApplicantListComponent implements OnInit {
       return;
     } else {
       if (jobListChecked.length) {
-        let objParam = {
+        const objParam = {
           CreatedBy: this.loggedInUser.userid || -99,
           tblJobApplicantStatus: jobListChecked.map(a => {
             return {

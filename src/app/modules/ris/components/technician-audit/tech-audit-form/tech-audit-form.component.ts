@@ -20,7 +20,7 @@ import { ActivatedRoute } from '@angular/router';
 export class TechAuditFormComponent implements OnInit {
 
   screenIdentity = null;
-  public starRatingElements: Array<ratingElement> = [];
+  public starRatingElements: ratingElement[] = [];
   @Input() InputPayload = {
     TPID: null,
     VisitID: null,
@@ -78,8 +78,8 @@ export class TechAuditFormComponent implements OnInit {
     FeedBackDetailRemarks: null
   }
   isMetal = false;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   loggedInUser: UserModel;
 
   TPQuestions = [];
@@ -119,7 +119,7 @@ export class TechAuditFormComponent implements OnInit {
     this.isShowDoctorName = this.screenIdentity !== 'my-tech-audit-summary-report' ? true : false;
     this.loadLoggedInUserInfo();
     this.getAuditQA();
-    let _ratingElement = new ratingElement();
+    const _ratingElement = new ratingElement();
     //ratingElement5.readonly = true;
     _ratingElement.checkedcolor = "red";
     _ratingElement.uncheckedcolor = "black";
@@ -173,7 +173,7 @@ export class TechAuditFormComponent implements OnInit {
 
   }
   isObjectEmpty(obj: any): boolean {
-    for (let key in obj) {
+    for (const key in obj) {
       if (obj[key] !== null && obj[key] !== undefined) {
         return false;
       }
@@ -221,7 +221,7 @@ export class TechAuditFormComponent implements OnInit {
   feedbackDate = null;
   getTechnologistVisitTPAuditByID() {
     this.existingAuditRow = [];
-    let objParam = {
+    const objParam = {
       TechnologistVisitTPAuditID: this.TechnologistVisitTPAuditID
     };
     this.sharedService.getData(API_ROUTES.GET_TECHNOLOGIST_VISIT_TP_AUDIT_BY_ID, objParam).subscribe((resp: any) => {
@@ -232,7 +232,7 @@ export class TechAuditFormComponent implements OnInit {
           this.AuditQAIDs = this.exitingAuditQAIDs.map((val:any) =>  val.AuditQAID);
         }
         if(this.existingAuditRow.length){
-          let objRow = this.existingAuditRow[0];
+          const objRow = this.existingAuditRow[0];
           this.Remarks = objRow.Remarks;
           this.Recommendations = objRow.Recommendation;
           this.QualityAssurance = objRow.QualityAssurance;
@@ -245,7 +245,7 @@ export class TechAuditFormComponent implements OnInit {
           this.feedbackDate = objRow.ManagerFeedbackOn;
           setTimeout(() => {
             this.starRatingElements.splice(0, this.starRatingElements.length);
-            let _ratingElement = new ratingElement();
+            const _ratingElement = new ratingElement();
             //ratingElement5.readonly = true;
             _ratingElement.checkedcolor = "red";
             _ratingElement.uncheckedcolor = "black";
@@ -294,7 +294,7 @@ export class TechAuditFormComponent implements OnInit {
       this.toastr.warning("Please select atleast one value for QA", "No QA selected");
       return;
     } else {
-      let objParam = {
+      const objParam = {
         TechnologistVisitTPAuditID: this.TechnologistVisitTPAuditID,
         AuditorTechnologistID: this.loggedInUser.userid || -99,
         TechnologistID: this.InitBy,
@@ -326,7 +326,7 @@ export class TechAuditFormComponent implements OnInit {
             this.TechnologistVisitTPAuditID = null;
             if (this.starRatingElements.length > 0) {
               this.starRatingElements.splice(0, this.starRatingElements.length);
-              let _ratingElement = new ratingElement();
+              const _ratingElement = new ratingElement();
               //ratingElement5.readonly = true;
               _ratingElement.checkedcolor = "red";
               _ratingElement.uncheckedcolor = "black";
@@ -363,7 +363,7 @@ export class TechAuditFormComponent implements OnInit {
       this.toastr.warning("Please provide remarks", "No Remarks");
       return;
     } else {
-      let objParam = {
+      const objParam = {
         TechnologistVisitTPAuditID: this.TechnologistVisitTPAuditID,
         // TechnologistID: this.loggedInUser.userid || -99,//this.InitBy,
         TechRemarks: this.TechRemarks,

@@ -609,7 +609,7 @@
                                     </button>
             
                                 <button (click)="ViewReport('')"
-                                    *ngIf="StatusId >= 7 && (!RISStatusID || RISStatusID >= 10) && (TPParams[0].ParamReportHTML != null || TPParams[0].ParamReportHTML != '')"
+                                    *ngIf="StatusId >= 7 && (!RISStatusID || RISStatusID >= 10) && (TPParams[0].ParamReportHTML != null || TPParams[0].ParamReportHTML !== '')"
                                     type="button" class="btn btn-sm btn-dark mt-2 mr-2"><i
                                         class="fa fa-print"></i> Print Preview </button>
                             </div>
@@ -939,7 +939,7 @@
                     <label for="otherInstructions" class="control-label">Additional comments / deficiencies / feedback:</label>
                     <textarea cols="" rows="" class="form-control form-control-sm" [(ngModel)]="feedbackRemarks"
                         name="feedbackRemarks" (blur)="feedbackRemarksTouched = true"
-                        [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit && isRepeat, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit && isRepeat}"></textarea>
+                        [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks==='') && clickSubmit && isRepeat, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks==='') && clickSubmit && isRepeat}"></textarea>
                 </div>
             </div>
         </div>
@@ -1140,7 +1140,7 @@
                 <label for="otherInstructions" class="control-label">Additional comments / deficiencies / feedback:</label>
                 <textarea cols="" rows="" class="form-control form-control-sm" [(ngModel)]="feedbackRemarks"
                     name="feedbackRemarks" (blur)="feedbackRemarksTouched = true"
-                    [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit}"></textarea>
+                    [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks==='') && clickSubmit, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks==='') && clickSubmit}"></textarea>
             </div>
     </div>
     <div class="modal-footer-custom">

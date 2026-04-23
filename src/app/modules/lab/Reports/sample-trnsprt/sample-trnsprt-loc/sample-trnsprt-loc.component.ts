@@ -73,7 +73,7 @@ export class SampleTrnsprtLocComponent implements OnInit {
 
 
   getSampleTransportationListLocWise(){
-    let formValues  = this.getsampleTransportationData.getRawValue();
+    const formValues  = this.getsampleTransportationData.getRawValue();
     
     if (this.getsampleTransportationData.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -81,7 +81,7 @@ export class SampleTrnsprtLocComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
       LocIDs : formValues.locID ? formValues.locID.join(","): null,
@@ -144,7 +144,7 @@ export class SampleTrnsprtLocComponent implements OnInit {
   getSubSection() {
     
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: -1,
     }    
@@ -197,10 +197,10 @@ export class SampleTrnsprtLocComponent implements OnInit {
 testList = [];
 getTestProfileList() {
   
-  let formValues  = this.getsampleTransportationData.getRawValue();
+  const formValues  = this.getsampleTransportationData.getRawValue();
   
   this.testList = [];
-  let _param = {
+  const _param = {
     TPID: null,
     TestProfileCode: null,
     TestProfileName: null,

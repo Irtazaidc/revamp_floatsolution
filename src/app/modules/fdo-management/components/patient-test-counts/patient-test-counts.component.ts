@@ -88,13 +88,13 @@ export class PatientTestCountsComponent implements OnInit {
   }
 
   getTestReportData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocIds: formValues.locID.join(",") || -1,
@@ -166,7 +166,7 @@ export class PatientTestCountsComponent implements OnInit {
   getLookupsForRegistration() {
     this.patientTypeList = [];
     this.lookupService.getLookupsForRegistration({ branchId: this.loggedInUser.locationid }).subscribe((resp: any) => {
-      let _response = resp.PayLoadDS || [];
+      const _response = resp.PayLoadDS || [];
       // this.paymentModesList = _response.Table5 || [];
       this.patientTypeList = _response.Table6 || [];
     }, (err) => {
@@ -175,7 +175,7 @@ export class PatientTestCountsComponent implements OnInit {
   }
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1, //null
       TestProfileCode: null,
       TestProfileName: null,
@@ -223,13 +223,13 @@ export class PatientTestCountsComponent implements OnInit {
   getSubSection() {
 
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     };
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
       },
       (err) => {
@@ -240,7 +240,7 @@ export class PatientTestCountsComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

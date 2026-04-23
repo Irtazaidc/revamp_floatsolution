@@ -178,7 +178,7 @@ export class CmsAdminDashboardComponent implements OnInit {
 
   getCMSrequestCountStats() {
    this.countList=[];
-   let objParm = {
+   const objParm = {
     DateFrom: Conversions.formatDateObject(this.dateFrom) || null,
     DateTo: Conversions.formatDateObject(this.dateTo) || null,
    };

@@ -389,7 +389,7 @@
                 <div class="form-group">
                     <label for="otherInstructions" class="control-label">Any other deficiency OR feedback:</label>
                     <textarea cols="" rows="" class="form-control form-control-sm" [(ngModel)]="feedbackRemarks" name="feedbackRemarks" (blur)="feedbackRemarksTouched = true"
-                    [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks=='') && clickSubmit}"
+                    [ngClass]="{'invalid': (!feedbackRemarks || feedbackRemarks==='') && clickSubmit, 'invalid-highlighted': (!feedbackRemarks || feedbackRemarks==='') && clickSubmit}"
                     ></textarea>
                 </div>
             </div>

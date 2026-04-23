@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, OnDestroy, OnChanges, AfterViewInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AppPopupService } from '../../../../shared/helpers/app-popup.service';
 import { FilterByKeyPipe } from 'src/app/modules/shared/pipes/filter-by-key.pipe';
@@ -21,7 +21,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './ai-assistance-request.component.html',
   styleUrls: ['./ai-assistance-request.component.scss']
 })
-export class AiAssistanceRequestComponent implements OnInit {
+export class AiAssistanceRequestComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Please Confirm...!', // 'Are you sure?',
@@ -106,9 +106,9 @@ export class AiAssistanceRequestComponent implements OnInit {
   }
 
   getRISWorkList() {
-    let formValues = this.risParamsForm.getRawValue();
+    const formValues = this.risParamsForm.getRawValue();
     // console.log("FORM VALUES IN PASS PARAMS: ",formValues)
-    let visitID = formValues.visitID;
+    const visitID = formValues.visitID;
     if ((!formValues.dateFrom || !formValues.dateTo) && !visitID) {
       this.toastr.error('Please Select Date Range OR provide Visit ID (PIN)');
       this.isValidDateRange = false;
@@ -144,7 +144,7 @@ export class AiAssistanceRequestComponent implements OnInit {
     this.searchText = '';
     this.risWorkist = [];
     this.spinner.show(this.spinnerRefs.listSection);
-    let params = {
+    const params = {
       // DateFrom: val.visitID ? null : val.dateFrom,
       // DateTo: val.visitID ? null : val.dateTo,
       RadiologistID: this.loggedInUser.userid
@@ -175,7 +175,7 @@ export class AiAssistanceRequestComponent implements OnInit {
   searchText = '';
   refreshPagination() {
     // this.clearVariables(0);
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       // .map((item, i) => ({ id: i + 1, ...item }))
@@ -185,10 +185,10 @@ export class AiAssistanceRequestComponent implements OnInit {
   filterResults() {
     // this.clearVariables(0);
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'TPFullName', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'TPFullName', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorkist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorkist, this.searchText, this.colNames, this.risWorkist);
     }
     this.pagination.filteredSearchResults = results;
@@ -203,7 +203,7 @@ export class AiAssistanceRequestComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -256,7 +256,7 @@ export class AiAssistanceRequestComponent implements OnInit {
     this.PatientID = row.PatientID;
     this.LocId = row.LocId;
 
-    let params = {
+    const params = {
       VisitID: row.VisitID,
       TPID: row.TPID,
       RadiologistID: this.loggedInUser.userid
@@ -303,7 +303,7 @@ export class AiAssistanceRequestComponent implements OnInit {
       this.toastr.error("Please provide remarks", "Validation Error");
       return;
     }
-    let dataObj = {
+    const dataObj = {
       VisitID: Number(this.VisitId),
       PatientID: this.PatientID,
       TPID: this.TPID,
@@ -343,7 +343,7 @@ export class AiAssistanceRequestComponent implements OnInit {
       this.toastr.error("Please provide remarks", "Validation Error");
       return;
     }
-    let dataObj = {
+    const dataObj = {
       RISRequestAIFeedBackID: this.RISRequestAIFeedBackID,
       RadiologistRating: this.RadiologistRating,
       RadiologistRemarks: this.RadiologistRemarks,
@@ -372,7 +372,7 @@ export class AiAssistanceRequestComponent implements OnInit {
   }
 
   searchByVisit() {
-    let visitID = this.risParamsForm.getRawValue().visitID;
+    const visitID = this.risParamsForm.getRawValue().visitID;
     if (visitID) {
       this.risParamsForm.patchValue({
         dateFrom: "",
@@ -496,13 +496,13 @@ export class AiAssistanceRequestComponent implements OnInit {
       // var createLink = (this.PACSServers[0].BackupServer);
 
       // createLink = createLink.substring(0, createLink.length - 1)
-      var createLink = imagePath
-      let sanitizedPath = createLink.replace(/\\/g, '%5C');
-      let url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
+      const createLink = imagePath
+      const sanitizedPath = createLink.replace(/\\/g, '%5C');
+      const url = ('radiant://?n=f&v=%22' + sanitizedPath + '%22')
       // console.log("url is :", url)
 
       // let winRef = window.open((url), '_blank');
-      let winRef = window.open((url), '_blank');
+      const winRef = window.open((url), '_blank');
       this.disabledButtonExport = false;
       this.isSpinnerExport = true;
     } catch (error) {
@@ -579,7 +579,7 @@ export class AiAssistanceRequestComponent implements OnInit {
   }
   AIAssistanceRequestRow: any;
   getRISAIAssistanceRequestByVIsitIDTPID() {
-    let params = {
+    const params = {
       VisitID: Number(this.VisitId),
       TPID: this.TPID
     };
@@ -639,7 +639,7 @@ export class AiAssistanceRequestComponent implements OnInit {
       TPID: this.TPID
     };
     const tblVisitTestDetail = [firstObj];
-    let objParams = {
+    const objParams = {
       IsVPN: isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail,

@@ -25,14 +25,14 @@ export class ServicesLogForKbsComponent implements OnInit {
     listSection: "listSection",
     logSection: "logSection",
   };
-  disabledButton: boolean = false;
+  disabledButton = false;
 
   serviceConfigForm: FormGroup = this.fb.group({
     SubSectionID: [null],
     LocIDs: [[]],
     TestID: [[]]
   });
-  isSpinner: boolean = true;
+  isSpinner = true;
   isSubmitted = false;
 
   constructor(
@@ -56,7 +56,7 @@ export class ServicesLogForKbsComponent implements OnInit {
   getServices() {
   this.servicesList = [];
 
-  let formValues = this.serviceConfigForm.getRawValue();
+  const formValues = this.serviceConfigForm.getRawValue();
 
   if (this.serviceConfigForm.invalid) {
     this.toastr.warning("Please Select Mandatory Fields");
@@ -64,7 +64,7 @@ export class ServicesLogForKbsComponent implements OnInit {
     return;
   }
 
-  let objParams = {
+  const objParams = {
     SubSectionID: formValues.SubSectionID,
     LocIDs: formValues.LocIDs.length ? formValues.LocIDs.join(",") : 1,
   };
@@ -133,7 +133,7 @@ export class ServicesLogForKbsComponent implements OnInit {
 
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1,
       TestProfileCode: null,
       TestProfileName: null,
@@ -159,7 +159,7 @@ export class ServicesLogForKbsComponent implements OnInit {
     this.BranchesList = [];
     this.lookupService.GetBranches().subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         _response.forEach((element, index) => {
           _response[index].Title = (element.Title || "").replace(
             "Islamabad Diagnostic Centre (Pvt) Ltd",
@@ -174,13 +174,13 @@ export class ServicesLogForKbsComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: -1,
     };
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad;
+        const _response = resp.PayLoad;
         this.subSectionList = _response;
       },
       (err) => {

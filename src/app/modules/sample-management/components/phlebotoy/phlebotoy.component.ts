@@ -108,7 +108,7 @@ export class PhlebotoyComponent implements OnInit {
 
 
   getPermissions() {
-    let _activatedroute = this.route.routeConfig.path;
+    const _activatedroute = this.route.routeConfig.path;
     // this.screenPermissionsObj = this.storageService.getLoggedInUserProfilePermissionsObj(_activatedroute);
     this.screenPermissionsObj = this.auth.getLoggedInUserProfilePermissionsObj(_activatedroute);
     // console.log(this.screenPermissionsObj);
@@ -125,8 +125,8 @@ export class PhlebotoyComponent implements OnInit {
     this.visitsList = [];
     this.visitsListAll = [];
     this.getVisitSamples(visitid);
-    let formValues = this.searchVisitsForm.getRawValue();
-    let params = {
+    const formValues = this.searchVisitsForm.getRawValue();
+    const params = {
       locationIds: (formValues.branchIds || [this.loggedInUser.locationid]).join(','),
       statusIds: formValues.statusId || "2", // 9 for report
       fromDate: formValues.fromDate ? Conversions.formatDateObject(formValues.fromDate) : '',
@@ -159,8 +159,8 @@ export class PhlebotoyComponent implements OnInit {
         data = data || [];
 
         // sort Urgent at top
-        let normalVisit = data.filter(a => a.ProcessId != 2);
-        let urgentVisit = data.filter(a => a.ProcessId == 2);
+        const normalVisit = data.filter(a => a.ProcessId != 2);
+        const urgentVisit = data.filter(a => a.ProcessId == 2);
         data = [...urgentVisit, ...normalVisit];
 
         this.visitsList = data;
@@ -193,9 +193,9 @@ export class PhlebotoyComponent implements OnInit {
       return;
     }
     this.VisitIdParam = visit.VisitId
-    let formValues = this.searchVisitsForm.getRawValue();
+    const formValues = this.searchVisitsForm.getRawValue();
     // this.searchPatient(visit.PatientId);
-    let params = {
+    const params = {
       visitId: visit.VisitId, // '201101056967', // '210301074271', //visit.VisitId,
       statusId: formValues.statusId //this.selectedVisit.StatusId || "2" // formValues.statusId ||
     };
@@ -229,8 +229,8 @@ export class PhlebotoyComponent implements OnInit {
   getVisitQuestionnaire() {
     this.visitQuestionnaire = [];
     this.visitQuestionnairePopupRef = this.appPopupService.openModal(this.visitQuestionnairePopup);
-    let _checkedSampleTestIds = this.visitSamplesList.filter(a => a.checked).map(a => a.TPId).join(',');
-    let params = {
+    const _checkedSampleTestIds = this.visitSamplesList.filter(a => a.checked).map(a => a.TPId).join(',');
+    const params = {
       visitId: this.selectedVisit.VisitId,
       tpIds: _checkedSampleTestIds
     }
@@ -249,7 +249,7 @@ export class PhlebotoyComponent implements OnInit {
               case 4: // Options & Text
               case '4': {
                 a.formattedAnswer = ['', ''];
-                let ans = (a.Answer || '').toString().split(':');
+                const ans = (a.Answer || '').toString().split(':');
                 a.formattedAnswer[0] = (ans[0] || '').toString().trim();
                 if (ans.length == 2) {
                   a.formattedAnswer[1] = (ans[1] || '').toString().trim();
@@ -289,7 +289,7 @@ export class PhlebotoyComponent implements OnInit {
   }
 
   saveVisitQuestionnaire() {
-    let params = {
+    const params = {
       // VisitId: '',
       // UserId: '',
       Questionnares: []
@@ -316,7 +316,7 @@ export class PhlebotoyComponent implements OnInit {
           // do nothing
         }
       }
-      let qObj = {
+      const qObj = {
         VisitId: this.selectedVisit.VisitId,
         QId: a.QId,
         Answer: and || '',
@@ -353,8 +353,8 @@ export class PhlebotoyComponent implements OnInit {
 
 
   printBarcode() {
-    let visitId = this.selectedVisit.VisitId;
-    let _checkedSampleTestIds = this.visitSamplesList.filter(a => a.checked).map(a => a.TPId).join(',');
+    const visitId = this.selectedVisit.VisitId;
+    const _checkedSampleTestIds = this.visitSamplesList.filter(a => a.checked).map(a => a.TPId).join(',');
     if (visitId && _checkedSampleTestIds) {
       const url = environment.patientReportsPortalUrl + 'smp-bc?p=' + btoa(JSON.stringify({ visitId: visitId, tpIds: _checkedSampleTestIds, appName: 'WebMedicubes:phlebotomy', timeStemp: +new Date() }));
       window.open(url.toString(), '_blank');
@@ -364,8 +364,8 @@ export class PhlebotoyComponent implements OnInit {
   }
 
   statusUpdate(statusId) {
-    let _checkedSamplesList = this.visitSamplesList.filter(a => a.checked);
-    let sampleCollectionArr = [];
+    const _checkedSamplesList = this.visitSamplesList.filter(a => a.checked);
+    const sampleCollectionArr = [];
     if (!_checkedSamplesList.length || !statusId) {
       this.toastr.warning('Please select atleast one Test/Sample');
       return;
@@ -388,16 +388,16 @@ export class PhlebotoyComponent implements OnInit {
         VisitSamplesList: _visitSamplesList
     }
     */
-    let _checkedSampleTestIds = _checkedSamplesList.map(a => a.TPId).join(',');
+    const _checkedSampleTestIds = _checkedSamplesList.map(a => a.TPId).join(',');
     _checkedSamplesList.forEach(a => {
-      let testProfileObj = {
+      const testProfileObj = {
         VisitId: a.VisitId,
         TPId: a.TPId,
         SCollectionId: (a.SCollectionId || 1)       
       }
       sampleCollectionArr.push(testProfileObj);
     })
-    let params = {
+    const params = {
       visitId: _checkedSamplesList[0].VisitId,
       tpIds: _checkedSampleTestIds,
       statusId: statusId,
@@ -449,7 +449,7 @@ export class PhlebotoyComponent implements OnInit {
       return;
     }
     const filterPipe = new FilterByKeyPipe();
-    let filteredData: any = filterPipe.transform(this.visitsList, this.searchVisitsForm.value.statusId, ['StatusId'], this.visitsListAll);
+    const filteredData: any = filterPipe.transform(this.visitsList, this.searchVisitsForm.value.statusId, ['StatusId'], this.visitsListAll);
     // console.log(this.visitsList, filteredData);
     this.visitsList = filteredData;
   }
@@ -494,7 +494,7 @@ export class PhlebotoyComponent implements OnInit {
     // this.spinner.show('GetBranches');
     this.lookupService.GetBranches().subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -533,14 +533,14 @@ export class PhlebotoyComponent implements OnInit {
     // var ageDifMs = Date.now() - birthday.getTime();
     // var ageDate = new Date(ageDifMs); // miliseconds from epoch
     // return Math.abs(ageDate.getUTCFullYear() - 1970);
-    let obj = { days: 0, months: 0, years: 0 }
+    const obj = { days: 0, months: 0, years: 0 }
     if (!moment(birthday).isValid()) {
       return obj;
     }
-    let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    let bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
-    let currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    let diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const bday: any = new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate()); //(2021, 3, 2);
+    const currentDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const diffDays = Math.round(Math.abs((currentDate - bday) / oneDay));
     if (diffDays > 364) {
       obj.years = Math.floor(diffDays / 364);
     } else if (diffDays >= 30) {

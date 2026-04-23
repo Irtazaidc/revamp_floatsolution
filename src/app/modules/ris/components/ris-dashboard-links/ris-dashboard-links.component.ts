@@ -18,13 +18,13 @@ export class RisDashboardLinksComponent implements OnInit {
   }
 
   // Create a single object with state indexes
-  stateObject: { [key: string]: boolean } = {};
+  stateObject: Record<string, boolean> = {};
   getRouts() {
-    let perms_allowed: Array<{ state: string }> = this.authService.getUserPermissionsFromLocalStorage() || [];
-    let routes: Array<{ state: string }> = perms_allowed;
+    const perms_allowed: { state: string }[] = this.authService.getUserPermissionsFromLocalStorage() || [];
+    const routes: { state: string }[] = perms_allowed;
     // Extract unique state values
-    let stateIndexes: string[] = routes.map(route => route.state);
-    let uniqueStateIndexes: string[] = Array.from(new Set(stateIndexes));
+    const stateIndexes: string[] = routes.map(route => route.state);
+    const uniqueStateIndexes: string[] = Array.from(new Set(stateIndexes));
 
     
     uniqueStateIndexes.forEach(state => {

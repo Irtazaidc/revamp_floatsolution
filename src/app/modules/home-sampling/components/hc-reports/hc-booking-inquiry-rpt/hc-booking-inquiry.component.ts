@@ -26,26 +26,26 @@ export class HcBookingInquiryComponent implements OnInit {
   paginatedSearchResults: any = [];
   PatientInfo: any = [];
   RiderInfo: any = [];
-  masterSelected: boolean = false;
-  collectionSize: number = 0;
-  page: number = 1;
-  pageSize: number = 8;
+  masterSelected = false;
+  collectionSize = 0;
+  page = 1;
+  pageSize = 8;
   checklist: any = [];
   SelectedTPs: any = [];
   checkedList: any = [];
   commaseparatedTPIds: any = [];
-  disableViewTestRow: boolean = false;
+  disableViewTestRow = false;
   visitDetailsList: any = [];
   selVisit: any = "";
   searchInVisitList: any = "";
   searchInTestDetail: any = "";
-  isDueBalance: boolean = false;
+  isDueBalance = false;
   DueBalanceAmount: any = 0;
-  IsMasterDisable: boolean = false;
+  IsMasterDisable = false;
   patientReportUrl: any = "";
-  isScreen: number = 0;
-  isTPDetailScreen: boolean = false;
-  isDeliverButtonAllowed: boolean = false;
+  isScreen = 0;
+  isTPDetailScreen = false;
+  isDeliverButtonAllowed = false;
   confirmationPopoverConfig = {
     placements: ['top', 'left', 'right', 'bottom'],
     popoverTitle: 'Confirmation Alert', // 'Are you sure?',
@@ -62,7 +62,7 @@ export class HcBookingInquiryComponent implements OnInit {
     bookingid: ['', Validators.compose([Validators.required])],
   });
   ImageUrl: any;
-  deliverRptTitle: string = "Deliver Reports";
+  deliverRptTitle = "Deliver Reports";
   SelRow: any;
   HighlightRow: any;
   spinnerRefs = {
@@ -70,7 +70,7 @@ export class HcBookingInquiryComponent implements OnInit {
     updatePicture:'updatePicture'
   }
   loggedInUser: UserModel;
-  invoiceCopyType: number = 1;
+  invoiceCopyType = 1;
   BookingPatientID: any;
   HCDateTime: any;
   CommaSepTPs: any;
@@ -100,13 +100,13 @@ export class HcBookingInquiryComponent implements OnInit {
     // let hcBookingId = "98983474";
     this.hcBookingInqList = [];
     this.riderId = null;
-    let formValues = this.bookingInqForm.getRawValue();
+    const formValues = this.bookingInqForm.getRawValue();
     if (!formValues.bookingid) {
       this.toastr.warning("Please Enter Booking ID")
       return;
     }
     else {
-      let params = {
+      const params = {
         "BookingID": formValues.bookingid
       }
       this.selBookingID = formValues.bookingid || null;
@@ -128,7 +128,7 @@ export class HcBookingInquiryComponent implements OnInit {
          
           this.patientId = this.hcBookingInqList.find(f => f.PatientId).PatientId || null;
           //resp.PayLoad[0].BookingPatientID;
-          let selVisit = resp.PayLoad[0].PIN;
+          const selVisit = resp.PayLoad[0].PIN;
           this.selVisit = selVisit.replace(/-/g, "");
         }
       }, (err) => {
@@ -142,8 +142,8 @@ export class HcBookingInquiryComponent implements OnInit {
     this.hcBookingDocument = [];
     this.ImageTitle = '';
     this.ImageUrl = null;
-    let formValues = this.bookingInqForm.getRawValue();
-      let params = {
+    const formValues = this.bookingInqForm.getRawValue();
+      const params = {
         BookingID: formValues.bookingid,
       }
       this.spinner.show(this.spinnerRefs.updatePicture);

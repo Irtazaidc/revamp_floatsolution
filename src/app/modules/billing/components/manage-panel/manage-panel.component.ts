@@ -46,8 +46,8 @@ export class ManagePanelComponent implements OnInit {
     ParentSection: "ParentSection",
   };
 
-  selectedTabIndex: number = 0;
-  tabIndex: number = 0;
+  selectedTabIndex = 0;
+  tabIndex = 0;
 
   loggedInUser: UserModel;
 
@@ -143,8 +143,8 @@ export class ManagePanelComponent implements OnInit {
   }
 
   InsertUpdatePanel(): void {
-    let formValues = this.userCreationForm.getRawValue();
-    let TestDetailsForm = this.testDetailsForm.getRawValue();
+    const formValues = this.userCreationForm.getRawValue();
+    const TestDetailsForm = this.testDetailsForm.getRawValue();
     if (this.userCreationForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -156,19 +156,19 @@ export class ManagePanelComponent implements OnInit {
       return;
     }
 
-    let checkedTestItems = this.filteredTestList.filter((a) => a.Allow);
+    const checkedTestItems = this.filteredTestList.filter((a) => a.Allow);
     if(!checkedTestItems.length){
       this.toastr.warning("Please select test(s)");
       return
     }
-    let checkedLocationItems = this.panelLocationList.filter((a) => a.Allow);
+    const checkedLocationItems = this.panelLocationList.filter((a) => a.Allow);
     if(!checkedLocationItems.length){
       this.toastr.warning("Please select location(s)");
       return
     }
-    let checkedUserItems = this.panelUsersList.filter((a) => a.PanelUserId);
+    const checkedUserItems = this.panelUsersList.filter((a) => a.PanelUserId);
 
-    let params = {
+    const params = {
       PanelID: this.selectedPanelId || null,
       Code: formValues.Code || null,
       Name: formValues.Name || null,
@@ -396,13 +396,13 @@ export class ManagePanelComponent implements OnInit {
 
   savePanelUsersData() {
     this.panelUsersDataList = [];
-    let formValues = this.userCreationForm.getRawValue();
+    const formValues = this.userCreationForm.getRawValue();
     if (this.userCreationForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let params = {
+    const params = {
       Username: formValues.Username || null,
       Password: formValues.Password || null,
       FullName: formValues.FullName || null,
@@ -449,7 +449,7 @@ export class ManagePanelComponent implements OnInit {
       this.toastr.warning("PanelId isn't being passed");
       return;
     }
-    let params = {
+    const params = {
       PanelId: PanelId,
     };
     this.spinner.show(this.spinnerRefs.generalSection);
@@ -479,7 +479,7 @@ export class ManagePanelComponent implements OnInit {
   }
   allTestsByPanelIdRateId = [];
   GetAllTestsByPanelIDPriceListId() {
-    let formValues = this.testDetailsForm.getRawValue();
+    const formValues = this.testDetailsForm.getRawValue();
     this.filteredTestList = [];
     this.filteredTestListOriginal = [];
     this.testList = [];
@@ -487,7 +487,7 @@ export class ManagePanelComponent implements OnInit {
     //   this.toastr.warning("PanelId or PriceListId isn't being passed");
     //   return;
     // }
-    let params = {
+    const params = {
       PanelId: this.selectedPanelId || null,
       PriceListId: formValues.RateListId || 1,
     };
@@ -535,7 +535,7 @@ export class ManagePanelComponent implements OnInit {
 
   TitleByCOAId = [];
   GetAccMaintenaceByCOAId() {
-    let formValues = this.userCreationForm.getRawValue();
+    const formValues = this.userCreationForm.getRawValue();
     this.TitleByCOAId = [];
     // if(this.userCreationForm.invalid){
     //   this.toastr.warning("Please Fill The Mandatory Fields");
@@ -547,7 +547,7 @@ export class ManagePanelComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let params = {
+    const params = {
       AccountNo: formValues.AccNo,
       COAId: formValues.ChartOAccount,
     };
@@ -617,7 +617,7 @@ export class ManagePanelComponent implements OnInit {
       this.toastr.warning("PanelId isn't being passed");
       return;
     }
-    let params = {
+    const params = {
       PanelId: PanelId,
     };
     this.spinner.show(this.spinnerRefs.LocationTable);
@@ -647,7 +647,7 @@ export class ManagePanelComponent implements OnInit {
       this.toastr.warning("PanelId isn't being passed");
       return;
     }
-    let params = {
+    const params = {
       PanelId: PanelId,
     };
     this.spinner.show(this.spinnerRefs.LocationTable);
@@ -713,7 +713,7 @@ export class ManagePanelComponent implements OnInit {
       this.toastr.warning("Please Provide PanelId");
       return;
     }
-    let params = {
+    const params = {
       PanelId: this.selectedPanelId,
       CreatedBy: this.loggedInUser.userid || -1,
     };
@@ -786,7 +786,7 @@ export class ManagePanelComponent implements OnInit {
     this.userCreationForm.enable();
     this.testDetailsForm.enable();
     console.log("Creating a new user");
-    let TestDetailsForm = this.testDetailsForm.getRawValue();
+    const TestDetailsForm = this.testDetailsForm.getRawValue();
     this.GetAllTestsByPanelIDPriceListId();
     this.AddnRemove = true;
   }
@@ -794,7 +794,7 @@ export class ManagePanelComponent implements OnInit {
   AddnRemove = false;
   SelectAll = false;
   DiscountCount = 0;
-  DiscountType : number = 1;
+  DiscountType  = 1;
   labDeptID = -1;
   testList = null;
   active = null;
@@ -807,7 +807,7 @@ export class ManagePanelComponent implements OnInit {
 
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: 1,
       TestProfileCode: null,
       TestProfileName: null,

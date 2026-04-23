@@ -80,7 +80,7 @@ export class TestProfilePackageComponent implements OnInit {
   testListChanged(e) {
   this.TPId = e.TPId;
   this.spinner.show(this.spinnerRefs.testGeneralSection);
-    let objParm = {
+    const objParm = {
       TPId: this.TPId
     }
     this.testProfileService.getTestProfileDetailByTPID(objParm).subscribe((res: any) => {
@@ -89,7 +89,7 @@ export class TestProfilePackageComponent implements OnInit {
         this.testGeneralData = res.PayLoadDS['Table'][0] || {};
         this.testProtocol= this.testGeneralData? this.testGeneralData['Protocol'].replace(/\r\n/g, '<br>'):this.testGeneralData['Protocol'];
         this.testInstructuon= this.testGeneralData? this.testGeneralData['Instruction'].replace(/\r\n/g, '<br>'):this.testGeneralData['Instruction'];
-        let TypeId = this.testGeneralData['TypeId'];
+        const TypeId = this.testGeneralData['TypeId'];
         if (TypeId === 3){
           this.getPackageList(this.testGeneralData)
         }
@@ -112,7 +112,7 @@ export class TestProfilePackageComponent implements OnInit {
   }
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -127,7 +127,7 @@ export class TestProfilePackageComponent implements OnInit {
   }
   getLocationList() {
     this.branchList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.GetBranches().subscribe((res: any) => {
       if (res && res.StatusCode == 200 && res.PayLoad) {
         let data = res.PayLoad;
@@ -142,7 +142,7 @@ export class TestProfilePackageComponent implements OnInit {
   }
   getTestProfileList() {
     this.testList = [];
-    let _param = {
+    const _param = {
       branchId: this.selectedLocId,
       TestProfileCode: null,
       TestProfileName: null,
@@ -180,7 +180,7 @@ export class TestProfilePackageComponent implements OnInit {
     console.log('i m  here ',location)
     this.repTimeShow =true;
     this.LocId = location.LocId;
-    let objParm = {
+    const objParm = {
       TPId: this.TPId,
       LocID:this.LocId
     };
@@ -202,8 +202,8 @@ export class TestProfilePackageComponent implements OnInit {
 
   minutesToHours(minutes){
     if(!minutes) return '';
-    var h:any = Math.floor(minutes / 60);
-    var m:any = minutes % 60;
+    let h:any = Math.floor(minutes / 60);
+    let m:any = minutes % 60;
     h = h < 10 ? '0' + h : h; 
     m = m < 10 ? '0' + m : m; 
     return h + ':' + m;
@@ -230,7 +230,7 @@ export class TestProfilePackageComponent implements OnInit {
 
   getPackageList(e){
 
-    let _params = {
+    const _params = {
       packageId: e.TPId,
       branchId: this.selectedLocId || null,
       panelId: (this.selectedPanelId || ''),

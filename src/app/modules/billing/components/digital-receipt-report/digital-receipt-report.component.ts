@@ -79,7 +79,7 @@ getDigitalReceiptReportData() {
     this.pagination.paginatedSearchResults = [];
     this.searchText = "";
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -155,7 +155,7 @@ getDigitalReceiptReportData() {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.paymentModesList = _response.Table5 || [];
           this.patientTypeList = _response.Table6 || [];
         },
@@ -204,7 +204,7 @@ getDigitalReceiptReportData() {
 }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -217,7 +217,7 @@ getDigitalReceiptReportData() {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = [
+    const cols = [
       "PIN",
       "ReceiptNo",
       "MRNo",

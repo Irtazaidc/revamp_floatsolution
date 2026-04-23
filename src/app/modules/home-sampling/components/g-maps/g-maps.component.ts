@@ -86,7 +86,7 @@ export class GMapsComponent implements OnInit, AfterViewInit {
     console.log("Lat: " + event.latLng.lat() + ", Long: " + event.latLng.lng());
   }
   RidersDetail() {
-    let params = {
+    const params = {
       RiderID: 0
     }
     this.HCService.GetRiders(params).subscribe((resp: any) => {
@@ -96,7 +96,7 @@ export class GMapsComponent implements OnInit, AfterViewInit {
   }
   AssignRider(hcReq, rider) {
     
-    let params = {
+    const params = {
       "BookingID": hcReq.BookingPatientID,
       "RiderID": rider.RiderID,
       "ModifiedBy": 0

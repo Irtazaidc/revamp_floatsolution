@@ -197,8 +197,8 @@
                                     <label for="radio2" class="form-check-label">By Name</label>
                                     <input  type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode" id="byCode1" checked>
                                     <label for="radio1" class="form-check-label">By Code</label>
-                                    <input [ngModelOptions]="{standalone: true}" type="checkbox" *ngIf="rdSearchBy == 'byCode'" class="form-check-input ml-2" name="chkSearchByExactMatch" id="chkSearchByExactMatch" (click)="changeMaching($event.target.checked)" [(ngModel)]="chkSearchByExactMatch">
-                                    <label for="chkSearchByExactMatch" *ngIf="rdSearchBy == 'byCode'" class="form-check-label"> <small>Exact match</small></label>
+                                    <input [ngModelOptions]="{standalone: true}" type="checkbox" *ngIf="rdSearchBy === 'byCode'" class="form-check-input ml-2" name="chkSearchByExactMatch" id="chkSearchByExactMatch" (click)="changeMaching($event.target.checked)" [(ngModel)]="chkSearchByExactMatch">
+                                    <label for="chkSearchByExactMatch" *ngIf="rdSearchBy === 'byCode'" class="form-check-label"> <small>Exact match</small></label>
                                 </div>
                                 <div>
                                     <ng-select 
@@ -320,7 +320,7 @@
                                 
                                 <button type="reset" class="btn btn-sm btn-outline-danger ml-2 pull-right" (click)="clearForm();"><i class="fa fa-plus"></i>New<i aria-hidden="true"></i></button>
                                 
-                                <button *ngIf="(RISTemplateID && CategoryID==1 && screenIdentity=='report-templates') || (RISTemplateID && CategoryID==2 && screenIdentity=='user-report-templates')"
+                                <button *ngIf="(RISTemplateID && CategoryID==1 && screenIdentity==='report-templates') || (RISTemplateID && CategoryID==2 && screenIdentity==='user-report-templates')"
                                     [disabled]="disabledButtonDelete || !RISTemplateID"
                                     class="btn btn-sm btn-danger pull-right ml-2"
                                     mwlConfirmationPopover
@@ -337,7 +337,7 @@
                                     [appendToBody]="true">
                                     <i class="fa fa-times"></i>Delete <i class="spinner-border-custom" aria-hidden="true" [hidden]="isSpinnerDelete" ></i>
                                 </button>
-                                <button *ngIf="(RISTemplateID && CategoryID==1 && screenIdentity=='report-templates') || (CategoryID==2 && screenIdentity=='user-report-templates') || !RISTemplateID && TPParams.length"
+                                <button *ngIf="(RISTemplateID && CategoryID==1 && screenIdentity==='report-templates') || (CategoryID==2 && screenIdentity==='user-report-templates') || !RISTemplateID && TPParams.length"
                                     [disabled]="disabledButton"
                                     class="btn btn-sm btn-primary pull-right"
                                     title=""

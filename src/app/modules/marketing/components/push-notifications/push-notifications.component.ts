@@ -18,7 +18,7 @@ export class PushNotificationsComponent implements OnInit {
   @ViewChild('authenticateAdmin') authenticateAdmin;
   username: any = "";
   password: any = "";
-  isSpinner: boolean = true;//Hide Button Spinner
+  isSpinner = true;//Hide Button Spinner
   pushNotificationsList = [];
   selectedNotification: any = '';
   pushNotificationTokens_generic = [];
@@ -111,7 +111,7 @@ export class PushNotificationsComponent implements OnInit {
 
   getPushNotificationsList() {
     this.pushNotificationsList = [];
-    let params = {
+    const params = {
     }
     this.showSpinner(this.spinnerRefs.pushNotificationsList);
     this.pushNotificationsService.getPushNotificationsList(params).subscribe((res: any) => {
@@ -125,7 +125,7 @@ export class PushNotificationsComponent implements OnInit {
   }
   getPushNotificationTokens_generic() {
     this.pushNotificationTokens_generic = [];
-    let params = {
+    const params = {
       "notificationType": 1
     }
     this.showSpinner(this.spinnerRefs.pushNotification_generic);
@@ -141,7 +141,7 @@ export class PushNotificationsComponent implements OnInit {
   }
   getPushNotificationTokens_specific() {
     this.pushNotificationTokens_specific = [];
-    let params = {
+    const params = {
       "notificationType": 2
     }
     this.showSpinner(this.spinnerRefs.pushNotification_specific);
@@ -158,7 +158,7 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   saveNotification(notificationType, spinnerRef) {
-    let params = {
+    const params = {
       mobileNotificationID: null,
       notificationType: notificationType || 1,
       notificationTitle: this.notificationForms.new.title || '',
@@ -182,7 +182,7 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   sendNotifications(action) {
-    let params = {
+    const params = {
       notificationsData: [],
       notificationSettingsData: {
         mobileNotificationID: this.selectedNotification.mobileNotificationID || null,
@@ -195,7 +195,7 @@ export class PushNotificationsComponent implements OnInit {
       case 'generic': {
         params.notificationSettingsData.notificationType = 1;
         this.pushNotificationTokens_generic.forEach(a => {
-          let obj: PushNotificationObj = {
+          const obj: PushNotificationObj = {
             to: [a.DeviceToken],
             title: this.notificationForms.generic.title || '',
             subtitle: this.notificationForms.generic.subtitle || '',
@@ -214,7 +214,7 @@ export class PushNotificationsComponent implements OnInit {
 
         params.notificationSettingsData.notificationType = 2;
         this.pushNotificationTokens_specific.filter(a => a.checked).forEach(a => {
-          let obj: PushNotificationObj = {
+          const obj: PushNotificationObj = {
             to: [a.DeviceToken],
             title: this.notificationForms.specific.title || '',
             subtitle: this.notificationForms.specific.subtitle || '',
@@ -243,7 +243,7 @@ export class PushNotificationsComponent implements OnInit {
 
     if (action == 'generic') {
       this.showSpinner();
-      let parm = {
+      const parm = {
         "notificationType": 1
       }
       this.pushNotificationsService.getPushNotificationTokens(parm).subscribe((res: any) => {
@@ -251,7 +251,7 @@ export class PushNotificationsComponent implements OnInit {
         this.pushNotificationTokens_generic = res.PayLoadDT || [];
         params.notificationsData = [];
         this.pushNotificationTokens_generic.forEach(a => {
-          let obj: PushNotificationObj = {
+          const obj: PushNotificationObj = {
             to: [a.DeviceToken],
             title: this.notificationForms.generic.title || '',
             subtitle: this.notificationForms.generic.subtitle || '',
@@ -308,17 +308,17 @@ export class PushNotificationsComponent implements OnInit {
   }
 
   sendNotifications_post_in_chunk(params) {
-    let requestObj = JSON.parse(JSON.stringify(params)); requestObj.notificationsData = [];
-    let chunksArr = [];
+    const requestObj = JSON.parse(JSON.stringify(params)); requestObj.notificationsData = [];
+    const chunksArr = [];
     let chunkNumber = 0, countsize = 50;
     for (let i = 0; i < Math.ceil(params.notificationsData.length / countsize); i++) {
-      let currentChunk = params.notificationsData.slice(chunkNumber, chunkNumber + countsize);
-      let obj = JSON.parse(JSON.stringify(requestObj));
+      const currentChunk = params.notificationsData.slice(chunkNumber, chunkNumber + countsize);
+      const obj = JSON.parse(JSON.stringify(requestObj));
       obj.notificationsData = currentChunk;
       chunksArr.push(obj);
       chunkNumber += countsize;
     }
-    let reqArr = [];
+    const reqArr = [];
     chunksArr.forEach(req => {
       reqArr.push(this.pushNotificationsService.sendPushNotifications(req).subscribe((resp: any) => { }, (err) => { }));
     })

@@ -60,7 +60,7 @@
 
                     <span *ngIf="  VisitPanelName && patientData.VisitPanelName != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
                         <i ngbTooltip="Visit Panel" class="text-primary flaticon-network mr-2 font-size-lg"></i>{{  VisitPanelName}}</span> -->
-                    <span *ngIf="UserDetailsList.Email != ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
+                    <span *ngIf="UserDetailsList.Email !== ''" class="text-dark-75 font-size-lg mr-lg-8 mr-5 mb-lg-0 mb-2">
                         <i class="text-danger fa fa-envelope mr-2 font-size-md" ngbTooltip="Email"></i> {{UserDetailsList.Email || 'NA'}}
                     </span>
                 </div>

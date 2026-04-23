@@ -14,8 +14,8 @@ import { LookupService } from "src/app/modules/patient-booking/services/lookup.s
   styleUrls: ["./kbs-ticker-config.component.scss"],
 })
 export class KbsTickerConfigComponent implements OnInit {
-  isSpinner: boolean = true; //Hide Loader
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
   editForm!: FormGroup;
   loggedInUser: UserModel;
   spinnerRefs = {
@@ -103,7 +103,7 @@ limitLength(event: any, max: number) {
 }
 
   getActiveKBSTicker() {
-    let params = {
+    const params = {
        ActiveOnly : 1 // Fetch active tickers
     };
     this.isSpinner = false;
@@ -115,7 +115,7 @@ limitLength(event: any, max: number) {
 
         if (res.StatusCode == 200) {
           // Receive list
-          let list = res.PayLoad;
+          const list = res.PayLoad;
 
           // Convert dates for datepicker
           this.activeTickerList = list.map((item: any) => ({
@@ -137,7 +137,7 @@ limitLength(event: any, max: number) {
     this.spinner.hide();
   }
   getArchiveKBSTicker() {
-    let params = {
+    const params = {
       ActiveOnly : 0 // Fetch archived tickers
     };
     this.isSpinner = false;
@@ -149,7 +149,7 @@ limitLength(event: any, max: number) {
 
         if (res.StatusCode == 200) {
           // Receive list
-          let list = res.PayLoad;
+          const list = res.PayLoad;
 
           // Convert dates for datepicker
           this.archiveTickerList = list.map((item: any) => ({
@@ -196,7 +196,7 @@ limitLength(event: any, max: number) {
   }
 
   getKBSTickerCategory() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
 
     this.lookupService.getKBSTickerCategory(params).subscribe(
@@ -225,7 +225,7 @@ limitLength(event: any, max: number) {
       this.toastr.error("User not found");
       return;
     }
-     for (let item of this.activeTickerList) {
+     for (const item of this.activeTickerList) {
     const start = this.convertFromNgb(item.StartDate);
     const end = item.NonExpiry ? null : this.convertFromNgb(item.EndDate);
 
@@ -282,7 +282,7 @@ limitLength(event: any, max: number) {
     return;
   }
 
-   for (let item of this.archiveTickerList) {
+   for (const item of this.archiveTickerList) {
     const start = this.convertFromNgb(item.StartDate);
     const end = item.NonExpiry ? null : this.convertFromNgb(item.EndDate);
 

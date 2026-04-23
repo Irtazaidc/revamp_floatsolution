@@ -50,7 +50,7 @@ export class HcPortableServicesShareReportComponent implements OnInit {
   }
 
   getReportData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     const dateFrom = formValues.DateFrom;
       const dateTo = formValues.DateTo;
       const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -79,7 +79,7 @@ export class HcPortableServicesShareReportComponent implements OnInit {
         this.isSubmitted = true;
         return;
       }
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.DateFrom),
       DateTo: Conversions.formatDateObject(formValues.DateTo),
     };

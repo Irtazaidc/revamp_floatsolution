@@ -51,7 +51,7 @@ export class HCCityAuthComponent implements OnInit {
 
   getUsers() {
     this.usersList = [];
-    let params = {};
+    const params = {};
     this.spinner.show();
     this.roleService.getUsers(params).subscribe((res: any) => {
       this.spinner.hide();
@@ -79,7 +79,7 @@ export class HCCityAuthComponent implements OnInit {
 
   getRoles() {
     this.rolesList = [];
-    let params = {};
+    const params = {};
     this.spinner.show();
     this.roleService.getRoles(params).subscribe((res: any) => {
       this.spinner.hide();
@@ -94,9 +94,9 @@ export class HCCityAuthComponent implements OnInit {
 
   assignHCCityToHCStaff() {
   
-    let formValues = this.hcCityAuthForm.getRawValue();
+    const formValues = this.hcCityAuthForm.getRawValue();
     console.log(formValues);
-    let params = {
+    const params = {
       UserId: formValues.userID,
       CityIDs: formValues.hcCityID.join(','),
       CreatedBy: this.loggedInUser.userid
@@ -111,14 +111,14 @@ export class HCCityAuthComponent implements OnInit {
   }
 
   getAuthorizedCitiesByUser() {
-    let formValues = this.hcCityAuthForm.getRawValue();
-    let params = {
+    const formValues = this.hcCityAuthForm.getRawValue();
+    const params = {
       "UserId": formValues.userID
     }
     this.hccityAuth.getAuthorizedCitiesByUserId(params).subscribe((resp: any) => {
       console.log(resp);
       if (resp.StatusCode == 200) {
-        let authCityIds = resp.PayLoad.map(a => { return Number(a.CityID) }); //.join(",").split(',')
+        const authCityIds = resp.PayLoad.map(a => { return Number(a.CityID) }); //.join(",").split(',')
         console.log(authCityIds);
         if (authCityIds.length) {
           this.hcCityAuthForm.patchValue({

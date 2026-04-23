@@ -126,7 +126,7 @@
                                                         <div class="input-group">
                                                             <select class="form-control col-4 pl-1 pr-0"
                                                                 formControlName="Salutation" #salutation
-                                                                [ngClass]="{'invalid': salutation.value == '', 'invalid-highlighted': salutation.value == '' && patientBasicInforFormSubmitted}"
+                                                                [ngClass]="{'invalid': salutation.value === '', 'invalid-highlighted': salutation.value === '' && patientBasicInforFormSubmitted}"
                                                                 [attr.disabled]="patientBasicInfoDisabled"
                                                                 [required]="!patientBasicInfoDisabled">
                                                                 <option [value]="''">--select--</option>
@@ -161,7 +161,7 @@
                                                         <div class="input-group">
                                                             <select #gndr id="pat_gender" class="form-control"
                                                                 formControlName="Gender"
-                                                                [ngClass]="{'invalid': gndr.value == '', 'invalid-highlighted': gndr.value == '' && patientBasicInforFormSubmitted}"
+                                                                [ngClass]="{'invalid': gndr.value === '', 'invalid-highlighted': gndr.value === '' && patientBasicInforFormSubmitted}"
                                                                 [attr.disabled]="patientBasicInfoDisabled"
                                                                 [required]="!patientBasicInfoDisabled">
                                                                 <!-- [ngClass]="gndr.value && gndr.value != '0' && gndr.value != 0 && gndr.value != '0: 0' ? '' : 'invalid'"  -->
@@ -446,7 +446,7 @@
                                             <label>Branches:</label>
                                             <div class="input-group">
                                                 <select #loc class="form-control" formControlName="BranchID"
-                                                    [ngClass]="{'invalid': loc.value == '', 'invalid-highlighted': loc.value == '' && patientBasicInforFormSubmitted}"
+                                                    [ngClass]="{'invalid': loc.value === '', 'invalid-highlighted': loc.value === '' && patientBasicInforFormSubmitted}"
                                                     [attr.disabled]="patientBasicInfoDisabled">
                                                     <option [value]="''">--select--</option>
                                                     <option *ngFor="let item of branchesList" [value]="item.LocId">
@@ -943,7 +943,7 @@
                                     <!-- <button (click)="startCamera()" class="btn btn-sm btn-outline-success">Play</button> -->
                                     <!-- <button (click)="pause()" class="btn btn-warning">Pause</button> -->
                                     <!-- <button (click)="resume()" class="btn btn-info">Resume</button> -->
-                                    <button (click)="capture()" *ngIf="openCameraFromSource == 'patient_pic'"
+                                    <button (click)="capture()" *ngIf="openCameraFromSource === 'patient_pic'"
                                         class="btn btn-sm btn-outline-success m-r-10">Capture</button>
                                     <button (click)="stopCamera()" class="btn btn-sm btn-outline-danger">Close</button>
                                     <select class="form-control" [(ngModel)]="selectedCamera"

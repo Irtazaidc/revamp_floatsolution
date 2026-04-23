@@ -11,7 +11,7 @@
                         <div class="remarks-by small" *ngIf="rem.UserName || rem.Form || rem.CreatedOn"> <span>{{rem.UserName || ' -- '}} - {{rem.LocCode || ' -- '}}</span> | <span>{{rem.Form || ' -- '}}</span> @ <span *ngIf="rem.CreatedOn">{{rem.CreatedOn | date: 'dd-MMM-yyyy HH:mm:ss'}}</span> </div>
                         <div
                             class="remarks-contents font-weight-bold"
-                            [ngClass]="{'text-danger': rem.Priority == 1, 'text-warning': rem.Priority == 2, 'text-center': rem.Remarks == 'no remarks'}">{{rem.Remarks || ''}}
+                            [ngClass]="{'text-danger': rem.Priority == 1, 'text-warning': rem.Priority == 2, 'text-center': rem.Remarks === 'no remarks'}">{{rem.Remarks || ''}}
                         </div>
                     </li>
                 </ul>

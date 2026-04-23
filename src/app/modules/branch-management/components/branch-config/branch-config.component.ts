@@ -14,13 +14,13 @@ import { BranchConfigService } from '../../services/branch-config.service';
   styleUrls: ['./branch-config.component.scss']
 })
 export class BranchConfigComponent implements OnInit {
-  IsAuthenticated: boolean = false;
+  IsAuthenticated = false;
   userCredentials: { UserName: string; Password: string; SourceName: string; };
   queryParams: any = {};
   branchTypesList: any = {};
   branchList: any = {};
-  isSpinner: boolean = true;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled] for modal
+  isSpinner = true;
+  disabledButton = false; // Button Enabled / Disables [By default Enabled] for modal
 
   branchConfigForm = this.fb.group({
     branchType: ['', Validators.compose([Validators.required])],
@@ -61,7 +61,7 @@ export class BranchConfigComponent implements OnInit {
   }
 
   verifyUserCredentials() {
-    let params = {
+    const params = {
       UserName: decodeURIComponent(this.queryParams.un || '').replace(/\s/g, '+'),
       Password: decodeURIComponent(this.queryParams.pw || '').replace(/\s/g, '+'),
       SourceName: decodeURIComponent(this.queryParams.appName || '').replace(/\s/g, '+'),
@@ -104,7 +104,7 @@ export class BranchConfigComponent implements OnInit {
     });
   }
   getBranches(branchID) {
-    let params = {
+    const params = {
       "BranchID": branchID
     }
     this.branchService.getBranches(params).subscribe((resp: any) => {
@@ -126,7 +126,7 @@ export class BranchConfigComponent implements OnInit {
   updateBranch() {
     this.isSpinner = false;
     this.disabledButton = true;
-    let formValues = this.branchConfigForm.getRawValue();
+    const formValues = this.branchConfigForm.getRawValue();
     this.branchConfigForm.markAllAsTouched();
     this.spinner.show(this.spinnerRefs.formSection);
 
@@ -137,7 +137,7 @@ export class BranchConfigComponent implements OnInit {
       this.disabledButton = false;
       return false;
     } else {
-      let params = {
+      const params = {
         BranchID: this.selBranchID,
         SampleTravelTime: formValues.sampleTravelTime,
         ParentBranchID: formValues.parentBranch,
@@ -201,7 +201,7 @@ export class BranchConfigComponent implements OnInit {
         }
       }
     }
-    let hashes = encryptedQueryString.split('&'); // atob
+    const hashes = encryptedQueryString.split('&'); // atob
     for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split(/=(.+)/); //.split('=');
       //vars.push(hash[0]);
@@ -222,7 +222,7 @@ export class BranchConfigComponent implements OnInit {
         //vars.push('accNo');
         vars['accNo'] = vars['VisitNo'];
       }
-      let graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
+      const graphicalParameter = (a == 'Graphical' || a == 'graphical' ? a : '');
       if (a == graphicalParameter) {
         if (vars[graphicalParameter] != 'false' && vars[graphicalParameter] != false && vars[graphicalParameter] != 0 && vars[graphicalParameter] != '0') {
           //vars.push('rpty');

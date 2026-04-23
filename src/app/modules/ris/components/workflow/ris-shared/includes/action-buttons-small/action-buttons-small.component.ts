@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, Input, OnInit, Output, SecurityContext, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SecurityContext, SimpleChanges, ViewChild, OnChanges } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ThirdShortlistedApplicantsComponent } from 'src/app/modules/recruitment/components/third-shortlisted-applicants/third-shortlisted-applicants.component';
@@ -23,7 +23,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './action-buttons-small.component.html',
   styleUrls: ['./action-buttons-small.component.scss']
 })
-export class ActionButtonsSmaLLComponent implements OnInit {
+export class ActionButtonsSmaLLComponent implements OnInit, OnChanges {
   @Output() isStatusChanged = new EventEmitter<any>();
   config = {
     toolbar: [
@@ -111,10 +111,10 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   CategoryID = null;
   searchText = '';
   existingRow = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonDelete: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerDelete: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonDelete = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerDelete = true;//Hide Loader
 
   spinnerRefs = {
     listSection: 'listSection',
@@ -180,7 +180,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   @ViewChild('dictionaryModal') dictionaryModal;
   @ViewChild('moHistoryModal') moHistoryModal;
   @ViewChild('techHistoryModal') techHistoryModal;
-  @Input('VisitDateTime') VisitDateTime = { RegistrationDate: null, DeliveryDate: null };
+  @Input() VisitDateTime = { RegistrationDate: null, DeliveryDate: null };
   loggedInUser: UserModel;
   vitalsModalPopupRef: NgbModalRef;
   dictionaryModalPopupRef: NgbModalRef;
@@ -238,7 +238,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.VisitID && this.TPID) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPID
       }
@@ -260,17 +260,17 @@ export class ActionButtonsSmaLLComponent implements OnInit {
     if (!this.RISWorkListID) {
       this.toastr.warning("No history recorded"); return;
     }
-    let objParams = {
+    const objParams = {
       RISWorkListID: this.RISWorkListID
     }
     this.sharedService.getData(API_ROUTES.GET_TECHNICIAN_HISTORY_JSON, objParams).subscribe((resp: any) => {
       this.spinner.hide(this.spinnerRefs.techHistorySection);
       if (resp.StatusCode == 200) {
-        let technicianHitory = resp.PayLoad[0] || [];
+        const technicianHitory = resp.PayLoad[0] || [];
         this.objJson = technicianHitory.TechnicianHistoryJSON ? JSON.parse(technicianHitory.TechnicianHistoryJSON) : []
         // console.log("this.objJson:", this.objJson)
         if (this.objJson.length) {
-          for (let obj of this.objJson) {
+          for (const obj of this.objJson) {
             if (obj.technicianHitory !== "") {
               this.isHistory = true;
               break;
@@ -299,7 +299,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
           this.toastr.warning("MO not performed against this test", "MO Consent")
         } else {
           url = url + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(this.VisitID), TPID: this.TPID }));
-          let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
+          const winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
         }
         break;
       case 'emr':
@@ -355,7 +355,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -363,7 +363,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   printReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -458,7 +458,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -479,11 +479,11 @@ export class ActionButtonsSmaLLComponent implements OnInit {
     }
   }
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -520,7 +520,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
       VisitID: this.VisitID,
       TPID: this.TPID
     }];
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail
@@ -579,14 +579,14 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   dataListGlobal = [];
   insertUpdateDictionary() {
     this.TextHTMLTag = "";
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     // this.TextHTMLTag = `<span [ngClass]="{'bold': ` + formValues.isBold + `, 'italic': ` + formValues.isItalic + `, 'underline': ` + formValues.isUnderline + `}">This is some text</span>`;
     this.TextHTMLTag = this.makeHtml(formValues);
     this._form.markAllAsTouched();
     if (this._form.invalid) {
       this.toastr.warning('Please fill the required fields...!'); return false;
     } else {
-      let checkDuplicateUser = this.dataListGlobal.find(el => el.CategoryID == 2 && el.TextCode.trim().localeCompare(formValues.TextCode.trim()) === 0);
+      const checkDuplicateUser = this.dataListGlobal.find(el => el.CategoryID == 2 && el.TextCode.trim().localeCompare(formValues.TextCode.trim()) === 0);
 
       if (this.RISDictionaryID && this.TextCode === formValues.TextCode) {
         this.saveDictionary(formValues)
@@ -607,12 +607,12 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   }
   saveDictionary(formValues) {
     //  Remove the outer <p> tag
-    let htmlContent = formValues.TextDescription;
+    const htmlContent = formValues.TextDescription;
     const withoutOuterP = this.removeOuterPTags(htmlContent);
     this.spinner.show(this.spinnerRefs.formSection);
     this.disabledButton = true;
     this.isSpinner = false;
-    let formData = {
+    const formData = {
       RISDictionaryID: this.RISDictionaryID,
       CategoryID: 2,
       TextCode: formValues.TextCode.trim(),
@@ -719,7 +719,7 @@ export class ActionButtonsSmaLLComponent implements OnInit {
   getRISDictionaryByUserID() {
     this.spinner.show(this.spinnerRefs.listSection);
     this.dataListGlobal = [];
-    let params = {
+    const params = {
       UserID: this.loggedInUser.userid || -99,
       CategoryID: 2
     };

@@ -69,13 +69,13 @@ export class ConsolidatedReportComponent implements OnInit {
   isSpinnerFinalize = true;
   isSpinnerSearchBill = true;
   isSpinnerSearchConsolidatedBill = true;
-  disabledButtonSearch: boolean = false;
-  isSpinnerSearch: boolean = true;
+  disabledButtonSearch = false;
+  isSpinnerSearch = true;
   BranchID = null;
   panelBills = [];
   panelConsolidatedBills = [];
   Remarks = "";
-  selectedCount: number = 0;
+  selectedCount = 0;
   flexCheckDisabled = false;
   billType = 1
   noDataMessage = 'Please search';
@@ -113,7 +113,7 @@ export class ConsolidatedReportComponent implements OnInit {
 
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       branchId: null
     }
     if (!this.loggedInUser.locationid) {
@@ -167,17 +167,17 @@ export class ConsolidatedReportComponent implements OnInit {
 
 
   copyText(text: any, i = null) {
-    let pin = text.AccNo
+    const pin = text.AccNo
     this.helper.copyMessage(pin);
   }
 
   printPanleBillPatientWiseReport(parentRow) {
-    let obj = {
+    const obj = {
       PatientID: parentRow.PatientId,
     }
     const url = environment.patientReportsPortalUrl + 'panel-bill-patient-wise-summary?p=' + btoa(JSON.stringify(obj));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -195,7 +195,7 @@ export class ConsolidatedReportComponent implements OnInit {
   getPanelBillForConsolidation() {
     this.newBillPress = true;
     this.showConsolidatedBillDetail = false;
-    let formValues = this._formWorklist.getRawValue();
+    const formValues = this._formWorklist.getRawValue();
     // Get the form values for dateFrom and dateTo
     const dateFrom: any = formValues.startDate;
     const dateTo: any = formValues.endDate;
@@ -221,7 +221,7 @@ export class ConsolidatedReportComponent implements OnInit {
     }
 
     this._formWorklist.markAllAsTouched();
-    let objParams = {
+    const objParams = {
       FromDate: formValues.startDate ? Conversions.formatDateObject(formValues.startDate) : null,
       ToDate: formValues.endDate ? Conversions.formatDateObject(formValues.endDate) : null,
       // PanelID: formValues.PanelId ? formValues.PanelId : null,
@@ -234,7 +234,7 @@ export class ConsolidatedReportComponent implements OnInit {
       this.isSpinnerSearchBill = true;
       this.spinner.hide(this.spinnerRefs.listSectionBill);
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
         if (!response.length) {
           this.noDataMessageBill = "No record found";
         }
@@ -297,7 +297,7 @@ export class ConsolidatedReportComponent implements OnInit {
     }
   }
   insertPanelConsolidatedBill() {
-    let filteredData: any[] = this.panelBills.filter(a => a.checked);
+    const filteredData: any[] = this.panelBills.filter(a => a.checked);
     if (!filteredData.length) {
       this.toastr.info("Please select any patient to generate the bill", "No Patient Selected!");
       return;
@@ -375,7 +375,7 @@ export class ConsolidatedReportComponent implements OnInit {
   }
 
   updatePanelConsolidatedBill() {
-    let filteredData: any[] = this.panelConsolidatedBillsDetail.filter(a => a.checked);
+    const filteredData: any[] = this.panelConsolidatedBillsDetail.filter(a => a.checked);
     if (!filteredData.length) {
       this.toastr.info("Please select any patient to generate the bill", "No Patient Selected!");
       return;
@@ -461,7 +461,7 @@ export class ConsolidatedReportComponent implements OnInit {
     this.newBill();
     this.isExisting = false;
     this.panelConsolidatedBills = [];
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     // Get the form values for dateFrom and dateTo
     const dateFrom = formValues.startDate;
     const dateTo = formValues.endDate;
@@ -487,7 +487,7 @@ export class ConsolidatedReportComponent implements OnInit {
     }
 
     this._form.markAllAsTouched();
-    let objParams = {
+    const objParams = {
       FromDate: formValues.startDate ? Conversions.formatDateObject(formValues.startDate) : null,
       ToDate: formValues.endDate ? Conversions.formatDateObject(formValues.endDate) : null,
       // PanelID: formValues.PanelId ? formValues.PanelId : null,
@@ -500,7 +500,7 @@ export class ConsolidatedReportComponent implements OnInit {
       this.isSpinnerSearchConsolidatedBill = true;
       this.spinner.hide(this.spinnerRefs.listSectionConsolidatedBill);
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
         if (!response.length) {
           this.noDataMessageBill = "No record found";
         }
@@ -546,12 +546,12 @@ export class ConsolidatedReportComponent implements OnInit {
     this.showConsolidatedBillDetail = true;
     this.rowIndex = i;
     this.panelConsolidatedBillsDetail = [];
-    let objParams = {
+    const objParams = {
       PanelConsolidatedBillID: row.PanelConsolidatedBillID
     };
     this.sharedService.getData(API_ROUTES.GET_PANEL_CONSOLIDATED_BILL_DETAIL, objParams).subscribe((resp: any) => {
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
         if (!response.length) {
           this.noDataMessageBill = "No record found";
         }
@@ -577,12 +577,12 @@ export class ConsolidatedReportComponent implements OnInit {
     this.showConsolidatedBillDetail = true;
     this.rowIndex = i;
     this.panelConsolidatedBillsDetail = [];
-    let objParams = {
+    const objParams = {
       PanelConsolidatedBillID: row.PanelConsolidatedBillID
     };
     this.sharedService.getData(API_ROUTES.GET_FINAL_PANEL_CONSOLIDATED_BILL_DETAIL, objParams).subscribe((resp: any) => {
       if (resp && resp.StatusCode == 200) {
-        let response = resp.PayLoad;
+        const response = resp.PayLoad;
         if (!response.length) {
           this.noDataMessageBill = "No record found";
         }
@@ -596,10 +596,10 @@ export class ConsolidatedReportComponent implements OnInit {
     })
   }
   printConsolidatedReport() {
-    let panelID = 1714;
-    let obj = { invoiceNo: this.invoiceNo, invoiceMonth: this.invoiceMonth, panelID: panelID, panelConsolidatedBillID: this.panelConsolidatedBillID }
+    const panelID = 1714;
+    const obj = { invoiceNo: this.invoiceNo, invoiceMonth: this.invoiceMonth, panelID: panelID, panelConsolidatedBillID: this.panelConsolidatedBillID }
     const url = environment.patientReportsPortalUrl + 'panel-consolidated-bill?p=' + btoa(JSON.stringify({ invoiceNo: this.invoiceNo, invoiceMonth: this.invoiceMonth, panelID: panelID, panelConsolidatedBillID: this.panelConsolidatedBillID }));
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     // setTimeout(() => {
     //   // winRef.close();
     // }, 1000);

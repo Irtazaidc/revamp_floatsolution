@@ -20,8 +20,8 @@ import { Label, Color } from "ng2-charts";
   styleUrls: ["./booking-comparison.component.scss"],
 })
 export class BookingComparisonComponent implements OnInit {
-  isSpinner: boolean = true;
-  disabledButton: boolean = false;
+  isSpinner = true;
+  disabledButton = false;
 
   bookingComparisonForm: FormGroup;
   bookingComparisonList: any = [];
@@ -34,7 +34,7 @@ export class BookingComparisonComponent implements OnInit {
   oneDayEarlier: NgbDate = this.calendar.getPrev(this.today, "d", 1);
   noComparisonDataMessage = "Please select user";
   HomeCollectionCites: any = [];
-  disableSearchButton: boolean = true;
+  disableSearchButton = true;
 
   hczones: any = 0;
   hcCity: any = 0;
@@ -88,7 +88,7 @@ export class BookingComparisonComponent implements OnInit {
   }
 
   getBookingComparison() {
-    let formValues = this.bookingComparisonForm.getRawValue();
+    const formValues = this.bookingComparisonForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom
       ? Conversions.formatDateObject(formValues.dateFrom)
       : null;
@@ -134,7 +134,7 @@ export class BookingComparisonComponent implements OnInit {
     // If all validations pass
     this.isDisable = true;
 
-    let objParm = {
+    const objParm = {
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
       CityID: this.currentCityID || formValues.hcCity,
@@ -186,7 +186,7 @@ export class BookingComparisonComponent implements OnInit {
   }
 
   RidersDetailF() {
-    let params = {
+    const params = {
       RiderID: 0,
       LocID: this.currentCityID,
     };

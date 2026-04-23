@@ -77,7 +77,7 @@ export class GizSaleReportComponent implements OnInit {
     this.GiZBillingDataList = [];
     this.ungroupedGizBillingData = []
     this.totalAmounts = {};
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(
@@ -113,7 +113,7 @@ export class GizSaleReportComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       FromDate: Conversions.formatDateObject(formValues.dateFrom) || null,
       ToDate: Conversions.formatDateObject(formValues.dateTo) || null,
       PanelAddOnServiceIDs : Array.isArray(formValues.PanelAddOnServiceID) && formValues.PanelAddOnServiceID.length > 0
@@ -373,7 +373,7 @@ isAmountColumn(key: string): boolean {
 }
 
 getColumnWidth(key: string): number {
-  const columnWidths: {[key: string]: number} = {
+  const columnWidths: Record<string, number> = {
     'MRN': 100,
     'PIN': 120,
     'Name': 200,

@@ -21,8 +21,8 @@ export class RackingRoutingComponent implements OnInit {
   spinnerRefs = {
     listSection: 'listSection'
   }
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   RackList: any = [];
   RackNo : any = null
   RackRow: any = [];
@@ -37,15 +37,15 @@ export class RackingRoutingComponent implements OnInit {
     sectionID: ['', Validators.compose([Validators.required])],
   });
   rackStatus: any=null;
-  isRequired: boolean = false;
+  isRequired = false;
   infoMessage ='Data loading...';
-  modalHeader : String ="Rack's Allocation";
-  scanType : number = 1; //1 For Rack Scaning, 2 For Sample Scaning
-  isRackAvailable: boolean = false;
-  SampleSection :String = "";
+  modalHeader  ="Rack's Allocation";
+  scanType  = 1; //1 For Rack Scaning, 2 For Sample Scaning
+  isRackAvailable = false;
+  SampleSection  = "";
   RackID : number = null;
   SampleBarcode :string = null;
-  isTLA: boolean=false;
+  isTLA=false;
   loggedInUser: any;
   constructor(
     private toastr : ToastrService,
@@ -68,12 +68,12 @@ export class RackingRoutingComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID
     }    
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response || [];
     }, (err) => {
       console.log(err)
@@ -82,7 +82,7 @@ export class RackingRoutingComponent implements OnInit {
 
   scaning(param){
     this.RackNo='';
-    let rack_sample_code = param.substring(0,5)
+    const rack_sample_code = param.substring(0,5)
     if(rack_sample_code.toLowerCase() =='rack-' || rack_sample_code.toLowerCase() == 'tlara'){
       this.getRackInformationByRackNo(param)
     }else{
@@ -94,7 +94,7 @@ export class RackingRoutingComponent implements OnInit {
     this.rackStatus = null 
     // this.RackNo = rackNo;
     this.RackRow = []
-    let params={
+    const params={
       RackNo : rackNo, 
 	    BranchID :  null
     }
@@ -160,7 +160,7 @@ export class RackingRoutingComponent implements OnInit {
     this.modalHeader ="Sample Racking";
     this.SampleCode = sampleCode;
     this.RackRow = []
-    let params={
+    const params={
       SampleBarcode : this.SampleCode
     }
 
@@ -169,9 +169,9 @@ export class RackingRoutingComponent implements OnInit {
         this.SampleRow = res.PayLoad || [];
         console.log('Sample row is: ',this.SampleRow)
         if(this.SampleRow.length){
-          let sectionID = this.SampleRow[0]['TPSubSectionID']
-          var rackRow = this.RackList.find(e=>e.SectionID == sectionID);
-          var tlaRow = this.RackList.find(e=>e.RackTypeID == 5);
+          const sectionID = this.SampleRow[0]['TPSubSectionID']
+          let rackRow = this.RackList.find(e=>e.SectionID == sectionID);
+          const tlaRow = this.RackList.find(e=>e.RackTypeID == 5);
 
           if(this.SampleRow[0].RackID){
             if(tlaRow){
@@ -236,7 +236,7 @@ export class RackingRoutingComponent implements OnInit {
     this.RackList = [];
     this.RackRow = []
     this.spinner.show(this.spinnerRefs.listSection);
-    let params = {
+    const params = {
       LocID: this.loggedInUser.locationid,
       Screen:'Racking'
     };
@@ -272,14 +272,14 @@ export class RackingRoutingComponent implements OnInit {
   allocateRack(){
     this.disabledButton = true; 
     this.isSpinner = false;
-    let formValues = this.formUpdateRack.getRawValue();
+    const formValues = this.formUpdateRack.getRawValue();
     this.formUpdateRack.markAllAsTouched();
     if(!this.formUpdateRack.invalid) {    
-      let sectionID = formValues.sectionID;
+      const sectionID = formValues.sectionID;
       let objParam={}
       if(sectionID || this.isTLA){
-        let sectionObj = this.subSectionList.find(e=>e.SubSectionId == sectionID);
-        let checkSectionRow = this.RackList.find(e=>e.SectionID == sectionID);
+        const sectionObj = this.subSectionList.find(e=>e.SubSectionId == sectionID);
+        const checkSectionRow = this.RackList.find(e=>e.SectionID == sectionID);
         if(checkSectionRow) {
           this.disabledButton = false; 
           this.isSpinner = true;
@@ -366,7 +366,7 @@ export class RackingRoutingComponent implements OnInit {
   putSample(){
     this.disabledButton = true; 
     this.isSpinner = false;
-      let objParam = {
+      const objParam = {
         SampleBarcode :  this.SampleBarcode,
         RackID :  this.RackID,
         isTLASample : this.isTLA? 1:0,

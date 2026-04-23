@@ -158,24 +158,24 @@
                                         <tr *ngIf="unproccessedShareData.length<1">
                                             <td colspan="100" class="text-center">No Record Found</td>
                                         </tr>
-                                        <tr scope="row"
+                                        <tr
                                             *ngFor="let hc of unproccessedShareData| filterByKey: searchInUnprocessedShareData:['RiderName', 'ShareAmount'] ">
-                                            <td scope="col">
+                                            <td>
                                                 <!-- [attr.disabled]="hc.AdminCloseTaskBtnDisabled ? true : null" -->
                                                 <input (change)="getUpProccessedSelData()" [(ngModel)]="hc.isSelected"
                                                     type="checkbox" class="" />
                                             </td>
-                                            <td scope="col"> {{hc.RiderName}}</td>
-                                            <td scope="col"> {{hc.ShareAmount }}</td>
-                                            <td *ngIf="!unProcessShareform.get('isProcessed')?.value" scope="col">
+                                            <td> {{hc.RiderName}}</td>
+                                            <td> {{hc.ShareAmount }}</td>
+                                            <td *ngIf="!unProcessShareform.get('isProcessed')?.value">
                                                 <input type="number"
                                                     class="form-control form-control-sm"
                                                     [(ngModel)]="hc.otherAllowance"
                                                     [disabled]="!hc.isSelected"
                                                     (ngModelChange)="updateNetPayable(hc)" />
                                             </td>
-                                            <td *ngIf="!unProcessShareform.get('isProcessed')?.value" scope="col"> {{hc.netPayable }}</td>
-                                            <td scope="col" style="cursor: pointer;"> <i class="fa fa-eye"
+                                            <td *ngIf="!unProcessShareform.get('isProcessed')?.value"> {{hc.netPayable }}</td>
+                                            <td style="cursor: pointer;"> <i class="fa fa-eye"
                                                     (click)="getUnProccessedShareData(hc)"></i> </td>
                                         </tr>
                                     </tbody>
@@ -247,27 +247,27 @@
                                         <tr *ngIf="unproccessedSpecificRiderShareData.length<1">
                                             <td colspan="100" class="text-center">No Record Found</td>
                                         </tr>
-                                        <tr scope="row"
+                                        <tr
                                             *ngFor="let hc of unproccessedSpecificRiderShareData | filterByKey: searchInUnprocessedShareOfSelriderData:['HCRequestID', 'TestName', 'RemarksByCCRStaff', 'FeedbackPoints', 'RemarksByCCRStaff', 'ShareAmount', 'VisitIDs'] ; let i = index">
                                             <td>{{i+1}}</td>
-                                            <td scope="col">
-                                                <input [disabled]="hc.status == 'Cancelled'"
+                                            <td>
+                                                <input [disabled]="hc.status === 'Cancelled'"
                                                     (change)="AddRemoveReqIDsToProcessedList(hc)"
                                                     [(ngModel)]="hc.isSelected" type="checkbox" class="" />
                                             </td>
-                                            <td scope="col"> {{hc.HCRequestID}}</td>
-                                            <td scope="col"> {{hc.TestName }}</td>
-                                            <td scope="col"> {{hc.RemarksByCCRStaff }}</td>
-                                            <td scope="col"> {{hc.FeedbackPoints }}</td>
-                                            <td scope="col"> {{hc.ShareAmount}}</td>
-                                            <td scope="col"> {{hc.status}}</td>
+                                            <td> {{hc.HCRequestID}}</td>
+                                            <td> {{hc.TestName }}</td>
+                                            <td> {{hc.RemarksByCCRStaff }}</td>
+                                            <td> {{hc.FeedbackPoints }}</td>
+                                            <td> {{hc.ShareAmount}}</td>
+                                            <td> {{hc.status}}</td>
                                             <!-- <td scope="col"> {{hc.VisitIDs}} </td> -->
                                         </tr>
-                                        <tr scope="row">
-                                            <td scope="col" colspan="6"> </td>
-                                            <td scope="col" colspan="1"> {{UnproccessesShareSum}} &nbsp;
+                                        <tr>
+                                            <td colspan="6"> </td>
+                                            <td colspan="1"> {{UnproccessesShareSum}} &nbsp;
                                             </td>
-                                            <td scope="col" > </td>
+                                            <td > </td>
                                         </tr>
                                     </tbody>
 
@@ -348,28 +348,28 @@
                                     </tr>
                                 </thead>
                                 <tbody id="">
-                                    <tr scope="row"
+                                    <tr
                                         *ngFor="let hc of proccessedShareData| filterByKey: searchIprocessedShareData:['RiderName', 'ShareAmount', 'RiderAvgFeedbackPoints']">
-                                        <td scope="col">
+                                        <td>
                                             <input (change)="getProccessedSelData()" [(ngModel)]="hc.isSelected"
                                                 type="checkbox" class="" />
                                         </td>
-                                        <td scope="row"> {{hc.RiderName}}</td>
-                                        <td scope="row"> {{hc.ShareAmount}}</td>
-                                        <td scope="row"> {{hc.OtherAllowance || '-'}}</td>
-                                        <td scope="row"> {{hc.OtherAllowance + hc.ShareAmount}}</td>
-                                        <td scope="row">{{hc.RiderAvgFeedbackPoints}}</td>
-                                        <td scope="row">
+                                        <td> {{hc.RiderName}}</td>
+                                        <td> {{hc.ShareAmount}}</td>
+                                        <td> {{hc.OtherAllowance || '-'}}</td>
+                                        <td> {{hc.OtherAllowance + hc.ShareAmount}}</td>
+                                        <td>{{hc.RiderAvgFeedbackPoints}}</td>
+                                        <td>
                                             <input type="text" class="form-control"
                                                 (change)="recommendedPercentageChanged(hc)"
                                                 [(ngModel)]="hc.recommendedPercentage">
                                         </td>
-                                        <td scope="row">
+                                        <td>
                                             <input type="text" class="form-control"
                                                 (change)="recommendedShareAmountChanged(hc)"
                                                 [(ngModel)]="hc.pRecommendedShareAmount">
                                         </td>
-                                        <td scope="row">
+                                        <td>
                                             <input type="text" class="form-control"
                                                 [(ngModel)]="hc.recommendationRemarks">
                                         </td>
@@ -474,29 +474,29 @@
                                     </tr>
                                 </thead>
                                 <tbody id="">
-                                    <tr scope="row"
+                                    <tr
                                         *ngFor="let hc of recommendedShareData| filterByKey: searchInproccedShareOfSelriderData:['RiderName', 'GeneratedShareAmount', 'RecommendedSharePercent', 'RecommendedShareAmount', 'RecommendedShareRemarks', 'RiderAvgFeedbackPoints']">
-                                        <td scope="col">
+                                        <td>
                                             <input (change)="getRecommendSelData()" [(ngModel)]="hc.isSelected"
                                                 type="checkbox" class="" />
                                         </td>
-                                        <td scope="row"> {{hc.RiderName}}</td>
-                                        <td scope="row"> {{hc.GeneratedShareAmount}}</td>
-                                        <td scope="row"> {{hc.RecommendedSharePercent}}</td>
-                                        <td scope="row"> {{hc.RecommendedShareAmount}}</td>
-                                        <td scope="row"> {{hc.RecommendedShareRemarks}}</td>
-                                        <td scope="row">{{hc.RiderAvgFeedbackPoints}} </td>
-                                        <td scope="row">
+                                        <td> {{hc.RiderName}}</td>
+                                        <td> {{hc.GeneratedShareAmount}}</td>
+                                        <td> {{hc.RecommendedSharePercent}}</td>
+                                        <td> {{hc.RecommendedShareAmount}}</td>
+                                        <td> {{hc.RecommendedShareRemarks}}</td>
+                                        <td>{{hc.RiderAvgFeedbackPoints}} </td>
+                                        <td>
                                             <input type="text" class="form-control"
                                                 (change)="approvedPercentageChanged(hc)"
                                                 [(ngModel)]="hc.approvedPercentage">
                                         </td>
-                                        <td scope="row">
+                                        <td>
                                             <input type="text" class="form-control"
                                                 (change)="approvededShareAmountChanged(hc)"
                                                 [(ngModel)]="hc.pApprovedShareAmount">
                                         </td>
-                                        <td scope="row">
+                                        <td>
                                             <input type="text" class="form-control" [(ngModel)]="hc.approvedRemarks">
                                         </td>
                                     </tr>

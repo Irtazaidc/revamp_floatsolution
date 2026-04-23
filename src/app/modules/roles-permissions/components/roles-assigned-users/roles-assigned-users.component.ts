@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -14,8 +14,8 @@ import { RoleService } from '../../services/role.service';
   templateUrl: './roles-assigned-users.component.html',
   styleUrls: ['./roles-assigned-users.component.scss']
 })
-export class RolesAssignedUsersComponent implements OnInit {
-  @Input('UserRole') UserRole: any;
+export class RolesAssignedUsersComponent implements OnInit, OnChanges {
+  @Input() UserRole: any;
   @Input('ParentName') parentName: any;
   
   searchText='';
@@ -50,7 +50,7 @@ export class RolesAssignedUsersComponent implements OnInit {
 
   GetUsersByRoleID(UserRoleID) {
     this.roleAssignedToUsersList = [];
-    let params = 
+    const params = 
     {
       RoleID: UserRoleID || null,
     };

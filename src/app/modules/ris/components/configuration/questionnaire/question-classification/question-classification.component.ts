@@ -16,13 +16,13 @@ import { AuthService, UserModel } from 'src/app/modules/auth';
 })
 export class QuestionClassificationComponent implements OnInit {
   @Output() tabIndexData = new EventEmitter<any>();
-  @Output() outputFromChild : EventEmitter<string> = new EventEmitter();
+  @Output() outputFromChild  = new EventEmitter<string>();
   QuestionClassificationID:any=null;
   searchText='';
   objList=[];
   existingRow = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   
   spinnerRefs = {
     listSection: 'listSection',
@@ -79,7 +79,7 @@ export class QuestionClassificationComponent implements OnInit {
   }
   getClassificationQuestionsByClassificationID(QuestionClassificationID){
     this.QuestionClassificationID = QuestionClassificationID;
-    let tabIndexObj={
+    const tabIndexObj={
       questionClassificationID:QuestionClassificationID,
       selectedIndex:2
     }
@@ -87,10 +87,10 @@ export class QuestionClassificationComponent implements OnInit {
   }
   
   insertUpdateQuestionClassification(){
-    let formValues = this.objForm.getRawValue();
+    const formValues = this.objForm.getRawValue();
     this.objForm.markAllAsTouched();
-    let qc = formValues.QuestionClassificationName ? formValues.QuestionClassificationName.trim():'';
-    let qcc = formValues.QuestionClassificationCode ? formValues.QuestionClassificationCode.trim():'';
+    const qc = formValues.QuestionClassificationName ? formValues.QuestionClassificationName.trim():'';
+    const qcc = formValues.QuestionClassificationCode ? formValues.QuestionClassificationCode.trim():'';
     if(qc =="" && qcc ==""){
       this.objForm.patchValue({
         QuestionClassificationName:""
@@ -132,7 +132,7 @@ export class QuestionClassificationComponent implements OnInit {
     } else {
       this.disabledButton = true;
       this.isSpinner = false;
-      let formData = {
+      const formData = {
         QuestionClassificationID:this.QuestionClassificationID,
         QuestionClassificationName: formValues.QuestionClassificationName,
         QuestionClassificationCode: formValues.QuestionClassificationCode.trim(),
@@ -183,7 +183,7 @@ export class QuestionClassificationComponent implements OnInit {
       this.spinner.show(this.spinnerRefs.listSection);
     }
     
-    let params = {
+    const params = {
       QuestionClassificationID: this.QuestionClassificationID
     };
     this.questionnaireService.getQuestionClassification(params).subscribe((res: any) => {

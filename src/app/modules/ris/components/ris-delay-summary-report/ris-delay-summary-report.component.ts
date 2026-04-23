@@ -81,7 +81,7 @@ export class RisDelaySummaryReportComponent implements OnInit {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad || [];
+        const _response = resp.PayLoad || [];
         this.testStatusList = _response;
       },
       (err) => {}
@@ -90,7 +90,7 @@ export class RisDelaySummaryReportComponent implements OnInit {
   panelList = [];
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe(
       (res: any) => {
         if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -111,7 +111,7 @@ export class RisDelaySummaryReportComponent implements OnInit {
   subSectionList = [];
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID,
     };
@@ -126,7 +126,7 @@ export class RisDelaySummaryReportComponent implements OnInit {
     );
   }
   getdelaySummaryReportData() {
-    let formValues = this.filterDelaySummaryForm.getRawValue();
+    const formValues = this.filterDelaySummaryForm.getRawValue();
     const dateFrom = formValues.fromDate;
     const dateTo = formValues.toDate;
     const fromDate: any = new Date(
@@ -162,7 +162,7 @@ export class RisDelaySummaryReportComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: formValues.fromDate ? Conversions.formatDateObject(formValues.fromDate)  : null,
       DateTo: formValues.toDate ? Conversions.formatDateObject(formValues.toDate) : null,
       LocIDs: formValues.LocIDs?.join(",") || -1,
@@ -273,7 +273,7 @@ export class RisDelaySummaryReportComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

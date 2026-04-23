@@ -71,7 +71,7 @@ pagination = {
 
 
   getRIStatReportData() {
-      let formValues = this.filterForm.getRawValue();
+      const formValues = this.filterForm.getRawValue();
       const dateFrom = formValues.dateFrom;
       const dateTo = formValues.dateTo;
       const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -101,7 +101,7 @@ pagination = {
         return;
       }
   
-      let objParams = {
+      const objParams = {
         DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
         DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
         LocIDs: formValues.locID.join(','),
@@ -215,7 +215,7 @@ get cleanSearchText(): string {
 
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Input, Output, ViewChild, OnChanges } from '@angular/core';
 import { QuestionnaireService } from 'src/app/modules/ris/services/questionnaire.service';
 import { CONSTANTS } from 'src/app/modules/shared/helpers/constants';
 import { AppPopupService } from '../../../../../shared/helpers/app-popup.service';
@@ -15,7 +15,7 @@ import { VitalsService } from 'src/app/modules/ris/services/vitals.service';
   templateUrl: './assigner.component.html',
   styleUrls: ['./assigner.component.scss']
 })
-export class AssignerComponent implements OnInit {
+export class AssignerComponent implements OnInit, OnChanges {
   @Input() ComponentPayload = {
     TPID: null,
     VisitID: null,
@@ -41,8 +41,8 @@ export class AssignerComponent implements OnInit {
     cancelClicked: false,
     confirmPopoverCancel: () => { }
   }
-  isSpinnerAssign: boolean = true;//Hide Loader
-  disabledButtonAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerAssign = true;//Hide Loader
+  disabledButtonAssign = false; // Button Enabled / Disables [By default Enabled]
   spinnerRefs = {
     listSection: 'listSection',
     drPic: "drPic"
@@ -104,7 +104,7 @@ export class AssignerComponent implements OnInit {
     }
   }
   getRadiologistInfo(EmpID){
-    let params = {
+    const params = {
       EmpID: EmpID
     };
 
@@ -147,14 +147,14 @@ export class AssignerComponent implements OnInit {
   }
   getEmployeePic(EmpID){
     this.spinner.show(this.spinnerRefs.drPic);
-    let params = {
+    const params = {
       EmpID:EmpID
     }
     this.questionnaireSrv.getEmployeePic(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.drPic);
       if (res.StatusCode == 200) {
         if(res.PayLoad.length && res.PayLoad[0].EmployeePic){
-          let resp = this.helper.formateImagesData(res.PayLoad,'EmployeePic');
+          const resp = this.helper.formateImagesData(res.PayLoad,'EmployeePic');
           this.radiologistPic = resp[0].EmployeePic;
         }else{
           this.radiologistPic=null;
@@ -204,7 +204,7 @@ export class AssignerComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -221,7 +221,7 @@ export class AssignerComponent implements OnInit {
   visitTests = []
   getMOInterventionTPByVisitID(VisitID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID
     };
     this.questionnaireSrv.getMOInterventionTPByVisitID(params).subscribe((res: any) => {

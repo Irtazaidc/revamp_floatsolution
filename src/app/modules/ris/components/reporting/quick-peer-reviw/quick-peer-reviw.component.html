@@ -134,7 +134,7 @@
             <div class="col-12">
                 <!-- <strong>No record found</strong> -->
                 
-                <ng-container *ngIf="screenIdentity=='peer-review'; else showNoRecSection">
+                <ng-container *ngIf="screenIdentity==='peer-review'; else showNoRecSection">
                     <app-no-record-found></app-no-record-found>
                   </ng-container>
                   
@@ -158,7 +158,7 @@
                                 <ng-container *ngFor="let header of _object.keys(pagination.paginatedSearchResults[0]); let i = index ">
                                     <ng-container>
                                         <th style="cursor: pointer"
-                                            *ngIf="(header !='id' && header != 'RISWorkListID' && header != 'TPId' && header != 'PatientId' && header != 'StatusId' && header !='RISStatusID' && header !='ProcessId' && header !='MOBy' && header !='StatusBadgeClass' && header !='isMedicalOfficerIntervention' && header !='EmpId' && header !='PhoneNumber' && header !='RegistrationDate' && header !='isConsentRead' && header !='TPCode' && header !='isTechHistoryRequred' && header !='TestStatus' && header !='InitializedOn' && header!='TranscribedBy' && header!='InitializedBy')">
+                                            *ngIf="(header !=='id' && header !== 'RISWorkListID' && header !== 'TPId' && header !== 'PatientId' && header !== 'StatusId' && header !=='RISStatusID' && header !=='ProcessId' && header !=='MOBy' && header !=='StatusBadgeClass' && header !=='isMedicalOfficerIntervention' && header !=='EmpId' && header !=='PhoneNumber' && header !=='RegistrationDate' && header !=='isConsentRead' && header !=='TPCode' && header !=='isTechHistoryRequred' && header !=='TestStatus' && header !=='InitializedOn' && header!=='TranscribedBy' && header!=='InitializedBy')">
                                             {{header}}</th>
                                     </ng-container>
                                 </ng-container>
@@ -170,19 +170,19 @@
                             <tr *ngFor="let row of pagination.paginatedSearchResults; let i = index "  (dblclick)="openReportDetail(row,i)" class="cursor-pointer" [ngClass]="{'active': i==rowIndex}">
                                 <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
                                     <td [ngClass]="{'text-danger': row.ProcessId == 2, 'blink-red font-weight-bolder': row.ProcessId == 3}"
-                                        *ngIf="(objKey != 'id' && objKey != 'RISWorkListID' && objKey != 'TPId' && objKey != 'PatientId' && objKey != 'StatusId' && objKey !='RISStatusID' && objKey !='ProcessId' && objKey !='MOBy' && objKey!='StatusBadgeClass' && objKey!='isMedicalOfficerIntervention' && objKey!='EmpId' && objKey!='PhoneNumber' && objKey!='RegistrationDate' && objKey!='isConsentRead' && objKey!='TPCode' && objKey!='isTechHistoryRequred' && objKey!='TestStatus'  && objKey!='InitializedOn' && objKey!='TranscribedBy' && objKey!='InitializedBy')">
-                                        <span *ngIf="(objKey == 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
+                                        *ngIf="(objKey !== 'id' && objKey !== 'RISWorkListID' && objKey !== 'TPId' && objKey !== 'PatientId' && objKey !== 'StatusId' && objKey !=='RISStatusID' && objKey !=='ProcessId' && objKey !=='MOBy' && objKey!=='StatusBadgeClass' && objKey!=='isMedicalOfficerIntervention' && objKey!=='EmpId' && objKey!=='PhoneNumber' && objKey!=='RegistrationDate' && objKey!=='isConsentRead' && objKey!=='TPCode' && objKey!=='isTechHistoryRequred' && objKey!=='TestStatus'  && objKey!=='InitializedOn' && objKey!=='TranscribedBy' && objKey!=='InitializedBy')">
+                                        <span *ngIf="(objKey === 'VisitNo')" class="copy-text-button" ngbTooltip="Copy to clipboard">
                                             <i 
                                                 [ngClass]="returnCopyClasses(i)"
                                                 class="ti-files" ngbPopover="copied" triggers="click:mouseleave"
                                                 (click)="copyText(row,i)">&nbsp;</i>
                                         </span>
-                                        <span class="cursor-pointer" *ngIf="(objKey == 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
-                                        <span class="cursor-pointer" *ngIf="(objKey != 'Workflow Status' && objKey != 'TestStatus' && objKey != 'InitializedBy' && objKey != 'TPCode' && objKey != 'PatientName' && objKey != 'RegistrationDate' && objKey != 'DeliveryDate' && objKey != 'RemainingTime (hh:mm)')" >{{ row[objKey]||'Registered' }}</span>
-                                        <label *ngIf="(objKey == 'Workflow Status' && (objKey!=null || objKey!='') && objKey != 'InitializedBy' && objKey != 'RemainingTime (hh:mm)')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
+                                        <span class="cursor-pointer" *ngIf="(objKey === 'InitializedBy')" >{{ row[objKey]||'--' }}</span>
+                                        <span class="cursor-pointer" *ngIf="(objKey !== 'Workflow Status' && objKey !== 'TestStatus' && objKey !== 'InitializedBy' && objKey !== 'TPCode' && objKey !== 'PatientName' && objKey !== 'RegistrationDate' && objKey !== 'DeliveryDate' && objKey !== 'RemainingTime (hh:mm)')" >{{ row[objKey]||'Registered' }}</span>
+                                        <label *ngIf="(objKey === 'Workflow Status' && (objKey!=null || objKey!=='') && objKey !== 'InitializedBy' && objKey !== 'RemainingTime (hh:mm)')" [ngClass]="row.StatusBadgeClass" class="badge-border-white cursor-pointer" >{{ row[objKey]||'Registered' }}</label>
             
-                                        <label *ngIf="objKey == 'TestStatus' && objKey != 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
-                                        <label *ngIf="objKey == 'RemainingTime (hh:mm)'">
+                                        <label *ngIf="objKey === 'TestStatus' && objKey !== 'InitializedBy'"  class="badge badge-primary badge-border-white cursor-pointer" >{{ row[objKey]}}</label>
+                                        <label *ngIf="objKey === 'RemainingTime (hh:mm)'">
                                             <ng-container *ngIf="row.StatusId < 9; else dash">
                                                 <strong ngbTooltip="Remaining Time hh:mm" [ngClass]="getRemainingTimeBadgeColor(row['RemainingTime (hh:mm)'])" class="badge badge-border-white cursor-pointer" style="padding: 7px 3px !important;">
                                                     {{ row[objKey] }}
@@ -192,8 +192,8 @@
                                                 --
                                             </ng-template>
                                         </label>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
-                                        <span class="cursor-pointer" *ngIf="objKey == 'DeliveryDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }} 
+                                        <span class="cursor-pointer" *ngIf="objKey === 'PatientName'" ngbTooltip="Ph# {{row.PhoneNumber}}">{{ row[objKey] }}</span>
+                                        <span class="cursor-pointer" *ngIf="objKey === 'DeliveryDate'">{{ row[objKey]  | dateFormat: 'DD-MM-YYYY h:mm:ss a' }} 
                                         </span>
                                     </td>
                                 </ng-container>

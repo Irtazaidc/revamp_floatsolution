@@ -92,7 +92,7 @@ export class AddUpdateNotificationComponent implements OnInit {
       cancelClicked: false,
       confirmPopoverCancel: () => {}
     }
-  CanUpdate: boolean=true;
+  CanUpdate=true;
   loggedInUser: UserModel;
   page = 1;
   pageSize = 10;
@@ -146,7 +146,7 @@ export class AddUpdateNotificationComponent implements OnInit {
     // this.spinner.show('GetBranches');
     this.lookupService.GetBranches().subscribe((resp: any) => {
       // this.spinner.hide('GetBranches');
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });
@@ -247,7 +247,7 @@ export class AddUpdateNotificationComponent implements OnInit {
 
 getEmployees() {
   this.employeesList = [];
-  let params = {};
+  const params = {};
   this.spinner.show();
   this.sharedService.getEmployees(params).subscribe( (res: any) => {
     this.spinner.hide();
@@ -263,7 +263,7 @@ getEmployees() {
 
 addUpdateNotification(){
   this.spinner.show();
-  let formValues = this.notificationConfigForm.getRawValue();
+  const formValues = this.notificationConfigForm.getRawValue();
   this.notificationConfigForm.markAllAsTouched();
   if((!formValues.branchIds.length) && (!formValues.departmentIds.length)){
     this.toastr.error('Please select atleast one branch and department!');
@@ -280,7 +280,7 @@ addUpdateNotification(){
   
   this.ld = this.notificationAttachments;
 
-  let notificatioDoc = this.ld.map((val) => { return {
+  const notificatioDoc = this.ld.map((val) => { return {
       "GDocumentID" : null,
       "GDocTitle" : val.fileName,
       "Remarks" : null,
@@ -293,7 +293,7 @@ addUpdateNotification(){
     }
   })
  
-    let formData = {
+    const formData = {
       NotificationID: this.NotificationID,
       NoticeCode: formValues.NotificationCode,
       NoticeTitle: formValues.NotificationTitle,
@@ -338,7 +338,7 @@ addUpdateNotification(){
     this.NotificationsExistingRow = [];
     this.SeletedBranchesIDs = [0];
     this.SelectedDepartmentsIDs = [0];
-    let params = {
+    const params = {
       NotificationID:NoticeId
     };
     // this.spinner.show();

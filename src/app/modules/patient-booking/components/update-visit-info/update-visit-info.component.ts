@@ -82,13 +82,13 @@ export class UpdateVisitInfoComponent implements OnInit {
   }
 
   updateVisit(){
-    let formValues  = this.updateForm.getRawValue();
+    const formValues  = this.updateForm.getRawValue();
     if (this.updateForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let objParams = {
+    const objParams = {
       VisitID : this.visitId || null,
       RefNo : formValues.RefNo || null,
       ModifiedBy: this.loggedInUser.userid, 
@@ -111,12 +111,12 @@ export class UpdateVisitInfoComponent implements OnInit {
   }
 
   getVisitInfoByVisitID(VisitID){
-    let Params = {
+    const Params = {
       VisitID : VisitID || null,
     }
     this.patientService.getVisitInfoByVisitID(Params).subscribe((res: any) => {
       if (res.StatusCode == 200 ) {
-        let data = JSON.parse(res.PayLoadStr);
+        const data = JSON.parse(res.PayLoadStr);
         this.getRefNo = data[0].RefNo || null;
       } else {
         this.toastr.warning('Something went wrong');

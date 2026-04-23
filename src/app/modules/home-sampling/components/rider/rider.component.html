@@ -453,7 +453,7 @@
                                             <div class="form-group">
                                                 <label for="UserName" class="control-label">Username:</label>
                                                 <input type="text" [attr.disabled]="DisableAllfields"
-                                                    [required]="isRider && RiderID==0" ([ngModel])="DisableAllfields"
+                                                    [required]="isRider && RiderID==0" [(ngModel)]="DisableAllfields"
                                                     class="form-control form-control-sm" name="UserName"
                                                     formControlName="UserName"
                                                     [ngClass]="{'invalid': RiderForm.get('UserName').errors, 'invalid-highlighted': RiderForm.get('UserName').errors}">
@@ -474,7 +474,7 @@
                                             <div class="form-group">
                                                 <label for="Password" class="control-label">Password:</label>
                                                 <input type="password" [required]="isRider && RiderID==0"
-                                                    ([ngModel])="DisableAllfields" class="form-control form-control-sm"
+                                                    [(ngModel)]="DisableAllfields" class="form-control form-control-sm"
                                                     name="Password" formControlName="Password"
                                                     [ngClass]="{'invalid': RiderForm.get('Password').errors && RiderID==0, 'invalid-highlighted': RiderForm.get('Password').errors}">
                                             </div>

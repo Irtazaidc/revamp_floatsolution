@@ -87,7 +87,7 @@ export class HcDashboardService {
   //#region  HC Booking 
 
   Gettest(msg) {
-    let Obj = {
+    const Obj = {
       "BookingID": 96749237
     }
     // "RemarksForHCChat": "Call Me Back", "RiderID": 1,"HCBookingStatusID": null, "HCChatRemarksBy": 508, "CreatedBy": 508, "HCDefaultRemarksID": 1
@@ -96,7 +96,7 @@ export class HcDashboardService {
       .catch(err => console.error(err))
   }
   updateHCBookingRemarks(params) {
-      let Obj = {
+      const Obj = {
       BookingID: String(params.BookingID || ""),
       HCRequestID: params.HCRequestID || null,
       isRemarksForHCChatUrgent: params.isUrgent != null ? Boolean(params.isUrgent) : false,

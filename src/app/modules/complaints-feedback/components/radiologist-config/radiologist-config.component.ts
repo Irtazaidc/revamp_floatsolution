@@ -24,8 +24,8 @@ export class RadiologistConfigComponent implements OnInit {
   isDissabledChk = false;
   radoiologistTime: any;
   radoiologistWorkWeek: any;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true; //Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true; //Hide Loader
   filteredAvailableRadiologist = [];
   loggedInUser: UserModel;
 
@@ -100,14 +100,14 @@ export class RadiologistConfigComponent implements OnInit {
   }
 
   updateRadiologistAvailability() {
-    let formValues = this.radiologistAvlForm.getRawValue();
+    const formValues = this.radiologistAvlForm.getRawValue();
     this.filteredAvailableRadiologist = this.radoiologistList;
-    let checkedItems = this.filteredAvailableRadiologist.filter(
+    const checkedItems = this.filteredAvailableRadiologist.filter(
       (item) => item.checked
     );
     let GeneralShiftId = false;
     let WorkWeekId = false;
-    let isAvailable = false;
+    const isAvailable = false;
 
     console.log("check", checkedItems);
     console.log("available", this.filteredAvailableRadiologist);
@@ -134,7 +134,7 @@ export class RadiologistConfigComponent implements OnInit {
       return;
     } else {
       console.log(" ", checkedItems);
-      let param = {
+      const param = {
         tblEmplAvailabilityShiftTime: checkedItems.map((item) => ({
           EmpID: item.EmpId,
           isAvailable: item.isAvailable ? true : false,
@@ -172,7 +172,7 @@ export class RadiologistConfigComponent implements OnInit {
   }
 
 getRadiologistInfoDetail() {
-  let params = {
+  const params = {
     LocID: this.loggedInUser.locationid, 
     EmpID: null,                        
   };
@@ -198,7 +198,7 @@ getRadiologistInfoDetail() {
 }
 
   getRadiologistTime() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
     this.lookupService.getDHRMGeneralShift(params).subscribe(
       (res: any) => {
@@ -219,7 +219,7 @@ getRadiologistInfoDetail() {
   }
 
   getRadiologistWorkWeek() {
-    let params = {};
+    const params = {};
     this.isSpinner = false;
     this.lookupService.getWorkWeek(params).subscribe(
       (res: any) => {

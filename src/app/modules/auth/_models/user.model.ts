@@ -22,7 +22,7 @@ export class UserModel extends AuthModel {
   locationid?: number;
   provinceID?: number;
   currentLocation: string; // this 
-  currentLocationID: Number; // this 
+  currentLocationID: number; // this 
   currentMachineName: string; // this 
   currentuserDomainName: string; // this 
   currenUserName: string; // this 

@@ -26,8 +26,8 @@ export class SampleTransferComponent implements OnInit {
   spinnerRefs = {
     listSection: 'listSection'
   }
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   RackList: any = [];
   RackNo : any = null
   RackRow: any = [];
@@ -42,12 +42,12 @@ export class SampleTransferComponent implements OnInit {
     sectionID: [''],
   });
   rackStatus: any=null;
-  isRequired: boolean = false;
+  isRequired = false;
   infoMessage ='Data loading...';
-  modalHeader : String ="Rack's Allocation";
-  scanType : number = 1; //1 For Rack Scaning, 2 For Sample Scaning
-  isRackAvailable: boolean = false;
-  SampleSection :String = "";
+  modalHeader  ="Rack's Allocation";
+  scanType  = 1; //1 For Rack Scaning, 2 For Sample Scaning
+  isRackAvailable = false;
+  SampleSection  = "";
   RackID : number = null;
   SampleBarcode :string = null;
   loggedInUser: any;
@@ -79,12 +79,12 @@ export class SampleTransferComponent implements OnInit {
 
   getSubSection() {
     this.subSectionList = [];
-    let objParm = {
+    const objParm = {
       SectionID: -1,
       LabDeptID: this.labDeptID
     }    
     this.lookupService.GetSubSectionBySectionID(objParm).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response || [];
     }, (err) => {
       console.log(err)
@@ -92,7 +92,7 @@ export class SampleTransferComponent implements OnInit {
   }
 
   scaning(param){ 
-    let rack_sample_code = param.substring(0,5)
+    const rack_sample_code = param.substring(0,5)
     if(rack_sample_code.toLowerCase() =='rack-' || rack_sample_code.toLowerCase() == 'tlara'){
       this.getRackInformationByRackNo(param)
     }else{
@@ -100,7 +100,7 @@ export class SampleTransferComponent implements OnInit {
     }
   }
   getRackInformationByRackNo(rackNo){ 
-    let rck = this.RackList.find(a=>a.RackNo==rackNo);
+    const rck = this.RackList.find(a=>a.RackNo==rackNo);
     // console.log('rck is: ',rck)
     // if(this.RackList.length && this.RackList[0].SampleCount<=0){
     //   this.toastr.info('Rack already available with empty space.')
@@ -109,7 +109,7 @@ export class SampleTransferComponent implements OnInit {
     this.scanType=1;
     this.rackStatus = null 
     this.RackRow = []
-    let params={
+    const params={
       RackNo : rackNo, 
 	    BranchID :  null
     }
@@ -126,7 +126,7 @@ export class SampleTransferComponent implements OnInit {
           }else if(this.RackRow[0]['Screen']=='Transfer' && this.RackRow[0]['Capacity']>0){
             this.rackStatus='allocated';
             this.isRequired = false;
-            let rackfilter = this.RackList.find(a=> a.RackNo=rackNo);
+            const rackfilter = this.RackList.find(a=> a.RackNo=rackNo);
             if(rackfilter && rackfilter.RackNo ==rackNo && rackfilter.SampleCount>0){
               this.getSmapleInfoByRackNo(rackNo)
             }else if(rackfilter && rackfilter.RackNo ==rackNo && rackfilter.SampleCount<=0){
@@ -155,7 +155,7 @@ export class SampleTransferComponent implements OnInit {
   }
 
   releasTransferEmptyRack(rackNo){
-    let objParam = {
+    const objParam = {
       RackNo :  rackNo,
       RackBarcode :  null,
       SectionID :  null,
@@ -183,7 +183,7 @@ export class SampleTransferComponent implements OnInit {
     this.modalHeader ="Sample Racking";
     this.SampleCode = sampleCode;
     this.RackRow = []
-    let params={
+    const params={
       SampleBarcode : this.SampleCode
     }
 
@@ -191,7 +191,7 @@ export class SampleTransferComponent implements OnInit {
       if(res.StatusCode == 200){
         this.SampleRow = res.PayLoad || [];
         if(this.SampleRow.length){
-          var rackRow = this.RackList.find(e=>e.SectionID == 41);
+          const rackRow = this.RackList.find(e=>e.SectionID == 41);
           if(this.SampleRow[0].RackID){
             this.toastr.warning('This sample currently exists in '+this.SampleRow[0].RackScreen+' "'+rackRow.Section+'" rack');
             return;
@@ -232,7 +232,7 @@ export class SampleTransferComponent implements OnInit {
     this.RackList = [];
     this.RackRow = []
     this.spinner.show(this.spinnerRefs.listSection);
-    let params = {
+    const params = {
       LocID: this.loggedInUser.locationid,
       Screen:'Transfer'
     };
@@ -268,9 +268,9 @@ export class SampleTransferComponent implements OnInit {
   allocateRack(){
     this.disabledButton = true; 
     this.isSpinner = false;
-    let existingOutsourceRack = this.RackList.find(e=>e.SectionID == 41);
+    const existingOutsourceRack = this.RackList.find(e=>e.SectionID == 41);
     let objParam={}
-    var toasterMessage='';
+    let toasterMessage='';
     if(existingOutsourceRack && this.RackRow[0].SampleCount<=0 && this.rackStatus=='allocated'){
       objParam = {
         RackNo :  this.RackNo,
@@ -347,7 +347,7 @@ export class SampleTransferComponent implements OnInit {
   putSample(){
     this.disabledButton = true; 
     this.isSpinner = false;
-      let objParam = {
+      const objParam = {
         SampleBarcode :  this.SampleBarcode,
         RackID :  this.RackID,
         isTLASample : 1,//isTLASample : this.isTLA? 1:0,
@@ -384,9 +384,9 @@ export class SampleTransferComponent implements OnInit {
 
   getSmapleInfoByRackNo(rackNo) {
     this.SampleIfoInRackList=[]
-    let sampleInfoFormVal = rackNo;
+    const sampleInfoFormVal = rackNo;
     if (sampleInfoFormVal) {
-      let params = {
+      const params = {
         "RackNo": sampleInfoFormVal,
         "Screen": 'Transfer'
       }
@@ -417,8 +417,8 @@ export class SampleTransferComponent implements OnInit {
 
 
   getTransferRackInformationByRackNo(rackNo){ 
-    var TransferRackRowCheck= []
-    let params={
+    let TransferRackRowCheck= []
+    const params={
       RackNo : rackNo, 
 	    BranchID :  null
     }
@@ -453,7 +453,7 @@ export class SampleTransferComponent implements OnInit {
       return;
     }
     let objParam={}
-    var toasterMessage='';
+    let toasterMessage='';
         objParam = {
           RackNo :  rackNo,
           RackBarcode :  null,
@@ -498,7 +498,7 @@ export class SampleTransferComponent implements OnInit {
     this.infoMessage='Data loading...';
     this.TransferRack = [];
     this.spinner.show(this.spinnerRefs.listSection);
-    let params = {
+    const params = {
       LocID: this.loggedInUser.locationid,
       Screen:'TransferRack'
     };
@@ -545,7 +545,7 @@ export class SampleTransferComponent implements OnInit {
   }
 
   moveSample(){
-    var objParam = {
+    const objParam = {
       CreatedBy: this.loggedInUser.userid || -99,
       FromRackNo: this.RackNo,
       ToRackNo: this.TransferRack[0].RackNo,
@@ -576,7 +576,7 @@ export class SampleTransferComponent implements OnInit {
   }
 
   viewSampleList() {
-    var objParam = {
+    const objParam = {
       CreatedBy: this.loggedInUser.userid || -99,
       FromRackNo: this.RackNo,
       ToRackNo: this.TransferRack[0].RackNo,

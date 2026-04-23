@@ -65,7 +65,7 @@ export class PartnerMachineSharingReportComponent implements OnInit {
 
 
   getRIStatReportData() {
-      let formValues = this.filterForm.getRawValue();
+      const formValues = this.filterForm.getRawValue();
       const dateFrom = formValues.dateFrom;
       const dateTo = formValues.dateTo;
       const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -95,7 +95,7 @@ export class PartnerMachineSharingReportComponent implements OnInit {
         return;
       }
   
-      let objParams = {
+      const objParams = {
         DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
         DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
         LocIDs: formValues.locID.join(','),

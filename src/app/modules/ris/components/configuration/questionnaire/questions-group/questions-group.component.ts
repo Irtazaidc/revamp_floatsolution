@@ -21,8 +21,8 @@ export class QuestionsGroupComponent implements OnInit {
   searchText='';
   objList=[];
   existingRow = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   actionButtonText = "Save";
   
   spinnerRefs = {
@@ -81,7 +81,7 @@ export class QuestionsGroupComponent implements OnInit {
   }
   getQuestion(){
     this.questionList = [];
-    let params = {
+    const params = {
       QuestionID: null
     };
     this.questionnaireService.getQuestion(params).subscribe((res: any) => {
@@ -97,7 +97,7 @@ export class QuestionsGroupComponent implements OnInit {
     })
   }
   getQuestionClassification(){
-    let params = {
+    const params = {
       QuestionClassificationID: null
     };
     this.questionnaireService.getQuestionClassification(params).subscribe((res: any) => {
@@ -119,10 +119,10 @@ export class QuestionsGroupComponent implements OnInit {
   addSelectedQuestion(e) {
     if(e){
       if (!this.selectedQuestion.find(a => a.QuestionID == e.QuestionID)) {
-        let newQuestion = this.questionList.find(x => x.QuestionID == e.QuestionID)
+        const newQuestion = this.questionList.find(x => x.QuestionID == e.QuestionID)
         if (newQuestion) {
           this.selectedQuestion.push(newQuestion);
-          let filteredQuestions = this.questionList.filter(x => x.QuestionID != e.QuestionID)
+          const filteredQuestions = this.questionList.filter(x => x.QuestionID != e.QuestionID)
           this.questionList = filteredQuestions;
         }
       }else{
@@ -154,11 +154,11 @@ export class QuestionsGroupComponent implements OnInit {
     }else{
       this.waitTillResponse(true);
       this.requiredHighlited=true;
-      var i=0;
+      let i=0;
 
       const tTPIDs = this.testList.filter(x => x.checked);
 
-      let objParam = {
+      const objParam = {
         CreatedBy: this.loggedInUser.userid || -99,
         QuestionClassificationID: this.questionClassificationID,
         tTPIDs: tTPIDs.map(x => {
@@ -210,7 +210,7 @@ export class QuestionsGroupComponent implements OnInit {
   this.selectedQuestion = [];
   this.testList = []; // dataset for tests
 
-  let params = {
+  const params = {
     QuestionClassificationID: questionClassificationID
   };
 

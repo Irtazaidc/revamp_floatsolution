@@ -11,14 +11,14 @@ import { Subscription, Observable } from 'rxjs';
 })
 export class AccordionDirective implements OnInit {
 
-  protected navlinks: Array<AccordionLinkDirective> = [];
+  protected navlinks: AccordionLinkDirective[] = [];
   private countState = 1;
   private _router: Subscription;
   closeOtherLinks(openLink: AccordionLinkDirective): void {
       this.countState++;
       if ((openLink.group !== 'sub-toggled' || openLink.group !== 'main-toggled') && this.countState === 1) {
           if (window.innerWidth < 768 || (window.innerWidth >= 768 && window.innerWidth <= 1024)) {
-              const toggled_element = <HTMLElement>document.querySelector('#mobile-collapse');
+              const toggled_element = document.querySelector('#mobile-collapse') as HTMLElement;
               toggled_element.click();
           }
       }

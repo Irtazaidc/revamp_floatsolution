@@ -40,7 +40,7 @@ export class SignalrService {
   }
 
   test(msg) {
-    let Obj = {
+    const Obj = {
       "BookingID": 96749237, "isRemarksForHCChatUrgent": 1,
       "RemarksForHCChat": "Call Me Back", "RiderID": 1, 
       "HCBookingStatusID": null, "HCChatRemarksBy": 508, "CreatedBy": 508, "HCDefaultRemarksID": 1
@@ -52,7 +52,7 @@ export class SignalrService {
   }
 
   Gettest(msg) {
-    let Obj = {
+    const Obj = {
       "BookingID": 96749237
     }
     // "RemarksForHCChat": "Call Me Back", "RiderID": 1,"HCBookingStatusID": null, "HCChatRemarksBy": 508, "CreatedBy": 508, "HCDefaultRemarksID": 1

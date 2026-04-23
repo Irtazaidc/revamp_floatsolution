@@ -17,7 +17,7 @@
     <div class="card-body" style="padding: 1.5rem 2.25rem">
         <form [formGroup]="_form" class="form-horizontal" name="form" role="form">
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='my-tech-audit-summary-report'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='my-tech-audit-summary-report'">
                     <label for="TechnologistID" class="control-label">Technologist:</label>
                     <ng-select style="width: 100%;" 
                     [ngClass]="{'invalid': _form.get('TechnologistID').errors && _form.get('TechnologistID').touched, 'invalid-highlighted': _form.get('TechnologistID').errors}" 
@@ -31,7 +31,7 @@
                         >
                     </ng-select>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='my-tech-audit-summary-report' && screenIdentity !='tech-audit-summary-report-branch-mgr'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='my-tech-audit-summary-report' && screenIdentity !=='tech-audit-summary-report-branch-mgr'">
                     <label for="AuditorTechnologistID" class="control-label">Auditor:</label>
                     <ng-select style="width: 100%;" 
                         [items]="technologistList" 
@@ -79,7 +79,7 @@
                         
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='tech-audit-summary-report-branch-mgr'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='tech-audit-summary-report-branch-mgr'">
                     <div class="form-group">
                         <label for="QualityAssurance" class="control-label">Quality Assurance:</label>
                         <ng-select style="width: 100%;" 
@@ -105,7 +105,7 @@
                         </ng-select>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!='my-tech-audit-summary-report' && screenIdentity!='tech-audit-summary-report-branch-mgr'">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3" *ngIf="screenIdentity!=='my-tech-audit-summary-report' && screenIdentity!=='tech-audit-summary-report-branch-mgr'">
                     <label for="TechnologistID" class="control-label">Branch:</label>
                     <ng-select style="width: 100%;" 
                         [items]="branchList" 
@@ -175,7 +175,7 @@
                                                 <td style="width: 15%;">{{ row.PatientName }}</td>
                                                 <td style="width: 10%;">{{ row.Section }}</td>
                                                 <td style="width: 10%;">{{ row.TPCode }}
-                                                    <small class="text-danger" *ngIf="row.isShared && screenIdentity!='radiologist-audit-findings'">(Shared)</small><br>
+                                                    <small class="text-danger" *ngIf="row.isShared && screenIdentity!=='radiologist-audit-findings'">(Shared)</small><br>
                                                     <ng-container *ngFor="let element of starRatingElementsInner" class="text-right">
                                                         <star-rating 
                                                             [(value)]="row.Rating" 

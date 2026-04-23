@@ -31,15 +31,15 @@ export class ContrastServiceComponent implements OnInit {
   RISServices = []
   getRISServicesByVisitIDAll() {
     this.RISServices = [];
-    let params = {
+    const params = {
       VisitID: this.VisitID,
       isShowAllService:1
     };
     this.sharedService.getData(API_ROUTES.GET_RISSERVICES_BY_VISITID, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let services = res.PayLoad || [];
-        let result = services.reduce((re, o) => {
-          let existObj = re.find(
+        const services = res.PayLoad || [];
+        const result = services.reduce((re, o) => {
+          const existObj = re.find(
             obj => obj.TPID === o.TPID
           )
 
@@ -70,7 +70,7 @@ export class ContrastServiceComponent implements OnInit {
           return re
         }, []);
         this.RISServices = result;
-        let contrasts = this.RISServices.length ? this.RISServices.filter(f => f.SubSectionId == 47) : null;
+        const contrasts = this.RISServices.length ? this.RISServices.filter(f => f.SubSectionId == 47) : null;
         this.contrastServices = (contrasts && contrasts.length) ? contrasts.map(service => service.TPName) : null;
 
       } else {

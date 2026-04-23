@@ -61,14 +61,14 @@ export class RiderDeviceInfoComponent implements OnInit {
     this.riderRoutinePic = []
     this.ImageUrl = 'assets/images/brand/no-image.png';
     this.RiderDevieInfoList = []
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
 
     if (this.filterForm.invalid) {
       this.toastr.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
       return;
     }
-    let objParm = {
+    const objParm = {
       DeviceDate: formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null,
       UserID: formValues.RiderId || -99, //10045,
     };
@@ -93,7 +93,7 @@ export class RiderDeviceInfoComponent implements OnInit {
 
   RidersDetailF() {
 
-    let params = {
+    const params = {
       RiderID: 0,
       LocID:null //this.loggedInUser.locationid || null,
     }

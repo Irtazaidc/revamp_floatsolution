@@ -95,7 +95,7 @@ export class ManageReportsOndeskComponent implements OnInit {
   }
 
   receiveSelectedTest() {
-    let checkedItems = this.visitDetails.filter(a => a.checked);
+    const checkedItems = this.visitDetails.filter(a => a.checked);
     console.log("checkedItems:", checkedItems)
     if (!checkedItems.length) {
       this.toastr.warning("Please select item(s) to update");
@@ -105,7 +105,7 @@ export class ManageReportsOndeskComponent implements OnInit {
       this.toastr.warning("VisitId isn't being provided");
         return;
     }
-    let params = {
+    const params = {
       VisitId: this.selectedVisitID,
       TPIds: checkedItems.map(tp => tp.TPId).join(","),
       CreatedBy: this.loggedInUser.userid || -1,
@@ -221,7 +221,7 @@ export class ManageReportsOndeskComponent implements OnInit {
 
     }
     getVisitData() {
-    let formValues = this.searchForm.getRawValue();
+    const formValues = this.searchForm.getRawValue();
     this.searchedDataList = [];
 
     if (this.searchForm.invalid) {
@@ -230,7 +230,7 @@ export class ManageReportsOndeskComponent implements OnInit {
       return;
     }
 
-    let params = {
+    const params = {
       DateFrom: Conversions.formatDateObject(formValues.Date) || null,
       DateTo: Conversions.formatDateObject(formValues.Date) || null,
       BranchIDs: formValues.BranchId.join(',') || null,
@@ -299,7 +299,7 @@ export class ManageReportsOndeskComponent implements OnInit {
   VisitID=null;
   billingInfo = [];
   getVisitDetails(visitID) {
-    let params = { VisitId: visitID };
+    const params = { VisitId: visitID };
      this.visitDetails = [];
      this.billingInfo = [];
      this.totalDifference = 0;

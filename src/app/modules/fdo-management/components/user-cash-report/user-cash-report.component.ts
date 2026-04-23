@@ -27,8 +27,8 @@ export class UserCashReportComponent implements OnInit {
   userCashDataList: any = [];
   paymentModesList = [];
   patientTypeList = [];
-  TotalCash: number = 0;
-  TotalCC: number = 0;
+  TotalCash = 0;
+  TotalCC = 0;
   reportType = null;
   ifDetail = false;
   ifSummary = false;
@@ -49,20 +49,20 @@ export class UserCashReportComponent implements OnInit {
   loggedInUser: UserModel;
   employeesList: any[];
   groupedUserCashData: any[] = [];
-  totalAmount: number = 0;
-  totalPayments: number = 0;
-  totalRefunds: number = 0;
-  totalRegularCash: number = 0;
-  totalRegularCC: number = 0;
-  totalRegularOnline: number = 0;
-  totalRegularChq: number = 0;
-  totalCashInst: number = 0;
-  totalCCInst: number = 0;
-  totalChqInst: number = 0;
-  totalROnlineInst: number = 0;
-  totalCashRefund: number = 0;
-  totalCreditCardRefund: number = 0;
-  totalRefundOnline: number = 0;
+  totalAmount = 0;
+  totalPayments = 0;
+  totalRefunds = 0;
+  totalRegularCash = 0;
+  totalRegularCC = 0;
+  totalRegularOnline = 0;
+  totalRegularChq = 0;
+  totalCashInst = 0;
+  totalCCInst = 0;
+  totalChqInst = 0;
+  totalROnlineInst = 0;
+  totalCashRefund = 0;
+  totalCreditCardRefund = 0;
+  totalRefundOnline = 0;
 
 
   constructor(
@@ -283,7 +283,7 @@ export class UserCashReportComponent implements OnInit {
     });
   }
   getUserCashDetailReportData() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     const spinnerRef = this.spinnerRefs.delayreportTable;
 
     if (this.filterForm.invalid) {
@@ -468,7 +468,7 @@ export class UserCashReportComponent implements OnInit {
     };
   }
 
-  expandedUsers: { [user: string]: boolean } = {};
+  expandedUsers: Record<string, boolean> = {};
 
   // ✅ Expand/Collapse toggle
   toggleUser(user: string) {
@@ -476,12 +476,12 @@ export class UserCashReportComponent implements OnInit {
   }
 
   getLookupsForRegistration() {
-    let param = {};
+    const param = {};
     this.paymentModesList = [];
     this.lookupService.getLookupsForRegistration(param)
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.paymentModesList = _response.Table9 || [];
         },
         (err) => {
@@ -492,7 +492,7 @@ export class UserCashReportComponent implements OnInit {
 
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99,
     };
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -513,7 +513,7 @@ export class UserCashReportComponent implements OnInit {
 
   getEmployeesData() {
     this.employeesList = [];
-    let objParam = {
+    const objParam = {
       DepartmentId: -1,
       DesignationId: -1,
       locId: -1,

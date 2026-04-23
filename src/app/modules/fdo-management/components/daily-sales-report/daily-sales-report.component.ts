@@ -73,7 +73,7 @@ export class DailySalesReportComponent implements OnInit {
   loadLoggedInUserInfo() {
     this.loggedInUser = this.auth.currentUserValue;
   }
-  TotalAmount:number = 0;
+  TotalAmount = 0;
 getDailySalesReportData() {
   const formValues = this.filterForm.getRawValue();
   const spinnerRef = this.spinnerRefs.delayreportTable;
@@ -119,7 +119,7 @@ getDailySalesReportData() {
 
   getLocationList() {
     this.branchList = [];
-    let param = {
+    const param = {
       UserID: this.loggedInUser.userid || -99
     }
     this.lookupService.getAllLocationByUserID(param).subscribe(
@@ -163,7 +163,7 @@ getDailySalesReportData() {
   getLookupsForRegistration() {
     this.paymentModesList = [];
     this.lookupService.getLookupsForRegistration({ branchId: this.loggedInUser.locationid }).subscribe((resp: any) => {
-      let _response = resp.PayLoadDS|| [];
+      const _response = resp.PayLoadDS|| [];
       this.paymentModesList = _response.Table5 || [];
       this.patientTypeList = _response.Table6 || [];
     }, (err) => {

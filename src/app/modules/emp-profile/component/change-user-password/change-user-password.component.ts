@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { first, catchError } from 'rxjs/operators';
@@ -17,10 +17,10 @@ import { environment } from 'src/environments/environment';
   templateUrl: './change-user-password.component.html',
   styleUrls: ['./change-user-password.component.scss']
 })
-export class ChangeUserPasswordComponent implements OnInit {
+export class ChangeUserPasswordComponent implements OnInit, OnDestroy {
 
   public validatePasswordPolicy(password: string, policy: string): any {
-    var retVal = "";
+    let retVal = "";
 
     // const [minLength, numUpper, numLower, numNumbers, numSpecial] = policy.split('').map(Number);
 
@@ -97,15 +97,15 @@ export class ChangeUserPasswordComponent implements OnInit {
 
   resetPassword() {
     this.isSubmitted=true;
-    let paramOb = {
+    const paramOb = {
       UserID: this.user.userid,
     }
     this.empService.empPasswordPolicy(paramOb).subscribe((res: any) => {
-      let policy = res.PayLoad[0].PasswordPolicy
-      let retVal = this.validatePasswordPolicy(this.resetForm.value.password, policy);
+      const policy = res.PayLoad[0].PasswordPolicy
+      const retVal = this.validatePasswordPolicy(this.resetForm.value.password, policy);
       if (retVal === "") {
         // password is valid   
-        let paramObj = {
+        const paramObj = {
           UserID: this.user.userid,
           OldPassword: this.resetForm.value.currentPassword,
           NewPassword: this.resetForm.value.password,

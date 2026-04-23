@@ -96,13 +96,13 @@ export class AssignLevelComponent implements OnInit {
 
   updateDoctorLevel() {
 
-    let formValues = this.assignForm.getRawValue();
+    const formValues = this.assignForm.getRawValue();
     // if (this.assignForm.invalid) {
     //   this.toastr.warning("Please Fill The Mandatory Fields");
     //   this.isSubmitted = true;
     //   return;
     // };
-    let checkedItems = this.radoiologistList.filter(a => a.checked);
+    const checkedItems = this.radoiologistList.filter(a => a.checked);
     if (!checkedItems.length) {
         this.toastr.warning("Please select item(s) to update");
         return;
@@ -112,7 +112,7 @@ export class AssignLevelComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let objParams = {
+    const objParams = {
       tblDoctorLevel: checkedItems.map(a => {
         return {
         LevelID:a.LevelID  || null,
@@ -139,7 +139,7 @@ export class AssignLevelComponent implements OnInit {
     })
   }
   getRadiologistInfoDetail() {
-    let params = {
+    const params = {
       EmpID: null
     };
     this.disabledButton = true;

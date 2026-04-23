@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, OnChanges } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -15,9 +15,9 @@ import { AppPopupService } from '../../../../../shared/helpers/app-popup.service
   templateUrl: './vitals.component.html',
   styleUrls: ['./vitals.component.scss']
 })
-export class VitalsComponent implements OnInit {
-  @Input('visitInfo') visitInfo: any = {};
-  @Input('vitalSectionShow') vitalSectionShow: any = {};
+export class VitalsComponent implements OnInit, OnChanges {
+  @Input() visitInfo: any = {};
+  @Input() vitalSectionShow: any = {};
   @Output() isStatusChanged = new EventEmitter<any>();
   @Output() isSaved = new EventEmitter<any>();
   vitalsForm = this.fb.group({
@@ -45,7 +45,7 @@ export class VitalsComponent implements OnInit {
   }
   painSeverityList: any = [];
   loggedInUser: UserModel;
-  showClrBtn: boolean = false;
+  showClrBtn = false;
   VisitVitalID = null;
   heightincm: number;
   tempHeightUnit: string;
@@ -73,8 +73,8 @@ export class VitalsComponent implements OnInit {
   }
 
   insertUpdVisitVitals() {
-    let formValues = this.vitalsForm.getRawValue();
-    let params = {
+    const formValues = this.vitalsForm.getRawValue();
+    const params = {
       "VisitVitalID": this.VisitVitalID,
       "VisitID": this.visitInfo.visitID,
       "PatientID": this.visitInfo.patientID,
@@ -134,7 +134,7 @@ export class VitalsComponent implements OnInit {
   getVitals() {
     
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.visitInfo.visitID,
         TPID: this.visitInfo.tpId
       }
@@ -142,7 +142,7 @@ export class VitalsComponent implements OnInit {
         // console.log("vital resp", resp);
         if (resp && resp.StatusCode == 200 && resp.PayLoad.length) {
           //Vitals Card////
-          let vitalsData = resp.PayLoad[0];
+          const vitalsData = resp.PayLoad[0];
           this.bpLowerValue = vitalsData.BPLowerValue;
           this.bpUpperValue = vitalsData.BPUpperValue;
           this.breathing = vitalsData.Breathing;
@@ -194,7 +194,7 @@ export class VitalsComponent implements OnInit {
     this.actionButtonIconclass = "ti-save";
   }
   calBMI() {
-    let formValues = this.vitalsForm.getRawValue();
+    const formValues = this.vitalsForm.getRawValue();
     if (formValues.height && formValues.weight) {
       // formValues.height = 165;
       // formValues.weight = 68;
@@ -205,7 +205,7 @@ export class VitalsComponent implements OnInit {
       }
       else {
         this.tempHeightUnit = 'ft';
-        let cm = formValues.height.toString().split('.')[1] ?
+        const cm = formValues.height.toString().split('.')[1] ?
           (((((Number(formValues.height.toString().split('.')[0]) * 12) + Number(formValues.height.toString().split('.')[1])))) * 0.0254) :
           (((((Number(formValues.height.toString()) * 12)
           ))) * 0.0254)
@@ -233,20 +233,20 @@ export class VitalsComponent implements OnInit {
     this.heightUnitChange();
   }
   heightUnitChange() {
-    let formValues = this.vitalsForm.getRawValue();
+    const formValues = this.vitalsForm.getRawValue();
     if (formValues.heightUnit == 'cm' && this.tempHeightUnit == 'ft' && formValues.height) {
       this.tempHeightUnit = 'cm';
-      let ftVal = Number(formValues.height.toString().split('.')[0]) ? Number(formValues.height.toString().split('.')[0]) : 0;
-      let inchesVal = Number(formValues.height.toString().split('.')[1]) ? Number(formValues.height.toString().split('.')[1]) : 0;
-      let heightincm = ftVal * 30.48 + inchesVal * 2.54;
+      const ftVal = Number(formValues.height.toString().split('.')[0]) ? Number(formValues.height.toString().split('.')[0]) : 0;
+      const inchesVal = Number(formValues.height.toString().split('.')[1]) ? Number(formValues.height.toString().split('.')[1]) : 0;
+      const heightincm = ftVal * 30.48 + inchesVal * 2.54;
       this.vitalsForm.patchValue({
         height: heightincm
       });
     }
     else if (formValues.heightUnit == 'ft' && this.tempHeightUnit == 'cm' && formValues.height) {
-      var realFeet = ((formValues.height * 0.393700) / 12);
-      var feet = Math.floor(realFeet);
-      var inches = Math.round((realFeet - feet) * 12);
+      const realFeet = ((formValues.height * 0.393700) / 12);
+      const feet = Math.floor(realFeet);
+      const inches = Math.round((realFeet - feet) * 12);
       this.vitalsForm.patchValue({
         height: feet + '.' + inches
       });

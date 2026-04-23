@@ -15,10 +15,10 @@ import { Conversions } from "src/app/modules/shared/helpers/conversions";
 })
 export class HcWorklistComponent implements OnInit {
   hcWorklistForm: FormGroup;
-  disabledButton: boolean = false;
+  disabledButton = false;
   isSubmitted = false;
   hcWorkList: any = [];
-  isSpinner: boolean = true;
+  isSpinner = true;
   branchList = [];
   searchText = "";
   isDisable = false;
@@ -55,7 +55,7 @@ export class HcWorklistComponent implements OnInit {
   }
 
   getHCWorklist() {
-    let formValues = this.hcWorklistForm.getRawValue();
+    const formValues = this.hcWorklistForm.getRawValue();
     this.searchText = " ";
     const rawDateFrom = formValues.DateFrom;
     const rawDateTo = formValues.DateTo;
@@ -96,7 +96,7 @@ export class HcWorklistComponent implements OnInit {
       this.isSubmitted = true;
       return;
     }
-    let objParm = {
+    const objParm = {
       DateFrom: Conversions.formatDateObject(formValues.DateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.DateTo) || null,
       LocId: formValues.LocId || -1,
@@ -116,7 +116,7 @@ export class HcWorklistComponent implements OnInit {
             }
             acc[item.VisitID].push(item);
             return acc;
-          }, {} as { [visitId: string]: any[] });
+          }, {} as Record<string, any[]>);
 
           // Convert to array for iteration in HTML
           this.hcWorkListGrouped = Object.keys(grouped).map((visitId) => ({

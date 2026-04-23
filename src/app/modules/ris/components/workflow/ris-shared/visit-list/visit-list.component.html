@@ -71,7 +71,7 @@
                         </tr>
                     </thead>
                     <tbody id="">
-                        <tr scope="row" (click)="visitRowClick(v,indx)"
+                        <tr (click)="visitRowClick(v,indx)"
                             *ngFor="let v of pagination.paginatedSearchResults;let indx = index" class="cursor-pointer"
                             [ngClass]="{'active': v.VisitId==VisitIdActive}">
                             <td>

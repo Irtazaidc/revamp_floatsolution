@@ -26,7 +26,7 @@ export class CmsReportingComponent implements OnInit {
   reportingDataList: any = [] 
   maxDate:any;
   loggedInUser: UserModel;
-  isSubmitted:boolean = false;
+  isSubmitted = false;
   public Fields = {
     dateFrom: ['',Validators.required],
     dateTo: ['',Validators.required],
@@ -68,14 +68,14 @@ export class CmsReportingComponent implements OnInit {
 
   getCMSReportingData(){
     this.reportingDataList = []
-    let formValues = this.reportingFilterFrom.getRawValue();
+    const formValues = this.reportingFilterFrom.getRawValue();
 
     if(this.reportingFilterFrom.invalid){
       this.toasrt.warning('Please Fill The Mandatory fields');
       return;
     } 
     
-    let param = {
+    const param = {
       dateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       dateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
     }
@@ -84,7 +84,7 @@ export class CmsReportingComponent implements OnInit {
     this.spinner.hide(this.spinnerRefs.reportingData)
       console.log("reportingDataList ~ res:", res)
       if (res && res.StatusCode == 200 && res.PayLoadStr) {
-        let data = res.PayLoadStr;
+        const data = res.PayLoadStr;
         this.reportingDataList = JSON.parse(data); 
         console.log("reportingDataList ~ this.reportingDataList:", this.reportingDataList)
       }

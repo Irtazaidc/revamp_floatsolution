@@ -107,10 +107,10 @@ export class InitialApproveRejectRequestComponent implements OnInit {
 
   getVisitTestReset() {
     this.resetRequests = [];
-    let formValues = this.formObj.getRawValue();
+    const formValues = this.formObj.getRawValue();
     formValues.dateFrom = formValues.dateFrom ? Conversions.formatDateObject(formValues.dateFrom) : null;
     formValues.dateTo = formValues.dateTo ? Conversions.formatDateObject(formValues.dateTo, 'end') : null;
-    let params = {
+    const params = {
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
       StatusID: 16
@@ -169,8 +169,8 @@ export class InitialApproveRejectRequestComponent implements OnInit {
       return;
     } else {
       this.clickSubmitBtn=false;
-      let TPIDs = this.TPID
-      let formData = {
+      const TPIDs = this.TPID
+      const formData = {
         VisitID: this.VisitID,
         TPIDs: TPIDs,
         Remarks: this.RejectApproveRequestRemarks,

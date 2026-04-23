@@ -66,7 +66,7 @@ export class FdoClosedSalesComponent implements OnInit {
   }
 
   getAllSaleByFDO() {
-    let params = {
+    const params = {
       userId: this.loggedInUser.userid, // 2163, // 768 //
       fromDate: moment().subtract(7, "days").format("YYYY-MM-DDT00:00:00.000"), //moment(new Date()).subtract(50, 'years').format('YYYY-MM-DDT00:00:00.000'), //  new Date(),
       toDate: moment(new Date()).format("YYYY-MM-DDT23:59:59.996"), // new Date()
@@ -88,7 +88,7 @@ export class FdoClosedSalesComponent implements OnInit {
         if (res.StatusCode == 200) {
           this.fdoSalesDataAll = res.PayLoad || [];
           // this.fdoSalesData = res.payLoad || [];
-          let xDates = [
+          const xDates = [
             ...new Set(
               this.fdoSalesDataAll.map((element) => {
                 return moment(element.CreatedOn).format("x");
@@ -174,7 +174,7 @@ export class FdoClosedSalesComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.paymentModesList = _response.Table5 || [];
         },
         (err) => {
@@ -227,7 +227,7 @@ export class FdoClosedSalesComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -240,10 +240,10 @@ export class FdoClosedSalesComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = ["VisitNo", "ReceiptNo"];
+    const cols = ["VisitNo", "ReceiptNo"];
     let results: any = this.fdoSalesData;
     if (this.searchText && this.searchText.length > 1) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(
         this.fdoSalesData,
         this.searchText,

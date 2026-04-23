@@ -80,7 +80,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 lg-12 col-xl-12">
-                            <div class="form-group" *ngIf="rackStatus=='free' && scanType==1">
+                            <div class="form-group" *ngIf="rackStatus==='free' && scanType==1">
                                 <label  class="form-control-label">Section</label>
                                 <select  class="form-control form-control-sm"  formControlName="sectionID"
                                     [required]="isRequired"
@@ -90,8 +90,8 @@
                                     <option *ngFor = "let section of subSectionList" value="{{section.SubSectionId}}">{{section.SubSectionTitle}}</option>                                        
                                 </select>
                             </div>
-                            <strong *ngIf="scanType==1 && rackStatus=='allocated'" class="text-danger"> <span class="text-primary">"{{RackNo}}" </span> is already locked, Do you want to release?</strong>
-                            <strong *ngIf="scanType==1 && rackStatus=='locked'" class="text-danger"> <span class="text-primary">"{{RackNo}}" </span> is already locked in <span style="font-size: 14px;" class="text-primary">{{RackRow[0]['Section']}} </span> Section.</strong>
+                            <strong *ngIf="scanType==1 && rackStatus==='allocated'" class="text-danger"> <span class="text-primary">"{{RackNo}}" </span> is already locked, Do you want to release?</strong>
+                            <strong *ngIf="scanType==1 && rackStatus==='locked'" class="text-danger"> <span class="text-primary">"{{RackNo}}" </span> is already locked in <span style="font-size: 14px;" class="text-primary">{{RackRow[0]['Section']}} </span> Section.</strong>
                             <strong *ngIf="scanType==2 && isRackAvailable" class="text-danger"> Do you want to put this sample in <span class="text-primary">{{SampleSection}}</span> rack ?</strong>
                             <strong *ngIf="scanType==2 && !isRackAvailable" class="text-danger"> Please scan <!--<span class="text-primary">{{SampleSection}}</span> -->rack first</strong>
                     </div>
@@ -99,7 +99,7 @@
             </div>
         </div>
         <div class="modal-footer"> 
-            <div *ngIf="rackStatus!='locked' || scanType==2">
+            <div *ngIf="rackStatus!=='locked' || scanType==2">
                 <button *ngIf="scanType==1" type="button" [disabled]="disabledButton" class="btn btn-sm btn-primary mr-2" (click)="allocateRack()">
                     <i class="fa fa-check-circle"></i>  Yes <i [hidden]="isSpinner" class="spinner-border-custom" aria-hidden="true"></i></button>
                 <button *ngIf="scanType==2 && isRackAvailable" type="button" [disabled]="disabledButton" class="btn btn-sm btn-primary mr-2" (click)="putSample()">
@@ -107,7 +107,7 @@
                 <button *ngIf="scanType==1 || isRackAvailable"  type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal" (click)="popupRackEventsHandler.close()">
                             <i class="fa fa-times-circle"></i> No</button>
             </div>
-            <div *ngIf="rackStatus=='locked' || (scanType==2 && !isRackAvailable)">
+            <div *ngIf="rackStatus==='locked' || (scanType==2 && !isRackAvailable)">
                 <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal" (click)="popupRackEventsHandler.close()">
                     <i class="fa fa-times-circle"></i> Close</button>
             </div>

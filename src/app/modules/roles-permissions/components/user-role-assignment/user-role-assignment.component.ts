@@ -28,7 +28,7 @@ export class UserRoleAssignmentComponent implements OnInit {
   disableRoleAssignmentForm = true;
 
   defaultPassword="Abc@321";
-  resetDisPassword:boolean=false;
+  resetDisPassword=false;
 
   spinnerRefs = {
     tableList: 'tableList',
@@ -88,9 +88,9 @@ export class UserRoleAssignmentComponent implements OnInit {
     this.getRoles();
   }
   userChanged() {
-    let selectedUserID = this.roleAssignmentForm.value.userID;
+    const selectedUserID = this.roleAssignmentForm.value.userID;
     console.log(selectedUserID);
-    let selectedUserObj = this.usersList.find(a => a.UserID == selectedUserID)
+    const selectedUserObj = this.usersList.find(a => a.UserID == selectedUserID)
     if (selectedUserObj) {
       this.roleAssignmentForm.patchValue({
         userRoleID: selectedUserObj.UserRoleID || ''
@@ -113,7 +113,7 @@ export class UserRoleAssignmentComponent implements OnInit {
 
   getUsers() {
     this.usersList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.tableList);
     this.roleService.getUsers(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.tableList);
@@ -139,7 +139,7 @@ export class UserRoleAssignmentComponent implements OnInit {
 
   getRoles() {
     this.rolesList = [];
-    let params = {};
+    const params = {};
     this.spinner.show();
     this.roleService.getRoles(params).subscribe((res: any) => {
       this.spinner.hide();
@@ -162,7 +162,7 @@ export class UserRoleAssignmentComponent implements OnInit {
       return;
     }
     console.log(this.roleAssignmentForm, this.roleAssignmentForm.valid)
-    let params = this.roleAssignmentForm.value;
+    const params = this.roleAssignmentForm.value;
     this.spinner.show();
     this.roleService.updateUserRole(params).subscribe((res: any) => {
       this.spinner.hide();
@@ -245,7 +245,7 @@ export class UserRoleAssignmentComponent implements OnInit {
     //   let retVal = this.validatePasswordPolicy(this.resetForm.value.password, policy);
     //   if (retVal === "") {
         // password is valid   
-        let paramObj = {
+        const paramObj = {
           UserID: this.UserID,
           OldPassword: null,
           NewPassword: this.defaultPassword, 

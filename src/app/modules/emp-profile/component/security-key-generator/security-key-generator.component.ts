@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
   templateUrl: './security-key-generator.component.html',
   styleUrls: ['./security-key-generator.component.scss']
 })
-export class SecurityKeyGeneratorComponent implements OnInit {
+export class SecurityKeyGeneratorComponent implements OnInit, OnDestroy {
   isSubmitted = false;
   showpin = false;
   showpinOld = false;
@@ -27,10 +27,10 @@ export class SecurityKeyGeneratorComponent implements OnInit {
   firstUserState: UserModel;
   subscriptions: Subscription[] = [];
   isLoading$: Observable<boolean>;
-  disabledButton: boolean = false;
-  disabledButtonDelete: boolean = false;
-  isSpinner: boolean = true;
-  isSpinnerDelete: boolean = true;
+  disabledButton = false;
+  disabledButtonDelete = false;
+  isSpinner = true;
+  isSpinnerDelete = true;
   spinnerRefs = {
     securityForm: 'securityForm'
   }
@@ -299,7 +299,7 @@ export class SecurityKeyGeneratorComponent implements OnInit {
     }
     this.disabledButton = true;
     this.isSpinner = false;
-    let paramObj = {
+    const paramObj = {
       ScreenPINID: 1,
       UserID: this.user.userid,
       OldPIN: this.securityForm.value.currentpin,
@@ -307,7 +307,7 @@ export class SecurityKeyGeneratorComponent implements OnInit {
       isUpdate: this.isUpdate
     }
     this.risSharedService.getData(API_ROUTES.EMP_INSERT_UPDATE_APP_USER_SCREEN_PIN, paramObj).subscribe((data: any) => {
-      let response = JSON.parse(data.PayLoadStr);
+      const response = JSON.parse(data.PayLoadStr);
       if (data.StatusCode == 200) {
         this.spinner.hide(this.spinnerRefs.securityForm);
         if (response[0].Result == 1) {
@@ -342,11 +342,11 @@ export class SecurityKeyGeneratorComponent implements OnInit {
   cardTitleText = 'Generate';
   cardTitleDescText = 'Generate a';
   getScreenPINByUserID() {
-    let paramObj = {
+    const paramObj = {
       UserID: this.user.userid
     }
     this.risSharedService.getData(API_ROUTES.GET_SCREEN_PIN_BY_USER_ID, paramObj).subscribe((data: any) => {
-      let response = data.PayLoad;
+      const response = data.PayLoad;
       this.isUpdate = response.some(item => item.AppUserScreenPINID);
       this.saveButtonText = this.isUpdate ? 'Reset' : 'Save Changes';
       this.cardTitleText = this.isUpdate ? 'Reset' : 'Generate';

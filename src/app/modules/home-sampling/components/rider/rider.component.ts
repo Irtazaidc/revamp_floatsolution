@@ -19,9 +19,9 @@ import { HelperService } from 'src/app/modules/shared/helpers/helper.service';
   styleUrls: ['./rider.component.scss']
 })
 export class RiderComponent implements OnInit {
-  ButtonClip: boolean = false;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  ButtonClip = false;
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   ActionLabel = "Save"
   spinnerRefs = {
     formSection: 'formSection',
@@ -31,15 +31,15 @@ export class RiderComponent implements OnInit {
   RiderID: any = 0;
   EmpNumber: any = null;
   EmployeeRow: any = [];
-  DisableAllfields: boolean = false;
-  isRider: boolean = false;
+  DisableAllfields = false;
+  isRider = false;
   NotationsList = [];
   RiderList = [];
   RiderRow: any[];
   searchText = '';
   citesList: any[];
   cityAreasList: any[];
-  ishShowPassMessage: boolean = false;
+  ishShowPassMessage = false;
   SampleCenters: any[];
   VehicleTypesList: any[];
   mobileOperatorList: any[];
@@ -85,8 +85,8 @@ export class RiderComponent implements OnInit {
     MobileOperatorID: ['',],
   });
   loggedInUser: UserModel;
-  ActionButtonText: string = 'Save';
-  ActionButtonIcon: string = 'fa fa-save';
+  ActionButtonText = 'Save';
+  ActionButtonIcon = 'fa fa-save';
   employeesList = [];
   licenseDocs = [];
   ld = [];
@@ -107,11 +107,11 @@ export class RiderComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.listSection);
     this.RiderList = [];
     // let formValues = this.formRider.getRawValue();
-    let objParm = {
+    const objParm = {
       RiderID: riderID
     }
     this.riderService.getRider(objParm).subscribe((res: any) => {
-      let resRider = res.PayLoadDS.Table || [];
+      const resRider = res.PayLoadDS.Table || [];
       if (res.StatusCode == 200) {
         this.RiderList = resRider || [];
       }
@@ -126,7 +126,7 @@ export class RiderComponent implements OnInit {
     // let formValues = this.formRider.getRawValue();
 
     this.riderService.getHCUserType().subscribe((res: any) => {
-      let resRider = res.PayLoad || [];
+      const resRider = res.PayLoad || [];
       if (res.StatusCode == 200) {
         this.HCUserType = resRider || [];
       }
@@ -146,11 +146,11 @@ export class RiderComponent implements OnInit {
     this.spinner.show(this.spinnerRefs.formSection);
     this.RiderRow = [];
     // let formValues = this.formRider.getRawValue();
-    let objParm = {
+    const objParm = {
       RiderID: riderID
     }
     this.riderService.getRider(objParm).subscribe((res: any) => {
-      let resRider = res.PayLoadDS.Table || [];
+      const resRider = res.PayLoadDS.Table || [];
       if (res.StatusCode == 200) {
         this.RiderRow = resRider || [];
 
@@ -277,7 +277,7 @@ export class RiderComponent implements OnInit {
 
   addUpdateRider() {
     this.spinner.show(this.spinnerRefs.formSection);
-    let formValues = this.RiderForm.getRawValue();
+    const formValues = this.RiderForm.getRawValue();
     this.RiderForm.markAllAsTouched();
 
     if (this.RiderForm.invalid) {
@@ -291,11 +291,11 @@ export class RiderComponent implements OnInit {
         this.toastr.error('Please contact HR for Login Credentials');
         this.spinner.hide(this.spinnerRefs.formSection); return;
       } else {
-        let uid = formValues.UserId != null ? formValues.UserId : 0;
+        const uid = formValues.UserId != null ? formValues.UserId : 0;
         this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
         this.isSpinner = false; // Button Spinner show
         this.ld = this.licenseDocs;
-        let generalLD = this.ld.map((val) => {
+        const generalLD = this.ld.map((val) => {
           return {
             "GDocumentID": val.docId,
             "GDocTitle": val.fileName,
@@ -308,7 +308,7 @@ export class RiderComponent implements OnInit {
             "GDocType": val.fileType
           }
         })
-        let formData = {
+        const formData = {
           RiderID: this.RiderID,
           NotationId: formValues.NotationId || 0,
           RiderFirstName: formValues.FirstName,
@@ -341,7 +341,7 @@ export class RiderComponent implements OnInit {
         this.riderService.addUpdateRider(formData).subscribe((data: any) => {
           this.spinner.hide(this.spinnerRefs.formSection);
           if (JSON.parse(data.PayLoadStr).length) {
-            let res = JSON.parse(data.PayLoadStr);
+            const res = JSON.parse(data.PayLoadStr);
             if (data.StatusCode == 200) {
               this.EmployeePic = "";
               this.ld = [];
@@ -411,7 +411,7 @@ export class RiderComponent implements OnInit {
       this.disablefields()
       this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       this.isSpinner = false; // Button Spinner shwo
-      let objParam = {
+      const objParam = {
         EmpId: this.EmpNumber,
       };
       this.riderService.GetEmployeeByEmpNo(objParam).subscribe((resp: any) => {
@@ -467,7 +467,7 @@ export class RiderComponent implements OnInit {
       this.disablefields()
       this.disabledButton = true; // Lock the button after for submit to wait till process is completed and respone is send
       this.isSpinner = false; // Button Spinner shwo
-      let objParam = {
+      const objParam = {
         EmpId: this.EmpNumber,
       };
       this.riderService.GetEmployeeByEmpNo(objParam).subscribe((resp: any) => {
@@ -560,7 +560,7 @@ export class RiderComponent implements OnInit {
 
   getHCCities() {
     this.citesList = []
-    let objParam = {
+    const objParam = {
       isHomeSamplingCity: 1
     }
     this.lookupService.getHCCities(objParam).subscribe((resp: any) => {
@@ -578,7 +578,7 @@ export class RiderComponent implements OnInit {
   }
   getCityAreas(CityID) {
     this.cityAreasList = []
-    let objParam = {
+    const objParam = {
       CityID: CityID
     }
     this.lookupService.getHCCityAreas(objParam).subscribe((resp: any) => {
@@ -619,7 +619,7 @@ export class RiderComponent implements OnInit {
   }
   getEmployees() {
     this.employeesList = [];
-    let params = {};
+    const params = {};
     this.spinner.show(this.spinnerRefs.employeesLoadingSection);
     this.sharedService.getEmployees(params).subscribe((res: any) => {
       this.spinner.hide();
@@ -655,7 +655,7 @@ export class RiderComponent implements OnInit {
 
   getVehicleTypes() {
     this.VehicleTypesList = []
-    let objParam = {
+    const objParam = {
     }
     this.lookupService.getVehicleTypes(objParam).subscribe((resp: any) => {
       this.VehicleTypesList = resp.PayLoad || [];
@@ -679,7 +679,7 @@ export class RiderComponent implements OnInit {
   }
 
   getMobileOperatorByCode(mobileNo) {
-    let params = {
+    const params = {
       mobileCode: (mobileNo || this.RiderForm.value.MobileNO || '')
     }
     if (params.mobileCode && params.mobileCode.length > 3) {
@@ -722,7 +722,7 @@ export class RiderComponent implements OnInit {
   }
 
   inActiveRider(RiderID, isActive) {
-    let params = {
+    const params = {
       "RiderID": RiderID,
       "IsActive": isActive ? 1 : 0
     }

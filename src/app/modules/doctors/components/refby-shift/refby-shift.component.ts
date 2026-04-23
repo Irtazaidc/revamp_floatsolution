@@ -98,7 +98,7 @@ export class RefbyShiftComponent implements OnInit {
   doctorList: any = [];
 
   getRefByDoctors() {
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     this.doctorList = [];
 
     const dateFrom = formValues.dateFrom;
@@ -136,7 +136,7 @@ export class RefbyShiftComponent implements OnInit {
       return;
     }
 
-    let paramObj = {
+    const paramObj = {
       DateFrom: formValues.dateFrom
         ? Conversions.formatDateObject(formValues.dateFrom)
         : null,
@@ -156,7 +156,7 @@ export class RefbyShiftComponent implements OnInit {
           this.spinner.hide(this.spinnerRefs.searchTable);
            if (res.StatusCode == 200) {
     if (res.PayLoad.length) {
-      let drData = res.PayLoad;
+      const drData = res.PayLoad;
 
       // Initialize checked property
       this.dataSetList = drData.map((item: any) => ({
@@ -200,7 +200,7 @@ export class RefbyShiftComponent implements OnInit {
   };
 
    refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -280,7 +280,7 @@ export class RefbyShiftComponent implements OnInit {
   }
 
   saveRefByDoctor() {
-      let checkedItems = this.pagination.paginatedSearchResults.filter((a) => a.checked);
+      const checkedItems = this.pagination.paginatedSearchResults.filter((a) => a.checked);
 
     if (!checkedItems.length) {
       this.toastr.warning(
@@ -294,7 +294,7 @@ export class RefbyShiftComponent implements OnInit {
     this.dataSetList.forEach((a) => (a.invalidEmail = false));
 
     // Validate email for checked doctors
-    let invalidEmails = checkedItems.filter(
+    const invalidEmails = checkedItems.filter(
       (a) => a.Email && !this.validateEmail(a.Email)
     );
 
@@ -307,7 +307,7 @@ export class RefbyShiftComponent implements OnInit {
       return; // stop submission
     }
 
-    let objParams = {
+    const objParams = {
       tblDoctorList: checkedItems.map((a) => ({
         RefByDoctorsToBeShiftId: a.RefByDoctorsToBeShiftId || null,
         Name: a.Name?.trim() || null,

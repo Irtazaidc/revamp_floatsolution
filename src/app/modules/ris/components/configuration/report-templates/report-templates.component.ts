@@ -76,14 +76,14 @@ export class ReportTemplatesComponent implements OnInit {
     */
   };
 
-  TemplateParameterHTML: string = '<p></p>';
+  TemplateParameterHTML = '<p></p>';
   RISTemplateID: any = null;
   searchText = '';
   existingRow = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonDelete: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  isSpinnerDelete: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonDelete = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  isSpinnerDelete = true;//Hide Loader
 
   spinnerRefs = {
     listSection: 'listSection',
@@ -179,7 +179,7 @@ export class ReportTemplatesComponent implements OnInit {
 
   RISTemplateParameterID = null;
   insertUpdateRISTemplate() {
-    let formValues = this._form.getRawValue();
+    const formValues = this._form.getRawValue();
     console.log("formValues are: ", formValues); //return;
     this._form.markAllAsTouched();
     if (this._form.invalid) {
@@ -188,7 +188,7 @@ export class ReportTemplatesComponent implements OnInit {
     } else {
       this.disabledButton = true;
       this.isSpinner = false;
-      let formData = {
+      const formData = {
         RISTemplateID: this.RISTemplateID,
         TemplateCode: formValues.TemplateCode,
         TemplateTitle: formValues.TemplateTitle,
@@ -258,7 +258,7 @@ export class ReportTemplatesComponent implements OnInit {
       this.spinner.show(this.spinnerRefs.listSection);
     }
 
-    let params = {
+    const params = {
       RISTemplateID: this.RISTemplateID,
       TPID: null,
       UserID: this.loggedInUser.userid
@@ -316,7 +316,7 @@ export class ReportTemplatesComponent implements OnInit {
     paginatedSearchResults: []
   }
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -325,10 +325,10 @@ export class ReportTemplatesComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = ['TemplateCode'];
+    const cols = ['TemplateCode'];
     let results: any = this.templateList;
     if (this.searchText && this.searchText.length > 1) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.templateList, this.searchText, cols, this.templateList);
     }
     this.pagination.filteredSearchResults = results;
@@ -351,7 +351,7 @@ export class ReportTemplatesComponent implements OnInit {
   }
 
   getRadiologyTests() {
-    let params = {
+    const params = {
       SectionID: 7
     };
     this.testsList = []
@@ -407,17 +407,17 @@ export class ReportTemplatesComponent implements OnInit {
   TPID = null
   testListChanged(e) {
     if (e) {
-      let TPId = e.TPId;
+      const TPId = e.TPId;
       this.TPID = TPId;
       this.TPName = e.TPName;
       this.TPCode = e.TPName;
       let response = [];
-      let ObjParams = {
+      const ObjParams = {
         pTPID: TPId,
       }
       this.TPService.GetTestProfileParamsByTPID(ObjParams).subscribe((resp: any) => {
         response = JSON.parse(resp.PayLoadStr);
-        let res = response['Table'];
+        const res = response['Table'];
         if (res.length) {
           this.isShowReportMain = true;
           this.TPParams = res.map((a) => ({ TemplateParameterHTML: '', ...a }))
@@ -435,9 +435,9 @@ export class ReportTemplatesComponent implements OnInit {
 
   }
   getRISTemplateDetail(e) {
-    let TPId = e.TPId;
+    const TPId = e.TPId;
     let response = [];
-    let ObjParams = {
+    const ObjParams = {
       RISTemplateID: this.RISTemplateID,
       PID: null,
     }
@@ -459,7 +459,7 @@ export class ReportTemplatesComponent implements OnInit {
     // this.spinner.show(this.spinnerRefs.formSection);
     // this.disabledButtonDelete = true;
     // this.isSpinnerDelete = false;
-    let params = {
+    const params = {
       TableName: "dbo.RISTemplate",
       PrimaryKey: "RISTemplateID",
       PrimaryKeyValue: this.RISTemplateID,

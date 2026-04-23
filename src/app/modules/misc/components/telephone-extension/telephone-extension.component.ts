@@ -21,9 +21,9 @@ export class TelephoneExtensionComponent implements OnInit {
   searchText='';
   ExtensionExistingRow = [];
   LabDeptID=-1;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonTests: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonTests = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   
   spinnerRefs = {
     listSection: 'listSection',
@@ -90,7 +90,7 @@ export class TelephoneExtensionComponent implements OnInit {
   
   insertUpdateExtension(){
     this.spinner.show(this.spinnerRefs.formSection); 
-    let formValues = this.extensionForm.getRawValue();
+    const formValues = this.extensionForm.getRawValue();
     this.extensionForm.markAllAsTouched();
     if(this.extensionForm.invalid) {
       this.spinner.hide(this.spinnerRefs.formSection);
@@ -98,7 +98,7 @@ export class TelephoneExtensionComponent implements OnInit {
     } else {
       this.disabledButton = true;
       this.isSpinner = false;
-      let formData = {
+      const formData = {
         ExtensionID:this.ExtensionID,
         DepartmentID: formValues.DepartmentId,
         LocID: formValues.LocId,
@@ -137,7 +137,7 @@ export class TelephoneExtensionComponent implements OnInit {
       this.ActionLabel="Save"
       this.CardTitle ="Add Extension";
       this.spinner.show(this.spinnerRefs.listSection);
-    let params = {
+    const params = {
       ExtensionID: this.ExtensionID,
       SubDepartmentID: this.SubDepartmentID,
       LocID: this.LocID
@@ -173,7 +173,7 @@ export class TelephoneExtensionComponent implements OnInit {
       this.spinner.show(this.spinnerRefs.listSection);
     }
     
-    let params = {
+    const params = {
       ExtensionID: this.ExtensionID,
       SubDepartmentID: this.SubDepartmentID,
       LocID: this.LocID
@@ -226,7 +226,7 @@ export class TelephoneExtensionComponent implements OnInit {
   getExtension_() {
     this.spinner.show(this.spinnerRefs.listSection);
     this.extensionList = [];
-    let _params = {
+    const _params = {
       ExtensionID: this.ExtensionID,
       SubDepartmentID: null,
       LocID: null
@@ -249,7 +249,7 @@ export class TelephoneExtensionComponent implements OnInit {
   getBranches() {
     this.branchesList = [];
     this.lookupService.GetBranches().subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       _response.forEach((element, index) => {
         _response[index].Title = (element.Title || '').replace('Islamabad Diagnostic Centre (Pvt) Ltd', 'IDC ');
       });

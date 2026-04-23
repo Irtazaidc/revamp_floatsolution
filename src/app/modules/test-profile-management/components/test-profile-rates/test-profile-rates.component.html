@@ -33,8 +33,8 @@
                         <label for="radio2" class="form-check-label">By Name</label>
                         <input type="radio" class="form-check-input ml-2" name="rdSearchBy" (click)="rdSearchByClick('byCode')" value="byCode" id="byCode1" checked>
                         <label for="radio1" class="form-check-label">By Code</label>
-                        <input type="checkbox" *ngIf="rdSearchBy == 'byCode'" class="form-check-input ml-2" name="chkSearchByExactMatch" id="chkSearchByExactMatch" [(ngModel)]="chkSearchByExactMatch">
-                        <label for="chkSearchByExactMatch" *ngIf="rdSearchBy == 'byCode'" class="form-check-label"> <small>Exact match</small></label>
+                        <input type="checkbox" *ngIf="rdSearchBy === 'byCode'" class="form-check-input ml-2" name="chkSearchByExactMatch" id="chkSearchByExactMatch" [(ngModel)]="chkSearchByExactMatch">
+                        <label for="chkSearchByExactMatch" *ngIf="rdSearchBy === 'byCode'" class="form-check-label"> <small>Exact match</small></label>
                     </div>
                     <div>
                         <ng-select [items]="testList" bindLabel="TestProfileName" bindValue="TPId"

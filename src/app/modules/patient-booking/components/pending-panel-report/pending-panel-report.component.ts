@@ -75,7 +75,7 @@ export class PendingPanelReportComponent implements OnInit {
   panelList = [];
   getPanelList() {
     this.panelList = [];
-    let _param = {};
+    const _param = {};
     this.lookupService.getPanels(_param).subscribe(
       (res: any) => {
         if (res && res.StatusCode == 200 && res.PayLoad) {
@@ -97,7 +97,7 @@ export class PendingPanelReportComponent implements OnInit {
     this.pagination.paginatedSearchResults = [];
     this.searchText = "";
 
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     if (this.filterForm.invalid) {
       this.toasrt.warning("Please Fill The Mandatory Fields");
       this.isSubmitted = true;
@@ -134,7 +134,7 @@ export class PendingPanelReportComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       PanelID: formValues.PanelID || -1,
@@ -179,7 +179,7 @@ export class PendingPanelReportComponent implements OnInit {
   }
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -192,7 +192,7 @@ export class PendingPanelReportComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = [
+    const cols = [
       "VisitId",
       "PatientName",
       "RegDate",

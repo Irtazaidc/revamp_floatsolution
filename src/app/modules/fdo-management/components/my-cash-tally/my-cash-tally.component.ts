@@ -75,7 +75,7 @@ export class MyCashTallyComponent implements OnInit {
   getCashTallyData() {
     this.cashTallyDataList = [];
     this.totalAmounts = {}
-    let formValues = this.filterForm.getRawValue();
+    const formValues = this.filterForm.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -105,7 +105,7 @@ export class MyCashTallyComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null,
       LocID : formValues.locID || -1,
@@ -175,7 +175,7 @@ export class MyCashTallyComponent implements OnInit {
   getLookupsForRegistration() {
     this.paymentModesList = [];
     this.lookupService.getLookupsForRegistration({ branchId: this.loggedInUser.locationid }).subscribe((resp: any) => {
-      let _response = resp.PayLoadDS|| [];
+      const _response = resp.PayLoadDS|| [];
       this.paymentModesList = _response.Table5 || [];
       
     }, (err) => {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
 import { PatientService } from 'src/app/modules/patient-booking/services/patient.service';
 import { FilterByKeyPipe } from 'src/app/modules/shared/pipes/filter-by-key.pipe';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,8 +14,8 @@ import { HelperService } from 'src/app/modules/shared/helpers/helper.service';
   templateUrl: './visit-list.component.html',
   styleUrls: ['./visit-list.component.scss']
 })
-export class VisitListComponent implements OnInit {
-  @Input('visitInfo') visitInfo: any = {};
+export class VisitListComponent implements OnInit, OnChanges {
+  @Input() visitInfo: any = {};
   @Output() selVisit = new EventEmitter<any>();
   @Output() selPIN = new EventEmitter<any>();
 
@@ -25,8 +25,8 @@ export class VisitListComponent implements OnInit {
   internalVisitID: any = '';
   selTps: any = '';
   paginatedVisitResults: any = [];
-  page: number = 1;
-  pageSize: number = 5;
+  page = 1;
+  pageSize = 5;
   paginatedVisitsList: any;
   PatientID = null;
   spinnerRefs = {
@@ -53,7 +53,7 @@ export class VisitListComponent implements OnInit {
 
   }
   getTestProfileByCellNo() {
-    let params = {
+    const params = {
       PatientCellNo: this.internalPhoneNumber || this.visitInfo.phoneNumber,
       PatientID: this.isThisPatient?this.PatientID:null
     }
@@ -61,7 +61,7 @@ export class VisitListComponent implements OnInit {
 
       console.log(resp);
       if (resp && resp.StatusCode == 200 && resp.PayLoad.length) {
-        let tests = resp.PayLoad
+        const tests = resp.PayLoad
         this.TPList =  tests.map(a => {
           return {
             TPId: a.TPId,
@@ -111,7 +111,7 @@ export class VisitListComponent implements OnInit {
     this.searchText = '';
     this.filterResults();
     this.VisitsList = [];
-    let params = {
+    const params = {
       VisitId: this.internalVisitID ? this.internalVisitID.replaceAll('-', '') : null,  //this.visitInfo.visitID,
       MobileNO: this.internalPhoneNumber || this.visitInfo.phoneNumber,
       PatientID: this.isThisPatient?this.PatientID:null
@@ -142,7 +142,7 @@ export class VisitListComponent implements OnInit {
     this.searchText = '';
     this.filterResults();
     this.VisitsList = [];
-    let params = {
+    const params = {
       TPIds: this.selTps.join(','),
       PatientCellNo: this.internalPhoneNumber || this.visitInfo.phoneNumber,  //this.visitInfo.visitID,  
       PatientID: this.isThisPatient?this.PatientID:null
@@ -187,7 +187,7 @@ export class VisitListComponent implements OnInit {
     paginatedSearchResults: []
   }
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       // .map((item, i) => ({ id: i + 1, ...item }))
@@ -202,10 +202,10 @@ export class VisitListComponent implements OnInit {
 
   filterResults() {
     this.pagination.page = 1;
-    let cols = ['VisitId', 'PatientName', 'PIN'];
+    const cols = ['VisitId', 'PatientName', 'PIN'];
     let results: any = this.VisitsList;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.VisitsList, this.searchText, cols, this.VisitsList);
     }
     this.pagination.filteredSearchResults = results;
@@ -233,7 +233,7 @@ export class VisitListComponent implements OnInit {
   isCoppied = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text
+    const pin = text
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {

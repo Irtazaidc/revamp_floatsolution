@@ -96,9 +96,9 @@ export class TestProfileConfigurationsComponent implements OnInit {
   manualTAT: any;
   PatientInstructions: any = "";
   TestDescription: any = "";
-  PatientInstructionsHTML: string = '<p></p>';
-  TestDescriptionHTML: string = '<p></p>';
-  imageURL: string = "";
+  PatientInstructionsHTML = '<p></p>';
+  TestDescriptionHTML = '<p></p>';
+  imageURL = "";
   uploadForm: FormGroup;
   formSubmitAttempt: boolean;
   IsImageAttached = 0;
@@ -109,7 +109,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   ModifiedBy = null;
   TPID: any;
   ExTPID: any;
-  isAuthenticated: boolean = false;
+  isAuthenticated = false;
   isHCTestProfile = false;
   isOnlineBookingAllowed = false;
   selectedAlternateTestCollectionMedium: any;
@@ -172,10 +172,10 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
   TPParams = [];
   CardTitle: string;
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
-  disabledButtonRange: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerRange: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
+  disabledButtonRange = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerRange = true;//Hide Loader
   MachineList: any;
   ParamMachineRangeID: any = null;//For update single range record
   TestProfileCode: any;
@@ -205,25 +205,25 @@ export class TestProfileConfigurationsComponent implements OnInit {
   ActionLabel = 'Add Range';
   selectedSymptoms: any = '';
   MachineName: any;
-  isMachineRangesList: boolean = false;
+  isMachineRangesList = false;
   TestRanges: any = [];
   queryParams: any = {};
-  IsAuthenticated: boolean = false;
+  IsAuthenticated = false;
   selBranchID: any = 0;
-  ActionBtnText: string = 'Save';
-  ActionBtnIcon: string = 'fa fa-save';
+  ActionBtnText = 'Save';
+  ActionBtnIcon = 'fa fa-save';
 
-  disabledButtonRemove: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerRemove: boolean = true;//Hide Loader
+  disabledButtonRemove = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerRemove = true;//Hide Loader
   UserID: any;
   TestMachineList: any = [];
-  isMedicalOfficerIntervention: boolean = false;
-  isBypassAssigner: boolean = false;
-  isBypassTech: boolean = false;
-  isService: boolean = false;
-  isCancelable: boolean = true;
-  isAdvanceCancellation: boolean = false;
-  isAIAssistEnable: boolean = false;
+  isMedicalOfficerIntervention = false;
+  isBypassAssigner = false;
+  isBypassTech = false;
+  isService = false;
+  isCancelable = true;
+  isAdvanceCancellation = false;
+  isAIAssistEnable = false;
   serviceType  = 1;
   selectedBodyparts: any = [];
   isFastingReq: any = false;
@@ -257,7 +257,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
       name: ['']
     })
   }
-  hasQueryParams: boolean = false;
+  hasQueryParams = false;
   ngOnInit(): void {
     this.queryParams = this.getUrlParams();
     this.route.queryParams.subscribe(params => {
@@ -326,7 +326,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   selectedPanel:any=null;
   getTestProfileList(tpname) {
     this.testProfileList = [];
-    let _params = {
+    const _params = {
       tpids: null,
       code: (this.searchByCodeNameRadio == 'code' ? tpname : null),
       desc: (this.searchByCodeNameRadio == 'name' ? tpname : null),
@@ -372,7 +372,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   verifyUserCredentials() {
-    let params = {
+    const params = {
       UserName: decodeURIComponent(this.queryParams.un || '').replace(/\s/g, '+'),
       Password: decodeURIComponent(this.queryParams.pw || '').replace(/\s/g, '+'),
       SourceName: decodeURIComponent(this.queryParams.appName || '').replace(/\s/g, '+'),
@@ -386,7 +386,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
           if (resp.StatusCode == 200) {
             if (data.PayLoad && data.PayLoad.length) {
               this.UserID = data.PayLoad[0].UserId;
-              let teken = resp.PayLoad[0].Token;
+              const teken = resp.PayLoad[0].Token;
               // this.setAuthInLocalStorage(this.createAuthObj(teken));
             }
           }
@@ -443,14 +443,14 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   decryptParam(param) {
-    let response = "";
+    const response = "";
     this.TPService.decryptData(param).subscribe((resp: any) => {
       if (resp.statusCode == 200) {
         if (resp.payLoadArr && resp.payLoadArr.length) {
           // console.warn("Here we Go ",resp.payLoadArr)
           this.ModifiedBy = resp.payLoadArr[0].userId;
           this.loggedIn = true;
-          let params = {
+          const params = {
             TestProfileName: "",
             TestProfileId: param.TestProfileId,
             isLabTest: 1
@@ -472,10 +472,10 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   decryptTPID(param) {
-    let paramObj = {
+    const paramObj = {
       TestProfileId: param
     }
-    let response = "";
+    const response = "";
     this.TPService.DecryptTPID(paramObj).subscribe((resp: any) => {
       this.TPID = resp.payLoad;
 
@@ -502,7 +502,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
   GetBodyParts() {
     let response = [];
-    let BodyPartCount = [];
+    const BodyPartCount = [];
 
     this.BodyPartCount = response.length
     this.TPService.GetBodyparts().subscribe((resp: any) => {
@@ -523,7 +523,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
   GetDiseases() {
     let response = [];
-    let ObjParams = {
+    const ObjParams = {
       DiseasesID: this.DiseasesID
     }
     this.DiseaseCount = response.length
@@ -612,7 +612,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
     })
 
     if (this.IsImageAttached == 1) {
-      let AddUpdateTPImage = {
+      const AddUpdateTPImage = {
         TPID: this.ExTPID,
         TestProfilePic: this.imageURL, //param.imageURL,
         TestProfilePicThumbnail: this.imageURL, //param.imageURL,
@@ -666,7 +666,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   TPNameCardHeader = "Test Profile Config";
  GetTestProfileDataByID(param: any) {
 
-  let ObjParams = { TPID: param };
+  const ObjParams = { TPID: param };
 
   this.spinner.show(this.spinnerRefs.mainFormSection);
 
@@ -774,7 +774,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
   GetTestProfileParamsByTPID(param) {
     let response = [];
-    let ObjParams = {
+    const ObjParams = {
       pTPID: param,
     }
     this.spinner.show();
@@ -786,8 +786,8 @@ export class TestProfileConfigurationsComponent implements OnInit {
       let machineArr: any;
       let machineIdsArr: any;
       this.TPParams.forEach((element, index) => {
-        let machineNames = (element.MachineName) ? (element.MachineName.replace(/[, ]+$/, "").trim()) : null
-        let string = (machineNames) ? machineNames.split(',') : '';
+        const machineNames = (element.MachineName) ? (element.MachineName.replace(/[, ]+$/, "").trim()) : null
+        const string = (machineNames) ? machineNames.split(',') : '';
         [...string];
         Array.from(string);
         machineArr = Object.assign([], string);
@@ -797,8 +797,8 @@ export class TestProfileConfigurationsComponent implements OnInit {
         // Machine names array
         // Machine Ids array
 
-        let machineIds = (element.MachineID) ? (element.MachineID.replace(/[, ]+$/, "").trim()) : null
-        let stringIds = (machineIds) ? machineIds.split(',') : '';
+        const machineIds = (element.MachineID) ? (element.MachineID.replace(/[, ]+$/, "").trim()) : null
+        const stringIds = (machineIds) ? machineIds.split(',') : '';
         [...stringIds];
         Array.from(string);
         machineIdsArr = Object.assign([], stringIds);
@@ -819,7 +819,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
   updateUrlParams_navigateTo(url, params = {}, settings = {}) {
     const _url = url || [];
-    let _settings = {
+    const _settings = {
       ...{
         // relativeTo: this.route,
         replaceUrl: true,
@@ -862,7 +862,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
         }
       }
     }
-    let hashes = encryptedQueryString.split('&'); // atob
+    const hashes = encryptedQueryString.split('&'); // atob
     for (let i = 0; i < hashes.length; i++) {
       hash = hashes[i].split(/=(.+)/); //.split('=');
       vars[hash[0]] = hash[1];
@@ -888,7 +888,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   getMachine(MachineID, filterIDs: any = []) {
-    let params = {
+    const params = {
       MachineID: MachineID
     };
     this.TPService.getMachineForTP(params).subscribe((res: any) => {
@@ -910,7 +910,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   associateMachine() {
     this.disabledButton = true;
     this.isSpinner = false;
-    let formValues = this.formAssocMachine.getRawValue();
+    const formValues = this.formAssocMachine.getRawValue();
     this.formAssocMachine.markAllAsTouched();
     if (!this.formAssocMachine.valid) {
       this.toastr.warning('Please fill the required information!');
@@ -923,9 +923,9 @@ export class TestProfileConfigurationsComponent implements OnInit {
         this.isSpinner = true;
         return;
       }
-      let ageFromDays = (formValues.AgeType == 'D') ? formValues.AgeFrom : this.daysConversion(formValues.AgeType, formValues.AgeFrom)
-      let ageToDays = (formValues.AgeType == 'D') ? formValues.AgeTo : this.daysConversion(formValues.AgeType, formValues.AgeTo)
-      let objParam = {
+      const ageFromDays = (formValues.AgeType == 'D') ? formValues.AgeFrom : this.daysConversion(formValues.AgeType, formValues.AgeFrom)
+      const ageToDays = (formValues.AgeType == 'D') ? formValues.AgeTo : this.daysConversion(formValues.AgeType, formValues.AgeTo)
+      const objParam = {
         ParamID: this.ParamID || null,
         MachineID: formValues.MachineID,
         CreatedBy: this.UserID || this.loggedInUser.userid, //this.loggedInUser.userid || -99,
@@ -972,7 +972,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   addUpdateRange() {
     this.disabledButtonRange = true;
     this.isSpinnerRange = false;
-    let formValues = this.formAddUpdateRange.getRawValue();
+    const formValues = this.formAddUpdateRange.getRawValue();
     this.formAddUpdateRange.markAllAsTouched();
     if (!this.formAddUpdateRange.valid) {
       this.toastr.warning('Please fill the required information!');
@@ -985,9 +985,9 @@ export class TestProfileConfigurationsComponent implements OnInit {
         this.isSpinnerRange = true;
         return;
       }
-      let ageFromDays = (formValues.AgeType == 'D') ? formValues.AgeFrom : this.daysConversion(formValues.AgeType, formValues.AgeFrom)
-      let ageToDays = (formValues.AgeType == 'D') ? formValues.AgeTo : this.daysConversion(formValues.AgeType, formValues.AgeTo)
-      let objParam = {
+      const ageFromDays = (formValues.AgeType == 'D') ? formValues.AgeFrom : this.daysConversion(formValues.AgeType, formValues.AgeFrom)
+      const ageToDays = (formValues.AgeType == 'D') ? formValues.AgeTo : this.daysConversion(formValues.AgeType, formValues.AgeTo)
+      const objParam = {
         ParamID: this.ParamID || null,
         MachineID: this.MachineID,
         CreatedBy: this.UserID || this.loggedInUser.userid, // this.loggedInUser.userid || -99,
@@ -1044,15 +1044,15 @@ export class TestProfileConfigurationsComponent implements OnInit {
     this.MachineID = MachineID;
     this.appPopupService.openModal(this.assocMachineDetailModal);
 
-    let params = {
+    const params = {
       ParamID: this.ParamID,
       MachineID: MachineID
     };
     this.TPService.getParamMachineRangesByParamID(params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let ranges = res.PayLoad || [];
-        let result = ranges.reduce((re, o) => {
-          let existObj = re.find(
+        const ranges = res.PayLoad || [];
+        const result = ranges.reduce((re, o) => {
+          const existObj = re.find(
             obj => obj.MachineID === o.MachineID
           )
 
@@ -1134,15 +1134,15 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
 
     if (isMachineRangesList) {
-      let params = {
+      const params = {
         ParamID: this.ParamID,
         MachineID: machineID
       };
       this.TPService.getParamMachineRangesByParamID(params).subscribe((res: any) => {
         if (res.StatusCode == 200) {
-          let ranges = res.PayLoad || [];
-          let result = ranges.reduce((re, o) => {
-            let existObj = re.find(
+          const ranges = res.PayLoad || [];
+          const result = ranges.reduce((re, o) => {
+            const existObj = re.find(
               obj => obj.MachineID === o.MachineID
             )
 
@@ -1192,7 +1192,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
     this.ActionBtnIcon = 'fa fa-save';
     this.ActionLabel = 'Add Range';
     this.formAddUpdateRange.reset();
-    var machineNameID = machineName.split('^');
+    const machineNameID = machineName.split('^');
     this.addUpdateRangeParamObj = {
       paramID: paramID,
       machineID: machineNameID[0]
@@ -1218,15 +1218,15 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
 
     if (isMachineRangesList) {
-      let params = {
+      const params = {
         ParamID: this.ParamID,
         MachineID: this.MachineID
       };
       this.TPService.getParamMachineRangesByParamID(params).subscribe((res: any) => {
         if (res.StatusCode == 200) {
-          let ranges = res.PayLoad || [];
-          let result = ranges.reduce((re, o) => {
-            let existObj = re.find(
+          const ranges = res.PayLoad || [];
+          const result = ranges.reduce((re, o) => {
+            const existObj = re.find(
               obj => obj.MachineID === o.MachineID
             )
 
@@ -1300,23 +1300,23 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   deleteParamMachineRangeByID(ParamMachineRangeID) {
-    let objParam = {
+    const objParam = {
       ParamMachineRangeID: ParamMachineRangeID
     };
     this.TPService.deleteParamMachineRangeByID(objParam).subscribe((data: any) => {
       this.spinner.hide();
       if (data.StatusCode == 200) {
         this.toastr.success('Record Deleted Successfully');
-        let params = {
+        const params = {
           ParamID: this.addUpdateRangeParamObj["paramID"],
           MachineID: this.addUpdateRangeParamObj["machineID"]
         };
 
         this.TPService.getParamMachineRangesByParamID(params).subscribe((res: any) => {
           if (res.StatusCode == 200) {
-            let ranges = res.PayLoad || [];
-            let result = ranges.reduce((re, o) => {
-              let existObj = re.find(
+            const ranges = res.PayLoad || [];
+            const result = ranges.reduce((re, o) => {
+              const existObj = re.find(
                 obj => obj.MachineID === o.MachineID
               )
 
@@ -1391,44 +1391,44 @@ export class TestProfileConfigurationsComponent implements OnInit {
 
   ////////begin::Convert Number of days to Year Months and Days in case of Age type Day/////////
   getFormatedStringFromDays_(numberOfDays) {
-    var years = Math.floor(numberOfDays / 365);
-    var months = Math.floor(numberOfDays % 365 / 30);
-    var days = Math.floor(numberOfDays % 365 % 30);
+    const years = Math.floor(numberOfDays / 365);
+    const months = Math.floor(numberOfDays % 365 / 30);
+    const days = Math.floor(numberOfDays % 365 % 30);
 
-    var yearsDisplay = years > 0 ? years + (years == 1 ? "Y, " : " Yrs, ") : "";
-    var monthsDisplay = months > 0 ? months + (months == 1 ? "M, " : " Mos, ") : "";
-    var daysDisplay = days > 0 ? days + (days == 1 ? "D" : "Dys") : "";
+    const yearsDisplay = years > 0 ? years + (years == 1 ? "Y, " : " Yrs, ") : "";
+    const monthsDisplay = months > 0 ? months + (months == 1 ? "M, " : " Mos, ") : "";
+    const daysDisplay = days > 0 ? days + (days == 1 ? "D" : "Dys") : "";
     return yearsDisplay + monthsDisplay + daysDisplay;
   }
 
   getFormatedStringFromDays(numberOfDays) {
-    var currentDate = new Date();
-    var calculatedDate = currentDate.setDate(currentDate.getDate() - numberOfDays);
-    var finalDateParam = this.datePipe.transform(calculatedDate, 'yyyy, MM, dd');
+    const currentDate = new Date();
+    const calculatedDate = currentDate.setDate(currentDate.getDate() - numberOfDays);
+    const finalDateParam = this.datePipe.transform(calculatedDate, 'yyyy, MM, dd');
     return (this.getAge(new Date(finalDateParam), new Date()))
   }
 
 
   getAge(date_1, date_2) {
     //convert to UTC
-    var date2_UTC = new Date(Date.UTC(date_2.getUTCFullYear(), date_2.getUTCMonth(), date_2.getUTCDate()));
-    var date1_UTC = new Date(Date.UTC(date_1.getUTCFullYear(), date_1.getUTCMonth(), date_1.getUTCDate()));
-    var yAppendix, mAppendix, dAppendix;
+    const date2_UTC = new Date(Date.UTC(date_2.getUTCFullYear(), date_2.getUTCMonth(), date_2.getUTCDate()));
+    const date1_UTC = new Date(Date.UTC(date_1.getUTCFullYear(), date_1.getUTCMonth(), date_1.getUTCDate()));
+    let yAppendix, mAppendix, dAppendix;
     //--------------------------------------------------------------
-    var days = date2_UTC.getDate() - date1_UTC.getDate();
+    let days = date2_UTC.getDate() - date1_UTC.getDate();
     days = days - 1;
     if (days < 0) {
       date2_UTC.setMonth(date2_UTC.getMonth() - 1);
       days += this.DaysInMonth(date2_UTC);
     }
     //--------------------------------------------------------------
-    var months = date2_UTC.getMonth() - date1_UTC.getMonth();
+    let months = date2_UTC.getMonth() - date1_UTC.getMonth();
     if (months < 0) {
       date2_UTC.setFullYear(date2_UTC.getFullYear() - 1);
       months += 12;
     }
     //--------------------------------------------------------------
-    var years = date2_UTC.getFullYear() - date1_UTC.getFullYear();
+    const years = date2_UTC.getFullYear() - date1_UTC.getFullYear();
     if (years > 1) yAppendix = "yrs";
     else yAppendix = "y";
     if (months > 1) mAppendix = "mos";
@@ -1439,9 +1439,9 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   DaysInMonth(date2_UTC) {
-    var monthStart: any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth(), 1);
-    var monthEnd: any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth() + 1, 1);
-    var monthLength = (monthEnd - monthStart) / (1000 * 60 * 60 * 24);
+    const monthStart: any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth(), 1);
+    const monthEnd: any = new Date(date2_UTC.getFullYear(), date2_UTC.getMonth() + 1, 1);
+    const monthLength = (monthEnd - monthStart) / (1000 * 60 * 60 * 24);
     return monthLength;
   }
   ////////end::Convert Number of days to Year Months and Days in case of Age type Day/////////
@@ -1478,7 +1478,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
     this.disabledButtonRemove = true; // Lock the button after for submit to wait till process is completed and respone is send
     this.isSpinnerRemove = false; // Button Spinner show
     this.spinner.show(this.spinnerRefs.machineAssocSection);
-    let objParam = {
+    const objParam = {
       ParamID: paramID,
       MachineID: machineID,
       CreatedBy: this.UserID || this.loggedInUser.userid,
@@ -1509,7 +1509,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   getTestMachines(TPID) {
     this.TPID = TPID;
     // this.spinner.show(this.spinnerRefs.machinePriorityFormSection);
-    let params = {
+    const params = {
       TPId: this.TPID
     };
     this.LabConfService.getTestMachinesExtended(params).subscribe((res: any) => {
@@ -1538,7 +1538,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
     this.isSpinner = false; // Button Spinner show
     this.spinner.show(this.spinnerRefs.machinePriorityFormSection);
     if (this.TestMachineList.length) {
-      let objParam = {
+      const objParam = {
         MachineTestID: this.TestMachineList[0].MachineTestID,
         TPID: this.TPID,
         CreatedBy: this.UserID || this.loggedInUser.userid,
@@ -1606,7 +1606,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   classificationList = []
   questionClassificationID = null;
   getQuestionClassification() {
-    let params = {
+    const params = {
       QuestionClassificationID: null
     };
     this.questionnaireService.getQuestionClassification(params).subscribe((res: any) => {
@@ -1643,7 +1643,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   QuestionGroupTypeID = 5;
   getQuestion() {
     this.questionList = [];
-    let params = {
+    const params = {
       QuestionID: null,
       QuestionGroupTypeID :this.QuestionGroupTypeID
     };
@@ -1663,10 +1663,10 @@ export class TestProfileConfigurationsComponent implements OnInit {
   addSelectedQuestion(e) {
     if (e) {
       if (!this.selectedQuestion.find(a => a.QuestionID == e.QuestionID)) {
-        let newQuestion = this.questionList.find(x => x.QuestionID == e.QuestionID)
+        const newQuestion = this.questionList.find(x => x.QuestionID == e.QuestionID)
         if (newQuestion) {
           this.selectedQuestion.push(newQuestion);
-          let filteredQuestions = this.questionList.filter(x => x.QuestionID != e.QuestionID)
+          const filteredQuestions = this.questionList.filter(x => x.QuestionID != e.QuestionID)
           this.questionList = filteredQuestions;
 
         }
@@ -1680,14 +1680,14 @@ export class TestProfileConfigurationsComponent implements OnInit {
   getQClassificationQuestions(e) {
     this.selectedQuestion = [];
     if (e.length) {
-      let classificationIDs = this.selectedQuestionClassification.join(",")
+      const classificationIDs = this.selectedQuestionClassification.join(",")
       this.getQClassificationSelectedQuestions(classificationIDs)
     }
   }
   getQClassificationSelectedQuestions(classificationIDs) {
     this.getQuestion();
     this.selectedQuestion = [];
-    let params = {
+    const params = {
       QuestionClassificationID: classificationIDs
     };
     this.questionnaireService.getQClassificationQuestions(params).subscribe((res: any) => {
@@ -1727,8 +1727,8 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   insertUpdateTPQuestions() {
-    let tpList = this.selectedQuestion.map(a => ({ TestProfileQuestionsID: a.TestProfileQuestionsID, QuestionClassificationID: a.QuestionClassificationID, QuestionID: a.QuestionID, SortOrder: a.SortOrder }));
-    let objParam = {
+    const tpList = this.selectedQuestion.map(a => ({ TestProfileQuestionsID: a.TestProfileQuestionsID, QuestionClassificationID: a.QuestionClassificationID, QuestionID: a.QuestionID, SortOrder: a.SortOrder }));
+    const objParam = {
       CreatedBy: this.UserID || this.loggedInUser.userid,
       TPID: this.TPID,
       // QuestionIDs: this.selectedQuestion.map(a => { return (a.QuestionID) }).join(",")
@@ -1756,7 +1756,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
 
   getTestProfileQuestions(TPID) {
-    let params = {
+    const params = {
       TPID: TPID,
       QuestionGroupTypeID:this.QuestionGroupTypeID
     };
@@ -1779,7 +1779,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   storeItemList = []
   getStoreItemList() {
     this.questionList = [];
-    let params = {
+    const params = {
     };
     this.TPService.getStoreItemListExtended(params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
@@ -1808,7 +1808,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   getTestStatus() {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.testStatusList = _response;
       // console.log("testStatusList: ", this.testStatusList)
     }, (err) => {
@@ -1819,7 +1819,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   getRISStatus() {
     this.RISStatusList = [];
     this.lookupService.RISStatusList({}).subscribe((resp: any) => {
-      let _response = resp.PayLoad || [];
+      const _response = resp.PayLoad || [];
       this.RISStatusList = _response;
       // console.log("RISStatusList: ", this.RISStatusList)
     }, (err) => {
@@ -1830,10 +1830,10 @@ export class TestProfileConfigurationsComponent implements OnInit {
   addSelectedItems(e) {
     if (e) {
       if (!this.selectedQuestion.find(a => a.StoreItemId == e.StoreItemId)) {
-        let newItems = this.storeItemList.find(x => x.StoreItemId == e.StoreItemId)
+        const newItems = this.storeItemList.find(x => x.StoreItemId == e.StoreItemId)
         if (newItems) {
           this.selectedItems.push(newItems);
-          let filteredItems = this.storeItemList.filter(x => x.StoreItemId != e.StoreItemId)
+          const filteredItems = this.storeItemList.filter(x => x.StoreItemId != e.StoreItemId)
           this.storeItemList = filteredItems;
 
         }
@@ -1845,11 +1845,11 @@ export class TestProfileConfigurationsComponent implements OnInit {
   addSelectedItemsTypeHead(e) {
     if (e) {
       if (!this.selectedQuestion.find(a => a.StoreItemId == e.item.StoreItemId)) {
-        let newItems = this.storeItemList.find(x => x.StoreItemId == e.item.StoreItemId)
+        const newItems = this.storeItemList.find(x => x.StoreItemId == e.item.StoreItemId)
         if (newItems) {
           this.selectedItems.push(newItems);
           // console.log("Dropdown selectedItems____", this.selectedItems)
-          let filteredItems = this.storeItemList.filter(x => x.StoreItemId != e.item.StoreItemId)
+          const filteredItems = this.storeItemList.filter(x => x.StoreItemId != e.item.StoreItemId)
           this.storeItemList = filteredItems;
           setTimeout(() => {
             this.selectedInventory = "";
@@ -1878,8 +1878,8 @@ export class TestProfileConfigurationsComponent implements OnInit {
   }
   selectedInventory = "";
   testFieldEnableDisalbe = false;
-  disabledButtonInventory: boolean = false;
-  isSpinnerInventory: boolean = true;
+  disabledButtonInventory = false;
+  isSpinnerInventory = true;
 
   formatter = (x: any) => x ? (x.StoreItemFull) : '';
   search = (text$: Observable<string>) =>
@@ -1909,7 +1909,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
       this.toastr.error("Please select atleast one status...")
       return;
     } else {
-      let objParam = {
+      const objParam = {
         TPId: this.TPID,
         CreatedBy: this.UserID || this.loggedInUser.userid,
         tblTPInventory: this.selectedItems.map(a => {
@@ -1956,7 +1956,7 @@ export class TestProfileConfigurationsComponent implements OnInit {
   //Get existing TP Inventory/////////////
   getTPInventory() {
     this.selectedItems = [];
-    let params = {
+    const params = {
       TPID: this.TPID,
       StatusID: this.StatusId,
       RISStatusID: this.RISStatusID

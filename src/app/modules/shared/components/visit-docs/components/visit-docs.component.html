@@ -80,16 +80,16 @@
             ">
             View Options:
             <i *ngIf="layoutBtnAllowed('compact')" class="ti-view-list btn-outline-secondary" [ngClass]="{
-                'bg-primary text-light': attachmentLayout == 'compact'
+                'bg-primary text-light': attachmentLayout === 'compact'
               }" (click)="attachmentLayout = 'compact'"></i>
             <i *ngIf="layoutBtnAllowed('list')" class="ti-view-list-alt btn-outline-secondary" [ngClass]="{
-                'bg-primary text-light': attachmentLayout == 'list'
+                'bg-primary text-light': attachmentLayout === 'list'
               }" (click)="attachmentLayout = 'list'"></i>
             <i *ngIf="layoutBtnAllowed('grid')" class="ti-view-grid btn-outline-secondary" [ngClass]="{
-                'bg-primary text-light': attachmentLayout == 'grid'
+                'bg-primary text-light': attachmentLayout === 'grid'
               }" (click)="attachmentLayout = 'grid'"></i>
             <i *ngIf="layoutBtnAllowed('grid2')" class="ti-layout-grid3-alt btn-outline-secondary" [ngClass]="{
-                'bg-primary text-light': attachmentLayout == 'grid2'
+                'bg-primary text-light': attachmentLayout === 'grid2'
               }" (click)="attachmentLayout = 'grid2'"></i>
           </span>
           <!-- <button class="btn btn-outline-secondary btn-mini btn-select-visit-attachments" type="button" (click)="uploadVisitAttachment.click()"><i class="ti-plus"></i> Scan</button>
@@ -119,7 +119,7 @@
       </div>
 
       <div class="row" *ngIf="visitAttachments && visitAttachments.length">
-        <div class="col-12 attachments-group attachments-group-compact" *ngIf="attachmentLayout == 'compact'">
+        <div class="col-12 attachments-group attachments-group-compact" *ngIf="attachmentLayout === 'compact'">
           <div class="table-responsive">
             <table class="table table-hover narrow-rows">
               <thead>
@@ -162,7 +162,7 @@
           </div>
         </div>
 
-        <div class="col-12 attachments-group attachments-group-list" *ngIf="attachmentLayout == 'list'">
+        <div class="col-12 attachments-group attachments-group-list" *ngIf="attachmentLayout === 'list'">
           <div class="table-responsive">
             <table class="table table-hover narrow-rows">
               <thead>
@@ -210,7 +210,7 @@
                             <h4>ZIP file</h4>
                           </ng-container>
                           <ng-container *ngSwitchDefault>
-                            <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                            <h3 *ngIf="va.fileType.split('/')[0] !== 'image'">
                               {{ va.fileType.split("/")[1] }}
                             </h3>
                           </ng-container>
@@ -248,7 +248,7 @@
 
         <!--  -->
 
-        <div class="col-12 attachments-group attachments-group-grid" *ngIf="attachmentLayout == 'grid'">
+        <div class="col-12 attachments-group attachments-group-grid" *ngIf="attachmentLayout === 'grid'">
           <div class="attachment-item mb-2 p-2 border rounded shadow-sm bg-light"
             *ngFor="let va of visitAttachments; let i = index" style="position: relative; max-width: 150px;">
             <!-- <a [href]="va.sanitizedThumbnail || va.sanitizedData" target="_blank"> -->
@@ -290,7 +290,7 @@
                     </h1>
                   </ng-container>
                   <ng-container *ngSwitchDefault>
-                    <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                    <h3 *ngIf="va.fileType.split('/')[0] !== 'image'">
                       {{ va.fileType.split("/")[1] }}
                     </h3>
                   </ng-container>
@@ -414,7 +414,7 @@
 
         <!--  -->
 
-        <div class="col-12 attachments-group attachments-group-grid2" *ngIf="attachmentLayout == 'grid2'">
+        <div class="col-12 attachments-group attachments-group-grid2" *ngIf="attachmentLayout === 'grid2'">
           <div class="attachment-item" *ngFor="let va of visitAttachments; let i = index" style="position: relative"
              [title]= "va.fileName + ' - ' + (va.CreatedName || 'NA') + ' (' + (va.CreatedOn | date:'dd MMM yyyy, hh:mm a') + ')'"  [ngClass]="{'active-image-border': i == rowIndex}">
             <div class="overlayForDoc" (click)="getDocById(va.docId, va.uniqueIdentifier, 0); getIndex(i)"></div>
@@ -452,7 +452,7 @@
                     </h4>
                   </ng-container>
                   <ng-container *ngSwitchDefault>
-                    <h3 *ngIf="va.fileType.split('/')[0] != 'image'">
+                    <h3 *ngIf="va.fileType.split('/')[0] !== 'image'">
                       {{ va.fileType.split("/")[1] }}
                     </h3>
                   </ng-container>
@@ -510,12 +510,12 @@
                   <!-- <button (click)="startCamera()" class="btn btn-sm btn-outline-success">Play</button> -->
                   <!-- <button (click)="pause()" class="btn btn-warning">Pause</button> -->
                   <!-- <button (click)="resume()" class="btn btn-info">Resume</button> -->
-                  <button (click)="capture()" *ngIf="openCameraFromSource == 'patient_pic'"
+                  <button (click)="capture()" *ngIf="openCameraFromSource === 'patient_pic'"
                     class="btn btn-sm btn-outline-success m-r-10">
                     Capture
                   </button>
                   <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" (click)="captureDocument()" *ngIf="openCameraFromSource == 'attachment'"
+                    <button type="button" (click)="captureDocument()" *ngIf="openCameraFromSource === 'attachment'"
                       class="btn btn-primary font-weight-bold">
                       Capture Picture
                     </button>
@@ -636,7 +636,7 @@
                 </h2>
               </ng-container>
               <ng-container *ngSwitchDefault>
-                <h3 *ngIf="selectedImg?.fileType.split('/')[0] != 'image'" cl>
+                <h3 *ngIf="selectedImg?.fileType.split('/')[0] !== 'image'" cl>
                   {{ selectedImg?.fileType.split("/")[1] }}
                 </h3>
               </ng-container>

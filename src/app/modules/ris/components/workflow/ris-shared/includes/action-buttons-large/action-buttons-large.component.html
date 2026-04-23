@@ -130,8 +130,8 @@
         <ng-container *ngIf="objJson !==null && objJson.length  && isHistory">
             <div class="history" style="max-height: 360px; overflow-y: auto;">
                 <div *ngFor="let h of objJson; let i = index">
-                    <span *ngIf="h.technicianHitory || h.technicianHitory!=''" class="text-primary"> {{h.unserName}} | {{h.savedOn}} </span>
-                    <p *ngIf="h.technicianHitory || h.technicianHitory!=''" style="border-bottom: 1px dashed #cccdd3;">{{h.technicianHitory}}</p>
+                    <span *ngIf="h.technicianHitory || h.technicianHitory!==''" class="text-primary"> {{h.unserName}} | {{h.savedOn}} </span>
+                    <p *ngIf="h.technicianHitory || h.technicianHitory!==''" style="border-bottom: 1px dashed #cccdd3;">{{h.technicianHitory}}</p>
                 </div>
             </div>
            

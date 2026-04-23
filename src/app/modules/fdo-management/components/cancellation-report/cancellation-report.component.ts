@@ -88,7 +88,7 @@ export class CancellationReportComponent implements OnInit {
   }
 
   getCancellationReport() {
-    let formValues = this.cancellationReportForm.getRawValue();
+    const formValues = this.cancellationReportForm.getRawValue();
     formValues.dateFrom = formValues.dateFrom
       ? Conversions.formatDateObject(formValues.dateFrom)
       : null;
@@ -102,15 +102,15 @@ export class CancellationReportComponent implements OnInit {
       return;
     }
     // Get the selected cancellation type from the form or default to 'All'
-    let selectedCancellationType = formValues.cancellationType || "All";
+    const selectedCancellationType = formValues.cancellationType || "All";
 
     // Find the corresponding value from the cancellationTypes array
-    let cancellationTypeValue =
+    const cancellationTypeValue =
       this.cancellationTypes.find(
         (type) => type.label === selectedCancellationType
       )?.value || 0;
 
-    let objParams = {
+    const objParams = {
       DateFrom: formValues.dateFrom,
       DateTo: formValues.dateTo,
       PatientType: formValues.TypeId || -1,
@@ -185,7 +185,7 @@ export class CancellationReportComponent implements OnInit {
     this.testStatusList = [];
     this.lookupService.getTestStatus({ testCategory: 1 }).subscribe(
       (resp: any) => {
-        let _response = resp.PayLoad || [];
+        const _response = resp.PayLoad || [];
         this.testStatusList = _response;
       },
       (err) => {}
@@ -198,7 +198,7 @@ export class CancellationReportComponent implements OnInit {
       .getLookupsForRegistration({ branchId: this.loggedInUser.locationid })
       .subscribe(
         (resp: any) => {
-          let _response = resp.PayLoadDS || [];
+          const _response = resp.PayLoadDS || [];
           this.paymentMethodList = _response.Table5 || [];
           this.patientTypeList = _response.Table6 || [];
         },

@@ -32,8 +32,8 @@ export class DenguePostedDataComponent implements OnInit {
     }, 100);
   }
   getDenguePostedData() {
-    let formValues = this.DenForm.getRawValue();
-    let params = {
+    const formValues = this.DenForm.getRawValue();
+    const params = {
       "DateFrom": Conversions.formatDateObjectToString(formValues.dateFrom),
       "DateTo": Conversions.formatDateObjectToString(formValues.dateTo),
       "LocID": formValues.locID || null, 

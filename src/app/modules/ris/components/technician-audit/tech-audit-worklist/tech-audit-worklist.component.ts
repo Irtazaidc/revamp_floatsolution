@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, OnDestroy, OnChanges, AfterViewInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AppPopupService } from '../../../../shared/helpers/app-popup.service';
 import { environment } from '../../../../../../environments/environment'
@@ -23,14 +23,14 @@ import Swal from 'sweetalert2';
   templateUrl: './tech-audit-worklist.component.html',
   styleUrls: ['./tech-audit-worklist.component.scss']
 })
-export class TechAuditWorklistComponent implements OnInit {
+export class TechAuditWorklistComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   private refreshSubscription: Subscription;
-  @Input('paramsValuesForWorkList') paramsValuesForWorkList: any;
-  @Input('colNamesForMOScreen') colNamesForMOScreen = [];
-  @Input('actionsPermission') actionsPermission: any = [];
-  @Input('isStatusChanged') isStatusChanged: any = [];
-  @Input('isSaved') isSaved: any = [];
+  @Input() paramsValuesForWorkList: any;
+  @Input() colNamesForMOScreen = [];
+  @Input() actionsPermission: any = [];
+  @Input() isStatusChanged: any = [];
+  @Input() isSaved: any = [];
   @Output() paramFormHeaderInfo = new EventEmitter<any>();
   @Output() selectedValueChange = new EventEmitter<any>();
   @Output() selectedDoctorFeedback = new EventEmitter<any>();
@@ -56,7 +56,7 @@ export class TechAuditWorklistComponent implements OnInit {
   loggedInUser: UserModel;
 
   sub: Subscription;
-  count: number = 0;
+  count = 0;
   currow: any;
   constructor(
     private spinner: NgxSpinnerService,
@@ -134,7 +134,7 @@ export class TechAuditWorklistComponent implements OnInit {
       this.getRISWorkList(this.paramsValuesForWorkList);
       // this.getRISWorkListCount(this.paramsValuesForWorkList);
       // }, 200);
-    let DoctorFeedback = this.storageService.getObject('DoctorFeedback');
+    const DoctorFeedback = this.storageService.getObject('DoctorFeedback');
     DoctorFeedback ? this.isDrCheckboxChecked = true: this.isDrCheckboxChecked = false;
     }
 
@@ -184,7 +184,7 @@ export class TechAuditWorklistComponent implements OnInit {
       this.searchText = '';
       this.risWorkist = [];
       this.spinner.show(this.spinnerRefs.listSection);
-      let params = {
+      const params = {
         VisitID: val.visitID ? Number(val.visitID.replaceAll("-", '')) : null,
         BranchIDs: val.branch ? val.branch.join(",") : null,
         FilterBy: val.filterBy,
@@ -198,7 +198,7 @@ export class TechAuditWorklistComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.listSection);
         if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
           this.orignaRisList = resp.PayLoad
-          let dataset = resp.PayLoad;
+          const dataset = resp.PayLoad;
           this.risWorkist = dataset.map(a => ({
             BranchCode: a.BranchCode,
             MOBy: a.MOBy,
@@ -239,9 +239,9 @@ export class TechAuditWorklistComponent implements OnInit {
             isMetal: a.isMetal,
             isPreMedical: a.isPreMedical
           }));
-          let newris = [];
+          const newris = [];
           this.risWorkist = this.risWorkist.map((a, i) => {
-            let _obj = {};
+            const _obj = {};
             this.colNamesForMOScreen.forEach(b => { _obj[b] = a[b] }); return _obj
           })
           this.filterResults();
@@ -390,7 +390,7 @@ export class TechAuditWorklistComponent implements OnInit {
   openMOHistoryReport(row) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(row.VisitNo.replaceAll("-", "")), TPID: row.TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -415,7 +415,7 @@ export class TechAuditWorklistComponent implements OnInit {
   searchText = '';
   refreshPagination() {
     // this.clearVariables(0);
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       // .map((item, i) => ({ id: i + 1, ...item }))
@@ -425,10 +425,10 @@ export class TechAuditWorklistComponent implements OnInit {
   filterResults() {
     // this.clearVariables(0);
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorkist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorkist, this.searchText, cols, this.risWorkist);
     }
     this.pagination.filteredSearchResults = results;
@@ -461,7 +461,7 @@ export class TechAuditWorklistComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -527,7 +527,7 @@ export class TechAuditWorklistComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -555,7 +555,7 @@ export class TechAuditWorklistComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -588,12 +588,12 @@ export class TechAuditWorklistComponent implements OnInit {
   subSectionList = []
   getSubSection() {
     this.subSectionList = [];
-    let objParam = {
+    const objParam = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.sharedService.getData(API_ROUTES.LOOKUP_GET_SUBSECTION_SECTIONID, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -668,16 +668,16 @@ export class TechAuditWorklistComponent implements OnInit {
 
   RISWorklistRow = []
   getRISWorklistRow(visitID, TPID) {
-    let params = {
+    const params = {
       VisitID: this.VisitID,
       TPID: this.TPId
     }
     this.sharedService.getData(API_ROUTES.GET_RIS_WORKLIST_ROW_FOR_TECH_AUDIT, params).subscribe((resp: any) => {
       if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
-        let respData = resp.PayLoad;
+        const respData = resp.PayLoad;
         console.log("response data is : ",respData)
         this.RISWorklistRow = respData;
-        let row = this.RISWorklistRow[0];
+        const row = this.RISWorklistRow[0];
         console.log("row is in getRISWorklistRow: ", row)
         this.WorkflowStatus = row["Workflow Status"]
         this.TPId = row.TPId;
@@ -711,8 +711,8 @@ export class TechAuditWorklistComponent implements OnInit {
             this.appPopupService.openModal(this.techAuditModal, { backdrop: 'static', size: 'fss' });
           } else {
             ////////////////////////////begin:: already audited item removed with alert message//////////////////////////////////////////////////////////////
-            let alertTitle = "Already Audited";
-            let aletMsg = 'This study <strong class="text-primary"> ' + row.VisitNo + ' : ' + this.TPName + '</strong> has already been audited.';
+            const alertTitle = "Already Audited";
+            const aletMsg = 'This study <strong class="text-primary"> ' + row.VisitNo + ' : ' + this.TPName + '</strong> has already been audited.';
             Swal.fire({
               title: alertTitle,
               html: aletMsg,
@@ -840,7 +840,7 @@ export class TechAuditWorklistComponent implements OnInit {
   }
 
   fitlterMyData(myData) {
-    let dataset = myData;
+    const dataset = myData;
     this.risWorkist = dataset.map(a => ({
       BranchCode: a.BranchCode,
       MOBy: a.MOBy,
@@ -880,9 +880,9 @@ export class TechAuditWorklistComponent implements OnInit {
       FBHLocCode: a.FBHLocCode || null,
       isMetal: a.isMetal
     }));
-    let newris = [];
+    const newris = [];
     this.risWorkist = this.risWorkist.map((a, i) => {
-      let _obj = {};
+      const _obj = {};
       this.colNamesForMOScreen.forEach(b => { _obj[b] = a[b] }); return _obj
     })
     this.filterResults();

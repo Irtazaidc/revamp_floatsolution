@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, OnDestroy, OnChanges, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
@@ -32,14 +32,14 @@ import Swal, { SweetAlertResult } from 'sweetalert2';
   templateUrl: './queue-manager-worklist.component.html',
   styleUrls: ['./queue-manager-worklist.component.scss']
 })
-export class QueueManagerWorklistComponent implements OnInit {
+export class QueueManagerWorklistComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   private refreshSubscription: Subscription;
-  @Input('paramsValuesForWorkList') paramsValuesForWorkList: any;
-  @Input('colNamesForMOScreen') colNamesForMOScreen = [];
-  @Input('actionsPermission') actionsPermission: any = [];
-  @Input('isStatusChanged') isStatusChanged: any = [];
-  @Input('isSaved') isSaved: any = [];
+  @Input() paramsValuesForWorkList: any;
+  @Input() colNamesForMOScreen = [];
+  @Input() actionsPermission: any = [];
+  @Input() isStatusChanged: any = [];
+  @Input() isSaved: any = [];
   @Output() paramFormHeaderInfo = new EventEmitter<any>();
   @Output() selectedValueChange = new EventEmitter<any>();
   @ViewChild('questionnaireModal') questionnaireModal;
@@ -68,8 +68,8 @@ export class QueueManagerWorklistComponent implements OnInit {
   visitInfo: any = {};
   PatientPhoneNumber: any = "";
   screenIdentity = null; //1 for MO Worklist, 2 for Tech Worklist
-  disabledButtonVerify: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinnerVerify: boolean = true;//Hide Loader
+  disabledButtonVerify = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerVerify = true;//Hide Loader
 
   techUsername = ""; //john.doe;
   techPassword = ""; //freedom;
@@ -92,7 +92,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   loggedInUser: UserModel;
 
   sub: Subscription;
-  count: number = 0;
+  count = 0;
   currow: any;
   constructor(
     private lookupSrv: LookupService,
@@ -259,7 +259,7 @@ export class QueueManagerWorklistComponent implements OnInit {
               this.toastr.warning("The device is not connected or closed, so please log in with your credentials.", "Device Connection Error")
               this.appPopupService.openModal(this.userVerificationModal, { backdrop: 'static', size: 'md' });
             } else {
-              let data = this.multiApp.getTDate();
+              const data = this.multiApp.getTDate();
               this.TPId = data.value.TPId;
               this.VisitID = data.value.VisitNo.replaceAll("-", "");
               this.VisitIDWithDashes = data.value.VisitNo;
@@ -499,7 +499,7 @@ export class QueueManagerWorklistComponent implements OnInit {
             // console.log("this.StatusId_____________",this.StatusId," this.RISWorklistRow",this.RISWorklistRow)
             this.count = this.count + 1;
             // this.clearVariables(0);
-            let obj = {
+            const obj = {
               user: 1,
               timestamp: +new Date(),
               screen: encodeURIComponent(window.location.href)
@@ -612,9 +612,9 @@ export class QueueManagerWorklistComponent implements OnInit {
     this.isLoadSummaryMethodCalled = false;
     // console.log("there we goo in risworklist status change rec getRisworkList:",val)
     // this.clearVariables(0)
-    let storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : val;
+    const storagePrms = this.storageService.getObject('risFilterParams') ? this.storageService.getObject('risFilterParams') : val;
     this.storageService.setObject('risFilterParams', val);
-    let visitIDForSelectedDoctor = val.visitID.replaceAll("-", '');
+    const visitIDForSelectedDoctor = val.visitID.replaceAll("-", '');
     if (val.visitID) {
       this.showAllTab = true;
       this.active = 7;
@@ -636,7 +636,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       // this.filterResults();
       this.risWorkist = [];
       this.spinner.show(this.spinnerRefs.listSection);
-      let params = {
+      const params = {
         VisitID: val.visitID ? val.visitID.replaceAll("-", '') : null,
         BranchIDs: (!val.branch || !val.branch.length) ? val.branchAll.join(",") : val.branch.join(","),
         FilterBy: val.filterBy,
@@ -654,7 +654,7 @@ export class QueueManagerWorklistComponent implements OnInit {
         this.spinner.hide(this.spinnerRefs.listSection);
         if (resp && resp.PayLoad && resp.PayLoad.length && resp.StatusCode == 200) {
           this.orignaRisList = resp.PayLoad
-          let dataset = resp.PayLoad;
+          const dataset = resp.PayLoad;
           // console.log("dataset: ", dataset)
           this.risWorkist = dataset.map(a => ({
             BranchCode: a.BranchCode,
@@ -692,9 +692,9 @@ export class QueueManagerWorklistComponent implements OnInit {
           }));
           // this.risWorkist = resp.PayLoad;
           // ['VisitNo', 'PatientName', 'TPCode', 'TestStatus']
-          let newris = [];
+          const newris = [];
           this.risWorkist = this.risWorkist.map((a, i) => {
-            let _obj = {};
+            const _obj = {};
             this.colNamesForMOScreen.forEach(b => { _obj[b] = a[b] }); return _obj
           })
           this.filterResults();
@@ -796,7 +796,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   countRadioAll = 0;
   getRISWorkListSummary(val) {
     if ((val.dateFrom && val.dateTo) || val.visitID) {
-      let params = {
+      const params = {
         VisitID: val.visitID ? val.visitID.replaceAll("-", '') : null,
         // BranchIDs: val.branch ? val.branch.join(",") : null, //comment in case of v1 and following for v2 ie queue-manager, we will add for bulkv2 also when need
         BranchIDs: (this.screenIdentity === 'queue-manager' || this.screenIdentity == 'bulk-queue-manager') && (!val.branch || !val.branch.length)
@@ -819,12 +819,12 @@ export class QueueManagerWorklistComponent implements OnInit {
       }
       // console.log("FormOBJJJJJJJJJ_IN queue Manager222222________", params)
       this.worklistSrv.getRISWorkListSummary(params).subscribe((resp: any) => {
-        let filterBy = [4, 5, 6, 7, 8, 9, 10];
+        const filterBy = [4, 5, 6, 7, 8, 9, 10];
         if (filterBy.includes(parseInt(params.FilterBy))) {
           if (resp && resp.PayLoadDS && resp.StatusCode == 200) {
-            let summaryCounter = resp.PayLoadDS.Table;
-            let summaryAddendum = resp.PayLoadDS.Table1;
-            let summaryPending = resp.PayLoadDS.Table2;
+            const summaryCounter = resp.PayLoadDS.Table;
+            const summaryAddendum = resp.PayLoadDS.Table1;
+            const summaryPending = resp.PayLoadDS.Table2;
 
             this.countRadioAssigned = (summaryCounter.find(a => a.RISStatusID === 8 && a.StatusID === 7) || { TotalRecords: 0 }).TotalRecords;
 
@@ -833,7 +833,7 @@ export class QueueManagerWorklistComponent implements OnInit {
             // this.countRadioDrafted = (summaryCounter.find(a => a.RISStatusID === 10 && a.StatusID === 7) || { TotalRecords: 0 }).TotalRecords;
 
             //new changes for drafted
-            let draftednwl = summaryCounter.filter(a => a.RISStatusID == 10 && a.StatusID == 7);
+            const draftednwl = summaryCounter.filter(a => a.RISStatusID == 10 && a.StatusID == 7);
             // let draftednwl = summaryCounter.filter(a => a.RISStatusID == 10 && a.StatusID != 10 && a.StatusID != 9 && a.StatusID != 8);
             this.countRadioDrafted = draftednwl.length ? draftednwl.reduce((n, { TotalRecords }) => n + TotalRecords, 0) : 0 || 0;
 
@@ -844,7 +844,7 @@ export class QueueManagerWorklistComponent implements OnInit {
             // this.countRadioReported = (summaryCounter.find(a => a.StatusID === 8) || { TotalRecords: 0 }).TotalRecords;
 
             //new changes for reported
-            let reportednwl = summaryCounter.filter(a => a.StatusID == 8);
+            const reportednwl = summaryCounter.filter(a => a.StatusID == 8);
             this.countRadioReported = reportednwl.length ? reportednwl.reduce((n, { TotalRecords }) => n + TotalRecords, 0) : 0 || 0;
 
 
@@ -853,7 +853,7 @@ export class QueueManagerWorklistComponent implements OnInit {
             // this.countRadioFinal = (summaryCounter.find(a => a.StatusID === 9) || { TotalRecords: 0 }).TotalRecords;
 
             //new changes for Final
-            let finalwl = summaryCounter.filter(a => a.StatusID == 9);
+            const finalwl = summaryCounter.filter(a => a.StatusID == 9);
             this.countRadioFinal = finalwl.length ? finalwl.reduce((n, { TotalRecords }) => n + TotalRecords, 0) : 0 || 0;
 
 
@@ -862,43 +862,43 @@ export class QueueManagerWorklistComponent implements OnInit {
           }
         } else {
           if (resp && resp.PayLoadDS && resp.StatusCode == 200) {
-            let summaryCounter = resp.PayLoadDS.Table;
+            const summaryCounter = resp.PayLoadDS.Table;
             // console.log("summaryCounter: ", summaryCounter)
 
-            let mowl = summaryCounter.filter(a => !a.RISStatusID && a.isMedicalOfficerIntervention == 1);
+            const mowl = summaryCounter.filter(a => !a.RISStatusID && a.isMedicalOfficerIntervention == 1);
             this.countMOWorklist = mowl.length ? mowl[0].TestCount : 0 || 0;
 
-            let modonewl = summaryCounter.filter(a => a.RISStatusID == 2 && a.isMedicalOfficerIntervention == 1);
+            const modonewl = summaryCounter.filter(a => a.RISStatusID == 2 && a.isMedicalOfficerIntervention == 1);
             this.countMODone = modonewl.length ? modonewl[0].TestCount : 0 || 0;
 
-            let checkinwl = summaryCounter.filter(a => a.RISStatusID == 2 || a.RISStatusID == 7 || !a.RISStatusID);
+            const checkinwl = summaryCounter.filter(a => a.RISStatusID == 2 || a.RISStatusID == 7 || !a.RISStatusID);
             // this.countCheckinWorklist = checkinwl.length ? checkinwl[0].TestCount : 0 || 0;
             this.countCheckinWorklist = checkinwl.length ? checkinwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
             // this.countCheckinWorklist = this.countMOWorklist + this.countMODone;
 
-            let checkoutwl = summaryCounter.filter(a => a.RISStatusID == 3);
+            const checkoutwl = summaryCounter.filter(a => a.RISStatusID == 3);
             this.countCheckoutWorklist = checkoutwl.length ? checkoutwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
-            let pendwl = summaryCounter.filter(a => a.RISStatusID == 7);
+            const pendwl = summaryCounter.filter(a => a.RISStatusID == 7);
             this.countPendWorklist = pendwl.length ? pendwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
-            let initialwl = summaryCounter.filter(a => a.RISStatusID == 4);
+            const initialwl = summaryCounter.filter(a => a.RISStatusID == 4);
             this.countInitialWorklist = initialwl.length ? initialwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
-            let initializedwl = summaryCounter.filter(a => a.RISStatusID == 5 || a.RISStatusID == 6);
+            const initializedwl = summaryCounter.filter(a => a.RISStatusID == 5 || a.RISStatusID == 6);
             this.countInitialized = initializedwl.length ? initializedwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
 
             this.countAllWorklist = this.countMOWorklist + this.countCheckinWorklist + this.countCheckoutWorklist + this.countInitialized;
 
-            let assignerAllwl = resp.PayLoadDS.Table1.length ? resp.PayLoadDS.Table1[0].TestCount : 0
+            const assignerAllwl = resp.PayLoadDS.Table1.length ? resp.PayLoadDS.Table1[0].TestCount : 0
 
 
 
 
-            let assigneAssignedwl = summaryCounter.filter(a => a.RISStatusID == 8);
+            const assigneAssignedwl = summaryCounter.filter(a => a.RISStatusID == 8);
             // let assignerUnassignedwl = summaryCounter.filter(a => a.RISStatusID == 1 || a.RISStatusID == 2 || a.RISStatusID == 3 || a.RISStatusID == 4 || a.RISStatusID == 5 || a.RISStatusID == 6 || a.RISStatusID == 7 || a.RISStatusID == 9 );
-            let assignerUnassignedwl = summaryCounter.filter(a => [4, 5, 9].includes(a.RISStatusID)); //1, 2, 3, 4, 5, 6, 7, 9 i have made some changes because in counter MO done and checkin studies was also comming while not in listing
+            const assignerUnassignedwl = summaryCounter.filter(a => [4, 5, 9].includes(a.RISStatusID)); //1, 2, 3, 4, 5, 6, 7, 9 i have made some changes because in counter MO done and checkin studies was also comming while not in listing
             // this.countAssignerWorkList = resp.PayLoadDS.Table1.length ? resp.PayLoadDS.Table1[0].TestCount : 0
 
             // this.countAssignerAssigned = assigneAssignedwl.length ? assigneAssignedwl.reduce((n, { TestCount }) => n + TestCount, 0) : 0 || 0;
@@ -1375,7 +1375,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   openMOHistoryReport(row) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(row.VisitNo.replaceAll("-", "")), TPID: row.TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -1400,7 +1400,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   searchText = '';
   refreshPagination() {
     // this.clearVariables(0);
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     if ((this.screenIdentity == 'queue-management' || this.screenIdentity == 'queue-manager') && this.isAssigner || (this.screenIdentity == 'bulk-queue-manager')) {
       this.pagination.paginatedSearchResults = dataToPaginate;
@@ -1417,10 +1417,10 @@ export class QueueManagerWorklistComponent implements OnInit {
   filterResults() {
     // this.clearVariables(0);
     this.pagination.page = 1;
-    let cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
+    const cols = ['VisitNo', 'PatientName', 'TPCode', 'BranchCode', 'PhoneNumber', 'TestStatus', 'Workflow Status'];
     let results: any = this.risWorkist;
     if (this.searchText && this.searchText.length > 2) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.risWorkist, this.searchText, cols, this.risWorkist);
     }
     this.pagination.filteredSearchResults = results;
@@ -1441,7 +1441,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   }
   readTechAgreement() {
     if (this.isConsentRead) {
-      let params = {
+      const params = {
         RISWorkListID: this.RISWorkListID,
         isConsentRead: 1,
         ModifiedBy: this.VerifiedUserID
@@ -1471,14 +1471,14 @@ export class QueueManagerWorklistComponent implements OnInit {
   }
   verifyUser() {
     // this.clearVariables();
-    let formValues = this.userVerificationForm.getRawValue();
+    const formValues = this.userVerificationForm.getRawValue();
     this.userVerificationForm.markAllAsTouched();
     if (this.userVerificationForm.invalid) {
       this.toastr.warning('Please fill the required fields...!'); return false;
     } else {
       ///////START::VERIFY USER /////////////////////////////
       // formValues.techUsername=='john.doe' && formValues.techPassword=='freedom'
-      let params = {
+      const params = {
         UserName: formValues.techUsername,
         Password: formValues.techPassword
       }
@@ -1545,7 +1545,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   isShowVitalsCard = false;
   getVitals() {
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: this.VisitID,
         TPID: this.TPId
       }
@@ -1564,7 +1564,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     this.VisitID = doropDownObj.VisitID
     this.visitInfo = { tpId: doropDownObj.TPID, visitID: doropDownObj.VisitID, patientID: this.PatientId, phoneNumber: this.PatientPhoneNumber }
     if (this.visitInfo.visitID && this.visitInfo.tpId) {
-      let params = {
+      const params = {
         VisitID: doropDownObj.VisitID,
         TPID: doropDownObj.TPID
       }
@@ -1638,7 +1638,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   printMOHistoryReport(visitID, TPId) {
     const url = environment.patientReportsPortalUrl + 'mo-consent?p=' + btoa(JSON.stringify({ VisitID: Number(visitID), TPID: TPId }));
     // let winRef = window.open(url.toString(), '_blank', 'resizable,height=700,width=900');
-    let winRef = window.open(url.toString(), '_blank');
+    const winRef = window.open(url.toString(), '_blank');
     setTimeout(() => {
       // winRef.close();
     }, 1000);
@@ -1651,10 +1651,10 @@ export class QueueManagerWorklistComponent implements OnInit {
 
 
   /////////////////////////////Assigner Section////////////
-  isSpinnerAssign: boolean = true;//Hide Loader
-  isSpinnerUnAssign: boolean = true;//Hide Loader
-  disabledButtonAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
-  disabledButtonUnAssign: boolean = false; // Button Enabled / Disables [By default Enabled]
+  isSpinnerAssign = true;//Hide Loader
+  isSpinnerUnAssign = true;//Hide Loader
+  disabledButtonAssign = false; // Button Enabled / Disables [By default Enabled]
+  disabledButtonUnAssign = false; // Button Enabled / Disables [By default Enabled]
   VisitId = null;
   assigneeName = null;
   assigneeInItName = null;
@@ -1705,7 +1705,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       setTimeout(() => {
       this.radiologistListFiltered = this.radoiologistList.filter((radiologist) => {
         // Split the SubSectionIDs string into an array of values
-        let subSectionIdsArray = radiologist.SubSectionIDs ? radiologist.SubSectionIDs.split(',').map(Number) : [];
+        const subSectionIdsArray = radiologist.SubSectionIDs ? radiologist.SubSectionIDs.split(',').map(Number) : [];
         // Check if the SubSectionIdFilter value is in the array
         return subSectionIdsArray.includes(this.SubSectionIdFilter);
       });
@@ -1718,7 +1718,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       // this.clearRadiologistSummary();
       this.selectedValueChange.emit(this.EmpID);
       // this.getRadiologistSummary(null);
-      let drInfo = this.radoiologistList.find(a => a.EmpId == this.EmpID);
+      const drInfo = this.radoiologistList.find(a => a.EmpId == this.EmpID);
       if (drInfo)
         this.assigneeName = drInfo.FullName;
       this.assigneeInItName = this.InitByEmpID ? this.radoiologistList.find(a => a.EmpId == this.InitByEmpID).FullName : null;
@@ -1750,7 +1750,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   TPIds = [];
   getMOInterventionTPByVisitID(VisitID) {
     this.visitTests = []
-    let params = {
+    const params = {
       VisitID: VisitID
     };
     // this.questionnaireSrv.getMOInterventionTPByVisitID(params).subscribe((res: any) => {
@@ -1769,13 +1769,13 @@ export class QueueManagerWorklistComponent implements OnInit {
   visitTestsAssigner = [];
   getRISTPByVisit(VisitID) {
     this.visitTestsAssigner = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       FilterBy: 1
     };
     this.sharedService.getData(API_ROUTES.GET_RIS_TP_BY_VISIT, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
-        let visitTestsAssigner = res.PayLoad || [];
+        const visitTestsAssigner = res.PayLoad || [];
         this.visitTestsAssigner = visitTestsAssigner.map(a => ({
           TPID: a.TPID,
           TestProfileCode: a.TestProfileCode,
@@ -1794,8 +1794,8 @@ export class QueueManagerWorklistComponent implements OnInit {
   radoiologistList = [];
   radiologistListFiltered = [];
   getRadiologistInfo(EmpID) {
-    let subSectionIDs = (this.paramsValuesForWorkList.subSectionIDs && this.paramsValuesForWorkList.subSectionIDs.length) ? this.paramsValuesForWorkList.subSectionIDs.join(",") : null;
-    let params = {
+    const subSectionIDs = (this.paramsValuesForWorkList.subSectionIDs && this.paramsValuesForWorkList.subSectionIDs.length) ? this.paramsValuesForWorkList.subSectionIDs.join(",") : null;
+    const params = {
       EmpID: EmpID,
       SubSectionIDs: subSectionIDs
     };
@@ -1878,7 +1878,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   rowIndexCpy = null;
   copyText(text: any, i = null) {
     this.rowIndexCpy = i;
-    let pin = text.VisitNo
+    const pin = text.VisitNo
     this.helper.copyMessage(pin);
     this.isCoppied = true;
     setTimeout(() => {
@@ -1936,9 +1936,9 @@ export class QueueManagerWorklistComponent implements OnInit {
   isDoneTechHistory = 0;
   objJson = []
   insertUpdateTechnicianWorkList() {
-    let currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
+    const currentdate = moment().format('DD-MMM-YYYY h:mm:ss');
     let mergeObj = []
-    let obj = {
+    const obj = {
       technicianHitory: this.TechnicianHistory,
       unserName: this.VerifiedUserName,
       userID: this.VerifiedUserID,
@@ -1949,7 +1949,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     mergeObj.push(obj);
     // console.log("jsonOBJ______________",obj);//return;
     // console.log("mergeObj______________",mergeObj);return;
-    let objParam = {
+    const objParam = {
       ///////////////////
       TPID: this.TPId,
       VisitID: Number(this.VisitID),
@@ -1971,7 +1971,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     // console.log("objParam for tech checklist____________", objParam);//return;
 
     this.techSrv.insertUpdateTechnicianWorkList(objParam).subscribe((data: any) => {
-      let respons = JSON.parse(data.PayLoadStr);
+      const respons = JSON.parse(data.PayLoadStr);
       if (respons.length) {
         if (data.StatusCode == 200) {
           this.toastr.success(data.Message);
@@ -2058,8 +2058,8 @@ export class QueueManagerWorklistComponent implements OnInit {
         input: 'custom-radio'
       },
       preConfirm: (res) => {
-        let processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
-        let processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
+        const processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
+        const processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
         if (!processID && processRemarks == '') {
           Swal.showValidationMessage('Please select any option and provide remarks');
           return false;
@@ -2082,7 +2082,7 @@ export class QueueManagerWorklistComponent implements OnInit {
 
     if (formValues && formValues[0] && formValues[1] != '') {
       this.ProcessID = Number(formValues[0]);
-      let remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + row.TPCode + ": " : "Critical Remarks for " + row.TPCode + ": ";
+      const remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + row.TPCode + ": " : "Critical Remarks for " + row.TPCode + ": ";
       this.ProcessRemarks = remarksPrepend + formValues[1]
       this.updateVisitTestPriority(row)
       this.saveVisitRemarks(row)
@@ -2124,8 +2124,8 @@ export class QueueManagerWorklistComponent implements OnInit {
         input: 'custom-radio'
       },
       preConfirm: (res) => {
-        let processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
-        let processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
+        const processID = (document.querySelector('input[name="swal-radio"]:checked') as HTMLInputElement)?.value;
+        const processRemarks = (document.getElementById('swal-textarea') as HTMLTextAreaElement).value;
         if (!processID && processRemarks == '') {
           Swal.showValidationMessage('Please select any option and provide remarks');
           return false;
@@ -2148,7 +2148,7 @@ export class QueueManagerWorklistComponent implements OnInit {
 
     if (formValues && formValues[0] && formValues[1] != '') {
       this.ProcessID = Number(formValues[0]);
-      let remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
+      const remarksPrepend = this.ProcessID == 2 ? "Urgent Remarks for " + this.TPCode + ": " : "Critical Remarks for " + this.TPCode + ": ";
       this.ProcessRemarks = remarksPrepend + formValues[1]
       this.updateVisitTestPriority({ TPId: this.TPId, VisitNo: this.VisitID })
       this.saveVisitRemarks({ TPId: this.TPId, VisitNo: this.VisitID })
@@ -2159,7 +2159,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   }
 
   updateVisitTestPriority(row) {
-    let objParams = {
+    const objParams = {
       VisitID: row.VisitNo.replaceAll("-", ""),
       TPID: row.TPId,
       ProcessID: this.ProcessID,
@@ -2167,7 +2167,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       CreatedBy: this.loggedInUser.userid || -99 // -99 incase of null
     }
     this.questionnaireSrv.updateVisitTestPriority(objParams).subscribe((res: any) => {
-      let respons = JSON.parse(res.PayLoadStr);
+      const respons = JSON.parse(res.PayLoadStr);
       if (res.StatusCode == 200) {
         this.toastr.success(res.Message, "Test Sensitivity");
         this.getRisworkList(this.paramsValuesForWorkList);
@@ -2181,7 +2181,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   }
 
   saveVisitRemarks(row) {
-    let params = {
+    const params = {
       VisitId: Number(row.VisitNo.replaceAll("-", "")),
       ModuleName: this.moduleScreenName,
       Remarks: this.ProcessRemarks.trim(),
@@ -2206,7 +2206,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     });
   }
   saveVisitRemarksAssigner(row) {
-    let params = {
+    const params = {
       VisitId: Number(row.VisitId),
       ModuleName: this.moduleScreenName,
       Remarks: row.Remarks,
@@ -2276,7 +2276,7 @@ export class QueueManagerWorklistComponent implements OnInit {
         this.isSpinnerUnassignmentBulk = false;
       }
 
-      let objParam = {
+      const objParam = {
         TPIDs: this.TPIds.join(","),
         VisitID: Number(this.VisitID),
         EmpID: this.DSByEmpID,
@@ -2299,7 +2299,7 @@ export class QueueManagerWorklistComponent implements OnInit {
         this.isDisabledUnassignmentBulk = false;
         this.isSpinnerUnassignmentBulk = true;
 
-        let respons = JSON.parse(data.PayLoadStr);
+        const respons = JSON.parse(data.PayLoadStr);
         if (respons[0].Result === 2) {
           this.toastr.error(data.Message); return;
         }
@@ -2338,7 +2338,7 @@ export class QueueManagerWorklistComponent implements OnInit {
 
             this.pagination.paginatedSearchResults.splice(this.rowIndex, 1);
             // this.pagination.paginatedSearchResults = this.pagination.paginatedSearchResults.filter(item => item.TPId != this.TPId && item.VisitNo!=this.VisitIDWithDashes);
-            let nextRow = this.pagination.paginatedSearchResults.find((item, index) => index == this.rowIndex);
+            const nextRow = this.pagination.paginatedSearchResults.find((item, index) => index == this.rowIndex);
             if (nextRow)
               setTimeout(() => {
                 this.assignTest(nextRow, this.rowIndex)
@@ -2432,7 +2432,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     this.clearAllRadiologistSummary();
     this.isDisabledUnassignmentBulk = true;
     this.isSpinnerUnassignmentBulk = false;
-    let objParam = {
+    const objParam = {
       TPIDs: row.TPId,
       VisitID: Number(row.VisitNo.replaceAll("-", "")),
       EmpID: this.EmpID,
@@ -2445,7 +2445,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     this.techSrv.insertUpdateVisitTestAssignment(objParam).subscribe((data: any) => {
       this.isDisabledUnassignmentBulk = false;
       this.isSpinnerUnassignmentBulk = true;
-      let respons = JSON.parse(data.PayLoadStr);
+      const respons = JSON.parse(data.PayLoadStr);
 
       if (respons.length) {
         if (data.StatusCode == 200) {
@@ -2516,7 +2516,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   disabledButtonUnlock = false;
   isSpinnerUnlock = true;
   updateRadioReportLock() {
-    let objParam = {
+    const objParam = {
       VisitID: Number(this.VisitId),
       TPID: this.TPId,
       LockedBy: null,
@@ -2542,12 +2542,12 @@ export class QueueManagerWorklistComponent implements OnInit {
 
   isLocked = null;
   getRadioReportVisitTestStatus() {
-    let objParam = {
+    const objParam = {
       VisitID: this.VisitId,
       TPID: this.TPId,
     }
     this.sharedService.getData(API_ROUTES.GET_RADIO_REPORT_VISIT_TEST_STATUS, objParam).subscribe((data: any) => {
-      let response = data.PayLoad;
+      const response = data.PayLoad;
       if (response && response.length) {
         this.isLocked = response[0].LockedBy;
       }
@@ -2559,12 +2559,12 @@ export class QueueManagerWorklistComponent implements OnInit {
   subSectionList = []
   getSubSection() {
     this.subSectionList = [];
-    let objParam = {
+    const objParam = {
       SectionID: -1,
       LabDeptID: 2
     }
     this.sharedService.getData(API_ROUTES.LOOKUP_GET_SUBSECTION_SECTIONID, objParam).subscribe((resp: any) => {
-      let _response = resp.PayLoad;
+      const _response = resp.PayLoad;
       this.subSectionList = _response;
     }, (err) => {
       this.toastr.error('Connection error');
@@ -2677,10 +2677,10 @@ export class QueueManagerWorklistComponent implements OnInit {
 
   getStudyName(e, VisitID) {
     this.isDisabledAssignment = false;
-    let TPID = e.target.value;
+    const TPID = e.target.value;
     // console.log("TPID______this.VisitID_",TPID,this.VisitID);
     // console.log("risworklist is ",this.risWorkist)
-    let tpObj = this.visitTestsAssigner.find(a => a.TPID == TPID);
+    const tpObj = this.visitTestsAssigner.find(a => a.TPID == TPID);
     this.TPCode = tpObj.TestProfileCode;
     this.TPName = tpObj.TestProfileName;
     this.getRISWorklistRow(VisitID, TPID)
@@ -2785,7 +2785,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   checkedItemCount = 0;
   mainChk = false;
   countCheckedItems() {
-    let checkedItems = this.pagination.paginatedSearchResults.filter(item => item.checked);
+    const checkedItems = this.pagination.paginatedSearchResults.filter(item => item.checked);
     this.checkedItemCount = checkedItems.length;
     this.mainChk = this.pagination.paginatedSearchResults.length == this.checkedItemCount ? true : false;
   }
@@ -2795,7 +2795,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     let isValidAssignmentObjInit = false;  // Init missing
     let isValidAssignmentObjDS = false;    // DS missing
     this.buttonClicked = true;
-    let checkedItems = this.pagination.paginatedSearchResults.filter(a => a.checked);
+    const checkedItems = this.pagination.paginatedSearchResults.filter(a => a.checked);
     if (!checkedItems.length) {
       this.toastr.warning("Please select test(s) to assign", "Warning");
       return;
@@ -2822,7 +2822,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       this.clearRadiologistSummary();
       this.isDisabledAssignment = true;
       this.isSpinnerAssignment = false;
-      let objParam = {
+      const objParam = {
         LocID: this.loggedInUser.locationid || -99, //incase of null or empty,
         RISStatusID: statusID,
         CreatedBy: this.loggedInUser.userid || -99,//incase of null or empty
@@ -2853,7 +2853,7 @@ export class QueueManagerWorklistComponent implements OnInit {
         this.buttonClicked = false;
         this.isDisabledAssignment = false;
         this.isSpinnerAssignment = true;
-        let respons = JSON.parse(data.PayLoadStr);
+        const respons = JSON.parse(data.PayLoadStr);
         if (respons[0].Result === 2) {
           this.toastr.error(data.Message); return;
         }
@@ -3078,14 +3078,14 @@ export class QueueManagerWorklistComponent implements OnInit {
     
     this.visitDetailBtnClicked = false;
     this.RISWorklistRow = []
-    let params = {
+    const params = {
       VisitID: VisitID,
       TPID: TPID
     };
     this.sharedService.getData(API_ROUTES.GET_RIS_WORKLIST_ROW, params).subscribe((res: any) => {
       if (res.StatusCode == 200) {
         this.RISWorklistRow = res.PayLoad || [];
-        let row = this.RISWorklistRow[0];
+        const row = this.RISWorklistRow[0];
         if (row.RISStatusID) {
           this.WorkflowStatus = row["Workflow Status"]
           this.EmpID = row.EmpId;
@@ -3167,7 +3167,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     } else {
       this.clearRadiologistSummary();
       this.isLoadSummaryMethodCalled = true;
-      let objParam = {
+      const objParam = {
         EmpID: this.InitByEmpID,
         SectionID: this.SubSectionId,
         DateFrom: this.paramsValuesForWorkList.dateFrom,
@@ -3179,7 +3179,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_SUMMARY, objParam).subscribe((resp: any) => {
         this.spinner.hide(this.spinnerRefs.readiologinstSummarySection);
         if (resp.StatusCode == 200) {
-          let readiologinstSummary = resp.PayLoadDS || [];
+          const readiologinstSummary = resp.PayLoadDS || [];
           this.AllStudies = readiologinstSummary.Table || [];
           this.FinalStudies = readiologinstSummary.Table1 || [];
           this.PendingStudies = readiologinstSummary.Table2 || [];
@@ -3201,7 +3201,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     } else {
       this.clearInitRadiologistSummary();
       this.isLoadInitSummaryMethodCalled = true;
-      let objParam = {
+      const objParam = {
         InitByEmpID: this.InitByEmpID,
         SectionID: this.SubSectionId,
         DateFrom: this.paramsValuesForWorkList.dateFrom,
@@ -3213,7 +3213,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       this.sharedService.getData(API_ROUTES.GET_INIT_RADIOLOGIST_SUMMARY, objParam).subscribe((resp: any) => {
         this.spinner.hide(this.spinnerRefs.readiologinstSummarySection);
         if (resp.StatusCode == 200) {
-          let readiologinstSummary = resp.PayLoadDS || [];
+          const readiologinstSummary = resp.PayLoadDS || [];
           this.AllInitStudies = readiologinstSummary.Table || [];
           this.FinalInitRadioStudies = readiologinstSummary.Table || [];
           this.PendingInitStudies = readiologinstSummary.Table1 || [];
@@ -3239,7 +3239,7 @@ export class QueueManagerWorklistComponent implements OnInit {
     } else {
       this.clearRadiologistSummaryDSBy();
       this.isLoadDSSummaryMethodCalled = true;
-      let objParam = {
+      const objParam = {
         DSByEmpID: this.DSByEmpID,
         SectionID: this.SubSectionIdDSBy,
         DateFrom: this.paramsValuesForWorkList.dateFrom,
@@ -3251,7 +3251,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       this.sharedService.getData(API_ROUTES.GET_DS_RADIOLOGIST_SUMMARY, objParam).subscribe((resp: any) => {
         this.spinner.hide(this.spinnerRefs.readiologinstSummarySectionDSBy);
         if (resp.StatusCode == 200) {
-          let readiologinstSummaryDSBy = resp.PayLoadDS || [];
+          const readiologinstSummaryDSBy = resp.PayLoadDS || [];
           this.AllStudiesDSBy = readiologinstSummaryDSBy.Table || [];
           this.FinalStudiesDSBy = readiologinstSummaryDSBy.Table || [];
           this.PendingStudiesDSBy = readiologinstSummaryDSBy.Table1 || [];
@@ -3274,14 +3274,14 @@ export class QueueManagerWorklistComponent implements OnInit {
   getEmployeePic(EmpID) {
     this.radiologistPic = null;
     this.spinner.show(this.spinnerRefs.drPic);
-    let params = {
+    const params = {
       EmpID: EmpID
     }
     this.questionnaireSrv.getEmployeePic(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.drPic);
       if (res.StatusCode == 200) {
         if (res.PayLoad.length && res.PayLoad[0].EmployeePic) {
-          let resp = this.helper.formateImagesData(res.PayLoad, 'EmployeePic');
+          const resp = this.helper.formateImagesData(res.PayLoad, 'EmployeePic');
           this.radiologistPic = resp[0].EmployeePic;
           this.radiologistPicDS = resp[0].EmployeePic;
         } else {
@@ -3302,14 +3302,14 @@ export class QueueManagerWorklistComponent implements OnInit {
   getInitEmployeePic(EmpID) {
     this.radiologistPic = null;
     this.spinner.show(this.spinnerRefs.drPic);
-    let params = {
+    const params = {
       EmpID: EmpID
     }
     this.questionnaireSrv.getEmployeePic(params).subscribe((res: any) => {
       this.spinner.hide(this.spinnerRefs.drPic);
       if (res.StatusCode == 200) {
         if (res.PayLoad.length && res.PayLoad[0].EmployeePic) {
-          let resp = this.helper.formateImagesData(res.PayLoad, 'EmployeePic');
+          const resp = this.helper.formateImagesData(res.PayLoad, 'EmployeePic');
           this.radiologistPic = resp[0].EmployeePic;
         } else {
           this.radiologistPic = null;
@@ -3326,9 +3326,9 @@ export class QueueManagerWorklistComponent implements OnInit {
   showPassword = false;
   isInputFocused = false;
 
-  urduNews: string = "براہ کرم زیر التواء ٹیسٹ چیک آؤٹ کریں۔ ورک فلو کا اگلا مرحلہ اس کا انتظار کر رہا ہے۔ شکریہ";
+  urduNews = "براہ کرم زیر التواء ٹیسٹ چیک آؤٹ کریں۔ ورک فلو کا اگلا مرحلہ اس کا انتظار کر رہا ہے۔ شکریہ";
   englishNews: string = this.countCheckoutWorklist > 1 ? "You have " + this.countCheckoutWorklist + " tests pending checkout. Please proceed; the next step awaits. " : "You have " + this.countCheckoutWorklist + " test pending checkout. Please proceed; the next step awaits. ";
-  showUrdu: boolean = true;
+  showUrdu = true;
   private newsSubscription: Subscription;
 
 
@@ -3451,7 +3451,7 @@ export class QueueManagerWorklistComponent implements OnInit {
         radioTP[0].ItemType = itemType;
         radioTP[0].AppName = 'medicubes';
         radioTP[0].LoginName_MC = this.loggedInUser.username;
-        let patientReportWinRef: any = this.openReportWindow();
+        const patientReportWinRef: any = this.openReportWindow();
         this.printRptService.getPatientReportUrl(radioTP[0]).subscribe((res: any) => {
           // console.log("ressssssssssssssssss: ", res)
           try {
@@ -3474,11 +3474,11 @@ export class QueueManagerWorklistComponent implements OnInit {
 
   isActive = null;
   openReportWindow() {
-    let patientVisitInvoiceWinRef = window.open('', '_blank');
+    const patientVisitInvoiceWinRef = window.open('', '_blank');
     return patientVisitInvoiceWinRef;
   }
   addSessionExpiryForReport(reportUrl) {
-    let reportSegments = reportUrl.split('?');
+    const reportSegments = reportUrl.split('?');
     if (reportSegments.length > 1) {
       reportUrl = reportSegments[0] + '?' + btoa(atob(reportSegments[1]) + '&SessionExpiryTime=' + (+new Date() + (CONSTANTS.REPORT_EXPIRY_TIME * 1000))); // &pdf=1
     }
@@ -3490,7 +3490,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   getPACSServers(visitID, TPID, rowIndex) {
     this.rowIndex = rowIndex;
     this.toastr.info("Working in progress", "Success");
-    let VisitID = visitID.replaceAll("-", "");
+    const VisitID = visitID.replaceAll("-", "");
     // 240301044020,@TPId INT=926--2123
     // let objParams = {
     //   VisitId: VisitID,//'240301134040',//'240301044020',//VisitID,
@@ -3505,7 +3505,7 @@ export class QueueManagerWorklistComponent implements OnInit {
       VisitID: VisitID,
       TPID: TPID
     }];
-    let objParams = {
+    const objParams = {
       IsVPN: this.isVPN,
       LocID: this.loggedInUser.locationid,
       tblVisitTPID: tblVisitTestDetail
@@ -3585,7 +3585,7 @@ export class QueueManagerWorklistComponent implements OnInit {
   AssigneeNameSuggestedByTech = null;
   getRadiologistRefByMappingInfo(visitID) {
     this.radiologistRefByMappingInfo = [];
-    let params = {
+    const params = {
       VisitID: visitID
     };
     this.sharedService.getData(API_ROUTES.GET_RADIOLOGIST_REFBYLIST_MAPPING_INFO, params).subscribe((res: any) => {

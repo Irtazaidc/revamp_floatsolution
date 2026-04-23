@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { EmployeeService } from '../../services/employee.service';
   templateUrl: './emp-personal-info.component.html',
   styleUrls: ['./emp-personal-info.component.scss']
 })
-export class EmpPersonalInfoComponent implements OnInit {
+export class EmpPersonalInfoComponent implements OnInit, OnDestroy {
 
   isReadonly = true;
   loggedInUser: UserModel;
@@ -62,20 +62,20 @@ export class EmpPersonalInfoComponent implements OnInit {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
   getEmpBasicInfo(id) {
-    let paramObj = {
+    const paramObj = {
       UserID:this.user.userid
     }
     this.empService.getEmpBasicInfo(paramObj).subscribe((resp: any) => {
       // console.log("API Response", resp)
-      let empCardData=resp.PayLoad[0] || [];
+      const empCardData=resp.PayLoad[0] || [];
       console.log("🚀EmpPersonalInfoComponent");
       this.FName=empCardData.EmployeeName;
       this.Department=empCardData.DepartmentName;
       this.empBirthDate=empCardData.DOB;
-      let birthdate = new Date(this.empBirthDate);
-      let today = new Date();
+      const birthdate = new Date(this.empBirthDate);
+      const today = new Date();
       let age = today.getFullYear() - birthdate.getFullYear();
-      let m = today.getMonth() - birthdate.getMonth();
+      const m = today.getMonth() - birthdate.getMonth();
       if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
           age--;
       }
@@ -88,7 +88,7 @@ export class EmpPersonalInfoComponent implements OnInit {
       this.empBloodGroup=empCardData.BloodGroup;
       this.empCNIC=empCardData.CNIC;
       this.empDateOfJoining=empCardData.DateOfJoining;
-      let joining = new Date(this.empDateOfJoining);
+      const joining = new Date(this.empDateOfJoining);
       this.empDateOfJoining=joining.toLocaleDateString("default", {year: "numeric", month: "short", day: "numeric"});
       this.empFatherName=empCardData.FatherName;
       this.empMaritalStatus=empCardData.MaritalStatus;

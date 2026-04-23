@@ -12,7 +12,7 @@ import { EmployeeService } from '../../services/employee.service';
   styleUrls: ['./emp-card.component.scss']
 })
 export class EmpCardComponent implements OnInit {
-@Input('userId') userId:any;
+@Input() userId:any;
 
   // FName="";
   // basicInfo=[];

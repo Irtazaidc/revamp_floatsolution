@@ -69,7 +69,7 @@ export class LabTestingComponent implements OnInit {
   }
 
   getLabTestingDataList(){
-    let formValues  = this.getLabTestingData.getRawValue();
+    const formValues  = this.getLabTestingData.getRawValue();
     const dateFrom = formValues.dateFrom;
     const dateTo = formValues.dateTo;
     const fromDate: any = new Date(dateFrom.year, dateFrom.month - 1, dateFrom.day);
@@ -99,7 +99,7 @@ export class LabTestingComponent implements OnInit {
       return;
     }
 
-    let objParams = {
+    const objParams = {
       DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
       DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
       LocID : formValues.locID || null,
@@ -148,7 +148,7 @@ export class LabTestingComponent implements OnInit {
   panelsList
   getPanels() {
     this.panelsList = [];
-    let _params = {
+    const _params = {
       branchId: null
     }
     this.lookupService.getPanels(_params).subscribe((res: any) => {

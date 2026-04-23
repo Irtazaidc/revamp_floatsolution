@@ -72,7 +72,7 @@ export class LabTestingLocComponent implements OnInit {
 
 
  getlabtestformDataList(){
-   let formValues  = this.labtestformData.getRawValue();
+   const formValues  = this.labtestformData.getRawValue();
    
    if (this.labtestformData.invalid) {
      this.toasrt.warning("Please Fill The Mandatory Fields");
@@ -80,7 +80,7 @@ export class LabTestingLocComponent implements OnInit {
      return;
    }
 
-   let objParams = {
+   const objParams = {
      DateFrom: Conversions.formatDateObject(formValues.dateFrom) || null,
      DateTo: Conversions.formatDateObject(formValues.dateTo) || null, 
      LocIDs : formValues.locID ? formValues.locID.join(","): null ,
@@ -144,7 +144,7 @@ export class LabTestingLocComponent implements OnInit {
  getSubSection() {
     
   this.subSectionList = [];
-  let objParm = {
+  const objParm = {
     SectionID: -1,
     LabDeptID: -1,
   }    
@@ -197,9 +197,9 @@ exportAsExcel() {
 
 testList = [];
 getTestProfileList() {
-  let formValues  = this.labtestformData.getRawValue();
+  const formValues  = this.labtestformData.getRawValue();
   this.testList = [];
-  let _param = {
+  const _param = {
     TPID: null,
     TestProfileCode: null,
     TestProfileName: null,

@@ -23,7 +23,7 @@ import { TestProfileConfigurationService } from '../../../test-profile-managemen
 export class TpConfigMrkComponent implements OnInit {
 
   @Output() tabIndexData = new EventEmitter<any>();
-  @Output() outputFromChild: EventEmitter<string> = new EventEmitter();
+  @Output() outputFromChild = new EventEmitter<string>();
 
   QuestionClassificationID: any = null;
 
@@ -32,8 +32,8 @@ export class TpConfigMrkComponent implements OnInit {
   searchText = '';
   objList = [];
   existingRow = [];
-  disabledButton: boolean = false; // Button Enabled / Disables [By default Enabled]
-  isSpinner: boolean = true;//Hide Loader
+  disabledButton = false; // Button Enabled / Disables [By default Enabled]
+  isSpinner = true;//Hide Loader
   ImageToUpload: File = null
   ImageUrl: any;
   ImageUrl_temp: any;
@@ -125,7 +125,7 @@ export class TpConfigMrkComponent implements OnInit {
     this.objList = [];
     this.filterResults();
     this.spinner.show(this.spinnerRefs.listSection);
-    let _param = {
+    const _param = {
       branchId: this.selectedLocId,
       TestProfileCode: null,
       TestProfileName: null,
@@ -161,7 +161,7 @@ export class TpConfigMrkComponent implements OnInit {
     let response = [];
     this.ImageUrl=null;
 
-    let paramObj = {
+    const paramObj = {
       TPID:this.TPId
     }
     this.TPService.GetTestProfilePicByID(paramObj).subscribe((resp: any) => {
@@ -183,7 +183,7 @@ export class TpConfigMrkComponent implements OnInit {
   // Start Pagination 
 
   refreshPagination() {
-    let dataToPaginate = this.pagination.filteredSearchResults;
+    const dataToPaginate = this.pagination.filteredSearchResults;
     this.pagination.collectionSize = dataToPaginate.length;
     this.pagination.paginatedSearchResults = dataToPaginate
       .map((item, i) => ({ id: i + 1, ...item }))
@@ -193,10 +193,10 @@ export class TpConfigMrkComponent implements OnInit {
   filterResults() {
     
     this.pagination.page = 1;
-    let cols = ['TestProfileName', 'TestProfileCode'];
+    const cols = ['TestProfileName', 'TestProfileCode'];
     let results: any = this.objList;
     if (this.searchText && this.searchText.length > 1) {
-      let pipe_filterByKey = new FilterByKeyPipe();
+      const pipe_filterByKey = new FilterByKeyPipe();
       results = pipe_filterByKey.transform(this.objList, this.searchText, cols, this.objList);
     }
     this.pagination.filteredSearchResults = results;
@@ -207,8 +207,8 @@ export class TpConfigMrkComponent implements OnInit {
 
   //Add Update Product Promotion
   addUpdateTestProfilePic() {
-    let bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
-    var fileExtension = "";
+    const bytesToMegaBytes = this.ImageMaxSize / (1024 ** 2);
+    let fileExtension = "";
     this.spinner.show(this.spinnerRefs.updatePicture);
     let image = null;
     if (this.ImageToUpload != null) {
@@ -232,7 +232,7 @@ export class TpConfigMrkComponent implements OnInit {
       //   image = this.ImageUrl.replace("data:image/png;base64,", "data:image/gif;base64,");
         
       }     
-      let param = {
+      const param = {
         CreatedBy: this.loggedInUser.userid,
         TPID: this.objForm.value.TPId,
         TestProfilePic: image,
@@ -278,8 +278,8 @@ export class TpConfigMrkComponent implements OnInit {
       this.objForm.reset();
     }, 100);
   }
-  Height:number = 0;
-  Weight:number = 0;
+  Height = 0;
+  Weight = 0;
 
   loadItemsImage(event) {
     const file = (event.target as HTMLInputElement).files[0];
@@ -311,15 +311,15 @@ export class TpConfigMrkComponent implements OnInit {
   }
   loadImage(file, fileName = 'file') {
     
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        let imageURL = reader.result as string;
+        const imageURL = reader.result as string;
         this.ImageUrl_temp = imageURL.replace('data:'+file.type+';base64,','');
         // console.log("file to load",this.ImageUrl_temp);
-        let _fileName = file.name || '';
+        const _fileName = file.name || '';
         //_fileName = `${fileName}`;
-        let _fileObject = {
+        const _fileObject = {
           uniqueIdentifier: (+new Date()),
           fileName: _fileName,
           filtType: file.type || '',
@@ -346,7 +346,7 @@ export class TpConfigMrkComponent implements OnInit {
 
   resizeImage(file, maxWidth, maxHeight, compressionRatio = 0, imageEncoding = '', base64Data = '') {
     const self = this;
-    let promise = new Promise( (resolve, reject) => {
+    const promise = new Promise( (resolve, reject) => {
       if(!file && !base64Data) {
         resolve('');
       }
@@ -357,7 +357,7 @@ export class TpConfigMrkComponent implements OnInit {
       let blob = null;
   
       // create a hidden canvas object we can use to create the new resized image data
-      let canvas_id = 'hiddenCanvas_'+ +new Date();
+      const canvas_id = 'hiddenCanvas_'+ +new Date();
       canvas.id = canvas_id;
       canvas.width = maxWidth;
       canvas.height = maxHeight;

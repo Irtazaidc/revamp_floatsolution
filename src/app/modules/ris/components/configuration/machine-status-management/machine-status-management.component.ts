@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService, UserModel } from 'src/app/modules/auth';
@@ -13,7 +13,7 @@ import { SharedService } from 'src/app/modules/shared/services/shared.service';
   templateUrl: './machine-status-management.component.html',
   styleUrls: ['./machine-status-management.component.scss']
 })
-export class MachineStatusManagementComponent implements OnInit {
+export class MachineStatusManagementComponent implements OnInit, OnChanges {
   spinnerRefs = {
     machineStatusSection: 'machineStatusSection'
   }
@@ -60,7 +60,7 @@ export class MachineStatusManagementComponent implements OnInit {
   isSpinner = true;
   disabledButton = false;
   updateMachineStatus() {
-    let formData = {
+    const formData = {
       RISMachineID: this.RISMachineID,
       isOnOff: this.isOnOff||false,
       isOnOffRemarks: this.isOnOffRemarks,

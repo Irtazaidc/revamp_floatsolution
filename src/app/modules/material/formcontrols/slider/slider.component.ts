@@ -211,7 +211,7 @@ export class SliderComponent implements OnInit {
   value = 0;
   vertical = false;
 
-  // tslint:disable-next-line:variable-name
+ 
   private _tickInterval = 1;
   myValue = 50;
 

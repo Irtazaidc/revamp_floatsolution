@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService } from '../../../../../_metronic/core';
 
-declare var document;
+declare let document;
 
 @Component({
   standalone: false,
@@ -31,7 +31,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
 
   currentUrl: string;
 
-  @Input('moduleId') moduleId = 1;
+  @Input() moduleId = 1;
 
   constructor(
     private layout: LayoutService,
