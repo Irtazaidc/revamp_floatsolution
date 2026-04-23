@@ -4,6 +4,7 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { provideNgxMask } from 'ngx-mask';
 import { provideToastr } from 'ngx-toastr'; // ✅ ADD THIS
 import {
   TranslateLoader,
@@ -18,12 +19,12 @@ class EmptyTranslateLoader implements TranslateLoader {
     return of({});
   }
 }
-
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(BrowserAnimationsModule),
 
-    // ✅ ADD THIS BLOCK
+    provideNgxMask(), // ✅ ADD THIS LINE
+
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',
