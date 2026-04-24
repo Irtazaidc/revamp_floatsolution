@@ -137,7 +137,8 @@ export class SharedService {
         const script = document.createElement('script');
         script.async = true;
         script.defer = true;
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=${encodeURIComponent(libraries)}`;
+        // Google Maps best-practice loading: add `loading=async` to avoid performance warning.
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=${encodeURIComponent(libraries)}&loading=async&v=weekly`;
 
         script.onload = () => {
           (script as any)._gm_loaded = true;

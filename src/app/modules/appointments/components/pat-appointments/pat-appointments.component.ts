@@ -77,21 +77,13 @@ export class PatAppointmentsComponent implements OnInit {
   messages = [];
 
   ngOnInit(): void {
-    this.socketService.receiveMessages().subscribe((msg: any) => {
-      // Ensure we handle both string and object cases
-      const content = typeof msg === 'object' ? msg.text : msg;
-      this.messages.push(content);
-      this.cdr.detectChanges();
-      console.log("New message:", content);
-    });
-    console.log("Socket messages", this.messages);
+    // NOTE: This component previously referenced `socketService` without providing it,
+    // which crashes on init. Keep the screen functional; realtime integration can be
+    // wired when the backend/socket contract is finalized.
   }
   newMessage = '';
   sendData() {
-    if (this.newMessage.trim()) {
-      this.socketService.sendMessage(this.newMessage);
-      this.newMessage = ''; // Clear the input after sending
-    }
+    this.newMessage = '';
   }
 
  

@@ -689,8 +689,6 @@ export class QuestionComponent implements OnInit {
           this.isYesNo = false;
           break;
         }
-      case 6:
-      // case 7:
       case 5:
         {
           this.isYesNo = true;
@@ -708,13 +706,13 @@ export class QuestionComponent implements OnInit {
           this.isOptionBox = false;
           this.isOptionBoxText = false;
           this.isMinCharLimit = false;
-          this.isMinMax = false
+          this.isMinMax = false;
           this.isYesNo = false;
           break;
         }
       case 7:
         {
-          this.isMinMax = true
+          this.isMinMax = true;
           this.isDataPicker = false;
           this.isOptionBox = false;
           this.isOptionBoxText = false;

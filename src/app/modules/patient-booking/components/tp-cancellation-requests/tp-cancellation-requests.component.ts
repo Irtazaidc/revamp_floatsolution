@@ -86,7 +86,7 @@ export class TPCancellationRequestsComponent implements OnInit {
 
 
   searchVisitsForm = this.fb.group({
-    branchIds: [0],
+    branchIds: [[]],
     fromDate: [''],
     toDate: [''],
   });

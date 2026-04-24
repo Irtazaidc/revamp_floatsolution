@@ -47,7 +47,7 @@ export class FdoSalesComponent implements OnInit {
     SalesDataBar: "SalesDataBar",
   };
 
-  selectedPaymentMode = null;
+  selectedPaymentMode: number[] = [];
 
    pagination = {
     page: 1,
@@ -792,7 +792,10 @@ return `
       .subscribe(
         (resp: any) => {
           const _response = resp.PayLoadDS || [];
-          this.paymentModesList = _response.Table5 || [];
+          // Defer assignment to avoid NG0100 (sync emissions in dev mode)
+          Promise.resolve().then(() => {
+            this.paymentModesList = _response.Table5 || [];
+          });
         },
         (err) => {
           console.log(err);

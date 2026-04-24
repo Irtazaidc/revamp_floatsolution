@@ -83,7 +83,7 @@ export class DelayedApprovalsComponent implements OnInit {
 
 
   searchVisitsForm = this.fb.group({
-    branchIds: [0],
+    branchIds: [[]],
     fromDate: [''],
     toDate: [''],
   });

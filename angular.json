@@ -23,8 +23,22 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "core-js",
+              "raf",
+              "rgbcolor",
+              "qrcode",
+              "moment",
+              "sweetalert2",
+              "object-path",
+              "exceljs",
+              "file-saver",
+              "html2canvas"
+            ],
             "assets": [
               {
                 "glob": "**/*",

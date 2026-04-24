@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideNgxMask } from 'ngx-mask';
 import { provideToastr } from 'ngx-toastr'; // ✅ ADD THIS
+import { httpInterceptorProvider } from './_metronic/core/Interceptors';
 import {
   TranslateLoader,
   TranslateModule,
@@ -38,6 +39,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     provideHttpClient(withInterceptorsFromDi()),
+    ...httpInterceptorProvider,
     provideRouter(appRoutes, withHashLocation()),
     provideCharts(withDefaultRegisterables()),
   ],

@@ -20,8 +20,8 @@
     gap: 1rem;
 }
 
-.custom-container1>div:hover> {
-    flex: 5
+.custom-container1 > div:hover {
+    flex: 5;
 }
 
 .custom-container1::-webkit-scrollbar-track {

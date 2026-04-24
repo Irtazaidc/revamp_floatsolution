@@ -27,8 +27,8 @@ export class RequestComparisonComponent implements OnInit {
   searchText = "";
   loggedInUser: UserModel;
   maxDate: any;
-  today: NgbDate = this.calendar.getToday();
-  oneDayEarlier: NgbDate = this.calendar.getPrev(this.today, "d", 1);
+  today!: NgbDate;
+  oneDayEarlier!: NgbDate;
   noComparisonDataMessage = "Please select user";
 
   employeesList = [];
@@ -50,6 +50,9 @@ export class RequestComparisonComponent implements OnInit {
   ngOnInit(): void {
     this.loadLoggedInUserInfo();
     this.getEmployeesData();
+
+    this.today = this.calendar.getToday();
+    this.oneDayEarlier = this.calendar.getPrev(this.today, "d", 1);
 
     this.requestComparisonForm = this.formBuilder.group({
       dateFrom: [this.oneDayEarlier],

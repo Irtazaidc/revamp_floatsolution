@@ -19,6 +19,7 @@ import { DiscountCardDetailsComponent } from "./components/discount-card-details
 import { InquiryReportComponent } from "./components/inquiry-report/inquiry-report.component";
 import { InquiryReportInnerComponent } from "./components/inquiry-report-inner/inquiry-report-inner.component";
 import { VisitTestInquiryComponent } from './components/shared/visit-test-inquiry/visit-test-inquiry.component';
+import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     InformationDeskComponent,
@@ -56,5 +57,6 @@ import { VisitTestInquiryComponent } from './components/shared/visit-test-inquir
     TestProfileConfigurationModule,
     RemarksModule,
   ],
+  providers: [DatePipe],
 })
 export class InformationDeskModule {}

@@ -236,14 +236,9 @@ export class MultiAppService {
       status: 3
     }
     if (this.ws_for_multiWinApp) {
-      if (this.ws_for_multiWinApp.readyState === WebSocketConnectionState.CONNECTING) { // (window.WebSocket || window.MozWebSocket).CONNECTING) { // 0
+      // Only treat OPEN socket as connected. CONNECTING cannot send().
+      if (this.ws_for_multiWinApp.readyState === WebSocketConnectionState.OPEN) {
         status.connected = true;
-      } else if (this.ws_for_multiWinApp.readyState === WebSocketConnectionState.OPEN) { // (window.WebSocket || window.MozWebSocket).OPEN) { // 1
-        status.connected = true;
-      } else if (this.ws_for_multiWinApp.readyState === WebSocketConnectionState.CLOSING) { // (window.WebSocket || window.MozWebSocket).CLOSING) { // 2
-        status.connected = false;
-      } else if (this.ws_for_multiWinApp.readyState === WebSocketConnectionState.CLOSED) { // (window.WebSocket || window.MozWebSocket).CLOSED) { // 3
-        status.connected = false;
       } else {
         status.connected = false;
       }
